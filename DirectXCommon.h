@@ -33,6 +33,8 @@ public:
 	/// </summary>
 	void PostDraw();
 
+	ID3D12Device* GetDevice() { return device_.Get(); }
+
 private:
 
 	WinApp* winApp_;

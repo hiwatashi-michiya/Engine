@@ -30,12 +30,20 @@ public:
 	/// <returns></returns>
 	HWND GetHwnd() const { return hwnd_; }
 
+	HINSTANCE GetHInstance() const { return wc_.hInstance; }
+
 private:
 
 	//ウィンドウハンドル
 	HWND hwnd_ = nullptr;
 
 	WNDCLASS wc_{};
+
+private:
+	WinApp() = default;
+	~WinApp() = default;
+	WinApp(const WinApp&) = delete;
+	const WinApp& operator=(const WinApp&) = delete;
 
 };
 
