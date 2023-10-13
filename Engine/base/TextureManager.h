@@ -28,7 +28,9 @@ public:
 
 	Texture Load(const std::string& filePath);
 
-	
+	void Finalize();
+
+	ID3D12DescriptorHeap* GetSRVDescHeap() { return srvDescHeap_; }
 
 private:
 
@@ -42,8 +44,13 @@ private:
 	uint32_t descriptorSizeSRV_;
 
 	ID3D12Device* device_;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescHeap_;
+	ID3D12DescriptorHeap* srvDescHeap_;
 	std::array<Texture, kNumDescriptors> textures_;
+
+	//ロードしたテクスチャの数
+	uint32_t textureIndex_ = 0;
+
+	const uint32_t kMaxTextures = 256;
 
 };
 

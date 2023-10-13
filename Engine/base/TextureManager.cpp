@@ -1,32 +1,14 @@
 #include "TextureManager.h"
 #include "DirectXCommon.h"
 #include "externals/DirectXTex/DirectXTex.h"
-
-std::wstring ConvertStringW(const std::string& str) {
-	if (str.empty()) {
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0,
-		reinterpret_cast<const char*>(&str[0]), static_cast<int>
-		(str.size()), NULL, 0);
-	if (sizeNeeded == 0) {
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const
-		char*>(&str[0]), static_cast<int>(str.size()), &result[0],
-		sizeNeeded);
-	return result;
-
-}
+#include"Engine/Convert.h"
 
 //DirectXTexを使ってTextureを読み込むためのLoadTexture関数
 DirectX::ScratchImage LoadTexture(const std::string& filePath) {
 
 	//テクスチャファイルを読んでプログラムを扱えるようにする
 	DirectX::ScratchImage image{};
-	std::wstring filePathW = ConvertStringW(filePath);
+	std::wstring filePathW = ConvertString(filePath);
 	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
 	assert(SUCCEEDED(hr));
 
@@ -117,11 +99,11 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12
 }
 
 //デスクリプタヒープ作成関数
-Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
-	Microsoft::WRL::ComPtr<ID3D12Device> device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+ID3D12DescriptorHeap* CreateDescriptorHeap(
+	ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
 
 	//ディスクリプタヒープの生成
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
+	ID3D12DescriptorHeap* descriptorHeap = nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
 	descriptorHeapDesc.Type = heapType;
 	descriptorHeapDesc.NumDescriptors = numDescriptors;
@@ -161,6 +143,9 @@ void TextureManager::Initialize() {
 
 Texture TextureManager::Load(const std::string& filePath) {
 
+	//制限数以上の読み込みで止める
+	assert(textureIndex_ < kMaxTextures);
+
 	Texture tex;
 
 	const uint32_t descriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -179,12 +164,21 @@ Texture TextureManager::Load(const std::string& filePath) {
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	//SRVを作成するDescriptorHeapの場所を決める
-	tex.srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1);
-	tex.srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1);
+	tex.srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
+	tex.srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
 
 	//SRVの生成
 	device_->CreateShaderResourceView(tex.resource.Get(), &srvDesc, tex.srvHandleCPU);
 
+	//使用カウント上昇
+	textureIndex_++;
+
 	return tex;
+
+}
+
+void TextureManager::Finalize() {
+
+	srvDescHeap_->Release();
 
 }

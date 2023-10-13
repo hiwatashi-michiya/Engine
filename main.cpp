@@ -1,11 +1,14 @@
-#include "MyEngine.h"
-#include "Input.h"
+#include "Engine/Engine.h"
+#include "Engine/input/Input.h"
 #include <Windows.h>
-#include "TextureManager.h"
+#include "Engine/base/TextureManager.h"
+#include <memory>
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	MyEngine::Initialize("engine", 1280, 720);
+	D3DResourceLeakChecker leak;
+
+	Engine::Initialize("engine", 1280, 720);
 
 	Input* input = nullptr;
 	
@@ -14,15 +17,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Texture tex;
 	tex = TextureManager::GetInstance()->Load("resources/monsterBall.png");
 
+	std::unique_ptr<Sprite> sprite = nullptr;
+
+	sprite.reset(Sprite::Create(tex, { 100.0f,0.0f }));
 
 	input = Input::GetInstance();
 	input->Initialize();
 
-	while (MyEngine::ProcessMessage() == 0)
+	while (Engine::ProcessMessage() == 0)
 	{
 
 		//フレーム開始
-		MyEngine::BeginFrame();
+		Engine::BeginFrame();
 
 		input->Update();
 
@@ -30,12 +36,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			OutputDebugStringA("Hit 0\n");
 		}
 
+		sprite->Draw();
+
 		//フレーム終了
-		MyEngine::EndFrame();
+		Engine::EndFrame();
 
 	}
 
-	MyEngine::Finalize();
+	TextureManager::GetInstance()->Finalize();
+
+	Engine::Finalize();
 
 	return 0;
 
