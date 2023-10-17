@@ -21,6 +21,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	dxCommon_->Initialize(winApp_, width, height);
 
 	Sprite::StaticInitialize(dxCommon_->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
+	Model::StaticInitialize(dxCommon_->GetDevice());
 
 }
 
@@ -30,6 +31,7 @@ int Engine::ProcessMessage() {
 
 void Engine::Finalize() {
 
+	Model::Finalize();
 	Sprite::Finalize();
 	dxCommon_->Finalize();
 	dxCommon_ = nullptr;
@@ -44,9 +46,13 @@ void Engine::BeginFrame() {
 
 	Sprite::PreDraw(dxCommon_->GetCommandList());
 
+	Model::PreDraw(dxCommon_->GetCommandList());
+
 }
 
 void Engine::EndFrame() {
+
+	Model::PostDraw();
 
 	Sprite::PostDraw();
 

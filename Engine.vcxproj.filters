@@ -40,6 +40,9 @@
     <Filter Include="shader">
       <UniqueIdentifier>{2a5b9dae-21a2-4c74-9087-579535ef9bc2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\manager">
+      <UniqueIdentifier>{76fbb517-0468-44d8-949f-2271126881b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -107,6 +110,15 @@
     </ClCompile>
     <ClCompile Include="Engine\Convert.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\manager\ShaderManager.cpp">
+      <Filter>Engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\WorldTransform.cpp">
+      <Filter>Engine\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\ViewProjection.cpp">
+      <Filter>Engine\3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +196,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Convert.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\manager\ShaderManager.h">
+      <Filter>Engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\WorldTransform.h">
+      <Filter>Engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\ViewProjection.h">
+      <Filter>Engine\3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

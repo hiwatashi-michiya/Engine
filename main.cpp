@@ -19,10 +19,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<Sprite> sprite = nullptr;
 
-	sprite.reset(Sprite::Create(tex, { 100.0f,0.0f }));
+	std::unique_ptr<Model> model = nullptr;
+
+	model.reset(Model::Create("multiMaterial.obj"));
+
+	sprite.reset(Sprite::Create(tex, { -600.0f,0.0f }));
 
 	input = Input::GetInstance();
 	input->Initialize();
+
+	Vector3 cameraPos = { 0.0f,0.0f,-10.0f };
 
 	while (Engine::ProcessMessage() == 0)
 	{
@@ -37,6 +43,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		sprite->Draw();
+
+		model->Draw({ 0.0f,0.0f,0.0f }, cameraPos);
 
 		//フレーム終了
 		Engine::EndFrame();

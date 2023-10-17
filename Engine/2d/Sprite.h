@@ -52,9 +52,9 @@ private:
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
-	static ID3D12RootSignature* rootSignature_;
+	static ID3D12RootSignature* rootSignature2D_;
 	//PSO
-	static ID3D12PipelineState* pipelineState_;
+	static ID3D12PipelineState* pipelineState2D_;
 
 	static Matrix4x4 matProjection_;
 

@@ -3,6 +3,7 @@
 #include "base/DirectXCommon.h"
 #include "base/WinApp.h"
 #include "2d/Sprite.h"
+#include "3d/Model.h"
 
 class Engine
 {
