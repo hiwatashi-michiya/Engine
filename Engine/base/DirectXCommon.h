@@ -7,6 +7,9 @@
 #include <dxcapi.h>
 #include <wrl.h>
 #include <vector>
+#include "externals/imgui/imgui.h"
+#include "externals/imgui/imgui_impl_dx12.h"
+#include "externals/imgui/imgui_impl_win32.h"
 
 #include "WinApp.h"
 
@@ -52,6 +55,7 @@ private:
 	ID3D12CommandAllocator* commandAllocator_;
 	ID3D12GraphicsCommandList* commandList_;
 	IDXGISwapChain4* swapChain_;
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
 	ID3D12Resource* depthStencilResource_;
 	ID3D12DescriptorHeap* rtvHeap_;
@@ -95,6 +99,9 @@ private:
 
 	//フェンス生成
 	void CreateFence();
+
+	//ImGui初期化
+	void InitializeImGui();
 
 };
 

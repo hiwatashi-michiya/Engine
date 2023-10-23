@@ -162,7 +162,7 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 	//DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthEnable = false;
 	//書き込み
 	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	//近ければ描画
@@ -307,6 +307,13 @@ void Sprite::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
+	//PSO設定
+	commandList_->SetPipelineState(pipelineState2D_);
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature2D_);
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 }
 
 void Sprite::PostDraw() {
@@ -322,13 +329,6 @@ void Sprite::Draw() {
 	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	*matTransformMap_ = worldViewProjectionMatrix;
-
-	//PSO設定
-	commandList_->SetPipelineState(pipelineState2D_);
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature2D_);
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//Spriteの描画
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);

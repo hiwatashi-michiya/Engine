@@ -1,6 +1,7 @@
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include <cmath>
+#include <cassert>
 
 //行列の加法
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) {
@@ -420,3 +421,8 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height,
 	return m;
 
 }
+
+// 二項演算子
+Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2) { return Add(m1, m2); }
+Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2) { return Subtract(m1, m2); }
+Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2) { return Multiply(m1, m2); }

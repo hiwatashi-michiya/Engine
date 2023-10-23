@@ -41,6 +41,9 @@ void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t 
 	//フェンス生成
 	CreateFence();
 
+	//ImGui初期化
+	InitializeImGui();
+
 }
 
 void DirectXCommon::PreDraw() {
@@ -275,7 +278,6 @@ void DirectXCommon::CreateSwapChain() {
 	HRESULT hr = S_FALSE;
 
 	//スワップチェーンを生成する
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	swapChainDesc.Width = backBufferWidth_; //画面の幅。ウィンドウのクライアント領域を同じものにしておく
 	swapChainDesc.Height = backBufferHeight_; //画面の高さ。ウィンドウのクライアント領域を同じものにしておく
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //色の形式
@@ -330,8 +332,9 @@ void DirectXCommon::CreateDepthBuffer() {
 
 	//DSVの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; //Format。基本的にはResourceに合わせる
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; //Format。基本的にはResourceに合わせる
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; //2dTexture
+	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 	//DSVHeapの先頭にDSVを作る
 	device_->CreateDepthStencilView(depthStencilResource_, &dsvDesc, dsvHeap_->GetCPUDescriptorHandleForHeapStart());
 
@@ -382,7 +385,7 @@ ID3D12Resource* DirectXCommon::CreateDepthStencilTextureResource(ID3D12Device* d
 	resourceDesc.Height = height; //Textureの高さ
 	resourceDesc.MipLevels = 1; //mipmapの数
 	resourceDesc.DepthOrArraySize = 1; //奥行き or 配列Textureの配列数
-	resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; //DepthStencilとして利用可能なフォーマット
+	resourceDesc.Format = DXGI_FORMAT_D32_FLOAT; //DepthStencilとして利用可能なフォーマット
 	resourceDesc.SampleDesc.Count = 1; //サンプリングカウント。1固定
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D; //2次元
 	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; //DepthStencilとして使う通知
@@ -390,11 +393,14 @@ ID3D12Resource* DirectXCommon::CreateDepthStencilTextureResource(ID3D12Device* d
 	//利用するHeapの設定
 	D3D12_HEAP_PROPERTIES heapProperties{};
 	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; //VRAM上に作る
+	heapProperties.CreationNodeMask = 1;
+	heapProperties.VisibleNodeMask = 1;
 
 	//深度値のクリア設定
 	D3D12_CLEAR_VALUE depthClearValue{};
 	depthClearValue.DepthStencil.Depth = 1.0f; //1.0f(最大値)でクリア
-	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; //フォーマット。Resourceと合わせる
+	depthClearValue.DepthStencil.Stencil = 0.0f;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT; //フォーマット。Resourceと合わせる
 
 	//Resourceの生成
 	ID3D12Resource* resource = nullptr;
@@ -408,6 +414,10 @@ ID3D12Resource* DirectXCommon::CreateDepthStencilTextureResource(ID3D12Device* d
 	assert(SUCCEEDED(hr));
 
 	return resource;
+
+}
+
+void DirectXCommon::InitializeImGui() {
 
 }
 

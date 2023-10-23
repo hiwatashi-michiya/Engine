@@ -43,6 +43,8 @@ public:
 	
 	static void Finalize();
 
+	void SetTexture(Texture tex) { texture_ = tex; }
+
 private:
 
 	//静的メンバ変数

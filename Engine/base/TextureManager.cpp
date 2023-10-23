@@ -144,7 +144,7 @@ void TextureManager::Initialize() {
 Texture TextureManager::Load(const std::string& filePath) {
 
 	//制限数以上の読み込みで止める
-	assert(textureIndex_ < kMaxTextures);
+	assert(textureIndex_ < kMaxTextures - 1);
 
 	Texture tex;
 

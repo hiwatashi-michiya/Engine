@@ -9,6 +9,7 @@
 #include <vector>
 #include <dxcapi.h>
 #include"Engine/base/TextureManager.h"
+#include "WorldTransform.h"
 
 //ディレクトリパス
 const std::string modelDirectoryPath = "resources";
@@ -61,9 +62,11 @@ public:
 
 	static void PostDraw();
 
-	void Draw(Vector3 position, Vector3 cameraPosition);
+	void Draw(WorldTransform worldTransform);
 
 	static void Finalize();
+
+	static WorldTransform worldTransformCamera_;
 
 private:
 

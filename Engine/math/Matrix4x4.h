@@ -1,13 +1,85 @@
 #pragma once
-#include <cassert>
+
 /// <summary>
 /// 4x4行列
 /// </summary>
-struct Matrix4x4 final {
+class Matrix4x4 {
+public:
+
 	float m[4][4];
+
+	//初期化
+	Matrix4x4() {
+		
+		for (int y = 0; y < 4; y++) {
+
+			for (int x = 0; x < 4; x++) {
+
+				//yとxの値が等しい場合に1を入れる
+				if (y == x) {
+
+					m[y][x] = 1;
+
+				}
+				else {
+
+					m[y][x] = 0;
+
+				}
+
+			}
+		}
+
+	}
+
+	Matrix4x4& operator+=(const Matrix4x4& matrix) {
+		
+
+		for (int y = 0; y < 4; y++) {
+
+			for (int x = 0; x < 4; x++) {
+
+				m[y][x] = m[y][x] + matrix.m[y][x];
+
+			}
+
+		}
+
+		return *this;
+	}
+
+	Matrix4x4& operator-=(const Matrix4x4& matrix) {
+		
+		for (int y = 0; y < 4; y++) {
+
+			for (int x = 0; x < 4; x++) {
+
+				m[y][x] = m[y][x] - matrix.m[y][x];
+			}
+		}
+
+		return *this;
+	}
+
+	Matrix4x4& operator*=(const Matrix4x4& matrix) {
+		
+		for (int y = 0; y < 4; y++) {
+
+			for (int x = 0; x < 4; x++) {
+
+				m[y][x] = m[y][0] * matrix.m[0][x] + m[y][1] * matrix.m[1][x] +
+					m[y][2] * matrix.m[2][x] + m[y][3] * matrix.m[3][x];
+
+			}
+
+		}
+
+		return *this;
+	}
+
 };
 
-struct Vector3;
+class Vector3;
 
 //行列の加法
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2);
@@ -56,3 +128,7 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height,
 	float minDepth, float maxDepth);
 
+// 二項演算子
+Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2);
+Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2);
+Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2);

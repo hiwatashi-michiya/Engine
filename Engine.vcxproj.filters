@@ -43,6 +43,9 @@
     <Filter Include="Engine\manager">
       <UniqueIdentifier>{76fbb517-0468-44d8-949f-2271126881b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{ab1ff59b-4e59-4fc1-bb6b-0f667912d291}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="Engine\3d\ViewProjection.cpp">
       <Filter>Engine\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\gamescene\GameScene.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\ViewProjection.h">
       <Filter>Engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\gamescene\GameScene.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

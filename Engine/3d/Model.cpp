@@ -13,16 +13,17 @@ ID3D12RootSignature* Model::rootSignature_ = nullptr;
 ID3D12PipelineState* Model::pipelineState_ = nullptr;
 IDxcBlob* Model::vs3dBlob_ = nullptr;
 IDxcBlob* Model::ps3dBlob_ = nullptr;
+WorldTransform Model::worldTransformCamera_{};
 
 //mtlファイル読み込み関数
-Model::MaterialData LoadMaterialTemplateFile(const std::string& filename) {
+Model::MaterialData LoadMaterialTemplateFile(const std::string& filename, const std::string& mtlFilename) {
 
 	//1.中で必要となる変数の宣言
 	Model::MaterialData materialData; //構築するMaterialData
 	std::string line; //ファイルから読んだ1行を格納するもの
 
 	//2.ファイルを開く
-	std::ifstream file(modelDirectoryPath + "/" + filename); //ファイルを開く
+	std::ifstream file(modelDirectoryPath + "/" + filename + "/" + mtlFilename); //ファイルを開く
 	assert(file.is_open()); //開けなかったら止める
 
 	//3.実際にファイルを読み、MaterialDataを構築していく
@@ -36,7 +37,7 @@ Model::MaterialData LoadMaterialTemplateFile(const std::string& filename) {
 			std::string textureFilename;
 			s >> textureFilename;
 			//連結してファイルパスにする
-			materialData.textureFilePath = modelDirectoryPath + "/" + textureFilename;
+			materialData.textureFilePath = modelDirectoryPath + "/" + filename + "/" + textureFilename;
 		}
 
 	}
@@ -57,7 +58,7 @@ Model::ModelData LoadObjFile(const std::string& filename) {
 	std::string line; //ファイルから読んだ1行を格納するもの
 
 	//2.ファイルを開く
-	std::ifstream file(modelDirectoryPath + "/" + filename); //ファイルを開く
+	std::ifstream file(modelDirectoryPath + "/" + filename + "/" + filename + ".obj"); //ファイルを開く
 	assert(file.is_open()); //開けなかったら止める
 
 	//3.実際にファイルを読み、ModelDataを構築していく
@@ -100,12 +101,27 @@ Model::ModelData LoadObjFile(const std::string& filename) {
 				for (int32_t element = 0; element < 3; ++element) {
 					std::string index;
 					std::getline(v, index, '/'); //区切りでインデックスを読んでいく
-					elementIndices[element] = std::stoi(index);
+
+					if (index == "") {
+						//情報が無い場合、1を代入
+						elementIndices[element] = 1;
+					}
+					else {
+						elementIndices[element] = std::stoi(index);
+					}
+					
 				}
 
 				//要素へのIndexから、実際の要素の値を取得して、頂点を構築する
 				Vector4 position = positions[elementIndices[0] - 1];
-				Vector2 texcoord = texcoords[elementIndices[1] - 1];
+
+				Vector2 texcoord;
+				if (!texcoords.empty()) {
+					texcoord = texcoords[elementIndices[1] - 1];
+				}
+				else {
+					texcoord = { 0.0f,0.0f };
+				}
 				Vector3 normal = normals[elementIndices[2] - 1];
 				/*VertexData vertex = { position, texcoord, normal };
 				modelData.vertices.push_back(vertex);*/
@@ -123,7 +139,7 @@ Model::ModelData LoadObjFile(const std::string& filename) {
 			std::string materialFilename;
 			s >> materialFilename;
 			//基本的にobjファイルと同一階層にmtlは存在させるので、ディレクトリ名とファイル名を渡す
-			modelData.material = LoadMaterialTemplateFile(materialFilename);
+			modelData.material = LoadMaterialTemplateFile(filename, materialFilename);
 
 		}
 
@@ -299,7 +315,7 @@ void Model::StaticInitialize(ID3D12Device* device) {
 
 	//DepthStencilの設定
 	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	//グラフィックスパイプラインを実際に生成
 	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
@@ -394,7 +410,14 @@ void Model::Initialize(const std::string& filename) {
 	//テクスチャ設定
 	{
 
-		texture_ = TextureManager::GetInstance()->Load(modelData_.material.textureFilePath);
+		//テクスチャ情報が空でない場合に設定
+		if (modelData_.material.textureFilePath != "") {
+			texture_ = TextureManager::GetInstance()->Load(modelData_.material.textureFilePath);
+		}
+		//テクスチャ情報が空の場合、既定の画像に設定
+		else {
+			texture_ = TextureManager::GetInstance()->Load("resources/white.png");
+		}
 
 	}
 
@@ -406,6 +429,15 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
+	worldTransformCamera_.UpdateMatrix();
+
+	//PSO設定
+	commandList_->SetPipelineState(pipelineState_);
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature_);
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 }
 
 void Model::PostDraw() {
@@ -414,22 +446,22 @@ void Model::PostDraw() {
 
 }
 
-void Model::Draw(Vector3 position, Vector3 cameraPosition) {
+void Model::Draw(WorldTransform worldTransform) {
 
-	Matrix4x4 worldMatrix = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, position);
-	Matrix4x4 cameraMatrix = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, cameraPosition);
+	Matrix4x4 worldMatrix = worldTransform.matWorld_;
+	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.0f, 1000.0f);
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
+
+	/*Matrix4x4 worldView = worldMatrix * viewMatrix;
+	Matrix4x4 viewProjection = viewMatrix * projectionMatrix;
+	Matrix4x4 a = worldView * projectionMatrix;
+	Matrix4x4 b = worldMatrix * viewProjection;*/
+
+	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * projectionMatrix);
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = worldMatrix;
 
-	//PSO設定
-	commandList_->SetPipelineState(pipelineState_);
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//平行光源設定
 	commandList_->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());
 	//Spriteの描画
@@ -451,4 +483,5 @@ void Model::Finalize() {
 	vs3dBlob_->Release();
 
 }
+
 
