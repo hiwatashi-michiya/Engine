@@ -4,6 +4,7 @@
 #include <wrl.h>
 #include <dinput.h>
 #include <array>
+#include <Xinput.h>
 
 class Input
 {
@@ -26,6 +27,12 @@ public:
 
 	bool TriggerKey(BYTE keyNumber);
 
+	bool GetJoyState(int32_t No, XINPUT_STATE& joyState);
+
+	bool PushButton(UINT button);
+
+	XINPUT_GAMEPAD GetGamepad() { return joyState_.Gamepad; }
+
 private:
 
 	Input() = default;
@@ -35,11 +42,16 @@ private:
 
 private:
 
+	void CalcDeadZone();
+
 	Microsoft::WRL::ComPtr<IDirectInput8> dInput_ = nullptr;
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
+	XINPUT_STATE joyState_;
+
 	std::array<BYTE, 256> key_;
 	std::array<BYTE, 256> preKey_;
 	HWND hwnd_;
+	bool isGetController_ = false;
 
 };
 

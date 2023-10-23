@@ -45,6 +45,10 @@ public:
 
 	void SetTexture(Texture tex) { texture_ = tex; }
 
+	void SetPosition(Vector2 pos) { position_ = pos; }
+
+	Vector2 GetPosition() { return position_; }
+
 private:
 
 	//静的メンバ変数

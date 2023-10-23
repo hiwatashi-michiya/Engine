@@ -32,11 +32,22 @@ void GameScene::Update() {
 #endif // _DEBUG
 
 
-	if (input_->PushKey(DIK_W)) {
+	Vector3 tmpvel{};
+
+	tmpvel.x += float(input_->GetGamepad().sThumbLX);
+	tmpvel.y += float(input_->GetGamepad().sThumbLY);
+
+	tmpvel = Normalize(tmpvel);
+
+	Vector2 pos = { uvSprite_->GetPosition().x + tmpvel.x, uvSprite_->GetPosition().y + tmpvel.y };
+
+	uvSprite_->SetPosition(pos);
+
+	if (input_->PushButton(XINPUT_GAMEPAD_Y)) {
 		worldTransformSuzanne_.translation_.z += 0.1f;
 	}
 
-	if (input_->PushKey(DIK_S)) {
+	if (input_->PushButton(XINPUT_GAMEPAD_A)) {
 		worldTransformSuzanne_.translation_.z -= 0.1f;
 	}
 
