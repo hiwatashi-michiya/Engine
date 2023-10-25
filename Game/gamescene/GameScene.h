@@ -6,6 +6,9 @@
 #include "Engine/input/Input.h"
 #include "Engine/2d/Sprite.h"
 #include <memory>
+#include "Game/player/Player.h"
+#include "Game/enemy/Enemy.h"
+#include "Game/stage/Stage.h"
 
 class GameScene
 {
@@ -24,13 +27,15 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 
-	std::unique_ptr<Model> suzanneModel_;
+	std::unique_ptr<Stage> stage_;
 
-	std::unique_ptr<Sprite> uvSprite_;
+	std::unique_ptr<Player> player_;
 
-	Texture uvTex_;
+	std::unique_ptr<Enemy> enemy_;
 
-	WorldTransform worldTransformSuzanne_;
+	std::unique_ptr<Model> modelSkydome_;
+
+	WorldTransform worldTransformSkydome_;
 
 };
 

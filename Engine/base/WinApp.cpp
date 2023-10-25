@@ -1,8 +1,12 @@
 #include "WinApp.h"
 
+#ifdef _DEBUG
+
 #include "externals/imgui/imgui_impl_win32.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+#endif // _DEBUG
 
 WinApp* WinApp::GetInstance() {
 	static WinApp instance;
@@ -12,9 +16,13 @@ WinApp* WinApp::GetInstance() {
 //ウィンドウプロシージャ
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
+#ifdef _DEBUG
+
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
+
+#endif // _DEBUG
 
 	//メッセージに応じてゲーム固有の処理を行う
 	switch (msg)

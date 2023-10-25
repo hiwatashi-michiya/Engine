@@ -46,6 +46,18 @@
     <Filter Include="Game">
       <UniqueIdentifier>{ab1ff59b-4e59-4fc1-bb6b-0f667912d291}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\player">
+      <UniqueIdentifier>{917f4b7e-6a0d-44e4-a646-8f1b0084b8a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\gameScene">
+      <UniqueIdentifier>{9faf39e3-20d2-4aac-9535-c1d01738b60f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\enemy">
+      <UniqueIdentifier>{87b21323-17e1-416c-817c-1030260f5109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\stage">
+      <UniqueIdentifier>{5825f192-7d68-4fbc-9f67-046c78643a1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -124,7 +136,19 @@
       <Filter>Engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="Game\gamescene\GameScene.cpp">
-      <Filter>Game</Filter>
+      <Filter>Game\gameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\player\Player.cpp">
+      <Filter>Game\player</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\stage\Stage.cpp">
+      <Filter>Game\stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\enemy\Enemy.cpp">
+      <Filter>Game\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\Collision.cpp">
+      <Filter>Engine\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -213,7 +237,22 @@
       <Filter>Engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Game\gamescene\GameScene.h">
-      <Filter>Game</Filter>
+      <Filter>Game\gameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\player\Player.h">
+      <Filter>Game\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\stage\Stage.h">
+      <Filter>Game\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\enemy\Enemy.h">
+      <Filter>Game\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\manager\ImGuiManager.h">
+      <Filter>Engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Collision.h">
+      <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

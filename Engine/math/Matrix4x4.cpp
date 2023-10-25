@@ -88,10 +88,13 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 		m.m[0][2] * m.m[1][1] * m.m[2][3] * m.m[3][0] +
 		m.m[0][1] * m.m[1][3] * m.m[2][2] * m.m[3][0];
 
-	//分母0では割れない
-	assert(denominator != 0.0f);
-
 	Matrix4x4 mResult = {};
+
+	//分母0では割れない
+	if (denominator == 0.0f) {
+		return mResult;
+	}
+	
 
 	mResult.m[0][0] = (m.m[1][1] * m.m[2][2] * m.m[3][3] + m.m[1][2] * m.m[2][3] * m.m[3][1] +
 		m.m[1][3] * m.m[2][1] * m.m[3][2] - m.m[1][3] * m.m[2][2] * m.m[3][1] -

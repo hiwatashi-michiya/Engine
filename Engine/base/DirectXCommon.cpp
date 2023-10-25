@@ -41,9 +41,6 @@ void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t 
 	//フェンス生成
 	CreateFence();
 
-	//ImGui初期化
-	InitializeImGui();
-
 }
 
 void DirectXCommon::PreDraw() {
@@ -414,10 +411,6 @@ ID3D12Resource* DirectXCommon::CreateDepthStencilTextureResource(ID3D12Device* d
 	assert(SUCCEEDED(hr));
 
 	return resource;
-
-}
-
-void DirectXCommon::InitializeImGui() {
 
 }
 

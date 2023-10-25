@@ -3,34 +3,33 @@
 /// <summary>
 /// 4x4行列
 /// </summary>
-class Matrix4x4 {
-public:
+struct Matrix4x4 {
 
 	float m[4][4];
 
-	//初期化
-	Matrix4x4() {
-		
-		for (int y = 0; y < 4; y++) {
+	////初期化
+	//Matrix4x4() {
+	//	
+	//	for (int y = 0; y < 4; y++) {
 
-			for (int x = 0; x < 4; x++) {
+	//		for (int x = 0; x < 4; x++) {
 
-				//yとxの値が等しい場合に1を入れる
-				if (y == x) {
+	//			//yとxの値が等しい場合に1を入れる
+	//			if (y == x) {
 
-					m[y][x] = 1;
+	//				m[y][x] = 1;
 
-				}
-				else {
+	//			}
+	//			else {
 
-					m[y][x] = 0;
+	//				m[y][x] = 0;
 
-				}
+	//			}
 
-			}
-		}
+	//		}
+	//	}
 
-	}
+	//}
 
 	Matrix4x4& operator+=(const Matrix4x4& matrix) {
 		
@@ -61,25 +60,9 @@ public:
 		return *this;
 	}
 
-	Matrix4x4& operator*=(const Matrix4x4& matrix) {
-		
-		for (int y = 0; y < 4; y++) {
-
-			for (int x = 0; x < 4; x++) {
-
-				m[y][x] = m[y][0] * matrix.m[0][x] + m[y][1] * matrix.m[1][x] +
-					m[y][2] * matrix.m[2][x] + m[y][3] * matrix.m[3][x];
-
-			}
-
-		}
-
-		return *this;
-	}
-
 };
 
-class Vector3;
+struct Vector3;
 
 //行列の加法
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2);

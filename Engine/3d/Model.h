@@ -68,6 +68,8 @@ public:
 
 	static WorldTransform worldTransformCamera_;
 
+	static 	Matrix4x4 matProjection_;
+
 private:
 
 	//静的メンバ変数
@@ -80,8 +82,6 @@ private:
 	static ID3D12RootSignature* rootSignature_;
 	//PSO
 	static ID3D12PipelineState* pipelineState_;
-
-	static Matrix4x4 matProjection_;
 
 	static IDxcBlob* vs3dBlob_;
 	static IDxcBlob* ps3dBlob_;
@@ -112,7 +112,6 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
-
 
 	//テクスチャ
 	Texture texture_;

@@ -14,6 +14,7 @@ ID3D12PipelineState* Model::pipelineState_ = nullptr;
 IDxcBlob* Model::vs3dBlob_ = nullptr;
 IDxcBlob* Model::ps3dBlob_ = nullptr;
 WorldTransform Model::worldTransformCamera_{};
+Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
 
 //mtlファイル読み込み関数
 Model::MaterialData LoadMaterialTemplateFile(const std::string& filename, const std::string& mtlFilename) {
@@ -386,7 +387,7 @@ void Model::Initialize(const std::string& filename) {
 		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
 
 		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		dLightMap_->direction = { 1.0f,0.0f,0.0f };
+		dLightMap_->direction = { 0.0f,-1.0f,0.0f };
 		dLightMap_->intensity = 1.0f;
 
 		dLightBuff_->Unmap(0, nullptr);
@@ -416,7 +417,7 @@ void Model::Initialize(const std::string& filename) {
 		}
 		//テクスチャ情報が空の場合、既定の画像に設定
 		else {
-			texture_ = TextureManager::GetInstance()->Load("resources/white.png");
+			texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
 		}
 
 	}
@@ -451,14 +452,8 @@ void Model::Draw(WorldTransform worldTransform) {
 	Matrix4x4 worldMatrix = worldTransform.matWorld_;
 	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-
-	/*Matrix4x4 worldView = worldMatrix * viewMatrix;
-	Matrix4x4 viewProjection = viewMatrix * projectionMatrix;
-	Matrix4x4 a = worldView * projectionMatrix;
-	Matrix4x4 b = worldMatrix * viewProjection;*/
-
-	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * projectionMatrix);
+	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
+	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = worldMatrix;
 

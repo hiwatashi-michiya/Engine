@@ -7,9 +7,6 @@
 #include <dxcapi.h>
 #include <wrl.h>
 #include <vector>
-#include "externals/imgui/imgui.h"
-#include "externals/imgui/imgui_impl_dx12.h"
-#include "externals/imgui/imgui_impl_win32.h"
 
 #include "WinApp.h"
 
@@ -99,9 +96,6 @@ private:
 
 	//フェンス生成
 	void CreateFence();
-
-	//ImGui初期化
-	void InitializeImGui();
 
 };
 

@@ -20,6 +20,24 @@ public:
 	//親のワールドトランスフォームのポインタ
 	WorldTransform* parent_ = nullptr;
 
+	//スケールを引き継ぐか
+	bool isScaleParent_ = true;
+
+	//回転を引き継ぐか
+	bool isRotationParent_ = true;
+
+	//平行移動を引き継ぐか
+	bool isTranslationParent_ = true;
+
+	//自身のスケールを維持するか
+	bool isScale_ = true;
+
+	//自身の回転を維持するか
+	bool isRotation_ = true;
+
+	//自身の平行移動を維持するか
+	bool isTranslation_ = true;
+
 	//ワールド行列
 	Matrix4x4 matWorld_;
 
@@ -27,7 +45,7 @@ public:
 
 private:
 
-
+	void SetMatParent();
 
 };
 
