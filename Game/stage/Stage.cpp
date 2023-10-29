@@ -93,10 +93,24 @@ void Stage::Collision(Player* player, Enemy* enemy) {
 			enemy->SetOBB();
 		}
 
+	}
+
+	for (size_t i = 0; i < 5; i++) {
+
 		if (IsCollision(obbs_[i], player->GetOBB())) {
 			player->SetParent(&worldTransforms_[i]);
+			if (i == 1) {
+				player->SetPosition(player->GetTranslation() + velocity_[0]);
+			}
+			if (i == 3) {
+				player->SetPosition(player->GetTranslation() + velocity_[1]);
+			}
 			player->SetPositionY(worldTransforms_[i].translation_.y + player->GetOBB().size.y);
 			player->SetOBB();
+			break;
+		}
+		else {
+			player->SetParent(nullptr);
 		}
 
 	}

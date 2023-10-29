@@ -31,6 +31,8 @@ public:
 
 	const WorldTransform& GetWorldTransform() { return worldTransformBody_; }
 
+	const Vector3& GetTranslation() { return worldTransformBody_.translation_; }
+
 private:
 
 	Input* input_ = nullptr;
