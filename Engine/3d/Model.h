@@ -62,7 +62,7 @@ public:
 
 	static void PostDraw();
 
-	void Draw(WorldTransform worldTransform);
+	void Draw(WorldTransform& worldTransform);
 
 	static void Finalize();
 

@@ -18,15 +18,18 @@ void Player::Initialize() {
 	modelHead_.reset(Model::Create("float_head"));
 	modelL_arm_.reset(Model::Create("float_L_arm"));
 	modelR_arm_.reset(Model::Create("float_R_arm"));
+	modelWeapon_.reset(Model::Create("weapon"));
 
 	worldTransformBody_.translation_.y = 0.0f;
 	worldTransformHead_.translation_.y = 3.0f;
 	worldTransformL_arm_.translation_ = { 1.0f,2.5f,0.0f };
 	worldTransformR_arm_.translation_ = { -1.0f,2.5f,0.0f };
+	worldTransformWeapon_.translation_.y = 3.0f;
 
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformL_arm_.parent_ = &worldTransformBody_;
 	worldTransformR_arm_.parent_ = &worldTransformBody_;
+	worldTransformWeapon_.parent_ = &worldTransformBody_;
 	worldTransformBody_.isScaleParent_ = false;
 	worldTransformBody_.isTranslationParent_ = false;
 
@@ -59,6 +62,54 @@ void Player::Update() {
 
 #endif // _DEBUG
 
+	if (behaviorRequest_) {
+		//振る舞いを変更する
+		behavior_ = behaviorRequest_.value();
+		//各振る舞いごとの初期化を実行
+		switch (behavior_) {
+		case Behavior::kRoot:
+		default:
+			BehaviorRootInitialize();
+			break;
+		case Behavior::kAttack:
+			BehaviorAttackInitialize();
+			break;
+
+		}
+		//振る舞いリクエストをリセット
+		behaviorRequest_ = std::nullopt;
+	}
+
+	switch (behavior_) {
+	case Behavior::kRoot:
+	default:
+		BehaviorRootUpdate();
+		break;
+	case Behavior::kAttack:
+		BehaviorAttackUpdate();
+		break;
+
+	}
+
+	SetOBB();
+
+}
+
+void Player::Draw() {
+
+	modelBody_->Draw(worldTransformBody_);
+	modelHead_->Draw(worldTransformHead_);
+	modelL_arm_->Draw(worldTransformL_arm_);
+	modelR_arm_->Draw(worldTransformR_arm_);
+	if (behavior_ == Behavior::kAttack) {
+		modelWeapon_->Draw(worldTransformWeapon_);
+	}
+	
+
+}
+
+void Player::BehaviorRootUpdate() {
+
 	// 速さ
 	const float speed = 0.7f;
 
@@ -76,7 +127,7 @@ void Player::Update() {
 	// 移動ベクトルをカメラの角度だけ回転させる
 	move = TransformNormal(move, matRotate);
 
-	move *= 0.2f;
+	move *= 0.4f;
 
 	// 移動
 	worldTransformBody_.translation_ += move;
@@ -87,30 +138,65 @@ void Player::Update() {
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
 		worldTransformBody_.rotation_.y = float(std::atan2(double(move.x), double(move.z)));
 	}
-	
+
 	if (worldTransformBody_.translation_.y <= -10.0f) {
 		worldTransformBody_.translation_ = { 0.0f,0.0f,0.0f };
 	}
 
 	if (worldTransformBody_.parent_) {
-		
+
 	}
 
-	worldTransformBody_.UpdateMatrix();
-	worldTransformHead_.UpdateMatrix();
-	worldTransformL_arm_.UpdateMatrix();
-	worldTransformR_arm_.UpdateMatrix();
-
-	SetOBB();
+	if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+		behaviorRequest_ = Behavior::kAttack;
+	}
 
 }
 
-void Player::Draw() {
+void Player::BehaviorRootInitialize() {
+	worldTransformL_arm_.rotation_.x = 0.0f;
+	worldTransformR_arm_.rotation_.x = 0.0f;
+	worldTransformWeapon_.rotation_.x = 3.14f;
+	worldTransformWeapon_.translation_.y = -1.0f;
+}
 
-	modelBody_->Draw(worldTransformBody_);
-	modelHead_->Draw(worldTransformHead_);
-	modelL_arm_->Draw(worldTransformL_arm_);
-	modelR_arm_->Draw(worldTransformR_arm_);
+void Player::BehaviorAttackUpdate() {
+
+	if (attackFrame == 70) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+
+	float rad = 3.14f / 30.0f;
+
+	if (attackFrame < 15) {
+		worldTransformL_arm_.rotation_.x -= rad;
+		worldTransformR_arm_.rotation_.x -= rad;
+		worldTransformWeapon_.rotation_.x -= rad;
+	}
+	else if (attackFrame >= 25 && attackFrame < 40) {
+		worldTransformL_arm_.rotation_.x += rad;
+		worldTransformR_arm_.rotation_.x += rad;
+		worldTransformWeapon_.rotation_.x += rad;
+	}
+
+	// フレーム更新
+	attackFrame++;
+
+}
+
+void Player::BehaviorAttackInitialize() {
+	attackFrame = 0;
+	worldTransformL_arm_.rotation_.x = -1.57f;
+	worldTransformR_arm_.rotation_.x = -1.57f;
+	worldTransformWeapon_.rotation_.x = 1.57f;
+	worldTransformWeapon_.translation_.y = 3.0f;
+}
+
+void Player::BehaviorDashUpdate() {
+
+}
+
+void Player::BehaviorDashInitialize() {
 
 }
 
