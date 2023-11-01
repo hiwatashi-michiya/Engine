@@ -8,6 +8,8 @@
 
 GameScene::GameScene()
 {
+	plane_.reset(Model::Create("plane"));
+	plane2_.reset(Model::Create("plane"));
 }
 
 GameScene::~GameScene()
@@ -18,8 +20,11 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	Model::worldTransformCamera_.translation_ = { 0.0f,30.0f,-50.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.5f;
+	Model::worldTransformCamera_.translation_ = { 0.0f,0.0f,-10.0f };
+	Model::worldTransformCamera_.rotation_.x = 0.0f;
+
+	worldTransformPlane_.translation_.x = -2.0f;
+	worldTransformPlane2_.translation_.x = 2.0f;
 
 }
 
@@ -33,7 +38,15 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &Model::worldTransformCamera_.translation_.x, 0.1f);
 	ImGui::End();
 
+	Model::StaticImGuiUpdate();
+
+	plane_->ImGuiUpdate();
+	plane2_->ImGuiUpdate();
+
 #endif // _DEBUG
+
+	worldTransformPlane_.UpdateMatrix();
+	worldTransformPlane2_.UpdateMatrix();
 
 }
 
@@ -46,7 +59,8 @@ void GameScene::Draw() {
 
 		Model::PreDraw(commandList);
 
-		
+		plane_->Draw(worldTransformPlane_);
+		plane2_->Draw(worldTransformPlane2_);
 
 		Model::PostDraw();
 

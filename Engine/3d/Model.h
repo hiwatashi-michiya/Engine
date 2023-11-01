@@ -54,6 +54,18 @@ public:
 		Matrix4x4 World;
 	};
 
+	enum BlendMode {
+		kNormal,//通常
+		kAdd,//加算
+		kSubtract,//減算
+		kMultiply,//乗算
+		kScreen,//スクリーン
+
+		kCountBlend
+	};
+
+	static const char* BlendTexts[BlendMode::kCountBlend];
+
 	static Model* Create(const std::string& filename);
 
 	void Initialize(const std::string& filename);
@@ -70,6 +82,12 @@ public:
 
 	static 	Matrix4x4 matProjection_;
 
+	static void StaticImGuiUpdate();
+
+	void ImGuiUpdate();
+
+	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
+
 private:
 
 	//静的メンバ変数
@@ -81,10 +99,22 @@ private:
 	//ルートシグネチャ
 	static ID3D12RootSignature* rootSignature_;
 	//PSO
-	static ID3D12PipelineState* pipelineState_;
+	static ID3D12PipelineState* pipelineStates_[BlendMode::kCountBlend];
+
+	/*static ID3D12PipelineState* pipelineState_;*/
 
 	static IDxcBlob* vs3dBlob_;
 	static IDxcBlob* ps3dBlob_;
+
+	//共通の平行光源バッファ
+	static Microsoft::WRL::ComPtr<ID3D12Resource> dLightBuff_;
+	//共通の平行光源バッファマップ
+	static DirectionalLight* dLightMap_;
+
+	//モデル識別用変数(ImGuiで使用)
+	static int modelNumber_;
+
+	static BlendMode currentBlendMode_;
 
 private:
 
@@ -95,16 +125,13 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
 	//定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
-	//平行光源バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> dLightBuff_;
+	
 	//頂点バッファマップ
 	VertexData* vertMap_ = nullptr;
 	//インデックスバッファマップ
 	uint32_t* indexMap_ = nullptr;
 	//定数バッファマップ
 	Material* constMap_ = nullptr;
-	//平行光源バッファマップ
-	DirectionalLight* dLightMap_ = nullptr;
 	//TransformMatrix
 	TransformationMatrix* matTransformMap_ = nullptr;
 

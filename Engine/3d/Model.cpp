@@ -4,17 +4,24 @@
 #include "Engine/manager/ShaderManager.h"
 #include <fstream>
 #include <sstream>
+#include "Engine/manager/ImGuiManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
 ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
 ID3D12RootSignature* Model::rootSignature_ = nullptr;
-ID3D12PipelineState* Model::pipelineState_ = nullptr;
+ID3D12PipelineState* Model::pipelineStates_[Model::BlendMode::kCountBlend] = { nullptr };
+//ID3D12PipelineState* Model::pipelineState_ = nullptr;
 IDxcBlob* Model::vs3dBlob_ = nullptr;
 IDxcBlob* Model::ps3dBlob_ = nullptr;
 WorldTransform Model::worldTransformCamera_{};
 Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
+Microsoft::WRL::ComPtr<ID3D12Resource> Model::dLightBuff_ = nullptr;
+Model::DirectionalLight* Model::dLightMap_ = nullptr;
+int Model::modelNumber_ = 0;
+Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
+const char* Model::BlendTexts[Model::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
 //mtlファイル読み込み関数
 Model::MaterialData LoadMaterialTemplateFile(const std::string& filename, const std::string& mtlFilename) {
@@ -272,13 +279,10 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	//全ての色要素を書き込む
 	blendDesc.RenderTarget[0].RenderTargetWriteMask =
 		D3D12_COLOR_WRITE_ENABLE_ALL;
-	/*blendDesc.RenderTarget[0].BlendEnable = TRUE;
-	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;*/
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	//RasterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
@@ -294,7 +298,6 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	vs3dBlob_->GetBufferSize() }; //VertexShader
 	graphicsPipelineStateDesc.PS = { ps3dBlob_->GetBufferPointer(),
 	ps3dBlob_->GetBufferSize() }; //PixelShader
-	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
 	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc; //RasterizerState
 	//書き込むRTVの情報
 	graphicsPipelineStateDesc.NumRenderTargets = 1;
@@ -318,10 +321,72 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
+	//通常
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
 	//グラフィックスパイプラインを実際に生成
 	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&pipelineState_));
+		IID_PPV_ARGS(&pipelineStates_[BlendMode::kNormal]));
 	assert(SUCCEEDED(hr));
+
+	//加算
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
+	//グラフィックスパイプラインを実際に生成
+	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+		IID_PPV_ARGS(&pipelineStates_[BlendMode::kAdd]));
+	assert(SUCCEEDED(hr));
+
+	//減算
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_SUBTRACT;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
+	//グラフィックスパイプラインを実際に生成
+	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+		IID_PPV_ARGS(&pipelineStates_[BlendMode::kSubtract]));
+	assert(SUCCEEDED(hr));
+
+	//乗算
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
+	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
+	//グラフィックスパイプラインを実際に生成
+	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+		IID_PPV_ARGS(&pipelineStates_[BlendMode::kMultiply]));
+	assert(SUCCEEDED(hr));
+
+	//スクリーン
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
+	//グラフィックスパイプラインを実際に生成
+	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+		IID_PPV_ARGS(&pipelineStates_[BlendMode::kScreen]));
+	assert(SUCCEEDED(hr));
+
+	//平行光源バッファ設定
+	{
+
+		dLightBuff_ = CreateBufferResource(device_, sizeof(DirectionalLight));
+
+		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
+
+		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		dLightMap_->direction = { 0.0f,-1.0f,0.0f };
+		dLightMap_->intensity = 1.0f;
+
+		dLightBuff_->Unmap(0, nullptr);
+
+	}
+
+	currentBlendMode_ = BlendMode::kNormal;
 
 }
 
@@ -379,20 +444,7 @@ void Model::Initialize(const std::string& filename) {
 
 	}
 
-	//平行光源バッファ
-	{
-
-		dLightBuff_ = CreateBufferResource(device_, sizeof(DirectionalLight));
-
-		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
-
-		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		dLightMap_->direction = { 0.0f,-1.0f,0.0f };
-		dLightMap_->intensity = 1.0f;
-
-		dLightBuff_->Unmap(0, nullptr);
-
-	}
+	
 
 	//transformMatrix
 	{
@@ -433,7 +485,7 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	worldTransformCamera_.UpdateMatrix();
 
 	//PSO設定
-	commandList_->SetPipelineState(pipelineState_);
+	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
 	//ルートシグネチャを設定
 	commandList_->SetGraphicsRootSignature(rootSignature_);
 	//プリミティブ形状を設定
@@ -444,6 +496,8 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 void Model::PostDraw() {
 
 	commandList_ = nullptr;
+
+	modelNumber_ = 0;
 
 }
 
@@ -472,11 +526,43 @@ void Model::Draw(WorldTransform worldTransform) {
 
 void Model::Finalize() {
 
-	pipelineState_->Release();
+	dLightBuff_->Release();
+	dLightBuff_ = nullptr;
+	/*pipelineState_->Release();*/
+	for (int i = BlendMode::kCountBlend - 1; i >= 0; i--) {
+		pipelineStates_[i]->Release();
+	}
 	rootSignature_->Release();
 	ps3dBlob_->Release();
 	vs3dBlob_->Release();
 
 }
 
+void Model::ImGuiUpdate() {
 
+	//識別ナンバー設定(ImGuiで使用)
+	std::string name = "model Color";
+
+	name += std::to_string(modelNumber_);
+
+	ImGui::Begin("model Settings");
+	ImGui::ColorEdit4(name.c_str(), &constMap_->color.x);
+	ImGui::End();
+
+	modelNumber_++;
+
+}
+
+//デバッグ時に使用
+void Model::StaticImGuiUpdate() {
+
+	ImGui::Begin("Static model Settings");
+	ImGui::ColorEdit3("Light Color", &dLightMap_->color.x);
+	ImGui::DragFloat3("Light Direction", &dLightMap_->direction.x, 0.01f);
+	ImGui::DragFloat("Intensity", &dLightMap_->intensity, 0.01f, 0.0f, 1.0f);
+	ImGui::Combo("Blend", (int*)&currentBlendMode_, BlendTexts, IM_ARRAYSIZE(BlendTexts));
+	ImGui::End();
+
+	dLightMap_->direction = Normalize(dLightMap_->direction);
+
+}

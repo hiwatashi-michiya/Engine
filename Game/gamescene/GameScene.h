@@ -27,6 +27,14 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 
+	std::unique_ptr<Model> plane_;
+
+	WorldTransform worldTransformPlane_;
+
+	std::unique_ptr<Model> plane2_;
+
+	WorldTransform worldTransformPlane2_;
+
 };
 
 

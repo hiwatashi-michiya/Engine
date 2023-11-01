@@ -101,6 +101,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\Convert.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
+    <ClCompile Include="Engine\Leak.cpp" />
     <ClCompile Include="Engine\manager\ShaderManager.cpp" />
     <ClCompile Include="Engine\math\Collision.cpp" />
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
@@ -134,6 +135,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\Convert.h" />
     <ClInclude Include="Engine\input\Input.h" />
+    <ClInclude Include="Engine\Leak.h" />
     <ClInclude Include="Engine\manager\ImGuiManager.h" />
     <ClInclude Include="Engine\manager\ShaderManager.h" />
     <ClInclude Include="Engine\math\Collision.h" />
