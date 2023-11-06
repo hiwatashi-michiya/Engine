@@ -7,6 +7,7 @@
 #include <dxcapi.h>
 #include <wrl.h>
 #include <vector>
+#include <chrono>
 
 #include "WinApp.h"
 
@@ -77,6 +78,16 @@ private:
 	uint32_t descriptorSizeRTV;
 	uint32_t descriptorSizeDSV;
 
+	//記録時間(FPS固定用)
+	std::chrono::steady_clock::time_point reference_;
+
+private:
+
+	DirectXCommon() = default;
+	~DirectXCommon() = default;
+	DirectXCommon(const DirectXCommon&) = delete;
+	const DirectXCommon& operator=(const DirectXCommon&) = delete;
+
 private:
 
 	//デバイスの初期化
@@ -96,6 +107,12 @@ private:
 
 	//フェンス生成
 	void CreateFence();
+
+	//FPS固定初期化
+	void InitializeFixFPS();
+
+	//FPS固定更新
+	void UpdateFixFPS();
 
 };
 
