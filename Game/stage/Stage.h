@@ -23,15 +23,17 @@ public:
 
 private:
 
-	std::unique_ptr<Model> modelFloor_;
+	std::unique_ptr<Model> modelFloor_[5];
 
 	std::unique_ptr<Model> modelGoal_;
 
-	WorldTransform worldTransform_;
+	WorldTransform worldTransforms_[5];
 
 	WorldTransform worldTransformGoal_;
 
-	OBB obb_;
+	Vector3 velocity_[2]{};
+
+	OBB obbs_[5];
 
 	OBB obbGoal_;
 
