@@ -5,6 +5,7 @@
 #include "Convert.h"
 #include "base/TextureManager.h"
 #include "input/Input.h"
+#include "manager/AudioManager.h"
 
 #ifdef _DEBUG
 
@@ -28,9 +29,11 @@ void Engine::Initialize(const char* title, int width, int height) {
 	dxCommon_ = DirectXCommon::GetInstance();
 	dxCommon_->Initialize(winApp_, width, height);
 
+	AudioManager::GetInstance()->Initialize();
 	Sprite::StaticInitialize(dxCommon_->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
 	Model::StaticInitialize(dxCommon_->GetDevice());
 
+	
 	TextureManager::GetInstance()->Initialize();
 	Input::GetInstance()->Initialize();
 
@@ -66,6 +69,7 @@ void Engine::Finalize() {
 
 #endif // _DEBUG
 
+	AudioManager::GetInstance()->Finalize();
 	Model::Finalize();
 	Sprite::Finalize();
 	dxCommon_->Finalize();

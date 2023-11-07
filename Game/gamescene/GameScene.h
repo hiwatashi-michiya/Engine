@@ -9,6 +9,7 @@
 #include "Game/player/Player.h"
 #include "Game/enemy/Enemy.h"
 #include "Game/stage/Stage.h"
+#include "Engine/manager/AudioManager.h"
 
 class GameScene
 {
@@ -26,6 +27,9 @@ private:
 
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
+	AudioManager* audioManager_ = nullptr;
+
+	uint32_t audio_;
 
 };
 

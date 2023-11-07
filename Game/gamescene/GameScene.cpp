@@ -18,9 +18,10 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
+	audioManager_ = AudioManager::GetInstance();
 	Model::worldTransformCamera_.translation_ = { 0.0f,30.0f,-50.0f };
 	Model::worldTransformCamera_.rotation_.x = 0.5f;
-
+	audio_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
 }
 
 void GameScene::Update() {
@@ -34,6 +35,30 @@ void GameScene::Update() {
 	ImGui::End();
 
 #endif // _DEBUG
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+		audioManager_->Play(audio_, 0.2f);
+	}
+
+	if (input_->TriggerKey(DIK_1)) {
+		audioManager_->Play(audio_, 0.2f, true);
+	}
+
+	if (input_->TriggerKey(DIK_2)) {
+		audioManager_->Stop(audio_);
+	}
+
+	if (input_->TriggerKey(DIK_3)) {
+		audioManager_->Pause(audio_);
+	}
+
+	if (input_->TriggerKey(DIK_4)) {
+		audioManager_->SetVolume(audio_, 0.4f);
+	}
+
+	if (input_->TriggerKey(DIK_5)) {
+		audioManager_->SetVolume(audio_, 1.0f);
+	}
 
 }
 
