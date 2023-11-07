@@ -34,9 +34,9 @@ public:
 	/// </summary>
 	void PostDraw();
 
-	ID3D12Device* GetDevice() { return device_; }
+	ID3D12Device* GetDevice() { return device_.Get(); }
 
-	ID3D12GraphicsCommandList* GetCommandList() { return commandList_; }
+	ID3D12GraphicsCommandList* GetCommandList() { return commandList_.Get(); }
 
 	/// <summary>
 	/// 終了処理
@@ -47,18 +47,18 @@ private:
 
 	WinApp* winApp_;
 
-	IDXGIFactory7* dxgiFactory_;
-	ID3D12Device* device_;
-	ID3D12CommandQueue* commandQueue_;
-	ID3D12CommandAllocator* commandAllocator_;
-	ID3D12GraphicsCommandList* commandList_;
-	IDXGISwapChain4* swapChain_;
+	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_;
+	Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
+	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
-	ID3D12Resource* depthStencilResource_;
-	ID3D12DescriptorHeap* rtvHeap_;
-	ID3D12DescriptorHeap* dsvHeap_;
-	ID3D12Fence* fence_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_;
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 	UINT64 fenceVal_ = 0;
 	int32_t backBufferWidth_ = 0;
 	int32_t backBufferHeight_ = 0;

@@ -1,13 +1,13 @@
 #include "Engine/Engine.h"
+D3DResourceLeakChecker leak;
 #include "Engine/input/Input.h"
 #include <Windows.h>
 #include "Engine/base/TextureManager.h"
 #include <memory>
 #include "Game/gamescene/GameScene.h"
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	D3DResourceLeakChecker leak;
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Engine::Initialize("engine", 1280, 720);
 

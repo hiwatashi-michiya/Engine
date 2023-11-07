@@ -9,10 +9,10 @@
 
 ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
-ID3D12RootSignature* Model::rootSignature_ = nullptr;
-ID3D12PipelineState* Model::pipelineState_ = nullptr;
-IDxcBlob* Model::vs3dBlob_ = nullptr;
-IDxcBlob* Model::ps3dBlob_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12RootSignature> Model::rootSignature_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12PipelineState> Model::pipelineState_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Model::vs3dBlob_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Model::ps3dBlob_ = nullptr;
 WorldTransform Model::worldTransformCamera_{};
 Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
 
@@ -288,7 +288,7 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature_; //RootSignature
+	graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get(); //RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
 	graphicsPipelineStateDesc.VS = { vs3dBlob_->GetBufferPointer(),
 	vs3dBlob_->GetBufferSize() }; //VertexShader
@@ -433,9 +433,9 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	worldTransformCamera_.UpdateMatrix();
 
 	//PSO設定
-	commandList_->SetPipelineState(pipelineState_);
+	commandList_->SetPipelineState(pipelineState_.Get());
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
+	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	//プリミティブ形状を設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -471,11 +471,6 @@ void Model::Draw(WorldTransform worldTransform) {
 }
 
 void Model::Finalize() {
-
-	pipelineState_->Release();
-	rootSignature_->Release();
-	ps3dBlob_->Release();
-	vs3dBlob_->Release();
 
 }
 

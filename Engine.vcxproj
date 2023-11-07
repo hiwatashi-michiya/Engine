@@ -94,13 +94,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Model.cpp" />
     <ClCompile Include="Engine\3d\ViewProjection.cpp" />
     <ClCompile Include="Engine\3d\WorldTransform.cpp" />
-    <ClCompile Include="Engine\audio\Audio.cpp" />
     <ClCompile Include="Engine\base\Camera.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\TextureManager.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\Convert.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
+    <ClCompile Include="Engine\manager\AudioManager.cpp" />
     <ClCompile Include="Engine\manager\ShaderManager.cpp" />
     <ClCompile Include="Engine\math\Collision.cpp" />
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
@@ -126,7 +126,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Model.h" />
     <ClInclude Include="Engine\3d\ViewProjection.h" />
     <ClInclude Include="Engine\3d\WorldTransform.h" />
-    <ClInclude Include="Engine\audio\Audio.h" />
     <ClInclude Include="Engine\base\Camera.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\SafeDelete.h" />
@@ -134,6 +133,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\Convert.h" />
     <ClInclude Include="Engine\input\Input.h" />
+    <ClInclude Include="Engine\manager\AudioManager.h" />
     <ClInclude Include="Engine\manager\ImGuiManager.h" />
     <ClInclude Include="Engine\manager\ShaderManager.h" />
     <ClInclude Include="Engine\math\Collision.h" />

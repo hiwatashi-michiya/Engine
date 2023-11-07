@@ -179,6 +179,4 @@ Texture TextureManager::Load(const std::string& filePath) {
 
 void TextureManager::Finalize() {
 
-	srvDescHeap_->Release();
-
 }

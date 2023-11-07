@@ -7,10 +7,10 @@
 
 ID3D12Device* Sprite::device_ = nullptr;
 ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;
-ID3D12RootSignature* Sprite::rootSignature2D_ = nullptr;
-ID3D12PipelineState* Sprite::pipelineState2D_ = nullptr;
-IDxcBlob* Sprite::vs2dBlob_ = nullptr;
-IDxcBlob* Sprite::ps2dBlob_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12RootSignature> Sprite::rootSignature2D_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12PipelineState> Sprite::pipelineState2D_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Sprite::vs2dBlob_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Sprite::ps2dBlob_ = nullptr;
 
 //静的初期化
 void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
@@ -142,7 +142,7 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature2D_; //RootSignature
+	graphicsPipelineStateDesc.pRootSignature = rootSignature2D_.Get(); //RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
 	graphicsPipelineStateDesc.VS = { vs2dBlob_->GetBufferPointer(),
 	vs2dBlob_->GetBufferSize() }; //VertexShader
@@ -308,9 +308,9 @@ void Sprite::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	commandList_ = commandList;
 
 	//PSO設定
-	commandList_->SetPipelineState(pipelineState2D_);
+	commandList_->SetPipelineState(pipelineState2D_.Get());
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature2D_);
+	commandList_->SetGraphicsRootSignature(rootSignature2D_.Get());
 	//プリミティブ形状を設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -344,10 +344,5 @@ void Sprite::Draw() {
 }
 
 void Sprite::Finalize() {
-
-	pipelineState2D_->Release();
-	rootSignature2D_->Release();
-	ps2dBlob_->Release();
-	vs2dBlob_->Release();
 
 }

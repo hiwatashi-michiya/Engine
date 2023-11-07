@@ -30,7 +30,7 @@ public:
 
 	void Finalize();
 
-	ID3D12DescriptorHeap* GetSRVDescHeap() { return srvDescHeap_; }
+	ID3D12DescriptorHeap* GetSRVDescHeap() { return srvDescHeap_.Get(); }
 
 private:
 
@@ -44,7 +44,7 @@ private:
 	uint32_t descriptorSizeSRV_;
 
 	ID3D12Device* device_;
-	ID3D12DescriptorHeap* srvDescHeap_;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescHeap_;
 	std::array<Texture, kNumDescriptors> textures_;
 
 	//ロードしたテクスチャの数

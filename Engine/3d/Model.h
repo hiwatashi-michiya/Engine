@@ -79,12 +79,12 @@ private:
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
-	static ID3D12RootSignature* rootSignature_;
+	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 	//PSO
-	static ID3D12PipelineState* pipelineState_;
+	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
 
-	static IDxcBlob* vs3dBlob_;
-	static IDxcBlob* ps3dBlob_;
+	static Microsoft::WRL::ComPtr<IDxcBlob> vs3dBlob_;
+	static Microsoft::WRL::ComPtr<IDxcBlob> ps3dBlob_;
 
 private:
 

@@ -28,9 +28,6 @@
     <Filter Include="Engine\2d">
       <UniqueIdentifier>{f0d73ae0-f3e4-43ff-97f7-b3a96887faca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\audio">
-      <UniqueIdentifier>{361d3de5-d18e-498d-b49a-55153de322f1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\input">
       <UniqueIdentifier>{78de4634-8756-48af-b08d-74fa1418cc43}</UniqueIdentifier>
     </Filter>
@@ -111,9 +108,6 @@
     <ClCompile Include="Engine\3d\Model.cpp">
       <Filter>Engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\audio\Audio.cpp">
-      <Filter>Engine\audio</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\input\Input.cpp">
       <Filter>Engine\input</Filter>
     </ClCompile>
@@ -149,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="Engine\math\Collision.cpp">
       <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\manager\AudioManager.cpp">
+      <Filter>Engine\manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,9 +203,6 @@
     <ClInclude Include="Engine\3d\Model.h">
       <Filter>Engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\audio\Audio.h">
-      <Filter>Engine\audio</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\input\Input.h">
       <Filter>Engine\input</Filter>
     </ClInclude>
@@ -253,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="Engine\math\Collision.h">
       <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\manager\AudioManager.h">
+      <Filter>Engine\manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
