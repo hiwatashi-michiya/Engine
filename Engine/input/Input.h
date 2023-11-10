@@ -33,6 +33,9 @@ public:
 
 	XINPUT_GAMEPAD GetGamepad() { return joyState_.Gamepad; }
 
+	//コントローラーが繋がれているか
+	bool GetIsGamepad() { return isGetController_; }
+
 private:
 
 	Input() = default;

@@ -5,6 +5,7 @@
 #include "Convert.h"
 #include "base/TextureManager.h"
 #include "input/Input.h"
+#include "GlobalVariables/GlobalVariables.h"
 
 #ifdef _DEBUG
 
@@ -33,6 +34,8 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	TextureManager::GetInstance()->Initialize();
 	Input::GetInstance()->Initialize();
+
+	GlobalVariables::GetInstance()->LoadFiles();
 
 #ifdef _DEBUG
 
@@ -89,6 +92,8 @@ void Engine::BeginFrame() {
 	dxCommon_->PreDraw();
 
 	Input::GetInstance()->Update();
+
+	GlobalVariables::GetInstance()->Update();
 
 }
 

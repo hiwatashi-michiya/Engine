@@ -1,4 +1,7 @@
 #include "GameScene.h"
+#include <cmath>
+#include <algorithm>
+#include "Engine/GlobalVariables/GlobalVariables.h"
 
 #ifdef _DEBUG
 
@@ -28,6 +31,11 @@ void GameScene::Initialize() {
 	enemy_->Initialize();
 	modelSkydome_.reset(Model::Create("skydome"));
 	worldTransformSkydome_.scale_ *= 500.0f;
+	const char* groupName = "Camera";
+	GlobalVariables::GetInstance()->AddItem(groupName, "Delay", delay_);
+
+
+	Reset();
 
 }
 
@@ -43,28 +51,52 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
+	UpdateGlobalVariables();
+
 	player_->Update();
+
+	if (input_->GetIsGamepad()) {
+
+		float rotateSpeed = 0.000001f;
+
+		destinationAngleY_ += float(input_->GetGamepad().sThumbRX) * rotateSpeed;
+
+		//右スティック押し込みでリセット
+		if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
+			destinationAngleY_ = 0.0f;
+		}
+
+	}
+
+	if (delay_ > 0.01f) {
+		//最短角度補間
+		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f / delay_);
+	}
+	else {
+		//最短角度補間
+		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f);
+	}
 
 	if (player_) {
 
-		//回転速度
-		float rotateSpeed = 0.001f;
-
-		Model::worldTransformCamera_.rotation_.y += input_->GetGamepad().sThumbRX * rotateSpeed * rotateSpeed;
-
-		Vector3 offset = { 0.0f, 10.0f, -30.0f };
-
-		Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
-
-		//オフセットをカメラの回転に合わせて回転させる
-		offset = TransformNormal(offset, matRotate);
-
-		Model::worldTransformCamera_.translation_ = player_->GetWorldTransform().translation_ + offset;
+		if (delay_ > 0.01f) {
+			interTarget_ = Lerp(interTarget_, player_->GetWorldTranslation(), 1.0f / delay_);
+		}
+		else {
+			interTarget_ = Lerp(interTarget_, player_->GetWorldTranslation(), 1.0f);
+		}
+		
 	}
 
-	enemy_->Update();
+	Vector3 tmpOffset = CalcOffset();
 
-	enemy_->Collision(player_.get());
+	Model::worldTransformCamera_.translation_ = interTarget_ + tmpOffset;
+
+	if (enemy_->GetIsDead() == false) {
+		enemy_->Update();
+
+		enemy_->Collision(player_.get());
+	}
 
 	stage_->Update();
 
@@ -87,7 +119,11 @@ void GameScene::Draw() {
 
 		player_->Draw();
 
-		enemy_->Draw();
+		if (enemy_->GetIsDead() == false) {
+			enemy_->Draw();
+		}
+
+		
 
 		stage_->Draw();
 
@@ -106,5 +142,61 @@ void GameScene::Draw() {
 
 	}
 
+
+}
+
+void GameScene::Reset() {
+
+	if (player_) {
+
+		interTarget_ = player_->GetWorldTranslation();
+		Model::worldTransformCamera_.rotation_.y = player_->GetRotation().y;
+
+	}
+
+	player_->destinationAngleY_ = Model::worldTransformCamera_.rotation_.y;
+
+	Vector3 tmpOffset = CalcOffset();
+
+	Model::worldTransformCamera_.translation_ = interTarget_ + tmpOffset;
+
+	destinationAngleY_ = 0.0f;
+
+	//if (player_) {
+
+	//	//回転速度
+	//	float rotateSpeed = 0.001f;
+
+	//	Model::worldTransformCamera_.rotation_.y += input_->GetGamepad().sThumbRX * rotateSpeed * rotateSpeed;
+
+	//	Vector3 offset = { 0.0f, 10.0f, -30.0f };
+
+	//	Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+
+	//	//オフセットをカメラの回転に合わせて回転させる
+	//	offset = TransformNormal(offset, matRotate);
+
+	//	Model::worldTransformCamera_.translation_ = player_->GetWorldTransform().translation_ + offset;
+	//}
+
+}
+
+Vector3 GameScene::CalcOffset() {
+
+	Vector3 offset = { 0.0f, 10.0f, -30.0f };
+
+	Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+
+	//オフセットをカメラの回転に合わせて回転させる
+	offset = TransformNormal(offset, matRotate);
+
+	return offset;
+
+}
+
+void GameScene::UpdateGlobalVariables() {
+
+	const char* groupName = "Camera";
+	delay_ = GlobalVariables::GetInstance()->GetFloatValue(groupName, "Delay");
 
 }

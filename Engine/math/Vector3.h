@@ -16,6 +16,8 @@ struct Vector3 {
 
 };
 
+class WorldTransform;
+
 struct Transform {
 	Vector3 scale;
 	Vector3 rotate;
@@ -52,10 +54,16 @@ struct AABB {
 };
 
 // OBB(箱)
-struct OBB {
+class OBB {
+public:
+
 	Vector3 center;          // 中心点
 	Vector3 orientations[3]; // 座標軸。正規化・直交必須
 	Vector3 size;            // 座標軸方向の長さの半分。中心から面までの距離
+
+	void SetOBB(const WorldTransform& worldTransform, float scale = 1.0f,
+		Vector3 offset = {0.0f,0.0f,0.0f});
+
 };
 
 //バネ構造体

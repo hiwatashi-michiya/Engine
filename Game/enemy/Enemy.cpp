@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "Engine/math/Collision.h"
+#include "Externals/imgui/imgui.h"
 
 Enemy::Enemy()
 {
@@ -30,6 +31,15 @@ void Enemy::Initialize() {
 }
 
 void Enemy::Update() {
+
+#ifdef _DEBUG
+
+	ImGui::Begin("enemy");
+	ImGui::DragFloat3("enemyobb", &obb_.center.x, 0.1f);
+	ImGui::End();
+
+#endif // _DEBUG
+
 
 	if (velocity_.y > -5.0f) {
 		velocity_.y -= 0.1f;
@@ -87,36 +97,28 @@ void Enemy::Draw() {
 
 void Enemy::SetOBB() {
 
-	obb_.center = worldTransformBody_.translation_;
-	obb_.size = worldTransformBody_.scale_ / 2.0f;
-
-	//回転行列を生成
-	Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix(worldTransformBody_.rotation_.x),
-		Multiply(MakeRotateYMatrix(worldTransformBody_.rotation_.y), MakeRotateZMatrix(worldTransformBody_.rotation_.z)));
-
-	//回転行列から軸を抽出
-	obb_.orientations[0].x = rotateMatrix.m[0][0];
-	obb_.orientations[0].y = rotateMatrix.m[0][1];
-	obb_.orientations[0].z = rotateMatrix.m[0][2];
-
-	obb_.orientations[1].x = rotateMatrix.m[1][0];
-	obb_.orientations[1].y = rotateMatrix.m[1][1];
-	obb_.orientations[1].z = rotateMatrix.m[1][2];
-
-	obb_.orientations[2].x = rotateMatrix.m[2][0];
-	obb_.orientations[2].y = rotateMatrix.m[2][1];
-	obb_.orientations[2].z = rotateMatrix.m[2][2];
-
-	obb_.orientations[0] = Normalize(obb_.orientations[0]);
-	obb_.orientations[1] = Normalize(obb_.orientations[1]);
-	obb_.orientations[2] = Normalize(obb_.orientations[2]);
+	obb_.SetOBB(worldTransformBody_, 1.0f);
 
 }
 
 void Enemy::Collision(Player* player) {
 
 	if (IsCollision(obb_, player->GetOBB())) {
-		player->SetPosition({ 0.0f,0.0f,0.0f });
+
+		//ダッシュしていたらダッシュ開始地点に戻す
+		if (player->GetIsDash()) {
+			player->SetPosition({ 0.0f,0.0f,0.0f });
+			player->SetBehavior(Behavior::kRoot);
+		}
+		//普通に当たったらスタート地点に戻す
+		else {
+			player->SetPosition({ 0.0f,0.0f,0.0f });
+		}
+		
+	}
+
+	if (IsCollision(obb_, player->GetAttackOBB())) {
+		isDead_ = true;
 	}
 
 }

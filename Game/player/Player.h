@@ -28,6 +28,8 @@ public:
 
 	const OBB& GetOBB() { return this->obb_; }
 
+	const OBB& GetAttackOBB() { return this->attackObb_; }
+
 	void SetPosition(const Vector3& position) { worldTransformBody_.translation_ = position; }
 
 	void SetPositionY(float pos) {
@@ -39,7 +41,33 @@ public:
 
 	const WorldTransform& GetWorldTransform() { return worldTransformBody_; }
 
+	const Vector3& GetWorldTranslation() {
+		return Vector3(worldTransformBody_.matWorld_.m[3][0],
+			worldTransformBody_.matWorld_.m[3][1],
+			worldTransformBody_.matWorld_.m[3][2]
+		);
+	}
+
 	const Vector3& GetTranslation() { return worldTransformBody_.translation_; }
+
+	const Vector3& GetRotation() { return worldTransformBody_.rotation_; }
+
+	bool GetIsDash() {
+
+		if (behavior_ == Behavior::kDash) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	Vector3 GetDashStartPosition() { return dashStartPosition_; }
+
+	void SetBehavior(Behavior behavior) { behavior_ = behavior; }
+
+	//目標角度
+	float destinationAngleY_;
 
 private:
 
@@ -63,7 +91,21 @@ private:
 	//次の振る舞いリクエスト
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
+	//ダッシュ用ワーク
+	struct WorkDash {
+		//ダッシュ用の媒介変数
+		uint32_t dashParamater_ = 0;
+		//ダッシュのスピード
+		float speed_ = 1.0f;
+		//ダッシュ時間
+		int32_t dashTime_ = 15;
+	};
+
+	WorkDash workDash_;
+
 	Vector3 velocity_{};
+
+	Vector3 dashStartPosition_{};
 
 	bool canJump_ = true;
 
@@ -85,10 +127,17 @@ private:
 	//ダッシュ初期化
 	void BehaviorDashInitialize();
 
+	//グローバル変数更新
+	void UpdateGlobalVariables();
+
 	int attackFrame = 0;
 
+	//補間係数
+	float lerpT_ = 0.0f;
 
 	OBB obb_;
+
+	OBB attackObb_;
 
 };
 

@@ -27,6 +27,8 @@ public:
 
 	void Collision(Player* player);
 
+	bool GetIsDead() { return isDead_; }
+
 private:
 
 	std::unique_ptr<Model> modelBody_;
@@ -40,5 +42,7 @@ private:
 	Vector3 velocity_{};
 
 	OBB obb_;
+
+	bool isDead_ = false;
 
 };

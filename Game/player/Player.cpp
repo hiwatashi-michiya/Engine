@@ -2,6 +2,8 @@
 #include <math.h>
 #include <cmath>
 #include "Engine/manager/ImGuiManager.h"
+#include "Engine/GlobalVariables/GlobalVariables.h"
+#include "Engine/math/MyMath.h"
 
 Player::Player()
 {
@@ -39,6 +41,19 @@ void Player::Initialize() {
 	obb_.orientations[2] = { 0.0f,0.0f,1.0f };
 	obb_.size = worldTransformBody_.scale_ / 2.0f;
 
+	attackObb_.center = worldTransformWeapon_.translation_;
+	attackObb_.orientations[0] = { 1.0f,0.0f,0.0f };
+	attackObb_.orientations[1] = { 0.0f,1.0f,0.0f };
+	attackObb_.orientations[2] = { 0.0f,0.0f,1.0f };
+	attackObb_.size = worldTransformWeapon_.scale_;
+
+	const char* groupName = "Player";
+
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+
+	GlobalVariables::GetInstance()->AddItem(groupName, "speed", workDash_.speed_);
+	GlobalVariables::GetInstance()->AddItem(groupName, "time", workDash_.dashTime_);
+
 }
 
 void Player::Update() {
@@ -58,9 +73,12 @@ void Player::Update() {
 	ImGui::DragFloat3("scale R", &worldTransformR_arm_.scale_.x, 0.1f);
 	ImGui::DragFloat3("rotation R", &worldTransformR_arm_.rotation_.x, 0.1f);
 	ImGui::DragFloat3("translation R", &worldTransformR_arm_.translation_.x, 0.1f);
+	ImGui::DragFloat3("attackobb", &attackObb_.center.x, 0.1f);
 	ImGui::End();
 
 #endif // _DEBUG
+
+	UpdateGlobalVariables();
 
 	if (behaviorRequest_) {
 		//振る舞いを変更する
@@ -73,6 +91,9 @@ void Player::Update() {
 			break;
 		case Behavior::kAttack:
 			BehaviorAttackInitialize();
+			break;
+		case Behavior::kDash:
+			BehaviorDashInitialize();
 			break;
 
 		}
@@ -87,6 +108,9 @@ void Player::Update() {
 		break;
 	case Behavior::kAttack:
 		BehaviorAttackUpdate();
+		break;
+	case Behavior::kDash:
+		BehaviorDashUpdate();
 		break;
 
 	}
@@ -136,19 +160,23 @@ void Player::BehaviorRootUpdate() {
 
 	// 回転
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
-		worldTransformBody_.rotation_.y = float(std::atan2(double(move.x), double(move.z)));
+		destinationAngleY_ = float(std::atan2(double(move.x), double(move.z)));
+		lerpT_ = 0.1f;
 	}
+
+	/*worldTransformBody_.rotation_.y = LerpShortAngle(worldTransformBody_.rotation_.y, destinationAngleY_, lerpT_);*/
+	worldTransformBody_.rotation_.y = destinationAngleY_;
 
 	if (worldTransformBody_.translation_.y <= -10.0f) {
 		worldTransformBody_.translation_ = { 0.0f,0.0f,0.0f };
 	}
 
-	if (worldTransformBody_.parent_) {
-
-	}
-
 	if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 		behaviorRequest_ = Behavior::kAttack;
+	}
+
+	if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
+		behaviorRequest_ = Behavior::kDash;
 	}
 
 }
@@ -194,36 +222,60 @@ void Player::BehaviorAttackInitialize() {
 
 void Player::BehaviorDashUpdate() {
 
+	if (velocity_.y > -5.0f) {
+		velocity_.y -= 0.1f;
+	}
+
+	//自キャラの向いている方向に移動
+	Vector3 move = { sinf(worldTransformBody_.rotation_.y), 0.0f,cosf(worldTransformBody_.rotation_.y) };
+
+	move *= workDash_.speed_;
+
+	worldTransformBody_.translation_ += move;
+	//落下処理
+	worldTransformBody_.translation_ += velocity_;
+
+	if (worldTransformBody_.translation_.y <= -10.0f) {
+		worldTransformBody_.translation_ = { 0.0f,0.0f,0.0f };
+	}
+
+	//ダッシュ時間
+	const uint32_t behaviorDashTime = workDash_.dashTime_;
+
+	//既定の時間で通常行動に戻る
+	if (++workDash_.dashParamater_ >= behaviorDashTime) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+
 }
 
 void Player::BehaviorDashInitialize() {
+
+	workDash_.dashParamater_ = 0;
+	worldTransformBody_.rotation_.y = destinationAngleY_;
+	dashStartPosition_ = worldTransformBody_.translation_;
 
 }
 
 void Player::SetOBB() {
 
-	obb_.center = worldTransformBody_.translation_;
-	obb_.size = worldTransformBody_.scale_ / 2.0f;
+	obb_.SetOBB(worldTransformBody_, 0.5f);
 
-	//回転行列を生成
-	Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix(worldTransformBody_.rotation_.x),
-		Multiply(MakeRotateYMatrix(worldTransformBody_.rotation_.y), MakeRotateZMatrix(worldTransformBody_.rotation_.z)));
+	if (attackFrame < 35) {
+		attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-100.0f,0.0f });
+	}
+	else {
+		attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-2.5f,9.5f });
+	}
+	
 
-	//回転行列から軸を抽出
-	obb_.orientations[0].x = rotateMatrix.m[0][0];
-	obb_.orientations[0].y = rotateMatrix.m[0][1];
-	obb_.orientations[0].z = rotateMatrix.m[0][2];
+}
 
-	obb_.orientations[1].x = rotateMatrix.m[1][0];
-	obb_.orientations[1].y = rotateMatrix.m[1][1];
-	obb_.orientations[1].z = rotateMatrix.m[1][2];
+void Player::UpdateGlobalVariables() {
 
-	obb_.orientations[2].x = rotateMatrix.m[2][0];
-	obb_.orientations[2].y = rotateMatrix.m[2][1];
-	obb_.orientations[2].z = rotateMatrix.m[2][2];
+	const char* groupName = "Player";
 
-	obb_.orientations[0] = Normalize(obb_.orientations[0]);
-	obb_.orientations[1] = Normalize(obb_.orientations[1]);
-	obb_.orientations[2] = Normalize(obb_.orientations[2]);
+	workDash_.speed_ = GlobalVariables::GetInstance()->GetFloatValue(groupName, "speed");
+	workDash_.dashTime_ =  GlobalVariables::GetInstance()->GetIntValue(groupName, "time");
 
 }

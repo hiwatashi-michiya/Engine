@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <algorithm>
+#include "Engine/3d/WorldTransform.h"
 
 // 加算
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
@@ -127,7 +128,7 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 //線形補間
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 
-	t = Clamp(t, 0, 1.0f);
+	t = std::clamp(t, 0.0f, 1.0f);
 
 	Vector3 p = Vector3(
 		v1.x + t * (v2.x - v1.x),
@@ -142,7 +143,7 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 //球面線形補間
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 
-	t = Clamp(t, 0, 1.0f);
+	t = std::clamp(t, 0.0f, 1.0f);
 
 	float theta = acosf(Clamp(Dot(v1, v2), 0, 1.0f) / (Length(v1) * Length(v2)));
 
@@ -272,6 +273,47 @@ void RotateOBB(OBB& obb, const Vector3& rotate) {
 
 }
 
+void OBB::SetOBB(const WorldTransform& worldTransform, float scale, Vector3 offset) {
+
+	Matrix4x4 tmpAffine = MakeAffineMatrix(worldTransform.scale_, worldTransform.rotation_,
+		worldTransform.translation_ + offset);
+
+	if (worldTransform.parent_) {
+
+		Vector3 tmpScale{ 1.0f,1.0f,1.0f }, tmpRotation{ 0.0f,0.0f,0.0f }, tmpTranslation{ 0.0f,0.0f,0.0f };
+
+		if (worldTransform.isScaleParent_) {
+			tmpScale = worldTransform.parent_->scale_;
+		}
+
+		if (worldTransform.isRotationParent_) {
+			tmpRotation = worldTransform.parent_->rotation_;
+		}
+
+		if (worldTransform.isTranslationParent_) {
+			tmpTranslation = worldTransform.parent_->translation_;
+		}
+
+		tmpAffine = tmpAffine * MakeAffineMatrix(tmpScale, tmpRotation, tmpTranslation);
+
+	}
+
+	center = { tmpAffine.m[3][0], tmpAffine.m[3][1], tmpAffine.m[3][2] };
+	size = worldTransform.scale_ * scale;
+
+	/*Matrix4x4 matRotate = Multiply(MakeRotateXMatrix(worldTransform.rotation_.x),
+		Multiply(MakeRotateYMatrix(worldTransform.rotation_.y), MakeRotateZMatrix(worldTransform.rotation_.z)));
+
+	if (worldTransform.parent_) {
+		 matRotate = matRotate * Multiply(MakeRotateXMatrix(worldTransform.parent_->rotation_.x),
+			Multiply(MakeRotateYMatrix(worldTransform.parent_->rotation_.y), MakeRotateZMatrix(worldTransform.parent_->rotation_.z)));
+	}*/
+
+	/*center = TransformNormal(center, matRotate);*/
+
+	RotateOBB(*this, worldTransform.rotation_);
+
+}
 
 //二項演算子
 Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }

@@ -58,6 +58,9 @@
     <Filter Include="Game\stage">
       <UniqueIdentifier>{5825f192-7d68-4fbc-9f67-046c78643a1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GlobalVariables">
+      <UniqueIdentifier>{0374ae7b-2f46-493c-b44f-d8d4d3984ffc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -148,6 +151,12 @@
       <Filter>Game\enemy</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Collision.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GlobalVariables\GlobalVariables.cpp">
+      <Filter>Engine\GlobalVariables</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\math\MyMath.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
   </ItemGroup>
@@ -252,6 +261,12 @@
       <Filter>Engine\manager</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Collision.h">
+      <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GlobalVariables\GlobalVariables.h">
+      <Filter>Engine\GlobalVariables</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\MyMath.h">
       <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>
