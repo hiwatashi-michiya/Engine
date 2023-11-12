@@ -9,7 +9,7 @@
 GameScene::GameScene()
 {
 	plane_.reset(Model::Create("plane"));
-	plane2_.reset(Model::Create("plane"));
+	plane2_.reset(Model::Create("fence"));
 }
 
 GameScene::~GameScene()
