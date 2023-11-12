@@ -25,3 +25,32 @@ float LerpShortAngle(float a, float b, float t) {
 	return std::lerp(a, b, t);
 
 }
+
+float Atan2(float y, float x) {
+
+	std::clamp(y, -1.0f, 1.0f);
+	std::clamp(x, -1.0f, 1.0f);
+
+	//未定義の動作を事前に防ぐ
+	if (x == 0.0f) {
+		return 0.0f;
+	}
+
+	float result;
+
+	float pi = 3.14f;
+
+	if (y >= 0) {
+
+		result = (1.0f - x) * pi / 2.0f;
+
+	}
+	else {
+
+		result = -(1.0f - x) * pi / 2.0f;
+
+	}
+
+	return result;
+
+}

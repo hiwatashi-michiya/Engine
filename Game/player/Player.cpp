@@ -160,7 +160,7 @@ void Player::BehaviorRootUpdate() {
 
 	// 回転
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
-		destinationAngleY_ = float(std::atan2(double(move.x), double(move.z)));
+		destinationAngleY_ = Atan2(move.x, move.z);
 		lerpT_ = 0.1f;
 	}
 
