@@ -276,6 +276,9 @@
     <None Include="resources\shaders\Sprite.hlsli">
       <Filter>shader</Filter>
     </None>
+    <None Include="resources\shaders\Particle.hlsli">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shaders\Object3d.PS.hlsl">
@@ -288,6 +291,12 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="resources\shaders\Sprite.VS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\Particle.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\Particle.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>
