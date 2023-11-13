@@ -1,4 +1,4 @@
-#include "Object3d.hlsli"
+#include "Particle.hlsli"
 
 struct TransformationMatrix {
 	float32_t4x4 WVP;
