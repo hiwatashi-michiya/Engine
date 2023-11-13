@@ -6,11 +6,9 @@
 #include <dxcapi.h>
 #include "ModelManager.h"
 #include "WorldTransform.h"
+#include <vector>
 
-//ディレクトリパス
-const std::string modelDirectoryPath = "resources";
-
-class Model
+class Particle3D
 {
 public:
 
@@ -28,15 +26,15 @@ public:
 
 	static const char* BlendTexts[BlendMode::kCountBlend];
 
-	static Model* Create(const std::string& filename);
+	static Particle3D* Create(const std::string& filename, uint32_t instanceCount = 1);
 
-	void Initialize(const std::string& filename);
+	void Initialize(const std::string& filename, uint32_t instanceCount);
 
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
 
 	static void PostDraw();
 
-	void Draw(WorldTransform worldTransform);
+	void Draw(std::vector<WorldTransform> worldTransform);
 
 	static void Finalize();
 
@@ -61,17 +59,12 @@ private:
 	//ルートシグネチャ
 	static ID3D12RootSignature* rootSignature_;
 	//PSO
-	static ID3D12PipelineState* pipelineStates_[BlendMode::kCountBlend];
+	static ID3D12PipelineState* particlePipelineStates_[BlendMode::kCountBlend];
 
 	/*static ID3D12PipelineState* pipelineState_;*/
 
-	static IDxcBlob* vs3dBlob_;
-	static IDxcBlob* ps3dBlob_;
-
-	//共通の平行光源バッファ
-	static Microsoft::WRL::ComPtr<ID3D12Resource> dLightBuff_;
-	//共通の平行光源バッファマップ
-	static DirectionalLight* dLightMap_;
+	static IDxcBlob* vs3dParticleBlob_;
+	static IDxcBlob* ps3dParticleBlob_;
 
 	//モデル識別用変数(ImGuiで使用)
 	static int modelNumber_;
@@ -105,8 +98,14 @@ private:
 	//テクスチャ
 	Texture texture_;
 
+	//インスタンシングリソース
+	InstancingResource instancingResource_;
+
 	//モデルデータ
 	ModelData modelData_;
+
+	//インスタンシングの数
+	uint32_t instanceCount_;
 
 };
 

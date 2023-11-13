@@ -5,7 +5,20 @@
 #include <wrl.h>
 #include <windows.h>
 
+//テクスチャ構造体
 struct Texture {
+
+	//リソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+	//CPUハンドル
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
+	//GPUハンドル
+	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+
+};
+
+//インスタンシング用のリソース構造体。中身はテクスチャ構造体と同様
+struct InstancingResource {
 
 	//リソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource;
@@ -27,6 +40,8 @@ public:
 	void Initialize();
 
 	Texture Load(const std::string& filePath);
+
+	InstancingResource SetInstancingResource(uint32_t instanceCount, Microsoft::WRL::ComPtr<ID3D12Resource> mapResource);
 
 	void Finalize();
 

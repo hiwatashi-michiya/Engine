@@ -96,9 +96,6 @@
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\TextureManager.cpp">
-      <Filter>Engine\base</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\WinApp.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
@@ -156,6 +153,15 @@
     <ClCompile Include="Engine\Leak.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\manager\TextureManager.cpp">
+      <Filter>Engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\Particle3D.cpp">
+      <Filter>Engine\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>Engine\3d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -192,9 +198,6 @@
       <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\SafeDelete.h">
-      <Filter>Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\TextureManager.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\WinApp.h">
@@ -263,6 +266,15 @@
     <ClInclude Include="Engine\Leak.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\manager\TextureManager.h">
+      <Filter>Engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Particle3D.h">
+      <Filter>Engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>Engine\3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -276,7 +288,7 @@
     <None Include="resources\shaders\Sprite.hlsli">
       <Filter>shader</Filter>
     </None>
-    <None Include="resources\shaders\Particle.hlsli">
+    <None Include="resources\shaders\Particle3d.hlsli">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
@@ -293,10 +305,10 @@
     <FxCompile Include="resources\shaders\Sprite.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="resources\shaders\Particle.PS.hlsl">
+    <FxCompile Include="resources\shaders\Particle3d.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="resources\shaders\Particle.VS.hlsl">
+    <FxCompile Include="resources\shaders\Particle3d.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

@@ -8,8 +8,18 @@
 
 GameScene::GameScene()
 {
-	plane_.reset(Model::Create("plane"));
-	plane2_.reset(Model::Create("fence"));
+	plane_.reset(Model::Create("./resources/plane/plane.obj"));
+	plane2_.reset(Model::Create("./resources/fence/fence.obj"));
+	particle_.reset(Particle3D::Create("./resources/plane/plane.obj", 10));
+
+	for (uint32_t i = 0; i < 10; i++) {
+		
+		WorldTransform worldTransform{};
+		worldTransform.translation_ = { 0.1f * i + 1.0f, 0.1f * i + 0.0f, 0.0f };
+		particleTransforms_.push_back(worldTransform);
+
+	}
+
 }
 
 GameScene::~GameScene()
@@ -38,7 +48,12 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &Model::worldTransformCamera_.translation_.x, 0.1f);
 	ImGui::End();
 
+	ImGui::Begin("worldTransform");
+	ImGui::DragFloat3("translation", &particleTransforms_[0].translation_.x, 0.1f);
+	ImGui::End();
+
 	Model::StaticImGuiUpdate();
+	Particle3D::StaticImGuiUpdate();
 
 	plane_->ImGuiUpdate();
 	plane2_->ImGuiUpdate();
@@ -47,6 +62,10 @@ void GameScene::Update() {
 
 	worldTransformPlane_.UpdateMatrix();
 	worldTransformPlane2_.UpdateMatrix();
+
+	for (WorldTransform& worldTransform : particleTransforms_) {
+		worldTransform.UpdateMatrix();
+	}
 
 }
 
@@ -59,13 +78,24 @@ void GameScene::Draw() {
 
 		Model::PreDraw(commandList);
 
-		plane_->Draw(worldTransformPlane_);
-		plane2_->Draw(worldTransformPlane2_);
+		/*plane_->Draw(worldTransformPlane_);
+		plane2_->Draw(worldTransformPlane2_);*/
 
 		Model::PostDraw();
 
 	}
 	
+	//パーティクル描画
+	{
+
+		Particle3D::PreDraw(commandList);
+
+		particle_->Draw(particleTransforms_);
+
+		Particle3D::PostDraw();
+
+	}
+
 	//2Dスプライト描画
 	{
 

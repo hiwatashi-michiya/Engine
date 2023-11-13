@@ -1,10 +1,16 @@
 #include "Engine.h"
+#include <Windows.h>
+#include "base/DirectXCommon.h"
+#include "base/WinApp.h"
+#include "2d/Sprite.h"
+#include "3d/Model.h"
 #include <string>
 #include "base/SafeDelete.h"
 #include <cassert>
 #include "Convert.h"
-#include "base/TextureManager.h"
+#include "manager/TextureManager.h"
 #include "input/Input.h"
+#include "3d/Particle3D.h"
 
 #ifdef _DEBUG
 
@@ -30,6 +36,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	Sprite::StaticInitialize(dxCommon_->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
 	Model::StaticInitialize(dxCommon_->GetDevice());
+	Particle3D::StaticInitialize(dxCommon_->GetDevice());
 
 	TextureManager::GetInstance()->Initialize();
 	Input::GetInstance()->Initialize();
@@ -66,6 +73,7 @@ void Engine::Finalize() {
 
 #endif // _DEBUG
 
+	Particle3D::Finalize();
 	Model::Finalize();
 	Sprite::Finalize();
 	dxCommon_->Finalize();

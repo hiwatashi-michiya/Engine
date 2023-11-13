@@ -1,7 +1,8 @@
 #include "TextureManager.h"
-#include "DirectXCommon.h"
+#include "Engine/base/DirectXCommon.h"
 #include "externals/DirectXTex/DirectXTex.h"
 #include"Engine/Convert.h"
+#include "Engine/math/Matrix4x4.h"
 
 //DirectXTexを使ってTextureを読み込むためのLoadTexture関数
 DirectX::ScratchImage LoadTexture(const std::string& filePath) {
@@ -174,6 +175,41 @@ Texture TextureManager::Load(const std::string& filePath) {
 	textureIndex_++;
 
 	return tex;
+
+}
+
+InstancingResource TextureManager::SetInstancingResource(uint32_t instanceCount, Microsoft::WRL::ComPtr<ID3D12Resource> mapResource) {
+
+	//制限数以上の読み込みで止める
+	assert(textureIndex_ < kMaxTextures - 1);
+
+	InstancingResource instancingResource;
+
+	instancingResource.resource = mapResource;
+
+	const uint32_t descriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	//metadataを基にSRVの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	srvDesc.Buffer.FirstElement = 0;
+	srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+	srvDesc.Buffer.NumElements = instanceCount;
+	srvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
+
+	//SRVを作成するDescriptorHeapの場所を決める
+	instancingResource.srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
+	instancingResource.srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
+
+	//SRVの生成
+	device_->CreateShaderResourceView(instancingResource.resource.Get(), &srvDesc, instancingResource.srvHandleCPU);
+
+	//使用カウント上昇
+	textureIndex_++;
+
+	return instancingResource;
 
 }
 
