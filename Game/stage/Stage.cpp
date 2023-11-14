@@ -15,11 +15,11 @@ void Stage::Initialize() {
 		modelFloor_[i].reset(Model::Create("ground"));
 
 		if (i < 2) {
-			worldTransforms_[i].scale_ = { 5.0f,1.0f,5.0f };
+			worldTransforms_[i].scale_ = { 5.0f,0.1f,5.0f };
 			worldTransforms_[i].translation_ = { 0.0f,0.0f, i * 10.0f };
 		}
 		else {
-			worldTransforms_[i].scale_ = { 10.0f,1.0f,10.0f };
+			worldTransforms_[i].scale_ = { 10.0f, 0.1f,10.0f };
 			worldTransforms_[i].translation_ = { 0.0f,0.0f, i * 20.0f - 15.0f };
 		}
 

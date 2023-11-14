@@ -95,7 +95,9 @@ void Player::Update() {
 		case Behavior::kDash:
 			BehaviorDashInitialize();
 			break;
-
+		case Behavior::kJump:
+			BehaviorJumpInitialize();
+			break;
 		}
 		//振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
@@ -112,7 +114,9 @@ void Player::Update() {
 	case Behavior::kDash:
 		BehaviorDashUpdate();
 		break;
-
+	case Behavior::kJump:
+		BehaviorJumpUpdate();
+		break;
 	}
 
 	SetOBB();
@@ -138,7 +142,7 @@ void Player::BehaviorRootUpdate() {
 	const float speed = 0.7f;
 
 	if (velocity_.y > -5.0f) {
-		velocity_.y -= 0.1f;
+		velocity_.y -= 0.05f;
 	}
 
 	// 移動量。Lスティックの入力を取る
@@ -160,7 +164,8 @@ void Player::BehaviorRootUpdate() {
 
 	// 回転
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
-		destinationAngleY_ = Atan2(move.x, move.z);
+		/*destinationAngleY_ = Atan2(move.x, move.z);*/
+		destinationAngleY_ = atan2(float(move.x), float(move.z));
 		lerpT_ = 0.1f;
 	}
 
@@ -177,6 +182,15 @@ void Player::BehaviorRootUpdate() {
 
 	if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
 		behaviorRequest_ = Behavior::kDash;
+	}
+
+	//ジャンプボタンを押したら
+	if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_A) {
+
+		if (worldTransformBody_.parent_) {
+			behaviorRequest_ = Behavior::kJump;
+		}
+		
 	}
 
 }
@@ -254,6 +268,57 @@ void Player::BehaviorDashInitialize() {
 	workDash_.dashParamater_ = 0;
 	worldTransformBody_.rotation_.y = destinationAngleY_;
 	dashStartPosition_ = worldTransformBody_.translation_;
+
+}
+
+//ジャンプ更新
+void Player::BehaviorJumpUpdate() {
+
+	// 速さ
+	const float speed = 0.7f;
+
+	if (velocity_.y > -5.0f) {
+		velocity_.y -= 0.05f;
+	}
+
+	// 移動量。Lスティックの入力を取る
+	Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
+	// 移動量に速さを反映
+	move = Multiply(speed, Normalize(move));
+
+	Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+
+	// 移動ベクトルをカメラの角度だけ回転させる
+	move = TransformNormal(move, matRotate);
+
+	move *= 0.4f;
+
+	// 移動
+	worldTransformBody_.translation_ += move;
+	//落下処理
+	worldTransformBody_.translation_ += velocity_;
+
+	// 回転
+	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
+		destinationAngleY_ = atan2(float(move.x), float(move.z));
+		lerpT_ = 0.1f;
+	}
+
+	/*worldTransformBody_.rotation_.y = LerpShortAngle(worldTransformBody_.rotation_.y, destinationAngleY_, lerpT_);*/
+	worldTransformBody_.rotation_.y = destinationAngleY_;
+
+	if (worldTransformBody_.translation_.y <= 1.0f) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+
+}
+
+//ジャンプ初期化
+void Player::BehaviorJumpInitialize() {
+
+	//ジャンプ初速
+	const float kJumpFirstSpeed = 0.7f;
+	velocity_.y = kJumpFirstSpeed;
 
 }
 

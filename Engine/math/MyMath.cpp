@@ -28,8 +28,8 @@ float LerpShortAngle(float a, float b, float t) {
 
 float Atan2(float y, float x) {
 
-	std::clamp(y, -1.0f, 1.0f);
-	std::clamp(x, -1.0f, 1.0f);
+	y = std::clamp(y, -1.0f, 1.0f);
+	x = std::clamp(x, -1.0f, 1.0f);
 
 	//未定義の動作を事前に防ぐ
 	if (x == 0.0f) {

@@ -10,6 +10,7 @@ enum class Behavior {
 	kRoot, //通常状態
 	kAttack, //攻撃中
 	kDash, //ダッシュ
+	kJump, //ジャンプ
 };
 
 class Player
@@ -126,6 +127,12 @@ private:
 
 	//ダッシュ初期化
 	void BehaviorDashInitialize();
+
+	//ジャンプ更新
+	void BehaviorJumpUpdate();
+
+	//ジャンプ初期化
+	void BehaviorJumpInitialize();
 
 	//グローバル変数更新
 	void UpdateGlobalVariables();
