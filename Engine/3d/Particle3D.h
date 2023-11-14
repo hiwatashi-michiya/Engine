@@ -48,6 +48,9 @@ public:
 
 	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
 
+	//ビルボードを使うかどうか
+	bool isBillboard_ = true;
+
 private:
 
 	//静的メンバ変数
@@ -94,6 +97,9 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
+
+	//ビルボード行列
+	Matrix4x4 matBillboard_;
 
 	//テクスチャ
 	Texture texture_;

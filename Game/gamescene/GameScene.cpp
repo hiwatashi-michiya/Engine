@@ -50,6 +50,7 @@ void GameScene::Update() {
 
 	ImGui::Begin("worldTransform");
 	ImGui::DragFloat3("translation", &particleTransforms_[0].translation_.x, 0.1f);
+	ImGui::Checkbox("billboard", &particle_->isBillboard_);
 	ImGui::End();
 
 	Model::StaticImGuiUpdate();
@@ -64,6 +65,7 @@ void GameScene::Update() {
 	worldTransformPlane2_.UpdateMatrix();
 
 	for (WorldTransform& worldTransform : particleTransforms_) {
+		/*worldTransform.translation_.y += 0.01f;*/
 		worldTransform.UpdateMatrix();
 	}
 
@@ -78,8 +80,8 @@ void GameScene::Draw() {
 
 		Model::PreDraw(commandList);
 
-		/*plane_->Draw(worldTransformPlane_);
-		plane2_->Draw(worldTransformPlane2_);*/
+		plane_->Draw(worldTransformPlane_);
+		plane2_->Draw(worldTransformPlane2_);
 
 		Model::PostDraw();
 

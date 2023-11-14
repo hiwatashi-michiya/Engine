@@ -366,14 +366,27 @@ void Particle3D::PostDraw() {
 
 void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
 
+	if (isBillboard_) {
+
+		matBillboard_ = Model::worldTransformCamera_.UpdateMatrix();
+
+		matBillboard_.m[3][0] = 0.0f;
+		matBillboard_.m[3][1] = 0.0f;
+		matBillboard_.m[3][2] = 0.0f;
+
+	}
+	else {
+		matBillboard_ = MakeIdentity4x4();
+	}
+
 	for (uint32_t i = 0; i < worldTransform.size(); i++) {
 
 		//配列外参照防止
 		if (i >= instanceCount_) {
 			break;
 		}
-
-		Matrix4x4 worldMatrix = worldTransform[i].matWorld_;
+		Matrix4x4 worldMatrix = MakeScaleMatrix(worldTransform[i].scale_) * matBillboard_ * MakeTranslateMatrix(worldTransform[i].translation_);
+		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
 		Matrix4x4 cameraMatrix = Model::worldTransformCamera_.UpdateMatrix();
 		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 		matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
