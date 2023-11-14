@@ -21,6 +21,10 @@ struct Material
 	int32_t enableLighting;
 	float padding[3];
 	Matrix4x4 uvTransform;
+	int32_t isGrayScale = 0; //グレースケール化のint型フラグ
+	int32_t isInversion = 0; //色反転フラグ
+	int32_t isRetro = 0; //レトロ化フラグ
+	int32_t isAverageBlur; //平均化ブラーフラグ
 };
 
 struct DirectionalLight {
