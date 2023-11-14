@@ -1,6 +1,6 @@
 #include "DirectXCommon.h"
 #include <cassert>
-#include "TextureManager.h"
+#include "Engine/manager/TextureManager.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")

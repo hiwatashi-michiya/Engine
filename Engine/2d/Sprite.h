@@ -2,7 +2,7 @@
 #include <d3d12.h>
 #include <wrl.h>
 #include "Engine/math/Matrix4x4.h"
-#include "Engine/base/TextureManager.h"
+#include "Engine/manager/TextureManager.h"
 #include "Engine/math/Vector2.h"
 #include "Engine/math/Vector4.h"
 #include <dxcapi.h>

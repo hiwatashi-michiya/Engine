@@ -55,6 +55,9 @@
     <Filter Include="Game\stage">
       <UniqueIdentifier>{5825f192-7d68-4fbc-9f67-046c78643a1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\MapEditor">
+      <UniqueIdentifier>{0e3679e7-07f9-4d31-9250-af2cbdc32f60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -88,9 +91,6 @@
       <Filter>Engine\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
-      <Filter>Engine\base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\TextureManager.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\WinApp.cpp">
@@ -144,6 +144,18 @@
     <ClCompile Include="Engine\math\Collision.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Leak.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\manager\TextureManager.cpp">
+      <Filter>Engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\Particle3D.cpp">
+      <Filter>Engine\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>Engine\3d</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\manager\AudioManager.cpp">
       <Filter>Engine\manager</Filter>
     </ClCompile>
@@ -183,9 +195,6 @@
       <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\SafeDelete.h">
-      <Filter>Engine\base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\TextureManager.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\WinApp.h">
@@ -248,6 +257,18 @@
     <ClInclude Include="Engine\math\Collision.h">
       <Filter>Engine\math</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Leak.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\manager\TextureManager.h">
+      <Filter>Engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Particle3D.h">
+      <Filter>Engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>Engine\3d</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\manager\AudioManager.h">
       <Filter>Engine\manager</Filter>
     </ClInclude>
@@ -264,6 +285,9 @@
     <None Include="resources\shaders\Sprite.hlsli">
       <Filter>shader</Filter>
     </None>
+    <None Include="resources\shaders\Particle3d.hlsli">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shaders\Object3d.PS.hlsl">
@@ -276,6 +300,12 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="resources\shaders\Sprite.VS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\Particle3d.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\Particle3d.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

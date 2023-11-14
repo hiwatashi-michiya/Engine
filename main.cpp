@@ -1,8 +1,9 @@
+#include "Engine/Leak.h"
 #include "Engine/Engine.h"
 D3DResourceLeakChecker leak;
 #include "Engine/input/Input.h"
 #include <Windows.h>
-#include "Engine/base/TextureManager.h"
+#include "Engine/manager/TextureManager.h"
 #include <memory>
 #include "Game/gamescene/GameScene.h"
 
