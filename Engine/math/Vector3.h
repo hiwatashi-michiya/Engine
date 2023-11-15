@@ -133,8 +133,6 @@ Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
 
 Vector3 CatmullRomPoint(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
 
-float Clamp(float x, float min, float max);
-
 Vector3 Project(const Vector3& v1, const Vector3& v2);
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 

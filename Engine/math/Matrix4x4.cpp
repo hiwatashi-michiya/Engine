@@ -453,6 +453,53 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 
 }
 
+//ある方向をある方向へ向ける回転行列
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
+
+	//回転軸
+	Vector3 n = Normalize(Cross(from, to));
+
+	//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
+	if (n.x == 0.0f && n.y == 0.0f && n.z == 0.0f) {
+
+		if (from.y != 0.0f || from.x != 0.0f) {
+			n = { from.y, -from.x,0.0f };
+		}
+		
+	}
+
+	//cosを求める
+	float cosTheta = Dot(from, to);
+	//sinを求める
+	float sinTheta = Length(Cross(from, to));
+
+	Matrix4x4 result{};
+
+	//任意軸の回転行列を求めた値から生成
+	result.m[0][0] = powf(n.x, 2) * (1.0f - cosTheta) + cosTheta;
+	result.m[0][1] = n.x * n.y * (1.0f - cosTheta) + n.z * sinTheta;
+	result.m[0][2] = n.x * n.z * (1.0f - cosTheta) - n.y * sinTheta;
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = n.x * n.y * (1.0f - cosTheta) - n.z * sinTheta;
+	result.m[1][1] = powf(n.y, 2) * (1.0f - cosTheta) + cosTheta;
+	result.m[1][2] = n.y * n.z * (1.0f - cosTheta) + n.x * sinTheta;
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = n.x * n.z * (1.0f - cosTheta) + n.y * sinTheta;
+	result.m[2][1] = n.y * n.z * (1.0f - cosTheta) - n.x * sinTheta;
+	result.m[2][2] = powf(n.z, 2) * (1.0f - cosTheta) + cosTheta;
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
+
+	return result;
+
+}
+
 // 二項演算子
 Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2) { return Add(m1, m2); }
 Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2) { return Subtract(m1, m2); }

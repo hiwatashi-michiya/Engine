@@ -127,7 +127,7 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 //線形補間
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 
-	t = Clamp(t, 0, 1.0f);
+	t = std::clamp(t, 0.0f, 1.0f);
 
 	Vector3 p = Vector3(
 		v1.x + t * (v2.x - v1.x),
@@ -142,9 +142,9 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 //球面線形補間
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 
-	t = Clamp(t, 0, 1.0f);
+	t = std::clamp(t, 0.0f, 1.0f);
 
-	float theta = acosf(Clamp(Dot(v1, v2), 0, 1.0f) / (Length(v1) * Length(v2)));
+	float theta = acosf(std::clamp(Dot(v1, v2), 0.0f, 1.0f) / (Length(v1) * Length(v2)));
 
 	float s = (1.0f - t) * Length(v1) + t * Length(v2);
 
@@ -177,20 +177,6 @@ Vector3 CatmullRomPoint(const Vector3& p0, const Vector3& p1, const Vector3& p2,
 		(-p0.z + p2.z) * t + (2 * p1.z)) / 2.0f;
 
 	return p;
-
-}
-
-float Clamp(float x, float min, float max) {
-
-	if (x > max) {
-		return max;
-	}
-
-	if (x < min) {
-		return min;
-	}
-
-	return x;
 
 }
 

@@ -120,6 +120,9 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height,
 //任意軸回転行列の作成関数
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 
+//ある方向をある方向へ向ける回転行列
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
 // 二項演算子
 Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2);
