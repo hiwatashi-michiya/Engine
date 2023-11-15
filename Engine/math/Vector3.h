@@ -3,7 +3,8 @@
 /// <summary>
 /// 3次元ベクトル
 /// </summary>
-struct Vector3 {
+class Vector3 {
+public:
 
 	float x;
 	float y;
@@ -101,7 +102,7 @@ struct Capsule {
 	float radius;
 };
 
-struct Matrix4x4;
+class Matrix4x4;
 
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 
@@ -116,7 +117,7 @@ float Length(const Vector3& v);
 Vector3 Normalize(const Vector3& v);
 
 //座標変換
-Vector3 CoordTransform(const Vector3& vector, const Matrix4x4& matrix);
+Vector3 TransformCoord(const Vector3& vector, const Matrix4x4& matrix);
 
 //ベクトル変換(スケールと回転)
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);

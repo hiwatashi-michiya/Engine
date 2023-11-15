@@ -190,7 +190,7 @@ bool IsCollision(const OBB& obb, const Sphere& sphere) {
 
 	Matrix4x4 obbWorldMatrixInverse = Inverse(obbWorldMatrix);
 
-	Vector3 centerInOBBLocalSpace = CoordTransform(sphere.center, obbWorldMatrixInverse);
+	Vector3 centerInOBBLocalSpace = TransformCoord(sphere.center, obbWorldMatrixInverse);
 
 	AABB aabbOBBLocal{ Vector3(-obb.size.x, -obb.size.y, -obb.size.z), obb.size };
 	Sphere sphereOBBLocal{ centerInOBBLocalSpace, sphere.radius };
@@ -217,8 +217,8 @@ bool IsCollision(const OBB& obb, const Segment& segment) {
 
 	Matrix4x4 obbWorldMatrixInverse = Inverse(obbWorldMatrix);
 
-	Vector3 localOrigin = CoordTransform(segment.origin, obbWorldMatrixInverse);
-	Vector3 localEnd = CoordTransform(Add(segment.origin, segment.diff), obbWorldMatrixInverse);
+	Vector3 localOrigin = TransformCoord(segment.origin, obbWorldMatrixInverse);
+	Vector3 localEnd = TransformCoord(Add(segment.origin, segment.diff), obbWorldMatrixInverse);
 
 	AABB localAABB{
 		{-obb.size.x, -obb.size.y, -obb.size.z},

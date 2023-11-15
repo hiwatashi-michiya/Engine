@@ -29,18 +29,10 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
+	Matrix4x4 rotateMatrix_;
 
-	std::unique_ptr<Model> plane_;
-	std::unique_ptr<Particle3D> particle_;
-
-	std::vector<WorldTransform> particleTransforms_;
-
-	WorldTransform worldTransformPlane_;
-
-	std::unique_ptr<Model> plane2_;
-
-	WorldTransform worldTransformPlane2_;
-	uint32_t audio_;
+	std::unique_ptr<Model> model_;
+	WorldTransform worldTransform_;
 
 };
 

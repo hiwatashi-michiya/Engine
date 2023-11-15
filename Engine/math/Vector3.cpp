@@ -82,7 +82,7 @@ Vector3 Normalize(const Vector3& v) {
 	return newV;
 }
 
-Vector3 CoordTransform(const Vector3& vector, const Matrix4x4& matrix) {
+Vector3 TransformCoord(const Vector3& vector, const Matrix4x4& matrix) {
 
 	Vector3 result = {};
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] +

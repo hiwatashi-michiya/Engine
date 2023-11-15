@@ -8,18 +8,7 @@
 
 GameScene::GameScene()
 {
-	plane_.reset(Model::Create("./resources/plane/plane.obj"));
-	plane2_.reset(Model::Create("./resources/fence/fence.obj"));
-	particle_.reset(Particle3D::Create("./resources/plane/plane.obj", 10));
-
-	for (uint32_t i = 0; i < 10; i++) {
-		
-		WorldTransform worldTransform{};
-		worldTransform.translation_ = { 0.1f * i + 1.0f, 0.1f * i + 0.0f, 0.0f };
-		particleTransforms_.push_back(worldTransform);
-
-	}
-
+	model_.reset(Model::Create("./resources/plane/plane.obj"));
 }
 
 GameScene::~GameScene()
@@ -30,68 +19,27 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	Model::worldTransformCamera_.translation_ = { 0.0f,0.0f,-10.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.0f;
-
-	worldTransformPlane_.translation_.x = -2.0f;
-	worldTransformPlane2_.translation_.x = 2.0f;
-
 	audioManager_ = AudioManager::GetInstance();
-	audio_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
+	Model::worldTransformCamera_.translation_.z = -10.0f;
+
+	Vector3 axis = { Normalize({1.0f,1.0f,1.0f}) };
+	float angle = 0.44f;
+	rotateMatrix_ = MakeRotateAxisAngle(axis, angle);
+
 }
 
 void GameScene::Update() {
 
 #ifdef _DEBUG
 
-	ImGui::Begin("camera");
-	ImGui::DragFloat3("scale", &Model::worldTransformCamera_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &Model::worldTransformCamera_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation", &Model::worldTransformCamera_.translation_.x, 0.1f);
+	ImGui::Begin("rotateMatrix");
+	ImGui::Text("m0 : %1.3f %1.3f %1.3f %1.3f", rotateMatrix_.m[0][0], rotateMatrix_.m[0][1], rotateMatrix_.m[0][2], rotateMatrix_.m[0][3]);
+	ImGui::Text("m1 : %1.3f %1.3f %1.3f %1.3f", rotateMatrix_.m[1][0], rotateMatrix_.m[1][1], rotateMatrix_.m[1][2], rotateMatrix_.m[1][3]);
+	ImGui::Text("m2 : %1.3f %1.3f %1.3f %1.3f", rotateMatrix_.m[2][0], rotateMatrix_.m[2][1], rotateMatrix_.m[2][2], rotateMatrix_.m[2][3]);
+	ImGui::Text("m3 : %1.3f %1.3f %1.3f %1.3f", rotateMatrix_.m[3][0], rotateMatrix_.m[3][1], rotateMatrix_.m[3][2], rotateMatrix_.m[3][3]);
 	ImGui::End();
-
-	ImGui::Begin("worldTransform");
-	ImGui::DragFloat3("translation", &particleTransforms_[0].translation_.x, 0.1f);
-	ImGui::Checkbox("billboard", &particle_->isBillboard_);
-	ImGui::End();
-
-	if (input_->TriggerKey(DIK_SPACE)) {
-		audioManager_->Play(audio_, 0.2f);
-	}
-	Model::StaticImGuiUpdate();
-	Particle3D::StaticImGuiUpdate();
-
-	if (input_->TriggerKey(DIK_1)) {
-		audioManager_->Play(audio_, 0.2f, true);
-	}
-	plane_->ImGuiUpdate();
-	plane2_->ImGuiUpdate();
 
 #endif // _DEBUG
-
-	worldTransformPlane_.UpdateMatrix();
-	worldTransformPlane2_.UpdateMatrix();
-
-	for (WorldTransform& worldTransform : particleTransforms_) {
-		/*worldTransform.translation_.y += 0.01f;*/
-		worldTransform.UpdateMatrix();
-	}
-
-	if (input_->TriggerKey(DIK_2)) {
-		audioManager_->Stop(audio_);
-	}
-
-	if (input_->TriggerKey(DIK_3)) {
-		audioManager_->Pause(audio_);
-	}
-
-	if (input_->TriggerKey(DIK_4)) {
-		audioManager_->SetVolume(audio_, 0.4f);
-	}
-
-	if (input_->TriggerKey(DIK_5)) {
-		audioManager_->SetVolume(audio_, 1.0f);
-	}
 
 }
 
@@ -104,8 +52,7 @@ void GameScene::Draw() {
 
 		Model::PreDraw(commandList);
 
-		plane_->Draw(worldTransformPlane_);
-		plane2_->Draw(worldTransformPlane2_);
+		/*model_->Draw(worldTransform_);*/
 
 		Model::PostDraw();
 
@@ -116,7 +63,7 @@ void GameScene::Draw() {
 
 		Particle3D::PreDraw(commandList);
 
-		particle_->Draw(particleTransforms_);
+		
 
 		Particle3D::PostDraw();
 

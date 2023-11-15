@@ -3,7 +3,8 @@
 /// <summary>
 /// 4x4行列
 /// </summary>
-struct Matrix4x4 {
+class Matrix4x4 {
+public:
 
 	float m[4][4];
 
@@ -67,7 +68,7 @@ struct TransformationMatrix {
 	Matrix4x4 World;
 };
 
-struct Vector3;
+class Vector3;
 
 //行列の加法
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2);
@@ -115,6 +116,9 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 //ビューポート変換行列
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height,
 	float minDepth, float maxDepth);
+
+//任意軸回転行列の作成関数
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 
 // 二項演算子
 Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2);
