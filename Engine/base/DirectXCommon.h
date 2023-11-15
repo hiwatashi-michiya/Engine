@@ -8,7 +8,7 @@
 #include <wrl.h>
 #include <vector>
 #include <chrono>
-
+#include <thread>
 #include "WinApp.h"
 
 class DirectXCommon
