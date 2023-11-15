@@ -43,6 +43,8 @@ void Input::Initialize() {
 
 void Input::Update() {
 
+	preJoyState_ = joyState_;
+
 	//キーボード情報の取得開始
 	keyboard_->Acquire();
 
@@ -82,6 +84,16 @@ bool Input::TriggerKey(BYTE keyNumber) {
 
 }
 
+bool Input::ReleaseKey(BYTE keyNumber) {
+
+	if (key_[keyNumber] == false && preKey_[keyNumber]) {
+		return true;
+	}
+
+	return false;
+
+}
+
 Input::~Input() {
 
 	if (keyboard_) {
@@ -105,6 +117,34 @@ bool Input::PushButton(UINT button) {
 	if (isGetController_) {
 
 		if (joyState_.Gamepad.wButtons & button) {
+			return true;
+		}
+
+	}
+
+	return false;
+
+}
+
+bool Input::TriggerButton(UINT button) {
+
+	if (isGetController_) {
+
+		if ((joyState_.Gamepad.wButtons & button) && (preJoyState_.Gamepad.wButtons & button) == 0) {
+			return true;
+		}
+
+	}
+
+	return false;
+
+}
+
+bool Input::ReleaseButton(UINT button) {
+
+	if (isGetController_) {
+
+		if ((joyState_.Gamepad.wButtons & button) == 0 && (preJoyState_.Gamepad.wButtons & button)) {
 			return true;
 		}
 

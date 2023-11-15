@@ -70,6 +70,9 @@ public:
 	//目標角度
 	float destinationAngleY_;
 
+	//コンボの数
+	static const int ComboNum_ = 3;
+
 private:
 
 	Input* input_ = nullptr;
@@ -101,6 +104,38 @@ private:
 		//ダッシュ時間
 		int32_t dashTime_ = 15;
 	};
+
+	//攻撃用ワーク
+	struct WorkAttack {
+		//攻撃ギミックの媒介変数
+		uint32_t attackParameter_ = 0;
+		int32_t comboIndex = 0;
+		int32_t inComboPhase = 0;
+		bool comboNext = false;
+	};
+
+	//攻撃用定数
+	struct ConstAttack {
+		//振りかぶりの時間
+		uint32_t anticipationTime;
+		//溜めの時間
+		uint32_t chargeTime;
+		//攻撃振りの時間
+		uint32_t swingTime;
+		//硬直時間
+		uint32_t recoveryTime;
+		//振りかぶりの移動速さ
+		float anticipationSpeed;
+		//溜めの移動速さ
+		float chargeSpeed;
+		//攻撃振りの移動速さ
+		float swingSpeed;
+	};
+
+	//コンボ定数表
+	static const std::array<ConstAttack, ComboNum_> kConstAttacks_;
+	
+	WorkAttack workAttack_;
 
 	WorkDash workDash_;
 

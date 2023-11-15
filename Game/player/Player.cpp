@@ -13,6 +13,19 @@ Player::~Player()
 {
 }
 
+//コンボ定数
+const std::array<Player::ConstAttack, Player::ComboNum_>
+Player::kConstAttacks_ = {
+
+	{
+		//振りかぶり、攻撃前硬直、攻撃振り時間、硬直、各フェーズの移動速さ
+		{15,10,15,15,0.0f,0.0f,0.15f},
+		{15,10,15,10,0.2f,0.0f,0.0f},
+		{15,10,15,30,0.2f,0.0f,0.0f},
+	}
+
+};
+
 void Player::Initialize() {
 
 	input_ = Input::GetInstance();
@@ -176,16 +189,16 @@ void Player::BehaviorRootUpdate() {
 		worldTransformBody_.translation_ = { 0.0f,0.0f,0.0f };
 	}
 
-	if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+	if (input_->TriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		behaviorRequest_ = Behavior::kAttack;
 	}
 
-	if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
+	if (input_->TriggerButton(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
 		behaviorRequest_ = Behavior::kDash;
 	}
 
 	//ジャンプボタンを押したら
-	if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_A) {
+	if (input_->TriggerButton(XINPUT_GAMEPAD_A)) {
 
 		if (worldTransformBody_.parent_) {
 			behaviorRequest_ = Behavior::kJump;
@@ -204,7 +217,34 @@ void Player::BehaviorRootInitialize() {
 
 void Player::BehaviorAttackUpdate() {
 
+	//コンボ上限でない
+	if (workAttack_.comboIndex < ComboNum_ - 1) {
+
+		//攻撃ボタンをトリガーしたら
+		if (input_->TriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+			//コンボ有効
+			workAttack_.comboNext = true;
+		}
+
+	}
+
+	//コンボ段階によってモーションを分岐
+	switch (workAttack_.comboIndex)
+	{
+		//0:上から振り下ろし(低速度)
+	default:
+	case 0:
+		break;
+		//1:上から振り下ろし(中速度)
+	case 1:
+		break;
+		//2;上から振り下ろし(高速度)
+	case 2:
+		break;
+	}
+
 	if (attackFrame == 70) {
+		attackFrame = 0;
 		behaviorRequest_ = Behavior::kRoot;
 	}
 
