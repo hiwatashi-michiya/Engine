@@ -15,7 +15,7 @@ public:
 	Sprite(Texture texture, Vector2 position, Vector2 size, Vector4 color);
 	~Sprite() = default;
 
-	static void StaticInitialize(ID3D12Device* device, int window_width, 
+	static void StaticInitialize(ID3D12Device* device, int window_width,
 		int window_hwight);
 
 	/// <summary>
@@ -31,7 +31,7 @@ public:
 		Matrix4x4 uvTransform;
 	};
 
-	static Sprite* Create(Texture texture, Vector2 position, Vector4 color = {1.0f,1.0f,1.0f,1.0f});
+	static Sprite* Create(Texture texture, Vector2 position, Vector4 color = { 1.0f,1.0f,1.0f,1.0f });
 
 	bool Initialize();
 
@@ -40,7 +40,7 @@ public:
 	static void PostDraw();
 
 	void Draw();
-	
+
 	static void Finalize();
 
 	void SetTexture(Texture tex) { texture_ = tex; }
@@ -49,10 +49,19 @@ public:
 
 	Vector2 GetPosition() { return position_; }
 
+	//位置
+	Vector2 position_{};
+
+	//サイズ
+	Vector2 size_{};
+
+	//色
+	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+
 private:
 
 	//静的メンバ変数
-	
+
 	//デバイス
 	static ID3D12Device* device_;
 	//コマンドリスト
@@ -93,15 +102,6 @@ private:
 
 	//テクスチャ
 	Texture texture_;
-
-	//位置
-	Vector2 position_{};
-
-	//サイズ
-	Vector2 size_{};
-
-	//色
-	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 
 };
 
