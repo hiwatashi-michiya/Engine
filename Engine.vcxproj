@@ -119,6 +119,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Game\enemy\Enemy.cpp" />
     <ClCompile Include="Game\gamescene\GameScene.cpp" />
+    <ClCompile Include="Game\Icommand\ICommand.cpp" />
+    <ClCompile Include="Game\InputHandler\InputHandler.cpp" />
     <ClCompile Include="Game\player\Player.cpp" />
     <ClCompile Include="Game\stage\Stage.cpp" />
     <ClCompile Include="main.cpp" />
@@ -159,6 +161,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Game\enemy\Enemy.h" />
     <ClInclude Include="Game\gamescene\GameScene.h" />
+    <ClInclude Include="Game\Icommand\ICommand.h" />
+    <ClInclude Include="Game\InputHandler\InputHandler.h" />
     <ClInclude Include="Game\player\Player.h" />
     <ClInclude Include="Game\stage\Stage.h" />
     <ClInclude Include="ModelManager.h" />

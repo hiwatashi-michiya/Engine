@@ -115,8 +115,6 @@ void Enemy::SetOBB() {
 
 void Enemy::Collision(Player* player) {
 
-	if (IsCollision(obb_, player->GetOBB())) {
-		player->SetPosition({ 0.0f,0.0f,0.0f });
-	}
+	
 
 }

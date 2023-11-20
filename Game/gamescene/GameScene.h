@@ -11,6 +11,7 @@
 #include "Game/stage/Stage.h"
 #include "Engine/3d/Particle3D.h"
 #include "Engine/manager/AudioManager.h"
+#include "Game/InputHandler/InputHandler.h"
 
 class GameScene
 {
@@ -30,17 +31,10 @@ private:
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 
-	std::unique_ptr<Model> plane_;
-	std::unique_ptr<Particle3D> particle_;
+	std::unique_ptr<InputHandler> inputHandler_ = nullptr;
+	ICommand* command_ = nullptr;
 
-	std::vector<WorldTransform> particleTransforms_;
-
-	WorldTransform worldTransformPlane_;
-
-	std::unique_ptr<Model> plane2_;
-
-	WorldTransform worldTransformPlane2_;
-	uint32_t audio_;
+	std::unique_ptr<Player> player_;
 
 };
 

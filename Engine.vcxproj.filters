@@ -58,6 +58,12 @@
     <Filter Include="Engine\MapEditor">
       <UniqueIdentifier>{0e3679e7-07f9-4d31-9250-af2cbdc32f60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Icommand">
+      <UniqueIdentifier>{3224a92f-69bd-49f2-9fa3-033bdc03f5ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\InputHandler">
+      <UniqueIdentifier>{1f9f6ade-fb83-4696-a7e2-b462248ba2ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -158,6 +164,12 @@
     </ClCompile>
     <ClCompile Include="Engine\manager\AudioManager.cpp">
       <Filter>Engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Icommand\ICommand.cpp">
+      <Filter>Game\Icommand</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\InputHandler\InputHandler.cpp">
+      <Filter>Game\InputHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +283,12 @@
     </ClInclude>
     <ClInclude Include="Engine\manager\AudioManager.h">
       <Filter>Engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Icommand\ICommand.h">
+      <Filter>Game\Icommand</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\InputHandler\InputHandler.h">
+      <Filter>Game\InputHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

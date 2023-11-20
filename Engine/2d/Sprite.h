@@ -49,6 +49,15 @@ public:
 
 	Vector2 GetPosition() { return position_; }
 
+	//位置
+	Vector2 position_{};
+
+	//サイズ
+	Vector2 size_{};
+
+	//色
+	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+
 private:
 
 	//静的メンバ変数
@@ -93,15 +102,6 @@ private:
 
 	//テクスチャ
 	Texture texture_;
-
-	//位置
-	Vector2 position_{};
-
-	//サイズ
-	Vector2 size_{};
-
-	//色
-	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 
 };
 
