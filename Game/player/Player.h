@@ -73,6 +73,18 @@ public:
 	//コンボの数
 	static const int ComboNum_ = 3;
 
+	//各攻撃時間をまとめたもの
+	struct AttackTime {
+		//振りかぶり時間
+		uint32_t firstTime;
+		//溜めまでの時間
+		uint32_t secondTime;
+		//攻撃振りまでの時間
+		uint32_t thirdTime;
+		//全ての時間合計
+		uint32_t totalTime;
+	};
+
 private:
 
 	Input* input_ = nullptr;
@@ -131,6 +143,8 @@ private:
 		//攻撃振りの移動速さ
 		float swingSpeed;
 	};
+
+	AttackTime EachAttackTime(ConstAttack constAttack);
 
 	//コンボ定数表
 	static const std::array<ConstAttack, ComboNum_> kConstAttacks_;

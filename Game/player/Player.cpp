@@ -19,9 +19,9 @@ Player::kConstAttacks_ = {
 
 	{
 		//振りかぶり、攻撃前硬直、攻撃振り時間、硬直、各フェーズの移動速さ
-		{15,10,15,15,0.0f,0.0f,0.15f},
-		{15,10,15,10,0.2f,0.0f,0.0f},
-		{15,10,15,30,0.2f,0.0f,0.0f},
+		{15,10,15,15,0.157f,0.0f,0.177f},
+		{10,10,10,10,0.236f,0.0f,0.26f},
+		{30,10,5,30,0.10785f,0.0f,0.942f},
 	}
 
 };
@@ -228,50 +228,274 @@ void Player::BehaviorAttackUpdate() {
 
 	}
 
+	AttackTime attackTime = EachAttackTime(kConstAttacks_[workAttack_.comboIndex]);
+
 	//コンボ段階によってモーションを分岐
 	switch (workAttack_.comboIndex)
 	{
 		//0:上から振り下ろし(低速度)
 	default:
+		break;
 	case 0:
+
+		if (workAttack_.attackParameter_ >= attackTime.totalTime) {
+			//コンボ継続なら次のコンボに進む
+			if (workAttack_.comboNext) {
+				//コンボ継続フラグをリセット
+				workAttack_.comboNext = false;
+				//コンボフェーズをリセット
+				workAttack_.inComboPhase = 0;
+				//経過時間をリセット
+				workAttack_.attackParameter_ = 0;
+				//コンボ段階を上げる
+				workAttack_.comboIndex++;
+				//パーツ初期化
+				worldTransformL_arm_.rotation_.x = -1.57f;
+				worldTransformR_arm_.rotation_.x = -1.57f;
+				worldTransformWeapon_.rotation_.x = 1.57f;
+				worldTransformWeapon_.translation_.y = 3.0f;
+			}
+			else {
+				//コンボ継続フラグをリセット
+				workAttack_.comboNext = false;
+				//コンボフェーズをリセット
+				workAttack_.inComboPhase = 0;
+				//経過時間をリセット
+				workAttack_.attackParameter_ = 0;
+				//コンボ段階をリセット
+				workAttack_.comboIndex = 0;
+				behaviorRequest_ = Behavior::kRoot;
+			}
+
+		}
+		else {
+
+			switch (workAttack_.inComboPhase)
+			{
+			default:
+			case 0:
+				if (workAttack_.attackParameter_ < attackTime.firstTime) {
+					worldTransformL_arm_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+					worldTransformR_arm_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+					worldTransformWeapon_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+				}
+				else {
+					workAttack_.inComboPhase++;
+				}
+				break;
+			case 1:
+
+				if (workAttack_.attackParameter_ >= attackTime.secondTime) {
+					workAttack_.inComboPhase++;
+				}
+
+				break;
+			case 2:
+				if (workAttack_.attackParameter_ < attackTime.thirdTime) {
+					worldTransformL_arm_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+					worldTransformR_arm_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+					worldTransformWeapon_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+				}
+				else {
+					workAttack_.inComboPhase++;
+				}
+				break;
+			case 3:
+
+				break;
+			}
+
+			workAttack_.attackParameter_++;
+
+		}
+
 		break;
 		//1:上から振り下ろし(中速度)
 	case 1:
+
+		if (workAttack_.attackParameter_ >= attackTime.totalTime) {
+			//コンボ継続なら次のコンボに進む
+			if (workAttack_.comboNext) {
+				//コンボ継続フラグをリセット
+				workAttack_.comboNext = false;
+				//コンボフェーズをリセット
+				workAttack_.inComboPhase = 0;
+				//経過時間をリセット
+				workAttack_.attackParameter_ = 0;
+				//コンボ段階を上げる
+				workAttack_.comboIndex++;
+				//パーツ初期化
+				worldTransformL_arm_.rotation_.x = -1.57f;
+				worldTransformR_arm_.rotation_.x = -1.57f;
+				worldTransformWeapon_.rotation_.x = 1.57f;
+				worldTransformWeapon_.translation_.y = 3.0f;
+			}
+			else {
+				//コンボ継続フラグをリセット
+				workAttack_.comboNext = false;
+				//コンボフェーズをリセット
+				workAttack_.inComboPhase = 0;
+				//経過時間をリセット
+				workAttack_.attackParameter_ = 0;
+				//コンボ段階をリセット
+				workAttack_.comboIndex = 0;
+				behaviorRequest_ = Behavior::kRoot;
+			}
+
+		}
+		else {
+
+			switch (workAttack_.inComboPhase)
+			{
+			default:
+			case 0:
+				if (workAttack_.attackParameter_ < attackTime.firstTime) {
+					worldTransformL_arm_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+					worldTransformR_arm_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+					worldTransformWeapon_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+				}
+				else {
+					workAttack_.inComboPhase++;
+				}
+				break;
+			case 1:
+
+				if (workAttack_.attackParameter_ >= attackTime.secondTime) {
+					workAttack_.inComboPhase++;
+				}
+
+				break;
+			case 2:
+				if (workAttack_.attackParameter_ < attackTime.thirdTime) {
+					worldTransformL_arm_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+					worldTransformR_arm_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+					worldTransformWeapon_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+				}
+				else {
+					workAttack_.inComboPhase++;
+				}
+				break;
+			case 3:
+
+				break;
+			}
+
+			workAttack_.attackParameter_++;
+
+		}
+
 		break;
 		//2;上から振り下ろし(高速度)
 	case 2:
+
+		if (workAttack_.attackParameter_ >= attackTime.totalTime) {
+			//コンボ継続なら次のコンボに進む
+			if (workAttack_.comboNext) {
+				//コンボ継続フラグをリセット
+				workAttack_.comboNext = false;
+				//コンボフェーズをリセット
+				workAttack_.inComboPhase = 0;
+				//経過時間をリセット
+				workAttack_.attackParameter_ = 0;
+				//コンボ段階を上げる
+				workAttack_.comboIndex++;
+				//パーツ初期化
+				worldTransformL_arm_.rotation_.x = -1.57f;
+				worldTransformR_arm_.rotation_.x = -1.57f;
+				worldTransformWeapon_.rotation_.x = 1.57f;
+				worldTransformWeapon_.translation_.y = 3.0f;
+			}
+			else {
+				//コンボ継続フラグをリセット
+				workAttack_.comboNext = false;
+				//コンボフェーズをリセット
+				workAttack_.inComboPhase = 0;
+				//経過時間をリセット
+				workAttack_.attackParameter_ = 0;
+				//コンボ段階をリセット
+				workAttack_.comboIndex = 0;
+				behaviorRequest_ = Behavior::kRoot;
+			}
+
+		}
+		else {
+
+			switch (workAttack_.inComboPhase)
+			{
+			default:
+			case 0:
+				if (workAttack_.attackParameter_ < attackTime.firstTime) {
+					worldTransformL_arm_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+					worldTransformR_arm_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+					worldTransformWeapon_.rotation_.x -= kConstAttacks_[workAttack_.comboIndex].anticipationSpeed;
+				}
+				else {
+					workAttack_.inComboPhase++;
+				}
+				break;
+			case 1:
+
+				if (workAttack_.attackParameter_ >= attackTime.secondTime) {
+					workAttack_.inComboPhase++;
+				}
+
+				break;
+			case 2:
+				if (workAttack_.attackParameter_ < attackTime.thirdTime) {
+					worldTransformL_arm_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+					worldTransformR_arm_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+					worldTransformWeapon_.rotation_.x += kConstAttacks_[workAttack_.comboIndex].swingSpeed;
+				}
+				else {
+					workAttack_.inComboPhase++;
+				}
+				break;
+			case 3:
+
+				break;
+			}
+
+			workAttack_.attackParameter_++;
+
+		}
+
 		break;
 	}
-
-	if (attackFrame == 70) {
-		attackFrame = 0;
-		behaviorRequest_ = Behavior::kRoot;
-	}
-
-	float rad = 3.14f / 30.0f;
-
-	if (attackFrame < 15) {
-		worldTransformL_arm_.rotation_.x -= rad;
-		worldTransformR_arm_.rotation_.x -= rad;
-		worldTransformWeapon_.rotation_.x -= rad;
-	}
-	else if (attackFrame >= 25 && attackFrame < 40) {
-		worldTransformL_arm_.rotation_.x += rad;
-		worldTransformR_arm_.rotation_.x += rad;
-		worldTransformWeapon_.rotation_.x += rad;
-	}
-
-	// フレーム更新
-	attackFrame++;
 
 }
 
 void Player::BehaviorAttackInitialize() {
-	attackFrame = 0;
+	//コンボ継続フラグをリセット
+	workAttack_.comboNext = false;
+	//コンボフェーズをリセット
+	workAttack_.inComboPhase = 0;
+	//経過時間をリセット
+	workAttack_.attackParameter_ = 0;
+	//コンボ段階をリセット
+	workAttack_.comboIndex = 0;
+	//パーツ初期化
 	worldTransformL_arm_.rotation_.x = -1.57f;
 	worldTransformR_arm_.rotation_.x = -1.57f;
 	worldTransformWeapon_.rotation_.x = 1.57f;
 	worldTransformWeapon_.translation_.y = 3.0f;
+}
+
+Player::AttackTime Player::EachAttackTime(ConstAttack constAttack) {
+
+	AttackTime eachAttackTime;
+
+	eachAttackTime.firstTime = constAttack.anticipationTime;
+
+	eachAttackTime.secondTime = constAttack.anticipationTime + constAttack.chargeTime;
+
+	eachAttackTime.thirdTime = constAttack.anticipationTime + constAttack.chargeTime +
+		constAttack.swingTime;
+
+	eachAttackTime.totalTime = constAttack.anticipationTime + constAttack.chargeTime +
+		constAttack.swingTime + constAttack.recoveryTime;
+
+	return eachAttackTime;
+
 }
 
 void Player::BehaviorDashUpdate() {
@@ -366,13 +590,41 @@ void Player::SetOBB() {
 
 	obb_.SetOBB(worldTransformBody_, 0.5f);
 
-	if (attackFrame < 35) {
-		attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-100.0f,0.0f });
+	if (behavior_ == Behavior::kAttack) {
+
+		switch (workAttack_.comboIndex)
+		{
+		default:
+		case 0:
+			if (workAttack_.attackParameter_ < 35) {
+				attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-100.0f,0.0f });
+			}
+			else {
+				attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-2.5f,9.5f });
+			}
+			break;
+		case 1:
+			if (workAttack_.attackParameter_ < 29) {
+				attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-100.0f,0.0f });
+			}
+			else {
+				attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-2.5f,9.5f });
+			}
+			break;
+		case 2:
+			if (workAttack_.attackParameter_ < 43) {
+				attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-100.0f,0.0f });
+			}
+			else if (workAttack_.attackParameter_ < 60) {
+				attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-2.5f,9.5f });
+			}
+			break;
+		}
+
 	}
 	else {
-		attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-2.5f,9.5f });
+		attackObb_.SetOBB(worldTransformWeapon_, 1.0f, { 0.0f,-100.0f,0.0f });
 	}
-	
 
 }
 
