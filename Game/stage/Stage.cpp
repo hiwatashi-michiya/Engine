@@ -18,6 +18,10 @@ void Stage::Initialize() {
 			worldTransforms_[i].scale_ = { 5.0f,0.1f,5.0f };
 			worldTransforms_[i].translation_ = { 0.0f,0.0f, i * 10.0f };
 		}
+		else if (i == 2) {
+			worldTransforms_[i].scale_ = { 100.0f, 0.1f,10.0f };
+			worldTransforms_[i].translation_ = { 0.0f,0.0f, i * 20.0f - 15.0f };
+		}
 		else {
 			worldTransforms_[i].scale_ = { 10.0f, 0.1f,10.0f };
 			worldTransforms_[i].translation_ = { 0.0f,0.0f, i * 20.0f - 15.0f };
@@ -84,13 +88,17 @@ void Stage::Draw() {
 
 }
 
-void Stage::Collision(Player* player, Enemy* enemy) {
+void Stage::Collision(Player* player, std::list<std::shared_ptr<Enemy>> enemies) {
 
 	for (size_t i = 0; i < 5; i++) {
 
-		if (IsCollision(obbs_[i], enemy->GetOBB())) {
-			enemy->SetPositionY(worldTransforms_[i].translation_.y + enemy->GetOBB().size.y);
-			enemy->SetOBB();
+		for (auto& enemy : enemies) {
+
+			if (IsCollision(obbs_[i], enemy->GetOBB())) {
+				enemy->SetPositionY(worldTransforms_[i].translation_.y + enemy->GetOBB().size.y);
+				enemy->SetOBB();
+			}
+
 		}
 
 	}

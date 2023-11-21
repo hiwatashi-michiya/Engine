@@ -61,6 +61,9 @@
     <Filter Include="Engine\GlobalVariables">
       <UniqueIdentifier>{0374ae7b-2f46-493c-b44f-d8d4d3984ffc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\LockOn">
+      <UniqueIdentifier>{8d22b7d9-c2aa-4845-951c-115e5498b842}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -158,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="Engine\math\MyMath.cpp">
       <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\lockon\LockOn.cpp">
+      <Filter>Game\LockOn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="Engine\math\MyMath.h">
       <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\lockon\LockOn.h">
+      <Filter>Game\LockOn</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

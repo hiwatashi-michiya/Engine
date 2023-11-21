@@ -68,7 +68,11 @@ public:
 
 	static WorldTransform worldTransformCamera_;
 
+	static Matrix4x4 matView_;
+
 	static 	Matrix4x4 matProjection_;
+
+	static const Matrix4x4& GetViewProjection() { return matView_ * matProjection_; }
 
 private:
 

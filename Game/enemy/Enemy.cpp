@@ -16,7 +16,6 @@ void Enemy::Initialize() {
 	modelL_arm_.reset(Model::Create("enemy_arm"));
 	modelR_arm_.reset(Model::Create("enemy_arm"));
 
-	worldTransformBody_.translation_ = { -5.0f, 0.0f,25.0f };
 	worldTransformL_arm_.translation_.x = -1.0f;
 	worldTransformR_arm_.translation_.x = 1.0f;
 	worldTransformL_arm_.parent_ = &worldTransformBody_;

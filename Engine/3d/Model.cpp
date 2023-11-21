@@ -14,6 +14,7 @@ ID3D12PipelineState* Model::pipelineState_ = nullptr;
 IDxcBlob* Model::vs3dBlob_ = nullptr;
 IDxcBlob* Model::ps3dBlob_ = nullptr;
 WorldTransform Model::worldTransformCamera_{};
+Matrix4x4 Model::matView_ = MakeIdentity4x4();
 Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
 
 //mtlファイル読み込み関数
@@ -454,9 +455,9 @@ void Model::Draw(WorldTransform& worldTransform) {
 
 	Matrix4x4 worldMatrix = worldTransform.matWorld_;
 	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
+	matView_ = Inverse(cameraMatrix);
 	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);
+	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (matView_ * matProjection_);
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = worldMatrix;
 

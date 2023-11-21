@@ -4,6 +4,7 @@
 #include <memory>
 #include "Game/player/Player.h"
 #include "Game/enemy/Enemy.h"
+#include <list>
 
 class Stage
 {
@@ -17,7 +18,7 @@ public:
 
 	void Draw();
 
-	void Collision(Player* player, Enemy* enemy);
+	void Collision(Player* player, std::list<std::shared_ptr<Enemy>> enemies);
 
 	void SetOBB();
 

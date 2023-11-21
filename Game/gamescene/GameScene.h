@@ -9,6 +9,8 @@
 #include "Game/player/Player.h"
 #include "Game/enemy/Enemy.h"
 #include "Game/stage/Stage.h"
+#include <list>
+#include "Game/lockon/LockOn.h"
 
 class GameScene
 {
@@ -46,7 +48,9 @@ private:
 
 	std::unique_ptr<Player> player_;
 
-	std::unique_ptr<Enemy> enemy_;
+	std::list<std::shared_ptr<Enemy>> enemies_;
+
+	std::unique_ptr<LockOn> lockOn_;
 
 	std::unique_ptr<Model> modelSkydome_;
 

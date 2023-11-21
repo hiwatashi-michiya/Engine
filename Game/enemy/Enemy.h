@@ -29,6 +29,32 @@ public:
 
 	bool GetIsDead() { return isDead_; }
 
+	void SetPosition(const Vector3& position) { worldTransformBody_.translation_ = position; }
+
+	const Vector3& GetPosition() { return worldTransformBody_.translation_; }
+
+	const Vector3& GetWorldPosition() {
+		
+		Vector3 pos = {
+			worldTransformBody_.matWorld_.m[3][0],
+			worldTransformBody_.matWorld_.m[3][1],
+			worldTransformBody_.matWorld_.m[3][2]
+		};
+		
+		return pos;
+
+	}
+
+	const Vector3& GetModelWorldPos() {
+
+		Vector3 offset = { 0.0f,0.5f,0.0f };
+
+		Vector3 pos = CoordTransform(offset, worldTransformBody_.matWorld_);
+
+		return pos;
+
+	}
+
 private:
 
 	std::unique_ptr<Model> modelBody_;
