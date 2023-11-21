@@ -31,7 +31,9 @@ void GameScene::Initialize() {
 	for (uint32_t i = 0; i < 5; i++) {
 		std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
 		enemy->Initialize();
-		enemy->SetPosition({ i * 10.0f - 20.0f, 0.0f,25.0f });
+		enemy->SetPosition({ i * 10.0f - 20.0f, 0.0f,25.0f + i * 0.5f });
+		enemy->SetVelocity({ 0.0f,0.0f,-0.1f + i * -0.1f });
+		enemy->SetMoveTimer(60);
 		enemies_.push_back(enemy);
 
 	}
@@ -46,7 +48,7 @@ void GameScene::Initialize() {
 	GlobalVariables::GetInstance()->AddItem(groupName, "Delay", delay_);
 
 
-	Reset();
+	ResetCamera();
 
 }
 
@@ -61,6 +63,20 @@ void GameScene::Update() {
 	ImGui::End();
 
 #endif // _DEBUG
+
+	if (player_->GetIsFall()) {
+		ResetEnemy();
+	}
+
+	//enemies_.remove_if([](std::shared_ptr<Enemy> enemy) {
+
+	//	if (enemy->GetIsDead()) {
+	//		return true;
+	//	}
+
+	//	return false;
+
+	//});
 
 	UpdateGlobalVariables();
 
@@ -165,7 +181,7 @@ void GameScene::Draw() {
 
 }
 
-void GameScene::Reset() {
+void GameScene::ResetCamera() {
 
 	if (player_) {
 
@@ -198,6 +214,23 @@ void GameScene::Reset() {
 
 	//	Model::worldTransformCamera_.translation_ = player_->GetWorldTransform().translation_ + offset;
 	//}
+
+}
+
+void GameScene::ResetEnemy() {
+
+	/*enemies_.clear();*/
+
+	for (uint32_t i = 0; auto & enemy : enemies_) {
+
+		if (enemy->GetIsDead()) {
+			enemy->SetPosition({ i * 10.0f - 20.0f, 0.0f,25.0f + i * 0.5f });
+			enemy->SetIsDead(false);
+		}
+
+		i++;
+
+	}
 
 }
 

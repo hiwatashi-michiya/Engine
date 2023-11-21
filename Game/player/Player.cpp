@@ -154,8 +154,8 @@ void Player::BehaviorRootUpdate() {
 	// 速さ
 	const float speed = 0.7f;
 
-	if (velocity_.y > -5.0f) {
-		velocity_.y -= 0.05f;
+	if (fallVelocity_.y > -5.0f) {
+		fallVelocity_.y -= 0.05f;
 	}
 
 	// 移動量。Lスティックの入力を取る
@@ -173,7 +173,7 @@ void Player::BehaviorRootUpdate() {
 	// 移動
 	worldTransformBody_.translation_ += move;
 	//落下処理
-	worldTransformBody_.translation_ += velocity_;
+	worldTransformBody_.translation_ += fallVelocity_;
 
 	// 回転
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
@@ -186,7 +186,11 @@ void Player::BehaviorRootUpdate() {
 	worldTransformBody_.rotation_.y = destinationAngleY_;
 
 	if (worldTransformBody_.translation_.y <= -10.0f) {
+		isFall_ = true;
 		worldTransformBody_.translation_ = { 0.0f,0.0f,0.0f };
+	}
+	else {
+		isFall_ = false;
 	}
 
 	if (input_->TriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
@@ -500,8 +504,8 @@ Player::AttackTime Player::EachAttackTime(ConstAttack constAttack) {
 
 void Player::BehaviorDashUpdate() {
 
-	if (velocity_.y > -5.0f) {
-		velocity_.y -= 0.1f;
+	if (fallVelocity_.y > -5.0f) {
+		fallVelocity_.y -= 0.1f;
 	}
 
 	//自キャラの向いている方向に移動
@@ -511,10 +515,14 @@ void Player::BehaviorDashUpdate() {
 
 	worldTransformBody_.translation_ += move;
 	//落下処理
-	worldTransformBody_.translation_ += velocity_;
+	worldTransformBody_.translation_ += fallVelocity_;
 
 	if (worldTransformBody_.translation_.y <= -10.0f) {
+		isFall_ = true;
 		worldTransformBody_.translation_ = { 0.0f,0.0f,0.0f };
+	}
+	else {
+		isFall_ = false;
 	}
 
 	//ダッシュ時間
@@ -541,8 +549,8 @@ void Player::BehaviorJumpUpdate() {
 	// 速さ
 	const float speed = 0.7f;
 
-	if (velocity_.y > -5.0f) {
-		velocity_.y -= 0.05f;
+	if (fallVelocity_.y > -5.0f) {
+		fallVelocity_.y -= 0.05f;
 	}
 
 	// 移動量。Lスティックの入力を取る
@@ -560,7 +568,7 @@ void Player::BehaviorJumpUpdate() {
 	// 移動
 	worldTransformBody_.translation_ += move;
 	//落下処理
-	worldTransformBody_.translation_ += velocity_;
+	worldTransformBody_.translation_ += fallVelocity_;
 
 	// 回転
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
@@ -582,7 +590,7 @@ void Player::BehaviorJumpInitialize() {
 
 	//ジャンプ初速
 	const float kJumpFirstSpeed = 0.7f;
-	velocity_.y = kJumpFirstSpeed;
+	fallVelocity_.y = kJumpFirstSpeed;
 
 }
 

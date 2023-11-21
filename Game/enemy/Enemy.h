@@ -22,10 +22,12 @@ public:
 
 	void SetPositionY(float pos) {
 		worldTransformBody_.translation_.y = pos;
-		velocity_.y = 0.0f;
+		fallVelocity_.y = 0.0f;
 	}
 
 	void Collision(Player* player);
+
+	void SetIsDead(bool flag) { isDead_ = flag; }
 
 	bool GetIsDead() { return isDead_; }
 
@@ -47,13 +49,17 @@ public:
 
 	const Vector3& GetModelWorldPos() {
 
-		Vector3 offset = { 0.0f,0.5f,0.0f };
+		Vector3 offset = { 0.0f,1.5f,0.0f };
 
 		Vector3 pos = CoordTransform(offset, worldTransformBody_.matWorld_);
 
 		return pos;
 
 	}
+
+	void SetVelocity(const Vector3& velocity) { velocity_ = velocity; }
+
+	void SetMoveTimer(uint32_t time) { maxMoveTime_ = time; }
 
 private:
 
@@ -65,7 +71,13 @@ private:
 	WorldTransform worldTransformL_arm_;
 	WorldTransform worldTransformR_arm_;
 
+	Vector3 fallVelocity_{};
+
 	Vector3 velocity_{};
+
+	uint32_t moveTimer_ = 0;
+
+	uint32_t maxMoveTime_ = 30;
 
 	OBB obb_;
 

@@ -40,7 +40,9 @@ private:
 
 	Vector3 CalcOffset();
 
-	void Reset();
+	void ResetCamera();
+
+	void ResetEnemy();
 
 	void UpdateGlobalVariables();
 

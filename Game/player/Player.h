@@ -35,7 +35,7 @@ public:
 
 	void SetPositionY(float pos) {
 		worldTransformBody_.translation_.y = pos;
-		velocity_.y = 0.0f;
+		fallVelocity_.y = 0.0f;
 	}
 
 	void SetOBB();
@@ -66,6 +66,8 @@ public:
 	Vector3 GetDashStartPosition() { return dashStartPosition_; }
 
 	void SetBehavior(Behavior behavior) { behavior_ = behavior; }
+
+	bool GetIsFall() const { return isFall_; }
 
 	//目標角度
 	float destinationAngleY_;
@@ -153,11 +155,14 @@ private:
 
 	WorkDash workDash_;
 
-	Vector3 velocity_{};
+	Vector3 fallVelocity_{};
 
 	Vector3 dashStartPosition_{};
 
 	bool canJump_ = true;
+
+	//落ちたかどうか
+	bool isFall_ = false;
 
 	//通常行動更新
 	void BehaviorRootUpdate();

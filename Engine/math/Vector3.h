@@ -129,6 +129,9 @@ Vector3 CoordTransform(const Vector3& vector, const Matrix4x4& matrix);
 //ベクトル変換(スケールと回転)
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
+//スクリーン座標変換
+Vector3 TransformScreen(const Vector3& v, const Matrix4x4& matView, const Matrix4x4& matProjection);
+
 // クロス積
 Vector3 Cross(const Vector3& v1, const Vector3& v2);
 

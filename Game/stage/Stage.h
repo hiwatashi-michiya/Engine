@@ -32,7 +32,7 @@ private:
 
 	WorldTransform worldTransformGoal_;
 
-	Vector3 velocity_[2]{};
+	Vector3 fallVelocity_[2]{};
 
 	OBB obbs_[5];
 

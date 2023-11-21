@@ -31,19 +31,25 @@ private:
 
 	std::unique_ptr<Sprite> lockOnMark_;
 
+	//ロックオン対象
+	Enemy* target_ = nullptr;
+
 	//検索
 	void Search(const std::list<std::shared_ptr<Enemy>>& enemies, const Matrix4x4& matView);
+
+	//範囲外判定
+	bool IsOutOfRange();
+
+	void SearchRange();
 
 	//最小距離
 	float minDistance_ = 10.0f;
 
 	//最大距離
-	float maxDistance_ = 30.0f;
+	float maxDistance_ = 100.0f;
 
 	//角度範囲
 	float angleRange_ = 3.14f / 9.0f;
-
-	bool isLockOn_;
 
 };
 

@@ -125,6 +125,26 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	return result;
 
 }
+
+Vector3 TransformScreen(const Vector3& v, const Matrix4x4& matView, const Matrix4x4& matProjection) {
+
+	Vector3 pos = v;
+
+	//ビューポート行列
+	Matrix4x4 matViewport =
+		MakeViewportMatrix(0, 0, 1280.0f, 720.0f, 0, 1);
+
+	//ビュー行列とプロジェクション行列、ビューポート行列を合成する
+	Matrix4x4 matViewProjectionViewport =
+		Multiply(Multiply(matView, matProjection), matViewport);
+
+	//ワールド→スクリーン座標変換(ここで3Dから2Dになる)
+	pos = CoordTransform(pos, matViewProjectionViewport);
+
+	return pos;
+
+}
+
 //線形補間
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 

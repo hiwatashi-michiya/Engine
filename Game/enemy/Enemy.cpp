@@ -40,20 +40,32 @@ void Enemy::Update() {
 #endif // _DEBUG
 
 
-	if (velocity_.y > -5.0f) {
-		velocity_.y -= 0.1f;
+	if (fallVelocity_.y > -5.0f) {
+		fallVelocity_.y -= 0.1f;
 	}
 
 	{
 
-		float rad = 3.14f / 60.0f;
+		/*float rad = 3.14f / 60.0f;
 		worldTransformBody_.rotation_.y -= rad;
 
 		if (worldTransformBody_.rotation_.y >= 6.28f) {
 			worldTransformBody_.rotation_.y = 0.0f;
+		}*/
+
+		if (++moveTimer_ >= maxMoveTime_) {
+
+			worldTransformBody_.rotation_.y += 3.14f;
+
+			if (worldTransformBody_.rotation_.y >= 6.28f) {
+				worldTransformBody_.rotation_.y = 0.0f;
+			}
+
+			/*velocity_ *= -1.0f;*/
+			moveTimer_ = 0;
 		}
 
-		Vector3 move = { 0.0f, 0.0f, -0.9f };
+		Vector3 move = velocity_;
 
 		move = TransformNormal(move, worldTransformBody_.matWorld_);
 		move /= 3.0f;
@@ -61,7 +73,7 @@ void Enemy::Update() {
 
 	}
 
-	worldTransformBody_.translation_ += velocity_;
+	worldTransformBody_.translation_ += fallVelocity_;
 
 	worldTransformL_arm_.rotation_.x += 3.14f / 60.0f;
 	worldTransformR_arm_.rotation_.x += 3.14f / 60.0f;
