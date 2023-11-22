@@ -76,6 +76,10 @@ void Player::Update() {
 
 	modelBody_->ImGuiUpdate("body");
 
+	ImGui::Begin("color");
+	ImGui::ColorEdit4("body color", &modelBody_->color_.x);
+	ImGui::End();
+
 #endif // _DEBUG
 
 	UpdateGlobalVariables();

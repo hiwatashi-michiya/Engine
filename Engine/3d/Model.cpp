@@ -372,7 +372,7 @@ void Model::Initialize(const std::string& filename) {
 		//マッピングしてデータ転送
 		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
 
-		constMap_->color = Vector4(1.0f,1.0f,1.0f,1.0f);
+		constMap_->color = color_;
 		constMap_->enableLighting = true;
 		constMap_->uvTransform = MakeIdentity4x4();
 
@@ -470,7 +470,7 @@ void Model::Draw(WorldTransform& worldTransform) {
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = worldMatrix;
 
-	/*constMap_->color = color_;*/
+	constMap_->color = color_;
 
 	//平行光源設定
 	commandList_->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());
