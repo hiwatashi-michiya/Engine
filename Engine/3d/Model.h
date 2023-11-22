@@ -76,6 +76,8 @@ public:
 
 	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 
+	void ImGuiUpdate(const std::string& name);
+
 private:
 
 	//静的メンバ変数

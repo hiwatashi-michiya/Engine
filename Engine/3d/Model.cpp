@@ -4,6 +4,7 @@
 #include "Engine/manager/ShaderManager.h"
 #include <fstream>
 #include <sstream>
+#include "Engine/manager/ImGuiManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -448,6 +449,14 @@ void Model::PostDraw() {
 
 }
 
+void Model::ImGuiUpdate(const std::string& name) {
+
+	ImGui::Begin(name.c_str());
+	ImGui::ColorEdit4("model Color", &constMap_->color.x);
+	ImGui::End();
+
+}
+
 void Model::Draw(WorldTransform& worldTransform) {
 
 	//行列の更新
@@ -461,7 +470,7 @@ void Model::Draw(WorldTransform& worldTransform) {
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = worldMatrix;
 
-	constMap_->color = color_;
+	/*constMap_->color = color_;*/
 
 	//平行光源設定
 	commandList_->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());

@@ -74,21 +74,7 @@ void Player::Update() {
 
 #ifdef _DEBUG
 
-	ImGui::Begin("player");
-	ImGui::DragFloat3("scale", &worldTransformBody_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &worldTransformBody_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation", &worldTransformBody_.translation_.x, 0.1f);
-	ImGui::DragFloat3("scale h", &worldTransformHead_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation h", &worldTransformHead_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation h", &worldTransformHead_.translation_.x, 0.1f);
-	ImGui::DragFloat3("scale L", &worldTransformL_arm_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation L", &worldTransformL_arm_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation L", &worldTransformL_arm_.translation_.x, 0.1f);
-	ImGui::DragFloat3("scale R", &worldTransformR_arm_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation R", &worldTransformR_arm_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation R", &worldTransformR_arm_.translation_.x, 0.1f);
-	ImGui::DragFloat3("attackobb", &attackObb_.center.x, 0.1f);
-	ImGui::End();
+	modelBody_->ImGuiUpdate("body");
 
 #endif // _DEBUG
 
