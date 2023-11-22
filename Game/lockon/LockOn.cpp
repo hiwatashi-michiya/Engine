@@ -1,6 +1,7 @@
 #include "LockOn.h"
 #include "Engine/input/Input.h"
 #include <cmath>
+#include "Engine/manager/ImGuiManager.h"
 
 LockOn::LockOn()
 {
@@ -18,20 +19,66 @@ void LockOn::Initialize() {
 
 }
 
-void LockOn::Update(const std::list<std::shared_ptr<Enemy>>& enemies,const Matrix4x4& matView) {
+void LockOn::Debug() {
+#ifdef _DEBUG
+	ImGui::Begin("lock on");
+	ImGui::Checkbox("is auto", &isAuto_);
+	ImGui::End();
+#endif // _DEBUG
+}
 
+void LockOn::Update(const std::list<std::shared_ptr<Enemy>>& enemies,const Matrix4x4& matView) {
 	
+	if (Input::GetInstance()->TriggerButton(XINPUT_GAMEPAD_B)) {
+
+		//自動ロックオン切り替え
+		if (isAuto_) {
+			isAuto_ = false;
+		}
+		else {
+			isAuto_ = true;
+		}
+
+	}
+
+	if (lockOnCoolTime_ > 0) {
+		lockOnCoolTime_--;
+	}
+
 	//ロックオン状態のとき
 	if (target_) {
 
-		if (Input::GetInstance()->TriggerButton(XINPUT_GAMEPAD_Y)) {
-			//ロックオンを外す
-			target_ = nullptr;
+		{
+
+			if (Input::GetInstance()->TriggerButton(XINPUT_GAMEPAD_Y)) {
+				//ロックオンを外す
+				target_ = nullptr;
+			}
+			//範囲外判定
+			else if (IsOutOfRange()) {
+				//ロックオンを外す
+				target_ = nullptr;
+			}
+			//敵が死んだかどうか判定
+			else if (target_->GetIsDead()) {
+				//ロックオンを外す
+				target_ = nullptr;
+			}
+
+			//再度サーチ
+			if (Input::GetInstance()->TriggerButton(XINPUT_GAMEPAD_X)) {
+
+				Search(enemies, matView);
+				
+			}
+
 		}
-		//範囲外判定
-		else if (IsOutOfRange()) {
-			//ロックオンを外す
-			target_ = nullptr;
+
+	}
+	else if(isAuto_){
+
+		if (lockOnCoolTime_ <= 0) {
+			Search(enemies, matView);
 		}
 
 	}
@@ -78,17 +125,27 @@ void LockOn::Search(const std::list<std::shared_ptr<Enemy>>& enemies, const Matr
 		//ワールド->ビュー座標変換
 		Vector3 positionView = CoordTransform(positionWorld, matView);
 
-		//距離条件チェック
-		if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
+		//敵が死んでいなければ
+		if (enemy->GetIsDead() == false) {
 
-			//カメラ前方との角度を計算
-			float arcTangent = atan2(
-				std::sqrtf(positionView.x * positionView.x + positionView.y * positionView.y),
-				positionView.z);
+			//ターゲットと同一でない場合
+			if (enemy.get() != target_) {
 
-			//角度条件チェック
-			if (fabsf(arcTangent) <= angleRange_) {
-				targets.emplace_back(std::make_pair(positionView.z, enemy.get()));
+				//距離条件チェック
+				if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
+
+					//カメラ前方との角度を計算
+					float arcTangent = atan2(
+						std::sqrtf(positionView.x * positionView.x + positionView.y * positionView.y),
+						positionView.z);
+
+					//角度条件チェック
+					if (fabsf(arcTangent) <= angleRange_) {
+						targets.emplace_back(std::make_pair(positionView.z, enemy.get()));
+					}
+
+				}
+
 			}
 
 		}
@@ -103,7 +160,9 @@ void LockOn::Search(const std::list<std::shared_ptr<Enemy>>& enemies, const Matr
 		targets.sort([](auto& pair1, auto& pair2) {return pair1.first < pair2.first; });
 		//ソートの結果一番近い敵をロックオン対象とする
 		target_ = targets.front().second;
+		lockOnCoolTime_ = maxLockOnCoolTime_;
 	}
+
 
 }
 

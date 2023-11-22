@@ -4,6 +4,11 @@
 
 Enemy::Enemy()
 {
+
+	modelBody_.reset(Model::Create("enemy"));
+	modelL_arm_.reset(Model::Create("enemy_arm"));
+	modelR_arm_.reset(Model::Create("enemy_arm"));
+
 }
 
 Enemy::~Enemy()
@@ -12,10 +17,7 @@ Enemy::~Enemy()
 
 void Enemy::Initialize() {
 
-	modelBody_.reset(Model::Create("enemy"));
-	modelL_arm_.reset(Model::Create("enemy_arm"));
-	modelR_arm_.reset(Model::Create("enemy_arm"));
-
+	worldTransformBody_.rotation_.y = 0.0f;
 	worldTransformL_arm_.translation_.x = -1.0f;
 	worldTransformR_arm_.translation_.x = 1.0f;
 	worldTransformL_arm_.parent_ = &worldTransformBody_;
@@ -26,6 +28,7 @@ void Enemy::Initialize() {
 	obb_.orientations[1] = { 0.0f,1.0f,0.0f };
 	obb_.orientations[2] = { 0.0f,0.0f,1.0f };
 	obb_.size = worldTransformBody_.scale_ / 2.0f;
+	hitCount_ = 0;
 
 }
 
@@ -44,39 +47,64 @@ void Enemy::Update() {
 		fallVelocity_.y -= 0.1f;
 	}
 
-	{
+	if (hitCount_ <= 0) {
 
-		/*float rad = 3.14f / 60.0f;
-		worldTransformBody_.rotation_.y -= rad;
+		{
 
-		if (worldTransformBody_.rotation_.y >= 6.28f) {
-			worldTransformBody_.rotation_.y = 0.0f;
-		}*/
+			if (worldTransformBody_.scale_.y < 1.0f) {
 
-		if (++moveTimer_ >= maxMoveTime_) {
+				worldTransformBody_.scale_.y += 0.1f;
 
-			worldTransformBody_.rotation_.y += 3.14f;
+				if (worldTransformBody_.scale_.y > 1.0f) {
+					worldTransformBody_.scale_.y = 1.0f;
+				}
+
+			}
+
+			/*float rad = 3.14f / 60.0f;
+			worldTransformBody_.rotation_.y -= rad;
 
 			if (worldTransformBody_.rotation_.y >= 6.28f) {
 				worldTransformBody_.rotation_.y = 0.0f;
+			}*/
+
+			if (++moveTimer_ >= maxMoveTime_) {
+
+				worldTransformBody_.rotation_.y += 3.14f;
+
+				if (worldTransformBody_.rotation_.y >= 6.28f) {
+					worldTransformBody_.rotation_.y = 0.0f;
+				}
+
+				/*velocity_ *= -1.0f;*/
+				moveTimer_ = 0;
 			}
 
-			/*velocity_ *= -1.0f;*/
-			moveTimer_ = 0;
+			Vector3 move = velocity_;
+
+			move = TransformNormal(move, worldTransformBody_.matWorld_);
+			move /= 3.0f;
+			worldTransformBody_.translation_ += move;
+
 		}
 
-		Vector3 move = velocity_;
+		worldTransformL_arm_.rotation_.x += 3.14f / 60.0f;
+		worldTransformR_arm_.rotation_.x += 3.14f / 60.0f;
 
-		move = TransformNormal(move, worldTransformBody_.matWorld_);
-		move /= 3.0f;
-		worldTransformBody_.translation_ += move;
+	}
+	else if(hitCount_ >= 3) {
+
+		modelBody_->color_.w -= 0.05f;
+		modelL_arm_->color_.w -= 0.05f;
+		modelR_arm_->color_.w -= 0.05f;
+
+		if (modelBody_->color_.w < 0.1f) {
+			isDead_ = true;
+		}
 
 	}
 
 	worldTransformBody_.translation_ += fallVelocity_;
-
-	worldTransformL_arm_.rotation_.x += 3.14f / 60.0f;
-	worldTransformR_arm_.rotation_.x += 3.14f / 60.0f;
 
 	if (worldTransformL_arm_.rotation_.x >= 6.28f) {
 		worldTransformL_arm_.rotation_.x = 0.0f;
@@ -114,6 +142,11 @@ void Enemy::SetOBB() {
 
 void Enemy::Collision(Player* player) {
 
+	//攻撃中でなかったらヒットカウントリセット
+	if (player->IsAttack() == false && hitCount_ < 3) {
+		hitCount_ = 0;
+	}
+
 	if (IsCollision(obb_, player->GetOBB())) {
 
 		//ダッシュしていたらダッシュ開始地点に戻す
@@ -128,8 +161,10 @@ void Enemy::Collision(Player* player) {
 		
 	}
 
-	if (IsCollision(obb_, player->GetAttackOBB())) {
-		isDead_ = true;
+	if (IsCollision(obb_, player->GetAttackOBB()) && player->GetIsHit() == false) {
+		hitCount_++;
+		worldTransformBody_.scale_.y -= 0.3f;
+		player->SetIsHit(true);
 	}
 
 }

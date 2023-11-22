@@ -461,6 +461,8 @@ void Model::Draw(WorldTransform& worldTransform) {
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = worldMatrix;
 
+	constMap_->color = color_;
+
 	//平行光源設定
 	commandList_->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());
 	//Spriteの描画

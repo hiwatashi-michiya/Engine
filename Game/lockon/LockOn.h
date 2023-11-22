@@ -25,6 +25,28 @@ public:
 	/// </summary>
 	void Draw();
 
+	bool IsLockOn() {
+
+		if (target_) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	Vector3 GetTargetPosition() const {
+
+		if (target_) {
+			return target_->GetModelWorldPos();
+		}
+
+		return Vector3(0.0f, 0.0f, 0.0f);
+
+	}
+
+	void Debug();
+
 private:
 
 	Texture tex_;
@@ -33,6 +55,12 @@ private:
 
 	//ロックオン対象
 	Enemy* target_ = nullptr;
+
+	//ロックオン可能な対象
+	std::vector<std::pair<float, Enemy*>> targets_;
+
+	//自動か手動か
+	bool isAuto_ = false;
 
 	//検索
 	void Search(const std::list<std::shared_ptr<Enemy>>& enemies, const Matrix4x4& matView);
@@ -43,13 +71,18 @@ private:
 	void SearchRange();
 
 	//最小距離
-	float minDistance_ = 10.0f;
+	float minDistance_ = 40.0f;
 
 	//最大距離
-	float maxDistance_ = 100.0f;
+	float maxDistance_ = 60.0f;
 
 	//角度範囲
 	float angleRange_ = 3.14f / 9.0f;
+
+	//ロックオンのクールタイム
+	uint32_t lockOnCoolTime_ = 0;
+
+	uint32_t maxLockOnCoolTime_ = 30;
 
 };
 

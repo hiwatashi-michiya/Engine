@@ -4,6 +4,7 @@
 #include "Engine/manager/ImGuiManager.h"
 #include "Engine/GlobalVariables/GlobalVariables.h"
 #include "Engine/math/MyMath.h"
+#include "Game/lockon/LockOn.h"
 
 Player::Player()
 {
@@ -158,32 +159,47 @@ void Player::BehaviorRootUpdate() {
 		fallVelocity_.y -= 0.05f;
 	}
 
-	// 移動量。Lスティックの入力を取る
-	Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
-	// 移動量に速さを反映
-	move = Multiply(speed, Normalize(move));
+	//移動入力があった場合
+	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
 
-	Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+		// 移動量。Lスティックの入力を取る
+		Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
+		// 移動量に速さを反映
+		move = Multiply(speed, Normalize(move));
 
-	// 移動ベクトルをカメラの角度だけ回転させる
-	move = TransformNormal(move, matRotate);
+		Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
 
-	move *= 0.4f;
+		// 移動ベクトルをカメラの角度だけ回転させる
+		move = TransformNormal(move, matRotate);
 
-	// 移動
-	worldTransformBody_.translation_ += move;
+		move *= 0.4f;
+
+		// 移動
+		worldTransformBody_.translation_ += move;
+
+		// 回転
+		destinationAngleY_ = atan2(float(move.x), float(move.z));
+		lerpT_ = 0.1f;
+
+	}
+	else if (lockOn_ && lockOn_->IsLockOn()) {
+
+		//ロックオン座標
+		Vector3 lockOnPos = lockOn_->GetTargetPosition();
+
+		//追従対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPos - this->GetWorldPosition();
+
+		destinationAngleY_ = std::atan2(sub.x, sub.z);
+
+	}
+
+	worldTransformBody_.rotation_.y = destinationAngleY_;
+
 	//落下処理
 	worldTransformBody_.translation_ += fallVelocity_;
 
-	// 回転
-	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
-		/*destinationAngleY_ = Atan2(move.x, move.z);*/
-		destinationAngleY_ = atan2(float(move.x), float(move.z));
-		lerpT_ = 0.1f;
-	}
-
 	/*worldTransformBody_.rotation_.y = LerpShortAngle(worldTransformBody_.rotation_.y, destinationAngleY_, lerpT_);*/
-	worldTransformBody_.rotation_.y = destinationAngleY_;
 
 	if (worldTransformBody_.translation_.y <= -10.0f) {
 		isFall_ = true;
@@ -234,6 +250,68 @@ void Player::BehaviorAttackUpdate() {
 
 	AttackTime attackTime = EachAttackTime(kConstAttacks_[workAttack_.comboIndex]);
 
+	//自キャラを敵に向ける処理
+	if (lockOn_ && lockOn_->IsLockOn()) {
+
+		//振りかぶりから溜めまでの間は追従する
+		if (workAttack_.attackParameter_ < attackTime.secondTime) {
+
+			//ロックオン座標
+			Vector3 lockOnPos = lockOn_->GetTargetPosition();
+
+			//追従対象からロックオン対象へのベクトル
+			Vector3 sub = lockOnPos - this->GetWorldPosition();
+
+			//距離
+			float distance = Length(sub);
+
+			float speed = 1.0f;
+
+			//距離しきい値
+			const float threshold = 10.5f;
+
+			worldTransformBody_.rotation_.y = std::atan2(sub.x, sub.z);
+
+			if (distance > threshold) {
+
+				if (speed > distance - threshold) {
+					speed = distance - threshold;
+				}
+
+				// 移動量。Lスティックの入力を取る
+				Vector3 move = { 0.0f, 0.0f, speed };
+
+				Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+
+				// 移動ベクトルをカメラの角度だけ回転させる
+				move = TransformNormal(move, matRotate);
+
+				move *= 0.4f;
+
+				// 移動
+				worldTransformBody_.translation_ += move;
+
+			}
+
+		}
+
+	}
+
+	if (fallVelocity_.y > -5.0f) {
+		fallVelocity_.y -= 0.05f;
+	}
+
+	//落下処理
+	worldTransformBody_.translation_ += fallVelocity_;
+
+	if (worldTransformBody_.translation_.y <= -10.0f) {
+		isFall_ = true;
+		worldTransformBody_.translation_ = { 0.0f,0.0f,0.0f };
+	}
+	else {
+		isFall_ = false;
+	}
+
 	//コンボ段階によってモーションを分岐
 	switch (workAttack_.comboIndex)
 	{
@@ -258,6 +336,7 @@ void Player::BehaviorAttackUpdate() {
 				worldTransformR_arm_.rotation_.x = -1.57f;
 				worldTransformWeapon_.rotation_.x = 1.57f;
 				worldTransformWeapon_.translation_.y = 3.0f;
+				isHit_ = false;
 			}
 			else {
 				//コンボ継続フラグをリセット
@@ -269,6 +348,7 @@ void Player::BehaviorAttackUpdate() {
 				//コンボ段階をリセット
 				workAttack_.comboIndex = 0;
 				behaviorRequest_ = Behavior::kRoot;
+				isHit_ = false;
 			}
 
 		}
@@ -333,6 +413,7 @@ void Player::BehaviorAttackUpdate() {
 				worldTransformR_arm_.rotation_.x = -1.57f;
 				worldTransformWeapon_.rotation_.x = 1.57f;
 				worldTransformWeapon_.translation_.y = 3.0f;
+				isHit_ = false;
 			}
 			else {
 				//コンボ継続フラグをリセット
@@ -344,6 +425,7 @@ void Player::BehaviorAttackUpdate() {
 				//コンボ段階をリセット
 				workAttack_.comboIndex = 0;
 				behaviorRequest_ = Behavior::kRoot;
+				isHit_ = false;
 			}
 
 		}
@@ -408,6 +490,7 @@ void Player::BehaviorAttackUpdate() {
 				worldTransformR_arm_.rotation_.x = -1.57f;
 				worldTransformWeapon_.rotation_.x = 1.57f;
 				worldTransformWeapon_.translation_.y = 3.0f;
+				isHit_ = false;
 			}
 			else {
 				//コンボ継続フラグをリセット
@@ -419,6 +502,7 @@ void Player::BehaviorAttackUpdate() {
 				//コンボ段階をリセット
 				workAttack_.comboIndex = 0;
 				behaviorRequest_ = Behavior::kRoot;
+				isHit_ = false;
 			}
 
 		}
@@ -482,6 +566,7 @@ void Player::BehaviorAttackInitialize() {
 	worldTransformR_arm_.rotation_.x = -1.57f;
 	worldTransformWeapon_.rotation_.x = 1.57f;
 	worldTransformWeapon_.translation_.y = 3.0f;
+	isHit_ = false;
 }
 
 Player::AttackTime Player::EachAttackTime(ConstAttack constAttack) {

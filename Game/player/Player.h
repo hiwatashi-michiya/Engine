@@ -13,6 +13,8 @@ enum class Behavior {
 	kJump, //ジャンプ
 };
 
+class LockOn;
+
 class Player
 {
 public:
@@ -42,7 +44,7 @@ public:
 
 	const WorldTransform& GetWorldTransform() { return worldTransformBody_; }
 
-	const Vector3& GetWorldTranslation() {
+	Vector3 GetWorldPosition() {
 		return Vector3(worldTransformBody_.matWorld_.m[3][0],
 			worldTransformBody_.matWorld_.m[3][1],
 			worldTransformBody_.matWorld_.m[3][2]
@@ -69,6 +71,9 @@ public:
 
 	bool GetIsFall() const { return isFall_; }
 
+	//ロックオンのセッター
+	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
+
 	//目標角度
 	float destinationAngleY_;
 
@@ -87,6 +92,21 @@ public:
 		uint32_t totalTime;
 	};
 
+	//攻撃中かどうか
+	bool IsAttack() {
+
+		if (behavior_ == Behavior::kAttack) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	void SetIsHit(bool flag) { isHit_ = flag; }
+
+	bool GetIsHit() const { return isHit_; }
+
 private:
 
 	Input* input_ = nullptr;
@@ -102,6 +122,9 @@ private:
 	WorldTransform worldTransformL_arm_;
 	WorldTransform worldTransformR_arm_;
 	WorldTransform worldTransformWeapon_;
+
+	//ロックオン
+	LockOn* lockOn_ = nullptr;
 
 	//振る舞い
 	Behavior behavior_ = Behavior::kRoot;
@@ -160,6 +183,9 @@ private:
 	Vector3 dashStartPosition_{};
 
 	bool canJump_ = true;
+
+	//攻撃が当たったかどうか
+	bool isHit_ = false;
 
 	//落ちたかどうか
 	bool isFall_ = false;

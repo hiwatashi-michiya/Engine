@@ -74,6 +74,8 @@ public:
 
 	static const Matrix4x4& GetViewProjection() { return matView_ * matProjection_; }
 
+	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+
 private:
 
 	//静的メンバ変数

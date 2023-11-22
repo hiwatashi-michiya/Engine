@@ -35,7 +35,7 @@ public:
 
 	const Vector3& GetPosition() { return worldTransformBody_.translation_; }
 
-	const Vector3& GetWorldPosition() {
+	Vector3 GetWorldPosition() {
 		
 		Vector3 pos = {
 			worldTransformBody_.matWorld_.m[3][0],
@@ -47,7 +47,7 @@ public:
 
 	}
 
-	const Vector3& GetModelWorldPos() {
+	Vector3 GetModelWorldPos() {
 
 		Vector3 offset = { 0.0f,1.5f,0.0f };
 
@@ -59,7 +59,9 @@ public:
 
 	void SetVelocity(const Vector3& velocity) { velocity_ = velocity; }
 
-	void SetMoveTimer(uint32_t time) { maxMoveTime_ = time; }
+	void SetMaxMoveTimer(uint32_t time) { maxMoveTime_ = time; }
+
+	void ResetMoveTimer() { moveTimer_ = 0; }
 
 private:
 
@@ -79,8 +81,16 @@ private:
 
 	uint32_t maxMoveTime_ = 30;
 
+	//硬直中のカウント
+	/*uint32_t stunTime_ = 0;*/
+
+	//硬直時間
+	uint32_t maxStunTime_ = 30;
+
 	OBB obb_;
 
 	bool isDead_ = false;
+
+	uint32_t hitCount_ = 0;
 
 };

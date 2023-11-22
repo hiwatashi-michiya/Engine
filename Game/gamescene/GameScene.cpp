@@ -22,7 +22,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	Model::worldTransformCamera_.translation_ = { 0.0f,10.0f,-50.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.25f;
+	Model::worldTransformCamera_.rotation_.x = 0.15f;
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
 	player_ = std::make_unique<Player>();
@@ -33,7 +33,7 @@ void GameScene::Initialize() {
 		enemy->Initialize();
 		enemy->SetPosition({ i * 10.0f - 20.0f, 0.0f,25.0f + i * 0.5f });
 		enemy->SetVelocity({ 0.0f,0.0f,-0.1f + i * -0.1f });
-		enemy->SetMoveTimer(60);
+		enemy->SetMaxMoveTimer(60);
 		enemies_.push_back(enemy);
 
 	}
@@ -41,6 +41,7 @@ void GameScene::Initialize() {
 	lockOn_ = std::make_unique<LockOn>();
 	//初期化
 	lockOn_->Initialize();
+	player_->SetLockOn(lockOn_.get());
 
 	modelSkydome_.reset(Model::Create("skydome"));
 	worldTransformSkydome_.scale_ *= 500.0f;
@@ -58,7 +59,7 @@ void GameScene::Update() {
 
 	ImGui::Begin("camera");
 	ImGui::DragFloat3("scale", &Model::worldTransformCamera_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &Model::worldTransformCamera_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &Model::worldTransformCamera_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("translation", &Model::worldTransformCamera_.translation_.x, 0.1f);
 	ImGui::End();
 
@@ -82,7 +83,18 @@ void GameScene::Update() {
 
 	player_->Update();
 
-	if (input_->GetIsGamepad()) {
+	if (lockOn_->IsLockOn()) {
+
+		//ロックオン座標
+		Vector3 lockOnPos = lockOn_->GetTargetPosition();
+
+		//追従対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPos - player_->GetWorldPosition();
+
+		destinationAngleY_ = std::atan2(sub.x, sub.z);
+
+	}
+	else if (input_->GetIsGamepad()) {
 
 		float rotateSpeed = 0.000001f;
 
@@ -107,10 +119,10 @@ void GameScene::Update() {
 	if (player_) {
 
 		if (delay_ > 0.01f) {
-			interTarget_ = Lerp(interTarget_, player_->GetWorldTranslation(), 1.0f / delay_);
+			interTarget_ = Lerp(interTarget_, player_->GetWorldPosition(), 1.0f / delay_);
 		}
 		else {
-			interTarget_ = Lerp(interTarget_, player_->GetWorldTranslation(), 1.0f);
+			interTarget_ = Lerp(interTarget_, player_->GetWorldPosition(), 1.0f);
 		}
 		
 	}
@@ -185,7 +197,7 @@ void GameScene::ResetCamera() {
 
 	if (player_) {
 
-		interTarget_ = player_->GetWorldTranslation();
+		interTarget_ = player_->GetWorldPosition();
 		Model::worldTransformCamera_.rotation_.y = player_->GetRotation().y;
 
 	}
@@ -221,10 +233,14 @@ void GameScene::ResetEnemy() {
 
 	/*enemies_.clear();*/
 
-	for (uint32_t i = 0; auto & enemy : enemies_) {
+	for (uint32_t i = 0; auto& enemy : enemies_) {
 
+		//復活処理
 		if (enemy->GetIsDead()) {
+			enemy->Initialize();
 			enemy->SetPosition({ i * 10.0f - 20.0f, 0.0f,25.0f + i * 0.5f });
+			enemy->SetVelocity({ 0.0f,0.0f,-0.1f + i * -0.1f });
+			enemy->ResetMoveTimer();
 			enemy->SetIsDead(false);
 		}
 

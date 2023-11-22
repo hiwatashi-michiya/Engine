@@ -1,6 +1,6 @@
 {
     "Player": {
-        "speed": 6.0,
+        "speed": 1.5,
         "time": 9
     }
 }
