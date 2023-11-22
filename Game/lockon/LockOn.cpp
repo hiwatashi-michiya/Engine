@@ -84,7 +84,8 @@ void LockOn::Update(const std::list<std::shared_ptr<Enemy>>& enemies,const Matri
 	}
 	else {
 
-		if (Input::GetInstance()->TriggerButton(XINPUT_GAMEPAD_Y)) {
+		if (Input::GetInstance()->TriggerButton(XINPUT_GAMEPAD_Y) ||
+			Input::GetInstance()->TriggerButton(XINPUT_GAMEPAD_X)) {
 			Search(enemies, matView);
 		}
 

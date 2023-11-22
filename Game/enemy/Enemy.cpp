@@ -29,6 +29,9 @@ void Enemy::Initialize() {
 	obb_.orientations[2] = { 0.0f,0.0f,1.0f };
 	obb_.size = worldTransformBody_.scale_ / 2.0f;
 	hitCount_ = 0;
+	modelBody_->color_ = { 1.0f,1.0f,1.0f,1.0f };
+	modelL_arm_->color_ = { 1.0f,1.0f,1.0f,1.0f };
+	modelR_arm_->color_ = { 1.0f,1.0f,1.0f,1.0f };
 
 }
 

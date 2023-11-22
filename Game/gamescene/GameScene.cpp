@@ -21,8 +21,8 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	Model::worldTransformCamera_.translation_ = { 0.0f,10.0f,-50.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.15f;
+	Model::worldTransformCamera_.translation_ = { 0.0f,15.0f,-50.0f };
+	Model::worldTransformCamera_.rotation_.x = 0.25f;
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
 	player_ = std::make_unique<Player>();
@@ -252,7 +252,7 @@ void GameScene::ResetEnemy() {
 
 Vector3 GameScene::CalcOffset() {
 
-	Vector3 offset = { 0.0f, 10.0f, -30.0f };
+	Vector3 offset = { 0.0f, 12.0f, -30.0f };
 
 	Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
 
