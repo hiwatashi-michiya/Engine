@@ -28,7 +28,7 @@ void GameScene::Initialize() {
 	Vector3 to1 = Normalize(Vector3{ 0.4f,0.7f,-0.5f });
 
 	rotateMatrix0_ = DirectionToDirection(
-		Normalize(Vector3{ 1.0f,0.0f,0.0f }), Normalize(Vector3{ -1.0f,0.0f,0.0f }));
+		Normalize(Vector3{ 0.0f,0.0f,1.0f }), Normalize(Vector3{ 1.0f,0.0f,0.0f }));
 	rotateMatrix1_ = DirectionToDirection(from0, to0);
 	rotateMatrix2_ = DirectionToDirection(from1, to1);
 
