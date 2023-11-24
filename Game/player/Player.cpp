@@ -30,11 +30,16 @@ Player::kConstAttacks_ = {
 void Player::Initialize() {
 
 	input_ = Input::GetInstance();
+
+	particleTex_ = TextureManager::GetInstance()->Load("./resources/effect/effect.png");
+
 	modelBody_.reset(Model::Create("float_body"));
 	modelHead_.reset(Model::Create("float_head"));
 	modelL_arm_.reset(Model::Create("float_L_arm"));
 	modelR_arm_.reset(Model::Create("float_R_arm"));
 	modelWeapon_.reset(Model::Create("weapon"));
+	particle_.reset(Particle3D::Create("plane", 10));
+	particle_->SetTexture(particleTex_);
 
 	worldTransformBody_.translation_.y = 0.0f;
 	worldTransformHead_.translation_.y = 3.0f;
@@ -49,6 +54,14 @@ void Player::Initialize() {
 	worldTransformBody_.isScaleParent_ = false;
 	worldTransformBody_.isTranslationParent_ = false;
 	preDirection_ = { 0.0f,0.0f,1.0f };
+
+	for (uint32_t i = 0; i < 10; i++) {
+
+		WorldTransform wt;
+		wt.translation_ = { 0.0f,0.0f,-100.0f };
+		wtParticles_.push_back(wt);
+
+	}
 
 	obb_.center = worldTransformBody_.translation_;
 	obb_.orientations[0] = { 1.0f,0.0f,0.0f };
@@ -122,6 +135,26 @@ void Player::Update() {
 
 	SetOBB();
 
+	if (isEffect_) {
+
+		for (uint32_t i = 0; auto & wt : wtParticles_) {
+
+			wt.translation_ += {cosf(i * 3.14f / 5.0f), 0.0f, sinf(i * 3.14f / 5.0f)};
+			wt.UpdateMatrix();
+
+			i++;
+
+		}
+
+		particle_->color_.w -= 0.05f;
+
+		if (particle_->color_.w <= 0.0f) {
+			particle_->color_.w = 1.0f;
+			isEffect_ = false;
+		}
+
+	}
+
 	worldTransformBody_.UpdateMatrix(directionToDirection_);
 	worldTransformHead_.UpdateMatrix();
 	worldTransformL_arm_.UpdateMatrix();
@@ -139,7 +172,14 @@ void Player::Draw() {
 	if (behavior_ == Behavior::kAttack) {
 		modelWeapon_->Draw(worldTransformWeapon_);
 	}
-	
+
+}
+
+void Player::DrawEffect() {
+
+	if (isEffect_) {
+		particle_->Draw(wtParticles_);
+	}
 
 }
 
@@ -247,6 +287,10 @@ void Player::BehaviorAttackUpdate() {
 	}
 
 	AttackTime attackTime = EachAttackTime(kConstAttacks_[workAttack_.comboIndex]);
+
+	if (workAttack_.attackParameter_ >= attackTime.thirdTime) {
+		isEffect_ = true;
+	}
 
 	//自キャラを敵に向ける処理
 	if (lockOn_ && lockOn_->IsLockOn()) {
@@ -380,6 +424,13 @@ void Player::BehaviorAttackUpdate() {
 				}
 				else {
 					workAttack_.inComboPhase++;
+
+					for (auto& wt : wtParticles_) {
+						wt.translation_ = attackObb_.center;
+					}
+
+					particle_->color_.w = 1.0f;
+
 				}
 				break;
 			case 3:
@@ -457,6 +508,13 @@ void Player::BehaviorAttackUpdate() {
 				}
 				else {
 					workAttack_.inComboPhase++;
+
+					for (auto& wt : wtParticles_) {
+						wt.translation_ = attackObb_.center;
+					}
+
+					particle_->color_.w = 1.0f;
+
 				}
 				break;
 			case 3:
@@ -534,6 +592,13 @@ void Player::BehaviorAttackUpdate() {
 				}
 				else {
 					workAttack_.inComboPhase++;
+
+					for (auto& wt : wtParticles_) {
+						wt.translation_ = attackObb_.center;
+					}
+
+					particle_->color_.w = 1.0f;
+
 				}
 				break;
 			case 3:

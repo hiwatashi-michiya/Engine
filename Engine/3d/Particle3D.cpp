@@ -426,7 +426,7 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 		//マッピングしてデータ転送
 		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
 
-		constMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		constMap_->color = color_;
 		constMap_->enableLighting = true;
 		constMap_->uvTransform = MakeIdentity4x4();
 
@@ -531,6 +531,8 @@ void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
 		matTransformMap_[i].World = worldMatrix;
 
 	}
+
+	constMap_->color = color_;
 
 	//Spriteの描画
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);

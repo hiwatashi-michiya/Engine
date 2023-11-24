@@ -6,6 +6,7 @@
 #include "base/TextureManager.h"
 #include "input/Input.h"
 #include "GlobalVariables/GlobalVariables.h"
+#include "3d/Particle3D.h"
 
 #ifdef _DEBUG
 
@@ -31,6 +32,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	Sprite::StaticInitialize(dxCommon_->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
 	Model::StaticInitialize(dxCommon_->GetDevice());
+	Particle3D::StaticInitialize(dxCommon_->GetDevice());
 
 	TextureManager::GetInstance()->Initialize();
 	Input::GetInstance()->Initialize();
@@ -69,6 +71,7 @@ void Engine::Finalize() {
 
 #endif // _DEBUG
 
+	Particle3D::Finalize();
 	Model::Finalize();
 	Sprite::Finalize();
 	dxCommon_->Finalize();

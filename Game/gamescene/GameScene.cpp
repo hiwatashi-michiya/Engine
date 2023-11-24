@@ -186,6 +186,17 @@ void GameScene::Draw() {
 
 	}
 	
+	//エフェクト描画
+	{
+
+		Particle3D::PreDraw(commandList);
+
+		player_->DrawEffect();
+
+		Particle3D::PostDraw();
+
+	}
+
 	//2Dスプライト描画
 	{
 

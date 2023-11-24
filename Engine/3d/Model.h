@@ -78,6 +78,8 @@ public:
 
 	void ImGuiUpdate(const std::string& name);
 
+	void SetTexture(Texture& texture) { texture_ = texture; }
+
 private:
 
 	//静的メンバ変数

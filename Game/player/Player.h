@@ -4,6 +4,7 @@
 #include <memory>
 #include "Engine/input/Input.h"
 #include <optional>
+#include "Engine/3d/Particle3D.h"
 
 //振る舞い
 enum class Behavior {
@@ -26,6 +27,8 @@ public:
 	void Update();
 
 	void Draw();
+
+	void DrawEffect();
 
 	void SetParent(WorldTransform* world) { worldTransformBody_.parent_ = world; }
 
@@ -117,11 +120,17 @@ private:
 	std::unique_ptr<Model> modelR_arm_;
 	std::unique_ptr<Model> modelWeapon_;
 
+	std::unique_ptr<Particle3D> particle_;
+
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformL_arm_;
 	WorldTransform worldTransformR_arm_;
 	WorldTransform worldTransformWeapon_;
+
+	std::vector<WorldTransform> wtParticles_;
+
+	Texture particleTex_;
 
 	//ロックオン
 	LockOn* lockOn_ = nullptr;
@@ -227,6 +236,9 @@ private:
 
 	//補間係数
 	float lerpT_ = 0.0f;
+
+	//エフェクト中かどうか
+	bool isEffect_ = false;
 
 	OBB obb_;
 

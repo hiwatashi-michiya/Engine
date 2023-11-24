@@ -10,6 +10,7 @@
 #include "Engine/math/Vector2.h"
 #include "WorldTransform.h"
 #include <vector>
+#include "Engine/base/TextureManager.h"
 
 class Particle3D
 {
@@ -87,6 +88,10 @@ public:
 
 	//ビルボードを使うかどうか
 	bool isBillboard_ = true;
+
+	void SetTexture(Texture& texture) { texture_ = texture; }
+
+	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 
 private:
 
