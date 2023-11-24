@@ -100,6 +100,13 @@ void GameScene::Update() {
 
 		destinationAngleY_ += float(input_->GetGamepad().sThumbRX) * rotateSpeed;
 
+		/*if (destinationAngleY_ > 3.14f) {
+			destinationAngleY_ = -3.13f;
+		}
+		else if (destinationAngleY_ <= -3.14f) {
+			destinationAngleY_ = 3.14f;
+		}*/
+
 		//右スティック押し込みでリセット
 		if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
 			destinationAngleY_ = 0.0f;

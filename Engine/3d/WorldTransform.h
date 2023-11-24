@@ -43,6 +43,8 @@ public:
 
 	Matrix4x4 UpdateMatrix();
 
+	Matrix4x4 UpdateMatrix(const Matrix4x4& matrix);
+
 private:
 
 	void SetMatParent();

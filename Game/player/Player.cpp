@@ -48,6 +48,7 @@ void Player::Initialize() {
 	worldTransformWeapon_.parent_ = &worldTransformBody_;
 	worldTransformBody_.isScaleParent_ = false;
 	worldTransformBody_.isTranslationParent_ = false;
+	preDirection_ = { 0.0f,0.0f,1.0f };
 
 	obb_.center = worldTransformBody_.translation_;
 	obb_.orientations[0] = { 1.0f,0.0f,0.0f };
@@ -67,6 +68,8 @@ void Player::Initialize() {
 
 	GlobalVariables::GetInstance()->AddItem(groupName, "speed", workDash_.speed_);
 	GlobalVariables::GetInstance()->AddItem(groupName, "time", workDash_.dashTime_);
+
+	directionToDirection_ = MakeIdentity4x4();
 
 }
 
@@ -119,6 +122,12 @@ void Player::Update() {
 
 	SetOBB();
 
+	worldTransformBody_.UpdateMatrix(directionToDirection_);
+	worldTransformHead_.UpdateMatrix();
+	worldTransformL_arm_.UpdateMatrix();
+	worldTransformR_arm_.UpdateMatrix();
+	worldTransformWeapon_.UpdateMatrix();
+
 }
 
 void Player::Draw() {
@@ -148,6 +157,12 @@ void Player::BehaviorRootUpdate() {
 
 		// 移動量。Lスティックの入力を取る
 		Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
+
+		// 回転
+		directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(move));
+
+		preDirection_ = Normalize(move);
+
 		// 移動量に速さを反映
 		move = Multiply(speed, Normalize(move));
 
@@ -161,8 +176,7 @@ void Player::BehaviorRootUpdate() {
 		// 移動
 		worldTransformBody_.translation_ += move;
 
-		// 回転
-		destinationAngleY_ = atan2(float(move.x), float(move.z));
+
 		lerpT_ = 0.1f;
 
 	}
@@ -174,11 +188,11 @@ void Player::BehaviorRootUpdate() {
 		//追従対象からロックオン対象へのベクトル
 		Vector3 sub = lockOnPos - this->GetWorldPosition();
 
-		destinationAngleY_ = std::atan2(sub.x, sub.z);
+		worldTransformBody_.rotation_.y = std::atan2(sub.x, sub.z);
 
 	}
 
-	worldTransformBody_.rotation_.y = destinationAngleY_;
+	/*worldTransformBody_.rotation_.y = destinationAngleY_;*/
 
 	//落下処理
 	worldTransformBody_.translation_ += fallVelocity_;
@@ -607,7 +621,7 @@ void Player::BehaviorDashUpdate() {
 void Player::BehaviorDashInitialize() {
 
 	workDash_.dashParamater_ = 0;
-	worldTransformBody_.rotation_.y = destinationAngleY_;
+	/*worldTransformBody_.rotation_.y = destinationAngleY_;*/
 	dashStartPosition_ = worldTransformBody_.translation_;
 
 }
@@ -641,12 +655,12 @@ void Player::BehaviorJumpUpdate() {
 
 	// 回転
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
-		destinationAngleY_ = atan2(float(move.x), float(move.z));
+		worldTransformBody_.rotation_.y = atan2(float(move.x), float(move.z));
 		lerpT_ = 0.1f;
 	}
 
 	/*worldTransformBody_.rotation_.y = LerpShortAngle(worldTransformBody_.rotation_.y, destinationAngleY_, lerpT_);*/
-	worldTransformBody_.rotation_.y = destinationAngleY_;
+	/*worldTransformBody_.rotation_.y = destinationAngleY_;*/
 
 	if (worldTransformBody_.translation_.y <= 1.0f) {
 		behaviorRequest_ = Behavior::kRoot;

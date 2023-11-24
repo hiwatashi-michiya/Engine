@@ -460,7 +460,7 @@ void Model::ImGuiUpdate(const std::string& name) {
 void Model::Draw(WorldTransform& worldTransform) {
 
 	//行列の更新
-	worldTransform.UpdateMatrix();
+	/*worldTransform.UpdateMatrix();*/
 
 	Matrix4x4 worldMatrix = worldTransform.matWorld_;
 	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();

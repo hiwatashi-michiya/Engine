@@ -23,6 +23,27 @@ Matrix4x4 WorldTransform::UpdateMatrix() {
 
 }
 
+Matrix4x4 WorldTransform::UpdateMatrix(const Matrix4x4& matrix) {
+
+	Matrix4x4 scaleMatrix = MakeScaleMatrix(this->scale_);
+	Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix(this->rotation_.x),
+		Multiply(MakeRotateYMatrix(this->rotation_.y), MakeRotateZMatrix(this->rotation_.z)));
+
+	rotateMatrix = rotateMatrix * matrix;
+
+	Matrix4x4 translateMatrix = MakeTranslateMatrix(this->translation_);
+
+	this->matWorld_ = scaleMatrix * rotateMatrix * translateMatrix;
+
+	//親行列があるなら追加で掛ける
+	if (parent_) {
+		SetMatParent();
+	}
+
+	return this->matWorld_;
+
+}
+
 void WorldTransform::SetMatParent() {
 
 	if (isScale_ && isRotation_ && isTranslation_) {
