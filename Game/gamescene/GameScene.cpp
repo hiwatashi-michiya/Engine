@@ -22,7 +22,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	Model::worldTransformCamera_.translation_ = { 0.0f,15.0f,-50.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.25f;
+	//Model::worldTransformCamera_.rotation_.x = 0.25f;
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
 	player_ = std::make_unique<Player>();
@@ -48,6 +48,8 @@ void GameScene::Initialize() {
 	const char* groupName = "Camera";
 	GlobalVariables::GetInstance()->AddItem(groupName, "Delay", delay_);
 
+	directionToDirection_ = MakeIdentity4x4();
+	preDirection_ = { 0.0f,0.0f,1.0f };
 
 	ResetCamera();
 
@@ -83,7 +85,16 @@ void GameScene::Update() {
 
 	player_->Update();
 
+	//ロックオン更新
+	lockOn_->Update(enemies_, Model::matView_);
+
+	directionToDirection_ = MakeIdentity4x4();
+
 	if (lockOn_->IsLockOn()) {
+
+		if (!isLockOnStart_) {
+			isLockOnStart_ = true;
+		}
 
 		//ロックオン座標
 		Vector3 lockOnPos = lockOn_->GetTargetPosition();
@@ -91,10 +102,22 @@ void GameScene::Update() {
 		//追従対象からロックオン対象へのベクトル
 		Vector3 sub = lockOnPos - player_->GetWorldPosition();
 
-		destinationAngleY_ = std::atan2(sub.x, sub.z);
+		Vector3 subNoneY = { sub.x, 0.0f,sub.z };
+
+		directionToDirection_ = DirectionToDirection(Normalize(Vector3{0.0f,0.0f,1.0f}), Normalize(subNoneY));
+
+		preDirection_ = Normalize(subNoneY);
+
+		/*destinationAngleY_ = std::atan2(sub.x, sub.z);*/
 
 	}
 	else if (input_->GetIsGamepad()) {
+
+		/*if (isLockOnStart_) {
+			destinationAngleY_ = std::acosf(Model::worldTransformCamera_.rotateMatrix_.m[0][0]);
+			isLockOnStart_ = false;
+
+		}*/
 
 		float rotateSpeed = 0.000001f;
 
@@ -148,14 +171,20 @@ void GameScene::Update() {
 
 	}
 
-	//ロックオン更新
-	lockOn_->Update(enemies_, Model::matView_);
-
 	stage_->Update();
 
 	stage_->Collision(player_.get(), enemies_);
 
 	worldTransformSkydome_.UpdateMatrix();
+
+	if (lockOn_->IsLockOn()) {
+		Model::worldTransformCamera_.UpdateMatrix(directionToDirection_, false);
+	}
+	else {
+		Model::worldTransformCamera_.UpdateMatrix(MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y), false);
+	}
+
+	
 
 }
 
@@ -270,9 +299,18 @@ void GameScene::ResetEnemy() {
 
 Vector3 GameScene::CalcOffset() {
 
-	Vector3 offset = { 0.0f, 12.0f, -30.0f };
+	Vector3 offset = { 0.0f, 5.0f, -30.0f };
 
-	Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+	Matrix4x4 matRotate = MakeIdentity4x4();
+
+	if (lockOn_->IsLockOn()) {
+		matRotate = Model::worldTransformCamera_.rotateMatrix_;
+	}
+	else {
+		matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+	}
+
+	/*Matrix4x4 tmprotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);*/
 
 	//オフセットをカメラの回転に合わせて回転させる
 	offset = TransformNormal(offset, matRotate);

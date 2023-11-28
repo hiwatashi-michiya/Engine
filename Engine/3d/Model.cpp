@@ -432,8 +432,6 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
-	worldTransformCamera_.UpdateMatrix();
-
 	//PSO設定
 	commandList_->SetPipelineState(pipelineState_);
 	//ルートシグネチャを設定
@@ -463,7 +461,7 @@ void Model::Draw(WorldTransform& worldTransform) {
 	/*worldTransform.UpdateMatrix();*/
 
 	Matrix4x4 worldMatrix = worldTransform.matWorld_;
-	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();
+	Matrix4x4 cameraMatrix = worldTransformCamera_.matWorld_;
 	matView_ = Inverse(cameraMatrix);
 	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
 	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (matView_ * matProjection_);

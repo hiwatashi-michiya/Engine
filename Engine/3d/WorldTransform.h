@@ -29,25 +29,20 @@ public:
 	//平行移動を引き継ぐか
 	bool isTranslationParent_ = true;
 
-	//自身のスケールを維持するか
-	bool isScale_ = true;
-
-	//自身の回転を維持するか
-	bool isRotation_ = true;
-
-	//自身の平行移動を維持するか
-	bool isTranslation_ = true;
-
 	//ワールド行列
 	Matrix4x4 matWorld_;
 
 	Matrix4x4 UpdateMatrix();
 
-	Matrix4x4 UpdateMatrix(const Matrix4x4& matrix);
+	Matrix4x4 UpdateMatrix(const Matrix4x4& matrix, bool isRotateUpdate = true);
+
+	Matrix4x4 rotateMatrix_;
 
 private:
 
 	void SetMatParent();
+
+	void SetMatParent(const Matrix4x4& matrix);
 
 };
 

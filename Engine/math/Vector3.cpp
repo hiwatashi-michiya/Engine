@@ -295,26 +295,37 @@ void RotateOBB(OBB& obb, const Vector3& rotate) {
 
 void OBB::SetOBB(const WorldTransform& worldTransform, float scale, Vector3 offset) {
 
-	Matrix4x4 tmpAffine = MakeAffineMatrix(worldTransform.scale_, worldTransform.rotation_,
-		worldTransform.translation_ + offset);
+	Matrix4x4 tmpAffine = MakeScaleMatrix(worldTransform.scale_) *
+		worldTransform.rotateMatrix_ *
+		MakeTranslateMatrix(worldTransform.translation_ + offset);
 
 	if (worldTransform.parent_) {
+
+		Matrix4x4 tmpScaleMatrix{}, tmpRotateMatrix{}, tmpTranslationMatrix{};
+
+		tmpScaleMatrix = MakeIdentity4x4();
+		tmpRotateMatrix = MakeIdentity4x4();
+		tmpTranslationMatrix = MakeIdentity4x4();
 
 		Vector3 tmpScale{ 1.0f,1.0f,1.0f }, tmpRotation{ 0.0f,0.0f,0.0f }, tmpTranslation{ 0.0f,0.0f,0.0f };
 
 		if (worldTransform.isScaleParent_) {
 			tmpScale = worldTransform.parent_->scale_;
+			tmpScaleMatrix = MakeScaleMatrix(tmpScale);
 		}
 
 		if (worldTransform.isRotationParent_) {
-			tmpRotation = worldTransform.parent_->rotation_;
+			tmpRotateMatrix = worldTransform.parent_->rotateMatrix_;
 		}
 
 		if (worldTransform.isTranslationParent_) {
 			tmpTranslation = worldTransform.parent_->translation_;
+			tmpTranslationMatrix = MakeTranslateMatrix(tmpTranslation);
 		}
 
-		tmpAffine = tmpAffine * MakeAffineMatrix(tmpScale, tmpRotation, tmpTranslation);
+		Matrix4x4 tmpParentAffine = tmpScaleMatrix * tmpRotateMatrix * tmpTranslationMatrix;
+
+		tmpAffine = tmpAffine * tmpParentAffine;
 
 	}
 
@@ -331,7 +342,7 @@ void OBB::SetOBB(const WorldTransform& worldTransform, float scale, Vector3 offs
 
 	/*center = TransformNormal(center, matRotate);*/
 
-	RotateOBB(*this, worldTransform.rotation_);
+	/*RotateOBB(*this, worldTransform.rotation_);*/
 
 }
 

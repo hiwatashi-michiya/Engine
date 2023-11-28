@@ -481,8 +481,6 @@ void Particle3D::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
-	worldTransformCamera_.UpdateMatrix();
-
 	//PSO設定
 	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_]);
 	//ルートシグネチャを設定
@@ -504,7 +502,7 @@ void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
 
 	if (isBillboard_) {
 
-		matBillboard_ = Model::worldTransformCamera_.UpdateMatrix();
+		matBillboard_ = Model::worldTransformCamera_.matWorld_;
 
 		matBillboard_.m[3][0] = 0.0f;
 		matBillboard_.m[3][1] = 0.0f;
@@ -523,7 +521,7 @@ void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
 		}
 		Matrix4x4 worldMatrix = MakeScaleMatrix(worldTransform[i].scale_) * matBillboard_ * MakeTranslateMatrix(worldTransform[i].translation_);
 		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
-		Matrix4x4 cameraMatrix = Model::worldTransformCamera_.UpdateMatrix();
+		Matrix4x4 cameraMatrix = Model::worldTransformCamera_.matWorld_;
 		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 		matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
 		Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);

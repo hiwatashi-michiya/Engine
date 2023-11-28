@@ -53,6 +53,7 @@ void Player::Initialize() {
 	worldTransformWeapon_.parent_ = &worldTransformBody_;
 	worldTransformBody_.isScaleParent_ = false;
 	worldTransformBody_.isTranslationParent_ = false;
+	worldTransformBody_.isRotationParent_ = false;
 	preDirection_ = { 0.0f,0.0f,1.0f };
 
 	for (uint32_t i = 0; i < 10; i++) {
@@ -93,6 +94,8 @@ void Player::Update() {
 #endif // _DEBUG
 
 	UpdateGlobalVariables();
+
+	directionToDirection_ = MakeIdentity4x4();
 
 	if (behaviorRequest_) {
 		//振る舞いを変更する
@@ -198,24 +201,32 @@ void Player::BehaviorRootUpdate() {
 		// 移動量。Lスティックの入力を取る
 		Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
 
-		// 回転
-		directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(move));
-
-		preDirection_ = Normalize(move);
-
 		// 移動量に速さを反映
 		move = Multiply(speed, Normalize(move));
 
-		Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+			Matrix4x4 matRotate = MakeIdentity4x4();
+
+		if (lockOn_->IsLockOn()) {
+			matRotate = Model::worldTransformCamera_.rotateMatrix_;
+		}
+		else {
+			matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+		}
+
+		/*Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);*/
 
 		// 移動ベクトルをカメラの角度だけ回転させる
 		move = TransformNormal(move, matRotate);
 
 		move *= 0.4f;
 
+		// 回転
+		directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(move));
+
+		preDirection_ = Normalize(move);
+
 		// 移動
 		worldTransformBody_.translation_ += move;
-
 
 		lerpT_ = 0.1f;
 
@@ -228,7 +239,11 @@ void Player::BehaviorRootUpdate() {
 		//追従対象からロックオン対象へのベクトル
 		Vector3 sub = lockOnPos - this->GetWorldPosition();
 
-		worldTransformBody_.rotation_.y = std::atan2(sub.x, sub.z);
+		sub.y = 0.0f;
+
+		directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(sub));
+
+		preDirection_ = Normalize(sub);
 
 	}
 
@@ -307,12 +322,16 @@ void Player::BehaviorAttackUpdate() {
 			//距離
 			float distance = Length(sub);
 
+			sub.y = 0.0f;
+
+			directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(sub));
+
+			preDirection_ = Normalize(sub);
+
 			float speed = 1.0f;
 
 			//距離しきい値
 			const float threshold = 10.5f;
-
-			worldTransformBody_.rotation_.y = std::atan2(sub.x, sub.z);
 
 			if (distance > threshold) {
 
@@ -323,7 +342,16 @@ void Player::BehaviorAttackUpdate() {
 				// 移動量。Lスティックの入力を取る
 				Vector3 move = { 0.0f, 0.0f, speed };
 
-				Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+				Matrix4x4 matRotate = MakeIdentity4x4();
+
+				if (lockOn_->IsLockOn()) {
+					matRotate = Model::worldTransformCamera_.rotateMatrix_;
+				}
+				else {
+					matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+				}
+
+				/*Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);*/
 
 				// 移動ベクトルをカメラの角度だけ回転させる
 				move = TransformNormal(move, matRotate);
@@ -701,26 +729,45 @@ void Player::BehaviorJumpUpdate() {
 		fallVelocity_.y -= 0.05f;
 	}
 
-	// 移動量。Lスティックの入力を取る
-	Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
-	// 移動量に速さを反映
-	move = Multiply(speed, Normalize(move));
+	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
 
-	Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+		// 移動量。Lスティックの入力を取る
+		Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
 
-	// 移動ベクトルをカメラの角度だけ回転させる
-	move = TransformNormal(move, matRotate);
+		// 移動量に速さを反映
+		move = Multiply(speed, Normalize(move));
 
-	move *= 0.4f;
+		Matrix4x4 matRotate = MakeIdentity4x4();
 
-	// 移動
-	worldTransformBody_.translation_ += move;
+		if (lockOn_->IsLockOn()) {
+			matRotate = Model::worldTransformCamera_.rotateMatrix_;
+		}
+		else {
+			matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+		}
+
+		/*Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);*/
+
+		// 移動ベクトルをカメラの角度だけ回転させる
+		move = TransformNormal(move, matRotate);
+
+		// 回転
+		directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(move));
+
+		preDirection_ = Normalize(move);
+
+		move *= 0.4f;
+
+		// 移動
+		worldTransformBody_.translation_ += move;
+
+	}
+
 	//落下処理
 	worldTransformBody_.translation_ += fallVelocity_;
 
 	// 回転
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
-		worldTransformBody_.rotation_.y = atan2(float(move.x), float(move.z));
 		lerpT_ = 0.1f;
 	}
 

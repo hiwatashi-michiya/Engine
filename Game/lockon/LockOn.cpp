@@ -136,12 +136,10 @@ void LockOn::Search(const std::list<std::shared_ptr<Enemy>>& enemies, const Matr
 				if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
 
 					//カメラ前方との角度を計算
-					float arcTangent = atan2(
-						std::sqrtf(positionView.x * positionView.x + positionView.y * positionView.y),
-						positionView.z);
+					float sin = Length(Cross(Normalize(Vector3{ 0.0f,0.0f,1.0f }), Normalize(positionView)));
 
 					//角度条件チェック
-					if (fabsf(arcTangent) <= angleRange_) {
+					if (fabsf(sin) <= sinRange_) {
 						targets.emplace_back(std::make_pair(positionView.z, enemy.get()));
 					}
 
@@ -179,12 +177,10 @@ bool LockOn::IsOutOfRange() {
 	if (minDistance_ <= positionView.z && positionView.z <= maxDistance_) {
 
 		//カメラ前方との角度を計算
-		float arcTangent = atan2(
-			std::sqrtf(positionView.x * positionView.x + positionView.y * positionView.y),
-			positionView.z);
+		float sin = Length(Cross(Normalize(Vector3{ 0.0f,0.0f,1.0f }), Normalize(positionView)));
 
 		//角度条件チェック
-		if (fabsf(arcTangent) <= angleRange_) {
+		if (fabsf(sin) <= sinRange_) {
 			return false;
 		}
 

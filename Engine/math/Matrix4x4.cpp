@@ -462,7 +462,10 @@ Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
 	//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
 	if (n.x == 0.0f && n.y == 0.0f && n.z == 0.0f) {
 
-		if (from.y != 0.0f || from.x != 0.0f) {
+		if (from.z != 0.0f || from.x != 0.0f) {
+			n = { from.z, 0.0f, -from.x };
+		}
+		else if (from.y != 0.0f || from.x != 0.0f) {
 			n = { from.y, -from.x,0.0f };
 		}
 
@@ -473,7 +476,7 @@ Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
 	//sinを求める
 	float sinTheta = Length(Cross(from, to));
 
-	Matrix4x4 result{};
+	Matrix4x4 result = MakeIdentity4x4();
 
 	//任意軸の回転行列を求めた値から生成
 	result.m[0][0] = powf(n.x, 2) * (1.0f - cosTheta) + cosTheta;

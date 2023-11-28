@@ -58,6 +58,14 @@ private:
 
 	WorldTransform worldTransformSkydome_;
 
+	//前回向いていた向き
+	Vector3 preDirection_{};
+
+	//回転行列
+	Matrix4x4 directionToDirection_{};
+
+	bool isLockOnStart_ = false;
+
 };
 
 

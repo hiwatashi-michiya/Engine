@@ -42,30 +42,30 @@ void Stage::Initialize() {
 	obbGoal_.orientations[2] = { 0.0f,0.0f,1.0f };
 	obbGoal_.size = worldTransformGoal_.scale_;
 
-	fallVelocity_[0] = { -0.1f,0.0f,0.0f };
-	fallVelocity_[1] = { 0.1f,0.0f,0.0f };
+	Velocity_[0] = { -0.1f,0.0f,0.0f };
+	Velocity_[1] = { 0.1f,0.0f,0.0f };
 
 }
 
 void Stage::Update() {
 
-	worldTransforms_[1].translation_ += fallVelocity_[0];
-	worldTransforms_[3].translation_ += fallVelocity_[1];
+	worldTransforms_[1].translation_ += Velocity_[0];
+	worldTransforms_[3].translation_ += Velocity_[1];
 
 	if (worldTransforms_[1].translation_.x < -10.0f) {
-		fallVelocity_[0] *= -1.0f;
+		Velocity_[0] *= -1.0f;
 	}
 
 	if (worldTransforms_[1].translation_.x > 10.0f) {
-		fallVelocity_[0] *= -1.0f;
+		Velocity_[0] *= -1.0f;
 	}
 
 	if (worldTransforms_[3].translation_.x < -10.0f) {
-		fallVelocity_[1] *= -1.0f;
+		Velocity_[1] *= -1.0f;
 	}
 
 	if (worldTransforms_[3].translation_.x > 10.0f) {
-		fallVelocity_[1] *= -1.0f;
+		Velocity_[1] *= -1.0f;
 	}
 
 	for (int i = 0; i < 5; i++) {
@@ -108,10 +108,10 @@ void Stage::Collision(Player* player, std::list<std::shared_ptr<Enemy>> enemies)
 		if (IsCollision(obbs_[i], player->GetOBB())) {
 			player->SetParent(&worldTransforms_[i]);
 			if (i == 1) {
-				player->SetPosition(player->GetTranslation() + fallVelocity_[0]);
+				player->SetPosition(player->GetTranslation() + Velocity_[0]);
 			}
 			if (i == 3) {
-				player->SetPosition(player->GetTranslation() + fallVelocity_[1]);
+				player->SetPosition(player->GetTranslation() + Velocity_[1]);
 			}
 			player->SetPositionY(worldTransforms_[i].translation_.y + player->GetOBB().size.y);
 			player->SetOBB();

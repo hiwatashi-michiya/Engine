@@ -77,7 +77,7 @@ private:
 	float maxDistance_ = 60.0f;
 
 	//角度範囲
-	float angleRange_ = 3.14f / 9.0f;
+	float sinRange_ = 1.0f / 4.0f;
 
 	//ロックオンのクールタイム
 	uint32_t lockOnCoolTime_ = 0;
