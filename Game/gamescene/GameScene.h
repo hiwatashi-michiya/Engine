@@ -43,6 +43,10 @@ private:
 	uint32_t audio_;
 	uint32_t audio2_;
 
+	Texture* tex_;
+
+	std::unique_ptr<Sprite> sprite_;
+
 };
 
 

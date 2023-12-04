@@ -8,9 +8,13 @@
 
 GameScene::GameScene()
 {
+
+	tex_ = TextureManager::GetInstance()->Load("./resources/test.png");
+
 	plane_.reset(Model::Create("./resources/plane/plane.obj"));
 	plane2_.reset(Model::Create("./resources/fence/fence.obj"));
 	particle_.reset(Particle3D::Create("./resources/plane/plane.obj", 10));
+	sprite_.reset(Sprite::Create(tex_, { 100.0f,100.0f }));
 
 	for (uint32_t i = 0; i < 10; i++) {
 		
@@ -67,6 +71,7 @@ void GameScene::Update() {
 	}
 	plane_->ImGuiUpdate();
 	plane2_->ImGuiUpdate();
+	sprite_->ImGuiUpdate("test");
 
 #endif // _DEBUG
 
@@ -94,22 +99,6 @@ void GameScene::Update() {
 		audioManager_->ReStart(audio_);
 	}
 
-	if (input_->TriggerKey(DIK_6)) {
-		audioManager_->Play(audio2_,0.2f);
-	}
-
-	if (input_->TriggerKey(DIK_7)) {
-		audioManager_->Pause(audio2_);
-	}
-
-	if (input_->TriggerKey(DIK_8)) {
-		audioManager_->ReStart(audio2_);
-	}
-
-	if (input_->TriggerKey(DIK_9)) {
-		audioManager_->Stop(audio2_);
-	}
-
 }
 
 void GameScene::Draw() {
@@ -121,7 +110,7 @@ void GameScene::Draw() {
 
 		Model::PreDraw(commandList);
 
-		if (audioManager_->IsPlaying(audio_) && audioManager_->IsPlaying(audio2_)) {
+		if (audioManager_->IsPlaying(audio_)) {
 			plane2_->Draw(worldTransformPlane2_);
 		}
 
@@ -147,7 +136,7 @@ void GameScene::Draw() {
 
 		Sprite::PreDraw(commandList);
 
-
+		sprite_->Draw();
 
 		Sprite::PostDraw();
 

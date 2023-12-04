@@ -55,8 +55,13 @@ public:
 	//サイズ
 	Vector2 size_{};
 
+	//スプライト上の表示範囲
+	Vector2 viewRect_{};
+
 	//色
 	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+
+	void ImGuiUpdate(const std::string name);
 
 private:
 

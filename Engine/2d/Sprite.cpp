@@ -2,6 +2,7 @@
 #include <cassert>
 #include "Engine/Convert.h"
 #include "Engine/manager/ShaderManager.h"
+#include "Engine/manager/ImGuiManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -126,13 +127,13 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 	//全ての色要素を書き込む
 	blendDesc.RenderTarget[0].RenderTargetWriteMask =
 		D3D12_COLOR_WRITE_ENABLE_ALL;
-	/*blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;*/
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	//RasterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
@@ -183,6 +184,7 @@ Sprite::Sprite(Texture* texture, Vector2 position, Vector2 size, Vector4 color) 
 	texture_ = texture;
 	position_ = position;
 	size_ = size;
+	viewRect_ = { 1.0f,1.0f };
 	color_ = color;
 }
 
@@ -326,16 +328,16 @@ void Sprite::Draw() {
 
 	//左下
 	vertMap_[0].position = { 0.0f,size_.y, 0.0f,1.0f };
-	vertMap_[0].texcoord = { 0.0f,1.0f };
+	vertMap_[0].texcoord = { 0.0f,viewRect_.y };
 	//左上
 	vertMap_[1].position = { 0.0f,0.0f, 0.0f,1.0f };
 	vertMap_[1].texcoord = { 0.0f,0.0f };
 	//右下
 	vertMap_[2].position = { size_.x,size_.y, 0.0f,1.0f };
-	vertMap_[2].texcoord = { 1.0f,1.0f };
+	vertMap_[2].texcoord = { viewRect_.x,viewRect_.y };
 	//右上
 	vertMap_[3].position = { size_.x,0.0f, 0.0f,1.0f };
-	vertMap_[3].texcoord = { 1.0f,0.0f };
+	vertMap_[3].texcoord = { viewRect_.x,0.0f };
 
 	Matrix4x4 worldMatrix = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, { position_.x, position_.y, 0.5f });
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
@@ -357,5 +359,17 @@ void Sprite::Draw() {
 }
 
 void Sprite::Finalize() {
+
+}
+
+void Sprite::ImGuiUpdate(const std::string name) {
+
+	ImGui::Begin(name.c_str());
+
+	ImGui::DragFloat2("position", &position_.x, 0.1f);
+	ImGui::DragFloat2("size", &size_.x, 0.01f);
+	ImGui::DragFloat2("view rect", &viewRect_.x, 0.01f, 0.0f,1.0f);
+
+	ImGui::End();
 
 }
