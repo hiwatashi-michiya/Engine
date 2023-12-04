@@ -110,11 +110,8 @@ void GameScene::Draw() {
 
 		Model::PreDraw(commandList);
 
-		if (audioManager_->IsPlaying(audio_)) {
-			plane2_->Draw(worldTransformPlane2_);
-		}
-
 		plane_->Draw(worldTransformPlane_);
+		plane2_->Draw(worldTransformPlane2_);
 
 		Model::PostDraw();
 

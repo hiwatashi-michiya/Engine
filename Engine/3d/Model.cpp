@@ -406,6 +406,9 @@ void Model::ImGuiUpdate() {
 	ImGui::DragInt("inversion", &constMap_->isInversion, 0.1f, 0, 1);
 	ImGui::DragInt("retro", &constMap_->isRetro, 0.1f, 0, 1);
 	ImGui::DragInt("ave blur", &constMap_->isAverageBlur, 0.1f, 0, 1);
+	ImGui::DragInt("emboss", &constMap_->isEmboss, 0.1f, 0, 1);
+	ImGui::DragInt("sharpness", &constMap_->isSharpness, 0.1f, 0, 1);
+	ImGui::DragInt("outline", &constMap_->isOutline, 0.1f, 0, 1);
 	ImGui::End();
 
 	modelNumber_++;
