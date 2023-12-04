@@ -81,8 +81,8 @@ void DirectXCommon::PreDraw() {
 	//ビューポート
 	D3D12_VIEWPORT viewport{};
 	//クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = backBufferWidth_;
-	viewport.Height = backBufferHeight_;
+	viewport.Width = float(backBufferWidth_);
+	viewport.Height = float(backBufferHeight_);
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -396,7 +396,7 @@ ID3D12Resource* DirectXCommon::CreateDepthStencilTextureResource(ID3D12Device* d
 	//深度値のクリア設定
 	D3D12_CLEAR_VALUE depthClearValue{};
 	depthClearValue.DepthStencil.Depth = 1.0f; //1.0f(最大値)でクリア
-	depthClearValue.DepthStencil.Stencil = 0.0f;
+	depthClearValue.DepthStencil.Stencil = 0;
 	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT; //フォーマット。Resourceと合わせる
 
 	//Resourceの生成
