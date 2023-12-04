@@ -38,6 +38,7 @@ void GameScene::Initialize() {
 
 	audioManager_ = AudioManager::GetInstance();
 	audio_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
+	audio2_ = audioManager_->SoundLoadWave("./resources/GrievousLady.wav");
 }
 
 void GameScene::Update() {
@@ -90,7 +91,23 @@ void GameScene::Update() {
 	}
 
 	if (input_->TriggerKey(DIK_5)) {
-		audioManager_->SetVolume(audio_, 1.0f);
+		audioManager_->ReStart(audio_);
+	}
+
+	if (input_->TriggerKey(DIK_6)) {
+		audioManager_->Play(audio2_,0.2f);
+	}
+
+	if (input_->TriggerKey(DIK_7)) {
+		audioManager_->Pause(audio2_);
+	}
+
+	if (input_->TriggerKey(DIK_8)) {
+		audioManager_->ReStart(audio2_);
+	}
+
+	if (input_->TriggerKey(DIK_9)) {
+		audioManager_->Stop(audio2_);
 	}
 
 }
@@ -104,8 +121,11 @@ void GameScene::Draw() {
 
 		Model::PreDraw(commandList);
 
+		if (audioManager_->IsPlaying(audio_) && audioManager_->IsPlaying(audio2_)) {
+			plane2_->Draw(worldTransformPlane2_);
+		}
+
 		plane_->Draw(worldTransformPlane_);
-		plane2_->Draw(worldTransformPlane2_);
 
 		Model::PostDraw();
 

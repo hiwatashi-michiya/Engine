@@ -179,19 +179,19 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 
 }
 
-Sprite::Sprite(Texture texture, Vector2 position, Vector2 size, Vector4 color) {
+Sprite::Sprite(Texture* texture, Vector2 position, Vector2 size, Vector4 color) {
 	texture_ = texture;
 	position_ = position;
 	size_ = size;
 	color_ = color;
 }
 
-Sprite* Sprite::Create(Texture texture, Vector2 position, Vector4 color) {
+Sprite* Sprite::Create(Texture* texture, Vector2 position, Vector4 color) {
 
 	Vector2 tmpSize = { 100.0f,100.0f };
 
-	tmpSize = { static_cast<float>(texture.resource->GetDesc().Width),
-	static_cast<float>(texture.resource->GetDesc().Height) };
+	tmpSize = { static_cast<float>(texture->resource->GetDesc().Width),
+	static_cast<float>(texture->resource->GetDesc().Height) };
 
 	Sprite* sprite = new Sprite(texture, position, tmpSize, color);
 
@@ -349,7 +349,7 @@ void Sprite::Draw() {
 	//IBVを設定
 	commandList_->IASetIndexBuffer(&ibView_);
 	////SRVの設定
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_.srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 	commandList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 	//描画
 	commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);

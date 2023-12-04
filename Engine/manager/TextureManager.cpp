@@ -142,20 +142,26 @@ void TextureManager::Initialize() {
 
 }
 
-Texture TextureManager::Load(const std::string& filePath) {
+Texture* TextureManager::Load(const std::string& filePath) {
+
+	if (textureMap_.find(filePath) != textureMap_.end()) {
+
+		return textureMap_[filePath].get();
+
+	}
 
 	//制限数以上の読み込みで止める
 	assert(textureIndex_ < kMaxTextures - 1);
 
-	Texture tex;
+	std::unique_ptr<Texture> tex = std::make_unique<Texture>();
 
 	const uint32_t descriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	//Textureを読んで転送する
 	DirectX::ScratchImage mipImages = LoadTexture(filePath);
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	tex.resource = CreateTextureResource(device_, metadata);
-	UploadTextureData(tex.resource, mipImages);
+	tex->resource = CreateTextureResource(device_, metadata);
+	UploadTextureData(tex->resource, mipImages);
 
 	//metadataを基にSRVの設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -165,16 +171,18 @@ Texture TextureManager::Load(const std::string& filePath) {
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	//SRVを作成するDescriptorHeapの場所を決める
-	tex.srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
-	tex.srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
+	tex->srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
+	tex->srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
 
 	//SRVの生成
-	device_->CreateShaderResourceView(tex.resource.Get(), &srvDesc, tex.srvHandleCPU);
+	device_->CreateShaderResourceView(tex->resource.Get(), &srvDesc, tex->srvHandleCPU);
+
+	textureMap_[filePath] = std::move(tex);
 
 	//使用カウント上昇
 	textureIndex_++;
 
-	return tex;
+	return textureMap_[filePath].get();
 
 }
 
@@ -214,5 +222,7 @@ InstancingResource TextureManager::SetInstancingResource(uint32_t instanceCount,
 }
 
 void TextureManager::Finalize() {
+
+	textureMap_.clear();
 
 }

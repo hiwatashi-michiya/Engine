@@ -56,6 +56,7 @@ public:
 	struct Audio
 	{
 		SoundData soundData;
+		bool isPause = false;
 		IXAudio2SourceVoice* pSourceVoice = nullptr;
 	};
 
@@ -94,6 +95,13 @@ public:
 	/// <param name="handle">ハンドル</param>
 	/// <param name="volume">音量</param>
 	void SetVolume(uint32_t handle, float volume);
+
+	/// <summary>
+	/// 再生中かどうか
+	/// </summary>
+	/// <param name="handle">ハンドル</param>
+	/// <returns>再生中だったらtrue</returns>
+	bool IsPlaying(uint32_t handle);
 
 private:
 

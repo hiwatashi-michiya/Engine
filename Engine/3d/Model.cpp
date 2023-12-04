@@ -382,7 +382,7 @@ void Model::Draw(WorldTransform worldTransform) {
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 	////SRVの設定
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_.srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 	commandList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 	//描画
 	commandList_->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);

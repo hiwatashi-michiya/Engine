@@ -103,7 +103,7 @@ private:
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
 	//テクスチャ
-	Texture texture_;
+	Texture* texture_;
 
 	//モデルデータ
 	ModelData modelData_;

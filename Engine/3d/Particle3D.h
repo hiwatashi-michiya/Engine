@@ -102,7 +102,7 @@ private:
 	Matrix4x4 matBillboard_;
 
 	//テクスチャ
-	Texture texture_;
+	Texture* texture_;
 
 	//インスタンシングリソース
 	InstancingResource instancingResource_;

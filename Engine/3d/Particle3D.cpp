@@ -400,7 +400,7 @@ void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);
 	commandList_->SetGraphicsRootDescriptorTable(1, instancingResource_.srvHandleGPU);
 	////SRVの設定
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_.srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 	commandList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 	//描画
 	commandList_->DrawInstanced(UINT(modelData_.vertices.size()), instanceCount_, 0, 0);

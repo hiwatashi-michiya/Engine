@@ -41,6 +41,7 @@ private:
 
 	WorldTransform worldTransformPlane2_;
 	uint32_t audio_;
+	uint32_t audio2_;
 
 };
 

@@ -46,15 +46,15 @@ void AudioManager::Finalize() {
 
 uint32_t AudioManager::SoundLoadWave(const char* filename) {
 
-	//最大ロード数を超えないようにする
-	assert(audioCount_ < kMaxAudioCount_);
-
 	//既にロードした音源だったらそのまま返す
 	if (intMap_.find(filename) != intMap_.end()) {
 
 		return intMap_[filename];
 
 	}
+
+	//最大ロード数を超えないようにする
+	assert(audioCount_ < kMaxAudioCount_);
 
 	//ファイル入力ストリームのインスタンス
 	std::ifstream file;
@@ -160,8 +160,8 @@ void AudioManager::Play(uint32_t handle, float volume, bool isLoop) {
 
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = audios_[0].soundData.pBuffer;
-	buf.AudioBytes = audios_[0].soundData.bufferSize;
+	buf.pAudioData = audios_[handle].soundData.pBuffer;
+	buf.AudioBytes = audios_[handle].soundData.bufferSize;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 
 	//波形データの再生
@@ -197,6 +197,7 @@ void AudioManager::Pause(uint32_t handle) {
 	}
 
 	if (audios_[handle].pSourceVoice) {
+		audios_[handle].isPause = true;
 		audios_[handle].pSourceVoice->Stop();
 	}
 
@@ -210,6 +211,7 @@ void AudioManager::ReStart(uint32_t handle) {
 	}
 
 	if (audios_[handle].pSourceVoice) {
+		audios_[handle].isPause = false;
 		audios_[handle].pSourceVoice->Start();
 	}
 
@@ -225,5 +227,27 @@ void AudioManager::SetVolume(uint32_t handle, float volume) {
 	if (audios_[handle].pSourceVoice) {
 		audios_[handle].pSourceVoice->SetVolume(volume);
 	}
+
+}
+
+bool AudioManager::IsPlaying(uint32_t handle) {
+
+	//ハンドルの値がカウントより大きい場合処理をせず、falseを返す
+	if (handle >= audioCount_) {
+		return false;
+	}
+
+	if (audios_[handle].pSourceVoice) {
+		
+		XAUDIO2_VOICE_STATE voiceState;
+
+		audios_[handle].pSourceVoice->GetState(&voiceState);
+
+		return (voiceState.BuffersQueued > 0); //バッファがキューにあれば再生中とみなす
+		
+
+	}
+
+	return false;
 
 }
