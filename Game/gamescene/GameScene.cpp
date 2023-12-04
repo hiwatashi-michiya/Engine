@@ -38,7 +38,7 @@ void GameScene::Initialize() {
 
 	audioManager_ = AudioManager::GetInstance();
 	audio_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
-	audio2_ = audioManager_->SoundLoadWave("./resources/GrievousLady.wav");
+	audio2_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
 }
 
 void GameScene::Update() {
