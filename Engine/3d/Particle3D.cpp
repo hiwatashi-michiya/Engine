@@ -268,7 +268,7 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 		//頂点バッファビュー設定
 		vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
-		vbView_.SizeInBytes = sizeof(VertexData) * modelData_.vertices.size();
+		vbView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
 		vbView_.StrideInBytes = sizeof(VertexData);
 
 		//マッピングしてデータ転送
