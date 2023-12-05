@@ -159,7 +159,7 @@
     <ClCompile Include="Engine\manager\AudioManager.cpp">
       <Filter>Engine\manager</Filter>
     </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
+    <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
   </ItemGroup>
@@ -275,7 +275,7 @@
     <ClInclude Include="Engine\manager\AudioManager.h">
       <Filter>Engine\manager</Filter>
     </ClInclude>
-    <ClInclude Include="Quaternion.h">
+    <ClInclude Include="Engine\math\Quaternion.h">
       <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,6 +11,7 @@
 #include "Game/stage/Stage.h"
 #include "Engine/3d/Particle3D.h"
 #include "Engine/manager/AudioManager.h"
+#include "Engine/math/Quaternion.h"
 
 class GameScene
 {
@@ -35,6 +36,16 @@ private:
 
 	std::unique_ptr<Model> model_;
 	WorldTransform worldTransform_;
+
+	Quaternion q1;
+	Quaternion q2;
+	Quaternion identity;
+	Quaternion conj;
+	Quaternion inv;
+	Quaternion normal;
+	Quaternion mul1;
+	Quaternion mul2;
+	float norm;
 
 };
 
