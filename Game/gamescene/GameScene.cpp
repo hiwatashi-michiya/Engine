@@ -19,7 +19,7 @@ GameScene::GameScene()
 	for (uint32_t i = 0; i < 10; i++) {
 		
 		WorldTransform worldTransform{};
-		worldTransform.translation_ = { 0.1f * i + 1.0f, 0.1f * i + 0.0f, 0.0f };
+		worldTransform.translation_ = { 0.1f * i + 1.0f, 0.1f * i + 0.0f, 1.0f };
 		particleTransforms_.push_back(worldTransform);
 
 	}
@@ -38,7 +38,7 @@ void GameScene::Initialize() {
 	Model::worldTransformCamera_.rotation_.x = 0.0f;
 
 	worldTransformPlane_.translation_.x = -2.0f;
-	worldTransformPlane2_.translation_.x = 2.0f;
+	worldTransformPlane2_.translation_.x = 0.0f;
 
 	audioManager_ = AudioManager::GetInstance();
 	audio_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
@@ -55,9 +55,10 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &Model::worldTransformCamera_.translation_.x, 0.1f);
 	ImGui::End();
 
-	ImGui::Begin("worldTransform");
-	ImGui::DragFloat3("translation", &particleTransforms_[0].translation_.x, 0.1f);
-	ImGui::Checkbox("billboard", &particle_->isBillboard_);
+	ImGui::Begin("worldTransform sphere");
+	ImGui::DragFloat3("translation", &worldTransformPlane2_.translation_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &worldTransformPlane2_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("scale", &worldTransformPlane2_.scale_.x, 0.1f);
 	ImGui::End();
 
 	if (input_->TriggerKey(DIK_SPACE)) {

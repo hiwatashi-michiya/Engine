@@ -393,6 +393,7 @@ void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
 		Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);
 		matTransformMap_[i].WVP = worldViewProjectionMatrix;
 		matTransformMap_[i].World = worldMatrix;
+		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(worldMatrix));
 
 	}
 

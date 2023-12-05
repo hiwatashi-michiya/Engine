@@ -392,6 +392,7 @@ void Model::Draw(WorldTransform worldTransform) {
 	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = worldMatrix;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(worldMatrix));
 
 	cameraMap_->worldPosition = worldTransformCamera_.GetWorldPosition();
 

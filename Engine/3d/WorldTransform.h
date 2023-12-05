@@ -43,7 +43,7 @@ public:
 
 	Matrix4x4 UpdateMatrix();
 
-	const Vector3& GetWorldPosition() {
+	Vector3 GetWorldPosition() {
 
 		Vector3 pos;
 
