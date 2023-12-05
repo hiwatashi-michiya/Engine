@@ -6,6 +6,7 @@
 #include <dxcapi.h>
 #include "ModelManager.h"
 #include "WorldTransform.h"
+#include "Engine/base/Camera.h"
 
 //ディレクトリパス
 const std::string modelDirectoryPath = "resources";
@@ -48,6 +49,8 @@ public:
 
 	void ImGuiUpdate();
 
+	void SetTexture(Texture* texture) { texture_ = texture; }
+
 	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
 
 private:
@@ -68,11 +71,6 @@ private:
 	static Microsoft::WRL::ComPtr<IDxcBlob> vs3dBlob_;
 	static Microsoft::WRL::ComPtr<IDxcBlob> ps3dBlob_;
 
-	//共通の平行光源バッファ
-	static Microsoft::WRL::ComPtr<ID3D12Resource> dLightBuff_;
-	//共通の平行光源バッファマップ
-	static DirectionalLight* dLightMap_;
-
 	//モデル識別用変数(ImGuiで使用)
 	static int modelNumber_;
 
@@ -87,7 +85,11 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
 	//定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
-	
+	//平行光源バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> dLightBuff_;
+	//カメラ座標バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> cameraBuff_;
+
 	//頂点バッファマップ
 	VertexData* vertMap_ = nullptr;
 	//インデックスバッファマップ
@@ -96,6 +98,10 @@ private:
 	Material* constMap_ = nullptr;
 	//TransformMatrix
 	TransformationMatrix* matTransformMap_ = nullptr;
+	//平行光源バッファマップ
+	DirectionalLight* dLightMap_ = nullptr;
+	//カメラ座標マップ
+	CameraForGPU* cameraMap_ = nullptr;
 
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};

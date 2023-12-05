@@ -12,7 +12,7 @@ GameScene::GameScene()
 	tex_ = TextureManager::GetInstance()->Load("./resources/test.png");
 
 	plane_.reset(Model::Create("./resources/plane/plane.obj"));
-	plane2_.reset(Model::Create("./resources/fence/fence.obj"));
+	plane2_.reset(Model::Create("./resources/sphere/sphere.obj"));
 	particle_.reset(Particle3D::Create("./resources/plane/plane.obj", 10));
 	sprite_.reset(Sprite::Create(tex_, { 100.0f,100.0f }));
 
@@ -133,7 +133,7 @@ void GameScene::Draw() {
 
 		Sprite::PreDraw(commandList);
 
-		sprite_->Draw();
+		/*sprite_->Draw();*/
 
 		Sprite::PostDraw();
 

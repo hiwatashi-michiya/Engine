@@ -43,6 +43,18 @@ public:
 
 	Matrix4x4 UpdateMatrix();
 
+	const Vector3& GetWorldPosition() {
+
+		Vector3 pos;
+
+		pos.x = matWorld_.m[3][0];
+		pos.y = matWorld_.m[3][1];
+		pos.z = matWorld_.m[3][2];
+
+		return pos;
+
+	}
+
 private:
 
 	void SetMatParent();

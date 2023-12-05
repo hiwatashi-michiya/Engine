@@ -17,8 +17,6 @@ Microsoft::WRL::ComPtr<IDxcBlob> Model::vs3dBlob_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Model::ps3dBlob_ = nullptr;
 WorldTransform Model::worldTransformCamera_{};
 Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
-Microsoft::WRL::ComPtr<ID3D12Resource> Model::dLightBuff_ = nullptr;
-DirectionalLight* Model::dLightMap_ = nullptr;
 int Model::modelNumber_ = 0;
 Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
 const char* Model::BlendTexts[Model::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
@@ -90,7 +88,7 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[4]{};
+	D3D12_ROOT_PARAMETER rootParameters[5]{};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
@@ -108,6 +106,11 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //CBVを使う
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParameters[3].Descriptor.ShaderRegister = 1; //レジスタ番号1を使う
+
+	//カメラの位置を送る
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[4].Descriptor.ShaderRegister = 2;
 
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
@@ -236,21 +239,6 @@ void Model::StaticInitialize(ID3D12Device* device) {
 		IID_PPV_ARGS(&pipelineStates_[BlendMode::kScreen]));
 	assert(SUCCEEDED(hr));
 
-	//平行光源バッファ設定
-	{
-
-		dLightBuff_ = CreateBufferResource(device_, sizeof(DirectionalLight));
-
-		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
-
-		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		dLightMap_->direction = { 0.0f,-1.0f,0.0f };
-		dLightMap_->intensity = 1.0f;
-
-		dLightBuff_->Unmap(0, nullptr);
-
-	}
-
 	currentBlendMode_ = BlendMode::kNormal;
 
 }
@@ -302,6 +290,7 @@ void Model::Initialize(const std::string& filename) {
 
 		constMap_->color = Vector4(1.0f,1.0f,1.0f,1.0f);
 		constMap_->enableLighting = true;
+		constMap_->shininess = 1.0f;
 		constMap_->uvTransform = MakeIdentity4x4();
 
 		//アンマップ
@@ -322,6 +311,34 @@ void Model::Initialize(const std::string& filename) {
 		matTransformMap_->World = MakeIdentity4x4();
 
 		matBuff_->Unmap(0, nullptr);
+
+	}
+
+	//平行光源バッファ設定
+	{
+
+		dLightBuff_ = CreateBufferResource(device_, sizeof(DirectionalLight));
+
+		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
+
+		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		dLightMap_->direction = { 0.0f,-1.0f,0.0f };
+		dLightMap_->intensity = 1.0f;
+
+		dLightBuff_->Unmap(0, nullptr);
+
+	}
+
+	//カメラ設定
+	{
+
+		cameraBuff_ = CreateBufferResource(device_, sizeof(CameraForGPU));
+
+		cameraBuff_->Map(0, nullptr, reinterpret_cast<void**>(&cameraMap_));
+
+		cameraMap_->worldPosition = Vector3::Zero();
+
+		cameraBuff_->Unmap(0, nullptr);
 
 	}
 
@@ -376,8 +393,12 @@ void Model::Draw(WorldTransform worldTransform) {
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = worldMatrix;
 
+	cameraMap_->worldPosition = worldTransformCamera_.GetWorldPosition();
+
 	//平行光源設定
 	commandList_->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());
+	//カメラ設定
+	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
 	//Spriteの描画
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
@@ -402,6 +423,7 @@ void Model::ImGuiUpdate() {
 
 	ImGui::Begin(name.c_str());
 	ImGui::ColorEdit4("model Color", &constMap_->color.x);
+	ImGui::DragFloat("shininess", &constMap_->shininess, 0.1f, 0.1f, 100.0f);
 	ImGui::DragInt("gray scale", &constMap_->isGrayScale, 0.1f, 0, 1);
 	ImGui::DragInt("inversion", &constMap_->isInversion, 0.1f, 0, 1);
 	ImGui::DragInt("retro", &constMap_->isRetro, 0.1f, 0, 1);
@@ -419,12 +441,7 @@ void Model::ImGuiUpdate() {
 void Model::StaticImGuiUpdate() {
 
 	ImGui::Begin("Static model Settings");
-	ImGui::ColorEdit3("Light Color", &dLightMap_->color.x);
-	ImGui::DragFloat3("Light Direction", &dLightMap_->direction.x, 0.01f);
-	ImGui::DragFloat("Intensity", &dLightMap_->intensity, 0.01f, 0.0f, 1.0f);
 	ImGui::Combo("Blend", (int*)&currentBlendMode_, BlendTexts, IM_ARRAYSIZE(BlendTexts));
 	ImGui::End();
-
-	dLightMap_->direction = Normalize(dLightMap_->direction);
 
 }

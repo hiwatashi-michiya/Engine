@@ -3,11 +3,14 @@
 /// <summary>
 /// 3次元ベクトル
 /// </summary>
-struct Vector3 {
+class Vector3 {
+public:
 
 	float x;
 	float y;
 	float z;
+
+	static const Vector3 Zero() { return Vector3{ 0.0f,0.0f,0.0f }; }
 
 	Vector3& operator*=(float s) { x *= s; y *= s; z *= s; return *this; }
 	Vector3& operator-=(const Vector3& v) { x -= v.x;  y -= v.y; z -= v.z; return *this; }
@@ -101,7 +104,7 @@ struct Capsule {
 	float radius;
 };
 
-struct Matrix4x4;
+class Matrix4x4;
 
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 
