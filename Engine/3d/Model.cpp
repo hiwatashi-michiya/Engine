@@ -10,11 +10,11 @@
 
 ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
-ID3D12RootSignature* Model::rootSignature_ = nullptr;
-ID3D12PipelineState* Model::pipelineStates_[Model::BlendMode::kCountBlend] = { nullptr };
+Microsoft::WRL::ComPtr<ID3D12RootSignature> Model::rootSignature_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12PipelineState> Model::pipelineStates_[Model::BlendMode::kCountBlend] = { nullptr };
 //ID3D12PipelineState* Model::pipelineState_ = nullptr;
-IDxcBlob* Model::vs3dBlob_ = nullptr;
-IDxcBlob* Model::ps3dBlob_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Model::vs3dBlob_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Model::ps3dBlob_ = nullptr;
 WorldTransform Model::worldTransformCamera_{};
 Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
 Microsoft::WRL::ComPtr<ID3D12Resource> Model::dLightBuff_ = nullptr;
@@ -157,7 +157,7 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature_; //RootSignature
+	graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get(); //RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
 	graphicsPipelineStateDesc.VS = { vs3dBlob_->GetBufferPointer(),
 	vs3dBlob_->GetBufferSize() }; //VertexShader
@@ -350,9 +350,9 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	worldTransformCamera_.UpdateMatrix();
 
 	//PSO設定
-	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
+	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
+	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	//プリミティブ形状を設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -382,7 +382,7 @@ void Model::Draw(WorldTransform worldTransform) {
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 	////SRVの設定
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_.srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 	commandList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 	//描画
 	commandList_->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
@@ -390,16 +390,6 @@ void Model::Draw(WorldTransform worldTransform) {
 }
 
 void Model::Finalize() {
-
-	dLightBuff_->Release();
-	dLightBuff_ = nullptr;
-	/*pipelineState_->Release();*/
-	for (int i = BlendMode::kCountBlend - 1; i >= 0; i--) {
-		pipelineStates_[i]->Release();
-	}
-	rootSignature_->Release();
-	ps3dBlob_->Release();
-	vs3dBlob_->Release();
 
 }
 
@@ -416,6 +406,9 @@ void Model::ImGuiUpdate() {
 	ImGui::DragInt("inversion", &constMap_->isInversion, 0.1f, 0, 1);
 	ImGui::DragInt("retro", &constMap_->isRetro, 0.1f, 0, 1);
 	ImGui::DragInt("ave blur", &constMap_->isAverageBlur, 0.1f, 0, 1);
+	ImGui::DragInt("emboss", &constMap_->isEmboss, 0.1f, 0, 1);
+	ImGui::DragInt("sharpness", &constMap_->isSharpness, 0.1f, 0, 1);
+	ImGui::DragInt("outline", &constMap_->isOutline, 0.1f, 0, 1);
 	ImGui::End();
 
 	modelNumber_++;

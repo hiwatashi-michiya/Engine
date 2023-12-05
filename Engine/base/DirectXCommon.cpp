@@ -23,6 +23,9 @@ void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t 
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
 
+	//FPS固定初期化
+	InitializeFixFPS();
+
 	//デバイス初期化
 	InitializeDXGIDevice();
 
@@ -64,9 +67,9 @@ void DirectXCommon::PreDraw() {
 	commandList_->ResourceBarrier(1, &barrier);
 
 	//レンダーターゲットビュー用ディスクリプタヒープハンドル取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV, bbIndex);
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = GetCPUDescriptorHandle(rtvHeap_.Get(), descriptorSizeRTV, bbIndex);
 	//深度ステンシルビュー用ディスクリプタヒープハンドル取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvH = GetCPUDescriptorHandle(dsvHeap_, descriptorSizeDSV, 0);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvH = GetCPUDescriptorHandle(dsvHeap_.Get(), descriptorSizeDSV, 0);
 	//レンダーターゲットをセット
 	commandList_->OMSetRenderTargets(1, &rtvH, false, &dsvH);
 	//指定した色で画面全体をクリアする
@@ -127,14 +130,14 @@ void DirectXCommon::PostDraw() {
 	assert(SUCCEEDED(hr));
 
 	//GPUにコマンドリストの実行を行わせる
-	ID3D12CommandList* commandLists[] = { commandList_ };
+	ID3D12CommandList* commandLists[] = { commandList_.Get()};
 	commandQueue_->ExecuteCommandLists(1, commandLists);
 	//GPUとOSに画面の交換を行うよう通知する
 	swapChain_->Present(1, 0);
 	//Fenceの値を更新
 	fenceVal_++;
 	//GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
-	commandQueue_->Signal(fence_, fenceVal_);
+	commandQueue_->Signal(fence_.Get(), fenceVal_);
 	//Fenceの値が指定したSignal値にたどり着いているか確認する
 	//GetCompletedValueの初期値はFence作成時に渡した初期値
 	if (fence_->GetCompletedValue() < fenceVal_) {
@@ -148,10 +151,13 @@ void DirectXCommon::PostDraw() {
 		CloseHandle(fenceEvent);
 	}
 
+	//FPS固定
+	UpdateFixFPS();
+
 	//次のフレーム用のコマンドリストを準備
 	hr = commandAllocator_->Reset();
 	assert(SUCCEEDED(hr));
-	hr = commandList_->Reset(commandAllocator_, nullptr);
+	hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
 	assert(SUCCEEDED(hr));
 
 }
@@ -257,7 +263,7 @@ void DirectXCommon::InitializeCommand() {
 	assert(SUCCEEDED(hr));
 
 	//コマンドリストを生成する
-	hr = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_,
+	hr = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(),
 		nullptr, IID_PPV_ARGS(&commandList_));
 	//コマンドリストの生成が上手くいかなかったので起動できない
 	assert(SUCCEEDED(hr));
@@ -283,8 +289,8 @@ void DirectXCommon::CreateSwapChain() {
 	swapChainDesc.BufferCount = 2; //ダブルバッファ
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; //モニタにうつしたら、中身を破棄
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
-	hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_, winApp_->GetHwnd(), &swapChainDesc,
-		nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain_));
+	hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_.Get(), winApp_->GetHwnd(), &swapChainDesc,
+		nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 
 }
@@ -297,7 +303,7 @@ void DirectXCommon::CreateFinalRenderTargets() {
 	hr = swapChain_->GetDesc(&swcDesc);
 	assert(SUCCEEDED(hr));
 
-	rtvHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
+	rtvHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
 
 	backBuffers_.resize(swcDesc.BufferCount);
 	for (int i = 0; i < backBuffers_.size(); i++) {
@@ -307,7 +313,7 @@ void DirectXCommon::CreateFinalRenderTargets() {
 		assert(SUCCEEDED(hr));
 
 		//ディスクリプタヒープのハンドルを取得
-		D3D12_CPU_DESCRIPTOR_HANDLE handle = GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV, i);
+		D3D12_CPU_DESCRIPTOR_HANDLE handle = GetCPUDescriptorHandle(rtvHeap_.Get(), descriptorSizeRTV, i);
 		//レンダーターゲットビューの設定
 		D3D12_RENDER_TARGET_VIEW_DESC renderTargetViewDesc{};
 		renderTargetViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -323,9 +329,9 @@ void DirectXCommon::CreateDepthBuffer() {
 
 	HRESULT hr = S_FALSE;
 
-	depthStencilResource_ = CreateDepthStencilTextureResource(device_, WinApp::kWindowWidth, WinApp::kWindowHeight);
+	depthStencilResource_ = CreateDepthStencilTextureResource(device_.Get(), WinApp::kWindowWidth, WinApp::kWindowHeight);
 
-	dsvHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+	dsvHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 	//DSVの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
@@ -333,7 +339,7 @@ void DirectXCommon::CreateDepthBuffer() {
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; //2dTexture
 	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 	//DSVHeapの先頭にDSVを作る
-	device_->CreateDepthStencilView(depthStencilResource_, &dsvDesc, dsvHeap_->GetCPUDescriptorHandleForHeapStart());
+	device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc, dsvHeap_->GetCPUDescriptorHandleForHeapStart());
 
 }
 
@@ -414,19 +420,42 @@ ID3D12Resource* DirectXCommon::CreateDepthStencilTextureResource(ID3D12Device* d
 
 }
 
-void DirectXCommon::Finalize() {
+//FPS固定初期化
+void DirectXCommon::InitializeFixFPS() {
 
-	fence_->Release();
-	dsvHeap_->Release();
-	depthStencilResource_->Release();
-	backBuffers_[0].Reset();
-	backBuffers_[1].Reset();
-	rtvHeap_->Release();
-	swapChain_->Release();
-	commandQueue_->Release();
-	commandList_->Release();
-	commandAllocator_->Release();
-	device_->Release();
-	dxgiFactory_->Release();
+	//現在時間を記録する
+	reference_ = std::chrono::steady_clock::now();
+
+}
+
+//FPS固定更新
+void DirectXCommon::UpdateFixFPS() {
+
+	//1/60秒ぴったりの時間
+	const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
+	//1/60秒よりわずかに短い時間
+	const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 65.0f));
+
+	//現在時間を取得する
+	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	std::chrono::microseconds elapsed =
+		std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
+
+	//1/60秒よりわずかに短い時間が経っていない場合
+	if (elapsed < kMinTime) {
+		//1/60秒経過するまで微小なスリーブを繰り返す
+		while (std::chrono::steady_clock::now() - reference_ < kMinTime) {
+			//1マイクロ秒スリーブ
+			std::this_thread::sleep_for(std::chrono::microseconds(1));
+		}
+
+	}
+	//現在の時間を記録する
+	reference_ = std::chrono::steady_clock::now();
+
+}
+
+void DirectXCommon::Finalize() {
 
 }

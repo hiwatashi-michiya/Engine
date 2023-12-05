@@ -8,9 +8,13 @@
 
 GameScene::GameScene()
 {
+
+	tex_ = TextureManager::GetInstance()->Load("./resources/test.png");
+
 	plane_.reset(Model::Create("./resources/plane/plane.obj"));
 	plane2_.reset(Model::Create("./resources/fence/fence.obj"));
 	particle_.reset(Particle3D::Create("./resources/plane/plane.obj", 10));
+	sprite_.reset(Sprite::Create(tex_, { 100.0f,100.0f }));
 
 	for (uint32_t i = 0; i < 10; i++) {
 		
@@ -36,6 +40,9 @@ void GameScene::Initialize() {
 	worldTransformPlane_.translation_.x = -2.0f;
 	worldTransformPlane2_.translation_.x = 2.0f;
 
+	audioManager_ = AudioManager::GetInstance();
+	audio_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
+	audio2_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
 }
 
 void GameScene::Update() {
@@ -53,11 +60,18 @@ void GameScene::Update() {
 	ImGui::Checkbox("billboard", &particle_->isBillboard_);
 	ImGui::End();
 
+	if (input_->TriggerKey(DIK_SPACE)) {
+		audioManager_->Play(audio_, 0.2f);
+	}
 	Model::StaticImGuiUpdate();
 	Particle3D::StaticImGuiUpdate();
 
+	if (input_->TriggerKey(DIK_1)) {
+		audioManager_->Play(audio_, 0.2f, true);
+	}
 	plane_->ImGuiUpdate();
 	plane2_->ImGuiUpdate();
+	sprite_->ImGuiUpdate("test");
 
 #endif // _DEBUG
 
@@ -67,6 +81,22 @@ void GameScene::Update() {
 	for (WorldTransform& worldTransform : particleTransforms_) {
 		/*worldTransform.translation_.y += 0.01f;*/
 		worldTransform.UpdateMatrix();
+	}
+
+	if (input_->TriggerKey(DIK_2)) {
+		audioManager_->Stop(audio_);
+	}
+
+	if (input_->TriggerKey(DIK_3)) {
+		audioManager_->Pause(audio_);
+	}
+
+	if (input_->TriggerKey(DIK_4)) {
+		audioManager_->SetVolume(audio_, 0.4f);
+	}
+
+	if (input_->TriggerKey(DIK_5)) {
+		audioManager_->ReStart(audio_);
 	}
 
 }
@@ -103,7 +133,7 @@ void GameScene::Draw() {
 
 		Sprite::PreDraw(commandList);
 
-
+		sprite_->Draw();
 
 		Sprite::PostDraw();
 

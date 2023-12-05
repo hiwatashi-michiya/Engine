@@ -10,11 +10,11 @@
 
 ID3D12Device* Particle3D::device_ = nullptr;
 ID3D12GraphicsCommandList* Particle3D::commandList_ = nullptr;
-ID3D12RootSignature* Particle3D::rootSignature_ = nullptr;
-ID3D12PipelineState* Particle3D::particlePipelineStates_[Particle3D::BlendMode::kCountBlend] = { nullptr };
+Microsoft::WRL::ComPtr<ID3D12RootSignature> Particle3D::rootSignature_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12PipelineState> Particle3D::particlePipelineStates_[Particle3D::BlendMode::kCountBlend] = { nullptr };
 //ID3D12PipelineState* Particle3D::pipelineState_ = nullptr;
-IDxcBlob* Particle3D::vs3dParticleBlob_ = nullptr;
-IDxcBlob* Particle3D::ps3dParticleBlob_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Particle3D::vs3dParticleBlob_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Particle3D::ps3dParticleBlob_ = nullptr;
 WorldTransform Particle3D::worldTransformCamera_{};
 Matrix4x4 Particle3D::matProjection_ = MakeIdentity4x4();
 int Particle3D::modelNumber_ = 0;
@@ -160,7 +160,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature_; //RootSignature
+	graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get(); //RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
 	graphicsPipelineStateDesc.VS = { vs3dParticleBlob_->GetBufferPointer(),
 	vs3dParticleBlob_->GetBufferSize() }; //VertexShader
@@ -348,9 +348,9 @@ void Particle3D::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	worldTransformCamera_.UpdateMatrix();
 
 	//PSO設定
-	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_]);
+	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_].Get());
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
+	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
 	//プリミティブ形状を設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -400,7 +400,7 @@ void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);
 	commandList_->SetGraphicsRootDescriptorTable(1, instancingResource_.srvHandleGPU);
 	////SRVの設定
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_.srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 	commandList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 	//描画
 	commandList_->DrawInstanced(UINT(modelData_.vertices.size()), instanceCount_, 0, 0);
@@ -410,12 +410,12 @@ void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
 void Particle3D::Finalize() {
 
 	/*pipelineState_->Release();*/
-	for (int i = BlendMode::kCountBlend - 1; i >= 0; i--) {
+	/*for (int i = BlendMode::kCountBlend - 1; i >= 0; i--) {
 		particlePipelineStates_[i]->Release();
 	}
 	rootSignature_->Release();
 	ps3dParticleBlob_->Release();
-	vs3dParticleBlob_->Release();
+	vs3dParticleBlob_->Release();*/
 
 }
 

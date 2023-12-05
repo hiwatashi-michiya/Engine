@@ -59,14 +59,14 @@ private:
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
-	static ID3D12RootSignature* rootSignature_;
+	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 	//PSO
-	static ID3D12PipelineState* pipelineStates_[BlendMode::kCountBlend];
+	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineStates_[BlendMode::kCountBlend];
 
 	/*static ID3D12PipelineState* pipelineState_;*/
 
-	static IDxcBlob* vs3dBlob_;
-	static IDxcBlob* ps3dBlob_;
+	static Microsoft::WRL::ComPtr<IDxcBlob> vs3dBlob_;
+	static Microsoft::WRL::ComPtr<IDxcBlob> ps3dBlob_;
 
 	//共通の平行光源バッファ
 	static Microsoft::WRL::ComPtr<ID3D12Resource> dLightBuff_;
@@ -103,7 +103,7 @@ private:
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
 	//テクスチャ
-	Texture texture_;
+	Texture* texture_;
 
 	//モデルデータ
 	ModelData modelData_;

@@ -12,10 +12,10 @@ class Sprite
 {
 public:
 
-	Sprite(Texture texture, Vector2 position, Vector2 size, Vector4 color);
+	Sprite(Texture* texture, Vector2 position, Vector2 size, Vector4 color);
 	~Sprite() = default;
 
-	static void StaticInitialize(ID3D12Device* device, int window_width, 
+	static void StaticInitialize(ID3D12Device* device, int window_width,
 		int window_hwight);
 
 	/// <summary>
@@ -31,7 +31,7 @@ public:
 		Matrix4x4 uvTransform;
 	};
 
-	static Sprite* Create(Texture texture, Vector2 position, Vector4 color = {1.0f,1.0f,1.0f,1.0f});
+	static Sprite* Create(Texture* texture, Vector2 position, Vector4 color = { 1.0f,1.0f,1.0f,1.0f });
 
 	bool Initialize();
 
@@ -40,32 +40,46 @@ public:
 	static void PostDraw();
 
 	void Draw();
-	
+
 	static void Finalize();
 
-	void SetTexture(Texture tex) { texture_ = tex; }
+	void SetTexture(Texture* tex) { texture_ = tex; }
 
 	void SetPosition(Vector2 pos) { position_ = pos; }
 
 	Vector2 GetPosition() { return position_; }
 
+	//位置
+	Vector2 position_{};
+
+	//サイズ
+	Vector2 size_{};
+
+	//スプライト上の表示範囲
+	Vector2 viewRect_{};
+
+	//色
+	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+
+	void ImGuiUpdate(const std::string name);
+
 private:
 
 	//静的メンバ変数
-	
+
 	//デバイス
 	static ID3D12Device* device_;
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
-	static ID3D12RootSignature* rootSignature2D_;
+	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature2D_;
 	//PSO
-	static ID3D12PipelineState* pipelineState2D_;
+	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState2D_;
 
 	static Matrix4x4 matProjection_;
 
-	static IDxcBlob* vs2dBlob_;
-	static IDxcBlob* ps2dBlob_;
+	static Microsoft::WRL::ComPtr<IDxcBlob> vs2dBlob_;
+	static Microsoft::WRL::ComPtr<IDxcBlob> ps2dBlob_;
 
 private:
 
@@ -92,16 +106,7 @@ private:
 
 
 	//テクスチャ
-	Texture texture_;
-
-	//位置
-	Vector2 position_{};
-
-	//サイズ
-	Vector2 size_{};
-
-	//色
-	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+	Texture* texture_;
 
 };
 

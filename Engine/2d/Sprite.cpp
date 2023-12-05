@@ -2,15 +2,16 @@
 #include <cassert>
 #include "Engine/Convert.h"
 #include "Engine/manager/ShaderManager.h"
+#include "Engine/manager/ImGuiManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
 ID3D12Device* Sprite::device_ = nullptr;
 ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;
-ID3D12RootSignature* Sprite::rootSignature2D_ = nullptr;
-ID3D12PipelineState* Sprite::pipelineState2D_ = nullptr;
-IDxcBlob* Sprite::vs2dBlob_ = nullptr;
-IDxcBlob* Sprite::ps2dBlob_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12RootSignature> Sprite::rootSignature2D_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12PipelineState> Sprite::pipelineState2D_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Sprite::vs2dBlob_ = nullptr;
+Microsoft::WRL::ComPtr<IDxcBlob> Sprite::ps2dBlob_ = nullptr;
 
 //静的初期化
 void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
@@ -126,13 +127,13 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 	//全ての色要素を書き込む
 	blendDesc.RenderTarget[0].RenderTargetWriteMask =
 		D3D12_COLOR_WRITE_ENABLE_ALL;
-	/*blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;*/
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	//RasterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
@@ -142,7 +143,7 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature2D_; //RootSignature
+	graphicsPipelineStateDesc.pRootSignature = rootSignature2D_.Get(); //RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
 	graphicsPipelineStateDesc.VS = { vs2dBlob_->GetBufferPointer(),
 	vs2dBlob_->GetBufferSize() }; //VertexShader
@@ -179,19 +180,20 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 
 }
 
-Sprite::Sprite(Texture texture, Vector2 position, Vector2 size, Vector4 color) {
+Sprite::Sprite(Texture* texture, Vector2 position, Vector2 size, Vector4 color) {
 	texture_ = texture;
 	position_ = position;
 	size_ = size;
+	viewRect_ = { 1.0f,1.0f };
 	color_ = color;
 }
 
-Sprite* Sprite::Create(Texture texture, Vector2 position, Vector4 color) {
+Sprite* Sprite::Create(Texture* texture, Vector2 position, Vector4 color) {
 
 	Vector2 tmpSize = { 100.0f,100.0f };
 
-	tmpSize = { static_cast<float>(texture.resource->GetDesc().Width),
-	static_cast<float>(texture.resource->GetDesc().Height) };
+	tmpSize = { static_cast<float>(texture->resource->GetDesc().Width),
+	static_cast<float>(texture->resource->GetDesc().Height) };
 
 	Sprite* sprite = new Sprite(texture, position, tmpSize, color);
 
@@ -308,9 +310,9 @@ void Sprite::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	commandList_ = commandList;
 
 	//PSO設定
-	commandList_->SetPipelineState(pipelineState2D_);
+	commandList_->SetPipelineState(pipelineState2D_.Get());
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature2D_);
+	commandList_->SetGraphicsRootSignature(rootSignature2D_.Get());
 	//プリミティブ形状を設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -324,6 +326,19 @@ void Sprite::PostDraw() {
 
 void Sprite::Draw() {
 
+	//左下
+	vertMap_[0].position = { 0.0f,size_.y, 0.0f,1.0f };
+	vertMap_[0].texcoord = { 0.0f,viewRect_.y };
+	//左上
+	vertMap_[1].position = { 0.0f,0.0f, 0.0f,1.0f };
+	vertMap_[1].texcoord = { 0.0f,0.0f };
+	//右下
+	vertMap_[2].position = { size_.x,size_.y, 0.0f,1.0f };
+	vertMap_[2].texcoord = { viewRect_.x,viewRect_.y };
+	//右上
+	vertMap_[3].position = { size_.x,0.0f, 0.0f,1.0f };
+	vertMap_[3].texcoord = { viewRect_.x,0.0f };
+
 	Matrix4x4 worldMatrix = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, { position_.x, position_.y, 0.5f });
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
 	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
@@ -336,7 +351,7 @@ void Sprite::Draw() {
 	//IBVを設定
 	commandList_->IASetIndexBuffer(&ibView_);
 	////SRVの設定
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_.srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 	commandList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 	//描画
 	commandList_->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -345,9 +360,16 @@ void Sprite::Draw() {
 
 void Sprite::Finalize() {
 
-	pipelineState2D_->Release();
-	rootSignature2D_->Release();
-	ps2dBlob_->Release();
-	vs2dBlob_->Release();
+}
+
+void Sprite::ImGuiUpdate(const std::string name) {
+
+	ImGui::Begin(name.c_str());
+
+	ImGui::DragFloat2("position", &position_.x, 0.1f);
+	ImGui::DragFloat2("size", &size_.x, 0.01f);
+	ImGui::DragFloat2("view rect", &viewRect_.x, 0.01f, 0.0f,1.0f);
+
+	ImGui::End();
 
 }

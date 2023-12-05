@@ -10,6 +10,7 @@
 #include "Game/enemy/Enemy.h"
 #include "Game/stage/Stage.h"
 #include "Engine/3d/Particle3D.h"
+#include "Engine/manager/AudioManager.h"
 
 class GameScene
 {
@@ -27,6 +28,7 @@ private:
 
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
+	AudioManager* audioManager_ = nullptr;
 
 	std::unique_ptr<Model> plane_;
 	std::unique_ptr<Particle3D> particle_;
@@ -38,6 +40,12 @@ private:
 	std::unique_ptr<Model> plane2_;
 
 	WorldTransform worldTransformPlane2_;
+	uint32_t audio_;
+	uint32_t audio2_;
+
+	Texture* tex_;
+
+	std::unique_ptr<Sprite> sprite_;
 
 };
 

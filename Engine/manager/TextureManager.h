@@ -4,6 +4,8 @@
 #include <string>
 #include <wrl.h>
 #include <windows.h>
+#include <memory>
+#include <unordered_map>
 
 //テクスチャ構造体
 struct Texture {
@@ -39,13 +41,13 @@ public:
 
 	void Initialize();
 
-	Texture Load(const std::string& filePath);
+	Texture* Load(const std::string& filePath);
 
 	InstancingResource SetInstancingResource(uint32_t instanceCount, Microsoft::WRL::ComPtr<ID3D12Resource> mapResource);
 
 	void Finalize();
 
-	ID3D12DescriptorHeap* GetSRVDescHeap() { return srvDescHeap_; }
+	ID3D12DescriptorHeap* GetSRVDescHeap() { return srvDescHeap_.Get(); }
 
 private:
 
@@ -59,8 +61,9 @@ private:
 	uint32_t descriptorSizeSRV_;
 
 	ID3D12Device* device_;
-	ID3D12DescriptorHeap* srvDescHeap_;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescHeap_;
 	std::array<Texture, kNumDescriptors> textures_;
+	std::unordered_map<std::string, std::unique_ptr<Texture>> textureMap_;
 
 	//ロードしたテクスチャの数
 	uint32_t textureIndex_ = 0;
