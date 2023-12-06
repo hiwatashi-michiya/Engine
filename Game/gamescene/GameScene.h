@@ -30,22 +30,16 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
-	Matrix4x4 rotateMatrix0_;
-	Matrix4x4 rotateMatrix1_;
-	Matrix4x4 rotateMatrix2_;
 
 	std::unique_ptr<Model> model_;
 	WorldTransform worldTransform_;
 
-	Quaternion q1;
-	Quaternion q2;
-	Quaternion identity;
-	Quaternion conj;
-	Quaternion inv;
-	Quaternion normal;
-	Quaternion mul1;
-	Quaternion mul2;
-	float norm;
+	Quaternion rotation;
+	Vector3 pointY;
+	Matrix4x4 rotateMatrix;
+	Vector3 rotateByQuaternion;
+	Vector3 rotateByMatrix;
+
 
 };
 
