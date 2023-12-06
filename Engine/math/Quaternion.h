@@ -60,6 +60,9 @@ public:
 	/// <returns></returns>
 	Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
 
+	//球面線形補間
+	Quaternion Slerp(const Quaternion& qr, float t);
+
 	Quaternion operator*=(const Quaternion& qr) { return this->Multiply(qr); }
 
 };
@@ -108,4 +111,11 @@ Quaternion Inverse(const Quaternion& quaternion);
 /// <returns></returns>
 Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
 
+//球面線形補間
+Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t);
+
 Quaternion operator*(const Quaternion& qr1, const Quaternion& qr2);
+Quaternion operator*(float val, const Quaternion& qr);
+Quaternion operator*(const Quaternion& qr, float val);
+Quaternion operator+(const Quaternion& qr1, const Quaternion& qr2);
+Quaternion operator-(const Quaternion& qr1);

@@ -1,6 +1,7 @@
 #include "Quaternion.h"
 #include <functional>
 #include <cmath>
+#include <algorithm>
 
 Quaternion::Quaternion()
 {
@@ -124,6 +125,34 @@ Quaternion Quaternion::MakeRotateAxisAngleQuaternion(const Vector3& axis, float 
 
 }
 
+//球面線形補間
+Quaternion Quaternion::Slerp(const Quaternion& qr, float t) {
+
+	t = std::clamp(t, 0.0f, 1.0f);
+
+	Quaternion q0 = *this;
+	Quaternion q1 = qr;
+
+	float dot = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w;
+
+	//遠ければもう片方の回転を利用
+	if (dot < 0.0f) {
+
+		q0 = -q0;
+		dot = -dot;
+
+	}
+
+	//為す角を求める
+	float theta = std::acosf(dot);
+
+	float scale0 = std::sinf((1.0f - t) * theta) / std::sinf(theta);
+	float scale1 = std::sinf(t * theta) / std::sinf(theta);
+
+	return scale0 * q0 + scale1 * q1;
+
+}
+
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
 
 	Quaternion qr;
@@ -216,4 +245,45 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 
 }
 
+//球面線形補間
+Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t) {
+
+	t = std::clamp(t, 0.0f, 1.0f);
+
+	Quaternion q0 = Normalize(qr0);
+	Quaternion q1 = Normalize(qr1);
+
+	float dot = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w;
+
+	//遠ければもう片方の回転を利用
+	if (dot < 0.0f) {
+
+		q0 = -q0;
+		dot = -dot;
+
+	}
+
+	//為す角を求める
+	float theta = std::acosf(dot);
+
+	float scale0 = std::sinf((1.0f - t) * theta) / std::sinf(theta);
+	float scale1 = std::sinf(t * theta) / std::sinf(theta);
+
+	return scale0 * q0 + scale1 * q1;
+
+}
+
 Quaternion operator*(const Quaternion& qr1, const Quaternion& qr2) { return Multiply(qr1, qr2); }
+
+Quaternion operator*(float val, const Quaternion& qr) {
+	return Quaternion(qr.x * val, qr.y * val, qr.z * val, qr.w * val);
+}
+
+Quaternion operator*(const Quaternion& qr, float val) {
+	return Quaternion(qr.x * val, qr.y * val, qr.z * val, qr.w * val);
+}
+
+Quaternion operator+(const Quaternion& qr1, const Quaternion& qr2) {
+	return Quaternion(qr1.x + qr2.x, qr1.y + qr2.y, qr1.z + qr2.z, qr1.w + qr2.w);
+}
+Quaternion operator-(const Quaternion& qr) { return Quaternion(-qr.x, -qr.y, -qr.z, -qr.w); }
