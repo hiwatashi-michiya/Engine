@@ -1,6 +1,7 @@
 #include "Vector3.h"
 #include <math.h>
 #include "Matrix4x4.h"
+#include "Quaternion.h"
 #include <cassert>
 #include <iostream>
 #include <algorithm>
@@ -218,6 +219,26 @@ Vector3 Reflect(const Vector3& input, const Vector3& normal) {
 	r = Subtract(input, Multiply(2 * Dot(input, normal), normal));
 
 	return r;
+
+}
+
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
+
+	//正規化前提
+	Quaternion normQr = Normalize(quaternion);
+
+	Quaternion qr;
+
+	qr.w = 0.0f;
+	qr.x = vector.x;
+	qr.y = vector.y;
+	qr.z = vector.z;
+
+	qr = normQr * qr * Inverse(normQr);
+
+	Vector3 result = { qr.x,qr.y,qr.z };
+
+	return result;
 
 }
 

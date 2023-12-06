@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector3.h"
 
 /// <summary>
 /// 四元数。クォータニオン
@@ -51,6 +52,16 @@ public:
 	/// <returns></returns>
 	Quaternion Inverse();
 
+	/// <summary>
+	/// 任意軸回転
+	/// </summary>
+	/// <param name="axis">任意軸</param>
+	/// <param name="angle">回転量</param>
+	/// <returns></returns>
+	Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
+
+	Quaternion operator*=(const Quaternion& qr) { return this->Multiply(qr); }
+
 };
 
 /// <summary>
@@ -88,3 +99,13 @@ Quaternion Normalize(const Quaternion& quaternion);
 /// <param name="quaternion"></param>
 /// <returns></returns>
 Quaternion Inverse(const Quaternion& quaternion);
+
+/// <summary>
+/// 任意軸回転
+/// </summary>
+/// <param name="axis">任意軸</param>
+/// <param name="angle">回転量</param>
+/// <returns></returns>
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
+
+Quaternion operator*(const Quaternion& qr1, const Quaternion& qr2);

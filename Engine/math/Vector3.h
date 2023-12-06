@@ -104,6 +104,8 @@ struct Capsule {
 
 class Matrix4x4;
 
+class Quaternion;
+
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
@@ -141,6 +143,9 @@ Vector3 Perpendicular(const Vector3& vector);
 
 //反射ベクトル
 Vector3 Reflect(const Vector3& input, const Vector3& normal);
+
+//ベクトルをクォータニオンで回転させた結果のベクトルを求める
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
 
 void ClampAABB(AABB& aabb);
 

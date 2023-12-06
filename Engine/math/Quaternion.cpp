@@ -1,5 +1,6 @@
 #include "Quaternion.h"
 #include <functional>
+#include <cmath>
 
 Quaternion::Quaternion()
 {
@@ -108,6 +109,21 @@ Quaternion Quaternion::Inverse() {
 
 }
 
+Quaternion Quaternion::MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
+
+	Quaternion qr;
+
+	qr.w = std::cosf(angle / 2.0f);
+	qr.x = axis.x * std::sinf(angle / 2.0f);
+	qr.y = axis.y * std::sinf(angle / 2.0f);
+	qr.z = axis.z * std::sinf(angle / 2.0f);
+
+	*this = qr;
+
+	return qr;
+
+}
+
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
 
 	Quaternion qr;
@@ -186,3 +202,18 @@ Quaternion Inverse(const Quaternion& quaternion) {
 	return qr;
 
 }
+
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
+
+	Quaternion qr;
+
+	qr.w = std::cosf(angle / 2.0f);
+	qr.x = axis.x * std::sinf(angle / 2.0f);
+	qr.y = axis.y * std::sinf(angle / 2.0f);
+	qr.z = axis.z * std::sinf(angle / 2.0f);
+
+	return qr;
+
+}
+
+Quaternion operator*(const Quaternion& qr1, const Quaternion& qr2) { return Multiply(qr1, qr2); }
