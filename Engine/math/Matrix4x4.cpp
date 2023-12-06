@@ -457,22 +457,31 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
 
 	//回転軸
-	Vector3 n = Normalize(Cross(from, to));
+	Vector3 n;
+	
+	//cosを求める
+	float cosTheta = Dot(from, to);
 
 	//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
-	if (n.x == 0.0f && n.y == 0.0f && n.z == 0.0f) {
+	if (cosTheta <= -1.0f) {
 
-		if (from.z != 0.0f || from.x != 0.0f) {
-			n = { from.z, 0.0f, -from.x };
-		}
-		else if (from.y != 0.0f || from.x != 0.0f) {
+		if (from.x != 0.0f || from.y != 0.0f) {
+
 			n = { from.y, -from.x,0.0f };
+			n = Normalize(n);
+		}
+		else if (from.x != 0.0f || from.z != 0.0f) {
+			
+			n = { 0.0f, -from.z, from.x };
+			n = Normalize(n);
+
 		}
 
 	}
+	else {
+		n = Normalize(Cross(from, to));
+	}
 
-	//cosを求める
-	float cosTheta = Dot(from, to);
 	//sinを求める
 	float sinTheta = Length(Cross(from, to));
 
