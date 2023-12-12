@@ -1,5 +1,6 @@
 #include "Matrix4x4.h"
 #include "Vector3.h"
+#include "Quaternion.h"
 #include <cmath>
 #include <cassert>
 
@@ -422,6 +423,125 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height,
 	m.m[3][3] = 1.0f;
 
 	return m;
+
+}
+
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
+
+	Matrix4x4 result{};
+
+	result.m[0][0] = powf(axis.x, 2) * (1.0f - cosf(angle)) + cosf(angle);
+	result.m[0][1] = axis.x * axis.y * (1.0f - cosf(angle)) + axis.z * sinf(angle);
+	result.m[0][2] = axis.x * axis.z * (1.0f - cosf(angle)) - axis.y * sinf(angle);
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = axis.x * axis.y * (1.0f - cosf(angle)) - axis.z * sinf(angle);
+	result.m[1][1] = powf(axis.y, 2) * (1.0f - cosf(angle)) + cosf(angle);
+	result.m[1][2] = axis.y * axis.z * (1.0f - cosf(angle)) + axis.x * sinf(angle);
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = axis.x * axis.z * (1.0f - cosf(angle)) + axis.y * sinf(angle);
+	result.m[2][1] = axis.y * axis.z * (1.0f - cosf(angle)) - axis.x * sinf(angle);
+	result.m[2][2] = powf(axis.z, 2) * (1.0f - cosf(angle)) + cosf(angle);
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
+
+	return result;
+
+}
+
+//ある方向をある方向へ向ける回転行列
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
+
+	//回転軸
+	Vector3 n;
+
+	//cosを求める
+	float cosTheta = Dot(from, to);
+
+	//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
+	if (cosTheta <= -1.0f) {
+
+		if (from.x != 0.0f || from.y != 0.0f) {
+
+			n = { from.y, -from.x,0.0f };
+			n = Normalize(n);
+		}
+		else if (from.x != 0.0f || from.z != 0.0f) {
+
+			n = { 0.0f, -from.z, from.x };
+			n = Normalize(n);
+
+		}
+
+	}
+	else {
+		n = Normalize(Cross(from, to));
+	}
+
+	//sinを求める
+	float sinTheta = Length(Cross(from, to));
+
+	Matrix4x4 result{};
+
+	//任意軸の回転行列を求めた値から生成
+	result.m[0][0] = powf(n.x, 2) * (1.0f - cosTheta) + cosTheta;
+	result.m[0][1] = n.x * n.y * (1.0f - cosTheta) + n.z * sinTheta;
+	result.m[0][2] = n.x * n.z * (1.0f - cosTheta) - n.y * sinTheta;
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = n.x * n.y * (1.0f - cosTheta) - n.z * sinTheta;
+	result.m[1][1] = powf(n.y, 2) * (1.0f - cosTheta) + cosTheta;
+	result.m[1][2] = n.y * n.z * (1.0f - cosTheta) + n.x * sinTheta;
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = n.x * n.z * (1.0f - cosTheta) + n.y * sinTheta;
+	result.m[2][1] = n.y * n.z * (1.0f - cosTheta) - n.x * sinTheta;
+	result.m[2][2] = powf(n.z, 2) * (1.0f - cosTheta) + cosTheta;
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
+
+	return result;
+
+}
+
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
+
+	Matrix4x4 result{};
+
+	result.m[0][0] = quaternion.w * quaternion.w + quaternion.x * quaternion.x -
+		quaternion.y * quaternion.y - quaternion.z * quaternion.z;
+	result.m[0][1] = 2.0f * (quaternion.x * quaternion.y + quaternion.w * quaternion.z);
+	result.m[0][2] = 2.0f * (quaternion.x * quaternion.z - quaternion.w * quaternion.y);
+	result.m[0][3] = 0.0f;
+
+
+	result.m[1][0] = 2.0f * (quaternion.x * quaternion.y - quaternion.w * quaternion.z);
+	result.m[1][1] = quaternion.w * quaternion.w - quaternion.x * quaternion.x +
+		quaternion.y * quaternion.y - quaternion.z * quaternion.z;
+	result.m[1][2] = 2.0f * (quaternion.y * quaternion.z + quaternion.w * quaternion.x);
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = 2.0f * (quaternion.x * quaternion.z + quaternion.w * quaternion.y);
+	result.m[2][1] = 2.0f * (quaternion.y * quaternion.z - quaternion.w * quaternion.x);
+	result.m[2][2] = quaternion.w * quaternion.w - quaternion.x * quaternion.x -
+		quaternion.y * quaternion.y + quaternion.z * quaternion.z;
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
+
+	return result;
 
 }
 

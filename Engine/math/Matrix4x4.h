@@ -71,6 +71,8 @@ struct TransformationMatrix {
 
 class Vector3;
 
+class Quaternion;
+
 //行列の加法
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2);
 
@@ -117,6 +119,15 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 //ビューポート変換行列
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height,
 	float minDepth, float maxDepth);
+
+//任意軸回転行列の作成関数
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
+//ある方向をある方向へ向ける回転行列
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
+//クォータニオンから回転行列を求める
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
 
 // 二項演算子
 Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2);
