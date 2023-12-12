@@ -11,9 +11,6 @@
 #include <memory>
 #include <unordered_map>
 
-//ディレクトリパス
-const std::string modelDirectoryPath = "resources";
-
 class Model
 {
 public:
