@@ -107,10 +107,10 @@ void Player::Update() {
 
 void Player::Draw() {
 
-	modelBody_->Draw(worldTransformBody_);
-	modelHead_->Draw(worldTransformHead_);
-	modelL_arm_->Draw(worldTransformL_arm_);
-	modelR_arm_->Draw(worldTransformR_arm_);
+	modelBody_->Draw();
+	modelHead_->Draw();
+	modelL_arm_->Draw();
+	modelR_arm_->Draw();
 
 }
 

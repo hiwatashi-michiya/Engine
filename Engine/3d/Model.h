@@ -60,7 +60,7 @@ public:
 
 	void Initialize(const std::string& filename);
 
-	void Draw(WorldTransform worldTransform);
+	void Draw();
 
 	void ImGuiUpdate();
 
@@ -68,6 +68,16 @@ public:
 
 	//メッシュ切り替え
 	void SetMesh(const std::string& objFileName);
+
+	Vector3 position_{};
+
+	Vector3 rotation_{};
+
+	Vector3 scale_{};
+
+	Matrix4x4 matWorld_{};
+
+	Model* parent_ = nullptr;
 
 private:
 

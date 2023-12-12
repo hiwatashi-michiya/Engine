@@ -46,14 +46,15 @@ void GameScene::Initialize() {
 	Model::worldTransformCamera_.translation_ = { 0.0f,0.0f,-10.0f };
 	Model::worldTransformCamera_.rotation_.x = 0.0f;
 
-	worldTransformPlane_.translation_.x = -2.0f;
-	worldTransformPlane2_.translation_.y = 1.0f;
-	worldTransformPlane3_.translation_.x = 1.5f;
-	worldTransformPlane4_.translation_.x = 1.0f;
-	worldTransformPlane5_.translation_.x = -1.0f;
+	plane_->position_.x = -2.0f;
+	plane2_->position_.y = 1.0f;
+	plane3_->position_.x = 1.5f;
+	plane4_->position_.x = 1.0f;
+	plane5_->position_.x = -1.0f;
 
 	for (uint32_t i = 0; i < 100; i++) {
-		worldTransforms_[i].translation_.x = 0.5f * i;
+		planes_[i]->position_.x = 0.5f * i;
+		planes_[i]->rotation_.z = 0.05f * i;
 	}
 
 	audioManager_ = AudioManager::GetInstance();
@@ -72,9 +73,9 @@ void GameScene::Update() {
 	ImGui::End();
 
 	ImGui::Begin("worldTransform sphere");
-	ImGui::DragFloat3("translation", &worldTransformPlane5_.translation_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &worldTransformPlane5_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("scale", &worldTransformPlane5_.scale_.x, 0.1f);
+	ImGui::DragFloat3("translation", &plane5_->position_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &plane5_->rotation_.x, 0.1f);
+	ImGui::DragFloat3("scale", &plane5_->scale_.x, 0.1f);
 	ImGui::End();
 
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -135,16 +136,16 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	plane_->Draw(worldTransformPlane_);
-	plane2_->Draw(worldTransformPlane2_);
-	plane3_->Draw(worldTransformPlane3_);
-	plane4_->Draw(worldTransformPlane4_);
-	plane5_->Draw(worldTransformPlane5_);
+	plane_->Draw();
+	plane2_->Draw();
+	plane3_->Draw();
+	plane4_->Draw();
+	plane5_->Draw();
 	
 	particle_->Draw(particleTransforms_);
 
 	for (uint32_t i = 0; i < 100; i++) {
-		planes_[i]->Draw(worldTransforms_[i]);
+		planes_[i]->Draw();
 	}
 
 	sprite_->Draw();
