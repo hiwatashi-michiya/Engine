@@ -36,7 +36,7 @@ private:
 	float destinationAngleY_ = 0.0f;
 
 	//遅延量
-	float delay_ = 0.1f;
+	float delay_ = 20.0f;
 
 	Vector3 CalcOffset();
 

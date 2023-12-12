@@ -67,6 +67,32 @@ void GameScene::Update() {
 
 	}
 
+	if (delay_ > 0.01f) {
+		//最短角度補間
+		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f / delay_);
+	}
+	else {
+		//最短角度補間
+		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f);
+	}
+
+	if (player_) {
+
+		if (delay_ > 0.01f) {
+			interTarget_ = Lerp(interTarget_, player_->GetPosition(), 1.0f / delay_);
+		}
+		else {
+			interTarget_ = Lerp(interTarget_, player_->GetPosition(), 1.0f);
+		}
+
+	}
+
+	Vector3 tmpOffset = CalcOffset();
+
+	Model::worldTransformCamera_.translation_ = interTarget_ + tmpOffset;
+
+	Model::worldTransformCamera_.UpdateMatrix();
+
 	player_->Update();
 
 }
@@ -74,5 +100,22 @@ void GameScene::Update() {
 void GameScene::Draw() {
 
 	player_->Draw();
+
+}
+
+Vector3 GameScene::CalcOffset() {
+
+	Vector3 offset = { 0.0f, 5.0f, -30.0f };
+
+	Matrix4x4 matRotate = MakeIdentity4x4();
+
+	matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+
+	/*Matrix4x4 tmprotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);*/
+
+	//オフセットをカメラの回転に合わせて回転させる
+	offset = TransformNormal(offset, matRotate);
+
+	return offset;
 
 }
