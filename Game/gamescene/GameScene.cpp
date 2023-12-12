@@ -41,6 +41,32 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
+	if (input_->GetIsGamepad()) {
+
+		/*if (isLockOnStart_) {
+			destinationAngleY_ = std::acosf(Model::worldTransformCamera_.rotateMatrix_.m[0][0]);
+			isLockOnStart_ = false;
+
+		}*/
+
+		float rotateSpeed = 0.000001f;
+
+		destinationAngleY_ += float(input_->GetGamepad().sThumbRX) * rotateSpeed;
+
+		/*if (destinationAngleY_ > 3.14f) {
+			destinationAngleY_ = -3.13f;
+		}
+		else if (destinationAngleY_ <= -3.14f) {
+			destinationAngleY_ = 3.14f;
+		}*/
+
+		//右スティック押し込みでリセット
+		if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
+			destinationAngleY_ = 0.0f;
+		}
+
+	}
+
 	player_->Update();
 
 }

@@ -29,6 +29,17 @@ private:
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 
+	//追従対象の残像座標
+	Vector3 interTarget_ = {};
+
+	//目標角度
+	float destinationAngleY_ = 0.0f;
+
+	//遅延量
+	float delay_ = 0.1f;
+
+	Vector3 CalcOffset();
+
 	std::unique_ptr<Player> player_;
 
 };
