@@ -309,13 +309,6 @@ void Sprite::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
-	//PSO設定
-	commandList_->SetPipelineState(pipelineState2D_.Get());
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature2D_.Get());
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 }
 
 void Sprite::PostDraw() {
@@ -344,6 +337,13 @@ void Sprite::Draw() {
 	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	*matTransformMap_ = worldViewProjectionMatrix;
+
+	//PSO設定
+	commandList_->SetPipelineState(pipelineState2D_.Get());
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature2D_.Get());
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//Spriteの描画
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);

@@ -102,9 +102,18 @@ void Engine::BeginFrame() {
 
 	Input::GetInstance()->Update();
 
+	Model::PreDraw(dxCommon_->GetCommandList());
+	Particle3D::PreDraw(dxCommon_->GetCommandList());
+	Sprite::PreDraw(dxCommon_->GetCommandList());
+
+
 }
 
 void Engine::EndFrame() {
+
+	Model::PostDraw();
+	Particle3D::PostDraw();
+	Sprite::PostDraw();
 
 #ifdef _DEBUG
 

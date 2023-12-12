@@ -15,7 +15,7 @@ struct VertexData {
 	Vector3 normal;
 };
 
-struct Material
+struct MaterialData
 {
 	Vector4 color;
 	
@@ -42,15 +42,14 @@ struct DirectionalLight {
 	float intensity;
 };
 
-struct MaterialData {
+struct TextureData {
 	std::string textureFilePath;
 };
 
-struct ModelData {
+struct MeshData {
 	std::vector<VertexData> vertices;
-	MaterialData material;
 };
 
-MaterialData LoadMaterialTemplateFile(const std::string& filename);
+//TextureData LoadMaterialTemplateFile(const std::string& filename);
 
-ModelData LoadObjFile(const std::string& filename);
+//MeshData LoadObjFile(const std::string& filename);

@@ -7,6 +7,9 @@
 #include "ModelManager.h"
 #include "WorldTransform.h"
 #include <vector>
+#include "Mesh.h"
+#include <memory>
+#include <unordered_map>
 
 class Particle3D
 {
@@ -74,41 +77,24 @@ private:
 
 	static BlendMode currentBlendMode_;
 
+	static std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes_;
+
 private:
 
-	//頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> matBuff_;
-	//インデックスバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
-	//定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 	
-	//頂点バッファマップ
-	VertexData* vertMap_ = nullptr;
-	//インデックスバッファマップ
-	uint32_t* indexMap_ = nullptr;
-	//定数バッファマップ
-	Material* constMap_ = nullptr;
 	//TransformMatrix
 	TransformationMatrix* matTransformMap_ = nullptr;
-
-	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView_{};
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView_{};
+	
+	//メッシュ
+	Mesh* mesh_;
 
 	//ビルボード行列
 	Matrix4x4 matBillboard_;
 
-	//テクスチャ
-	Texture* texture_;
-
 	//インスタンシングリソース
 	InstancingResource instancingResource_;
-
-	//モデルデータ
-	ModelData modelData_;
 
 	//インスタンシングの数
 	uint32_t instanceCount_;
