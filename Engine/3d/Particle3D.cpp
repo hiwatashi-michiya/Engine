@@ -279,6 +279,19 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	instanceCount_ = instanceCount;
 
+	//トランスフォーム情報をインスタンス数に合わせてリサイズする
+	positions_.resize(instanceCount_);
+	rotations_.resize(instanceCount_);
+	scales_.resize(instanceCount_);
+	matWorlds_.resize(instanceCount_);
+
+	for (uint32_t i = 0; i < instanceCount_; i++) {
+		positions_[i] = Vector3::Zero();
+		rotations_[i] = Vector3::Zero();
+		scales_[i] = Vector3::Identity();
+		matWorlds_[i] = MakeIdentity4x4();
+	}
+
 	//transformMatrix
 	{
 
@@ -323,36 +336,31 @@ void Particle3D::PostDraw() {
 
 }
 
-void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
+void Particle3D::Draw() {
 
-	if (isBillboard_) {
+	matBillboard_ = Model::worldTransformCamera_.UpdateMatrix();
 
-		matBillboard_ = Model::worldTransformCamera_.UpdateMatrix();
+	matBillboard_.m[3][0] = 0.0f;
+	matBillboard_.m[3][1] = 0.0f;
+	matBillboard_.m[3][2] = 0.0f;
 
-		matBillboard_.m[3][0] = 0.0f;
-		matBillboard_.m[3][1] = 0.0f;
-		matBillboard_.m[3][2] = 0.0f;
+	for (uint32_t i = 0; i < instanceCount_; i++) {
 
-	}
-	else {
-		matBillboard_ = MakeIdentity4x4();
-	}
-
-	for (uint32_t i = 0; i < worldTransform.size(); i++) {
-
-		//配列外参照防止
-		if (i >= instanceCount_) {
-			break;
+		if (isBillboard_) {
+			matWorlds_[i] = MakeScaleMatrix(scales_[i]) * matBillboard_ * MakeTranslateMatrix(positions_[i]);
 		}
-		Matrix4x4 worldMatrix = MakeScaleMatrix(worldTransform[i].scale_) * matBillboard_ * MakeTranslateMatrix(worldTransform[i].translation_);
+		else {
+			matWorlds_[i] = MakeAffineMatrix(scales_[i], rotations_[i], positions_[i]);
+		}
+
 		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
 		Matrix4x4 cameraMatrix = Model::worldTransformCamera_.UpdateMatrix();
 		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 		matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-		Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);
+		Matrix4x4 worldViewProjectionMatrix = matWorlds_[i] * (viewMatrix * matProjection_);
 		matTransformMap_[i].WVP = worldViewProjectionMatrix;
-		matTransformMap_[i].World = worldMatrix;
-		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(worldMatrix));
+		matTransformMap_[i].World = matWorlds_[i];
+		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(matWorlds_[i]));
 
 	}
 

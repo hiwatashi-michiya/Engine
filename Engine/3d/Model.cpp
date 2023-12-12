@@ -337,14 +337,13 @@ void Model::Draw() {
 		matWorld_ = matWorld_ * parent_->matWorld_;
 	}
 
-	Matrix4x4 worldMatrix = matWorld_;
 	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);
+	Matrix4x4 worldViewProjectionMatrix = matWorld_ * (viewMatrix * matProjection_);
 	matTransformMap_->WVP = worldViewProjectionMatrix;
-	matTransformMap_->World = worldMatrix;
-	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(worldMatrix));
+	matTransformMap_->World = matWorld_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(matWorld_));
 
 	cameraMap_->worldPosition = worldTransformCamera_.GetWorldPosition();
 

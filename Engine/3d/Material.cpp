@@ -74,7 +74,7 @@ Material* Material::Create(const std::string& filename) {
 
 		constMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		constMap_->enableLighting = true;
-		constMap_->shininess = 1.0f;
+		constMap_->shininess = 50.0f;
 		constMap_->uvTransform = MakeIdentity4x4();
 
 		//アンマップ

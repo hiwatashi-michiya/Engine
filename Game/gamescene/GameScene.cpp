@@ -27,9 +27,7 @@ GameScene::GameScene()
 
 	for (uint32_t i = 0; i < 10; i++) {
 		
-		WorldTransform worldTransform{};
-		worldTransform.translation_ = { 0.1f * i + 1.0f, 0.1f * i + 0.0f, 1.0f };
-		particleTransforms_.push_back(worldTransform);
+		particle_->positions_[i] = {0.1f * i + 1.0f, 0.1f * i + 0.0f, 1.0f};
 
 	}
 
@@ -93,21 +91,6 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	worldTransformPlane_.UpdateMatrix();
-	worldTransformPlane2_.UpdateMatrix();
-	worldTransformPlane3_.UpdateMatrix();
-	worldTransformPlane4_.UpdateMatrix();
-	worldTransformPlane5_.UpdateMatrix();
-
-	for (uint32_t i = 0; i < 100; i++) {
-		worldTransforms_[i].UpdateMatrix();
-	}
-
-	for (WorldTransform& worldTransform : particleTransforms_) {
-		/*worldTransform.translation_.y += 0.01f;*/
-		worldTransform.UpdateMatrix();
-	}
-
 	if (input_->TriggerKey(DIK_Q)) {
 		plane_->SetMesh("./resources/sphere/sphere.obj");
 	}
@@ -136,17 +119,17 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	plane_->Draw();
+	/*plane_->Draw();
 	plane2_->Draw();
 	plane3_->Draw();
 	plane4_->Draw();
-	plane5_->Draw();
+	plane5_->Draw();*/
 	
-	particle_->Draw(particleTransforms_);
+	particle_->Draw();
 
-	for (uint32_t i = 0; i < 100; i++) {
+	/*for (uint32_t i = 0; i < 100; i++) {
 		planes_[i]->Draw();
-	}
+	}*/
 
 	sprite_->Draw();
 

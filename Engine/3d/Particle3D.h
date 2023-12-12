@@ -31,13 +31,9 @@ public:
 
 	static Particle3D* Create(const std::string& filename, uint32_t instanceCount = 1);
 
-	void Initialize(const std::string& filename, uint32_t instanceCount);
-
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
 
 	static void PostDraw();
-
-	void Draw(std::vector<WorldTransform> worldTransform);
 
 	static void Finalize();
 
@@ -47,12 +43,26 @@ public:
 
 	static void StaticImGuiUpdate();
 
-	void ImGuiUpdate();
-
 	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
+
+public:
+
+	void Initialize(const std::string& filename, uint32_t instanceCount);
+
+	void Draw();
+
+	void ImGuiUpdate();
 
 	//ビルボードを使うかどうか
 	bool isBillboard_ = true;
+
+	std::vector<Vector3> positions_{};
+
+	std::vector<Vector3> rotations_{};
+
+	std::vector<Vector3> scales_{};
+
+	std::vector<Matrix4x4> matWorlds_{};
 
 private:
 

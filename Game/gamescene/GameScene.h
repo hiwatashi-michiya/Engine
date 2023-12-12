@@ -45,8 +45,6 @@ private:
 
 	std::unique_ptr<Model> planes_[100];
 
-	WorldTransform worldTransforms_[100];
-
 	WorldTransform worldTransformPlane2_;
 	WorldTransform worldTransformPlane3_;
 	WorldTransform worldTransformPlane4_;
