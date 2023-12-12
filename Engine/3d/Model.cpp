@@ -388,3 +388,21 @@ void Model::StaticImGuiUpdate() {
 	ImGui::End();
 
 }
+
+void Model::SetMesh(const std::string& objFileName) {
+
+	if (meshes_.find(objFileName) != meshes_.end()) {
+
+		mesh_ = meshes_[objFileName].get();
+
+	}
+	else {
+
+		//メッシュを登録
+		meshes_[objFileName] = std::make_shared<Mesh>();
+		meshes_[objFileName]->Create(objFileName);
+		mesh_ = meshes_[objFileName].get();
+
+	}
+
+}

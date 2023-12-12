@@ -18,6 +18,7 @@ class Model
 {
 public:
 
+	//モデル全体の初期化
 	static void StaticInitialize(ID3D12Device* device);
 
 	enum BlendMode {
@@ -32,29 +33,41 @@ public:
 
 	static const char* BlendTexts[BlendMode::kCountBlend];
 
+	//モデル生成
 	static Model* Create(const std::string& filename);
 
-	void Initialize(const std::string& filename);
-
+	//描画前処理
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
 
+	//描画後処理
 	static void PostDraw();
-
-	void Draw(WorldTransform worldTransform);
 
 	static void Finalize();
 
+	//カメラ
 	static WorldTransform worldTransformCamera_;
 
+	//プロジェクション行列
 	static 	Matrix4x4 matProjection_;
 
+	//モデル全体に影響を与えるImGui
 	static void StaticImGuiUpdate();
+
+	//全体のブレンドモード変更
+	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
+
+public:
+
+	void Initialize(const std::string& filename);
+
+	void Draw(WorldTransform worldTransform);
 
 	void ImGuiUpdate();
 
-	/*void SetTexture(Texture* texture) { texture_ = texture; }*/
+	void SetTexture(Texture* texture) { mesh_->SetTexture(texture); }
 
-	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
+	//メッシュ切り替え
+	void SetMesh(const std::string& objFileName);
 
 private:
 

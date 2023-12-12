@@ -39,6 +39,8 @@ public:
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
+	void SetTexture(Texture* texture) { material_->SetTexture(texture); }
+
 private:
 
 	static ID3D12Device* device_;

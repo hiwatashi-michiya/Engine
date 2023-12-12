@@ -15,7 +15,7 @@ GameScene::GameScene()
 	plane2_.reset(Model::Create("./resources/plane/plane.obj"));
 	plane3_.reset(Model::Create("./resources/plane/plane.obj"));
 	plane4_.reset(Model::Create("./resources/sphere/sphere.obj"));
-	plane5_.reset(Model::Create("./resources/sphere/sphere.obj"));
+	plane5_ = plane4_.get();
 	particle_.reset(Particle3D::Create("./resources/plane/plane.obj", 10));
 	sprite_.reset(Sprite::Create(tex_, { 100.0f,100.0f }));
 
@@ -107,6 +107,14 @@ void GameScene::Update() {
 		worldTransform.UpdateMatrix();
 	}
 
+	if (input_->TriggerKey(DIK_Q)) {
+		plane_->SetMesh("./resources/sphere/sphere.obj");
+	}
+
+	if (input_->TriggerKey(DIK_E)) {
+		plane_->SetMesh("./resources/suzanne/suzanne.obj");
+	}
+
 	if (input_->TriggerKey(DIK_2)) {
 		audioManager_->Stop(audio_);
 	}
@@ -127,9 +135,9 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	/*plane_->Draw(worldTransformPlane_);
+	plane_->Draw(worldTransformPlane_);
 	plane2_->Draw(worldTransformPlane2_);
-	plane3_->Draw(worldTransformPlane3_);*/
+	plane3_->Draw(worldTransformPlane3_);
 	plane4_->Draw(worldTransformPlane4_);
 	plane5_->Draw(worldTransformPlane5_);
 	
@@ -138,5 +146,7 @@ void GameScene::Draw() {
 	for (uint32_t i = 0; i < 100; i++) {
 		planes_[i]->Draw(worldTransforms_[i]);
 	}
+
+	sprite_->Draw();
 
 }

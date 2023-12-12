@@ -41,7 +41,7 @@ private:
 	std::unique_ptr<Model> plane2_;
 	std::unique_ptr<Model> plane3_;
 	std::unique_ptr<Model> plane4_;
-	std::unique_ptr<Model> plane5_;
+	Model* plane5_;
 
 	std::unique_ptr<Model> planes_[100];
 

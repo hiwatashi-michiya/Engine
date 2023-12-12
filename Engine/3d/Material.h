@@ -18,6 +18,9 @@ public:
 	//描画コマンドセット
 	void SetCommandMaterial(ID3D12GraphicsCommandList* commandList);
 
+	//テクスチャセット
+	void SetTexture(Texture* texture) { texture_ = texture; }
+
 	//定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 	//平行光源バッファ
