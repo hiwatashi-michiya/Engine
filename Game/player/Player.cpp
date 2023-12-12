@@ -14,10 +14,17 @@ void Player::Initialize() {
 	input_ = Input::GetInstance();
 
 	playerModel_.reset(Model::Create("./resources/cube/cube.obj"));
+	playerModel_->scale_.z *= 2.0f;
+
+	preDirection_ = { 0.0f,0.0f,1.0f };
+
+	directionToDirection_ = MakeIdentity4x4();
 
 }
 
 void Player::Update() {
+
+	directionToDirection_ = MakeIdentity4x4();
 
 	if (behaviorRequest_) {
 		//振る舞いを変更する
@@ -88,6 +95,8 @@ void Player::BehaviorRootUpdate() {
 		// 回転
 		directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(move));
 
+		playerModel_->matRotate_ = playerModel_->matRotate_ * directionToDirection_;
+
 		preDirection_ = Normalize(move);
 
 		// 移動
@@ -112,7 +121,7 @@ void Player::BehaviorRootInitialize() {
 
 void Player::BehaviorAttackUpdate() {
 
-	
+	behaviorRequest_ = Behavior::kRoot;
 
 }
 
@@ -142,7 +151,5 @@ void Player::BehaviorDashUpdate() {
 void Player::BehaviorDashInitialize() {
 
 	workDash_.dashParamater_ = 0;
-	/*worldTransformBody_.rotation_.y = destinationAngleY_;*/
-	dashStartPosition_ = playerModel_->position_;
 
 }

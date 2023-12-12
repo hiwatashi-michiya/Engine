@@ -308,6 +308,7 @@ void Model::Initialize(const std::string& filename) {
 	position_ = Vector3::Zero();
 	rotation_ = Vector3::Zero();
 	scale_ = Vector3::Identity();
+	matRotate_ = MakeIdentity4x4();
 
 }
 
@@ -331,7 +332,7 @@ void Model::PostDraw() {
 
 void Model::Draw() {
 
-	matWorld_ = MakeAffineMatrix(scale_, rotation_, position_);
+	matWorld_ = MakeScaleMatrix(scale_) * matRotate_ * MakeTranslateMatrix(position_);
 
 	if (parent_) {
 		matWorld_ = matWorld_ * parent_->matWorld_;

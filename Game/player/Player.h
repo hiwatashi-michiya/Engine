@@ -34,11 +34,29 @@ private:
 
 	std::unique_ptr<Model> playerModel_;
 
+	//ダッシュ用ワーク
+	struct WorkDash {
+		//ダッシュ用の媒介変数
+		uint32_t dashParamater_ = 0;
+		//ダッシュのスピード
+		float speed_ = 1.0f;
+		//ダッシュ時間
+		int32_t dashTime_ = 15;
+	};
+
+	WorkDash workDash_;
+
 	//振る舞い
 	Behavior behavior_ = Behavior::kRoot;
 
 	//次の振る舞いリクエスト
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
+
+	//前回向いていた向き
+	Vector3 preDirection_{};
+
+	//回転行列
+	Matrix4x4 directionToDirection_{};
 
 	//通常行動更新
 	void BehaviorRootUpdate();

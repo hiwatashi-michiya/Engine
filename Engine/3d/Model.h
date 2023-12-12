@@ -74,6 +74,8 @@ public:
 
 	Matrix4x4 matWorld_{};
 
+	Matrix4x4 matRotate_{};
+
 	Model* parent_ = nullptr;
 
 private:
