@@ -1,5 +1,6 @@
 #include "Bullet.h"
 #include "Player.h"
+#include "Engine/math/Rand.h"
 
 Bullet::Bullet()
 {
@@ -17,6 +18,9 @@ void Bullet::Initialize(Player* player) {
 	model_->scale_ *= 0.3f;
 
 	model_->parent_ = player_->GetModel();
+	model_->position_ = { float(rand() % 6 - 3), float(rand() % 4 + 2), float(rand() % 6 - 3) };
+	model_->rotation_ = { float(rand() % 300) / 100.0f, float(rand() % 300) / 100.0f, float(rand() % 300) / 100.0f };
+	model_->matRotate_ = MakeRotateZMatrix(model_->rotation_.z) * MakeRotateYMatrix(model_->rotation_.y) * MakeRotateXMatrix(model_->rotation_.x);
 
 }
 
