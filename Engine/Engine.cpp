@@ -12,6 +12,7 @@
 #include "input/Input.h"
 #include "3d/Particle3D.h"
 #include "manager/AudioManager.h"
+#include "math/Rand.h"
 
 #ifdef _DEBUG
 
@@ -25,6 +26,9 @@ DirectXCommon* dxCommon_ = nullptr;
 void Engine::Initialize(const char* title, int width, int height) {
 
 	CoInitializeEx(0, COINIT_MULTITHREADED);
+
+	//乱数生成
+	SetRandom();
 
 	//ウィンドウ作成
 	auto&& titleString = ConvertString(title);

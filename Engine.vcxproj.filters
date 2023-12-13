@@ -165,6 +165,9 @@
     <ClCompile Include="Game\player\Bullet.cpp">
       <Filter>Game\gameScene\player</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\Rand.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -283,6 +286,9 @@
     </ClInclude>
     <ClInclude Include="Game\player\Bullet.h">
       <Filter>Game\gameScene\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Rand.h">
+      <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
