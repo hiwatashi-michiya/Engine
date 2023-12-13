@@ -28,7 +28,7 @@ void GameScene::Initialize() {
 	Vector3 to1 = Normalize(Vector3{ 0.4f,0.7f,-0.5f });
 
 	rotation0 = MakeRotateAxisAngleQuaternion({ 0.71f,0.71f,0.0f }, 0.3f);
-	rotation1 = MakeRotateAxisAngleQuaternion({ 0.71f,0.0f,0.71f }, 3.141592f);
+	rotation1 = { -rotation0.x, -rotation0.y, -rotation0.z, -rotation0.w };
 
 	interpolate0 = Slerp(rotation0, rotation1, 0.0f);
 	interpolate1 = Slerp(rotation0, rotation1, 0.3f);
