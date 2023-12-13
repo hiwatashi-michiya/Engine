@@ -22,6 +22,8 @@ public:
 
 	void Shot();
 
+	void SetPosition(const Vector3& position) { model_->position_ = position; }
+
 private:
 
 	Player* player_ = nullptr;

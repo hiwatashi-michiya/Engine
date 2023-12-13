@@ -39,7 +39,9 @@ void Player::Update() {
 	directionToDirection_ = MakeIdentity4x4();
 
 	for (auto& bullet : bullets_) {
+		
 		bullet->Update();
+
 	}
 
 	if (behaviorRequest_) {

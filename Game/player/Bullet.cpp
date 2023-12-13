@@ -14,7 +14,7 @@ void Bullet::Initialize(Player* player) {
 	player_ = player;
 
 	model_.reset(Model::Create("./resources/cube/cube.obj"));
-	model_->scale_ *= 0.5f;
+	model_->scale_ *= 0.3f;
 
 	model_->parent_ = player_->GetModel();
 
@@ -44,6 +44,7 @@ void Bullet::Shot() {
 	model_->position_ = player_->GetPosition();
 	Vector3 vel{ 0.0f,0.0f,1.0f };
 	liveTime_ = maxLiveTime_;
+	model_->scale_ = { 0.5f,0.5f,0.5f };
 	velocity_ = TransformNormal(vel, player_->GetModel()->matWorld_);
 	isShot_ = true;
 
