@@ -68,9 +68,18 @@ void GameScene::Update() {
 
 		}*/
 
-		float rotateSpeed = 0.000001f;
+		float rotateSpeed = 0.000002f;
 
 		destinationAngleY_ += float(input_->GetGamepad().sThumbRX) * rotateSpeed;
+
+		destinationAngleX_ += -float(input_->GetGamepad().sThumbRY) * rotateSpeed;
+
+		if (destinationAngleX_ < -0.0f) {
+			destinationAngleX_ = -0.0f;
+		}
+		else if (destinationAngleX_ > 0.2f) {
+			destinationAngleX_ = 0.2f;
+		}
 
 		/*if (destinationAngleY_ > 3.14f) {
 			destinationAngleY_ = -3.13f;
@@ -82,6 +91,7 @@ void GameScene::Update() {
 		//右スティック押し込みでリセット
 		if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
 			destinationAngleY_ = 0.0f;
+			destinationAngleX_ = 0.2f;
 		}
 
 	}
@@ -89,10 +99,12 @@ void GameScene::Update() {
 	if (delay_ > 0.01f) {
 		//最短角度補間
 		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f / delay_);
+		Model::worldTransformCamera_.rotation_.x = std::lerp(Model::worldTransformCamera_.rotation_.x, destinationAngleX_, 1.0f / delay_);
 	}
 	else {
 		//最短角度補間
 		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f);
+		Model::worldTransformCamera_.rotation_.x = std::lerp(Model::worldTransformCamera_.rotation_.x, destinationAngleX_, 1.0f);
 	}
 
 	if (player_) {

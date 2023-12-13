@@ -36,6 +36,7 @@ private:
 
 	//目標角度
 	float destinationAngleY_ = 0.0f;
+	float destinationAngleX_ = 0.2f;
 
 	//遅延量
 	float delay_ = 10.0f;
