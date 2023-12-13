@@ -42,9 +42,9 @@ private:
 		//ダッシュ用の媒介変数
 		uint32_t dashParamater_ = 0;
 		//ダッシュのスピード
-		float speed_ = 3.0f;
+		float speed_ = 2.0f;
 		//ダッシュ時間
-		int32_t dashTime_ = 15;
+		int32_t dashTime_ = 10;
 	};
 
 	WorkDash workDash_;
