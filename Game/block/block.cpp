@@ -33,9 +33,10 @@ void Block::Initialize(const Vector3& pos, Player* player, const Vector3& blockS
 		for (uint32_t z = 0; z < sizeZ_; z++) {
 			for (uint32_t y = 0; y < sizeY_; y++) {
 				for (uint32_t x = 0; x < sizeX_; x++) {
-					particle_->positions_[i] = Vector3{ (x - sizeX_ / 2.0f) * 2.0f, (y - sizeY_ / 2.0f) * 2.0f,(z - sizeZ_ / 2.0f) * 2.0f } + model_->position_;
+					particle_->positions_[i] = Vector3{ (x - sizeX_ / 2.0f) * 2.0f + 1.0f, (y - sizeY_ / 2.0f) * 2.0f + 1.0f,
+						(z - sizeZ_ / 2.0f) * 2.0f + 1.0f } + model_->position_;
 					particle_->scales_[i] = { 0.7f,0.7f,0.7f };
-					/*particle_->rotations_[i] = { i * 0.3f, i * 0.1f, i * -0.2f };*/
+					particle_->rotations_[i] = { i * 0.3f, i * 0.1f, i * -0.2f };
 					i++;
 				}
 			}

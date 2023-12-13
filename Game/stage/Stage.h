@@ -16,8 +16,10 @@ public:
 private:
 
 	std::unique_ptr<Model> model_;
+	std::unique_ptr<Model> skydome_;
 
 	Texture* tex_;
+	Texture* tex2_;
 
 };
 
