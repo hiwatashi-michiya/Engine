@@ -162,6 +162,9 @@
     <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\Rand.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -276,6 +279,9 @@
       <Filter>Engine\manager</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Quaternion.h">
+      <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Rand.h">
       <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>
