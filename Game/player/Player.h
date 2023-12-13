@@ -2,6 +2,7 @@
 #include "Engine/3d/Model.h"
 #include <optional>
 #include "Engine/input/Input.h"
+#include "Bullet.h"
 
 //振る舞い
 enum class Behavior {
@@ -31,6 +32,10 @@ public:
 
 	bool GetIsBreak() const { return isBreak_; }
 
+	void AddBullet(uint32_t num);
+
+	Model* GetModel() const { return playerModel_.get(); }
+
 private:
 
 	Input* input_ = nullptr;
@@ -47,7 +52,19 @@ private:
 		int32_t dashTime_ = 10;
 	};
 
+	//攻撃用ワーク
+	struct WorkAttack {
+		//ブロック所持数
+		uint32_t blockCount_;
+		//攻撃間隔(フレーム数)
+		uint32_t interval_ = 5;
+		//攻撃クールタイム
+		uint32_t coolTime_;
+	};
+
 	WorkDash workDash_;
+
+	WorkAttack workAttack_;
 
 	//振る舞い
 	Behavior behavior_ = Behavior::kRoot;
@@ -63,6 +80,9 @@ private:
 
 	//移動速度
 	Vector3 velocity_{};
+
+	//弾リスト
+	std::list<std::shared_ptr<Bullet>> bullets_;
 
 	//ブロック破壊フラグ
 	bool isBreak_ = false;
@@ -85,7 +105,7 @@ private:
 	//ダッシュ初期化
 	void BehaviorDashInitialize();
 
-	//ブロック数カウント
-	uint32_t blockCount_;
+	//攻撃
+	void Attack();
 
 };

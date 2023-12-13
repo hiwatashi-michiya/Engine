@@ -56,6 +56,7 @@ void Block::Update() {
 
 	if (isBreak_ && Length(GetPosition() - player_->GetPosition()) < 6.0f) {
 
+		player_->AddBullet(particleCount_);
 		isDead_ = true;
 	}
 

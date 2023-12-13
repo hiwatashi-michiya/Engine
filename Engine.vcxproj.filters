@@ -162,6 +162,9 @@
     <ClCompile Include="Game\block\block.cpp">
       <Filter>Game\block</Filter>
     </ClCompile>
+    <ClCompile Include="Game\player\Bullet.cpp">
+      <Filter>Game\gameScene\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -277,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="Game\block\block.h">
       <Filter>Game\block</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\player\Bullet.h">
+      <Filter>Game\gameScene\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,9 +24,23 @@ void Player::Initialize() {
 
 void Player::Update() {
 
+	bullets_.remove_if([](auto& bullet) {
+
+		if (bullet->GetIsDead()) {
+			return true;
+		}
+
+		return false;
+
+	});
+
 	isBreak_ = false;
 
 	directionToDirection_ = MakeIdentity4x4();
+
+	for (auto& bullet : bullets_) {
+		bullet->Update();
+	}
 
 	if (behaviorRequest_) {
 		//振る舞いを変更する
@@ -73,6 +87,10 @@ void Player::Update() {
 void Player::Draw() {
 
 	playerModel_->Draw();
+
+	for (auto& bullet : bullets_) {
+		bullet->Draw();
+	}
 
 }
 
@@ -122,6 +140,11 @@ void Player::BehaviorRootUpdate() {
 		behaviorRequest_ = Behavior::kDash;
 	}
 
+	//攻撃
+	if (input_->PushButton(XINPUT_GAMEPAD_A)) {
+		Attack();
+	}
+
 }
 
 void Player::BehaviorRootInitialize() {
@@ -136,6 +159,39 @@ void Player::BehaviorAttackUpdate() {
 
 void Player::BehaviorAttackInitialize() {
 	
+}
+
+void Player::Attack() {
+
+	if (workAttack_.coolTime_ > 0) {
+		workAttack_.coolTime_--;
+	}
+
+	if (workAttack_.coolTime_ == 0) {
+		
+		for (auto& bullet : bullets_) {
+
+			if (!bullet->GetIsShot()) {
+				bullet->Shot();
+				break;
+			}
+
+		}
+
+	}
+
+}
+
+void Player::AddBullet(uint32_t num) {
+
+	for (uint32_t i = 0; i < num; i++) {
+
+		std::shared_ptr<Bullet> newBullet = std::make_shared<Bullet>();
+		newBullet->Initialize(this);
+		bullets_.push_back(newBullet);
+
+	}
+
 }
 
 void Player::BehaviorDashUpdate() {
