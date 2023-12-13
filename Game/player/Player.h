@@ -1,3 +1,4 @@
+#pragma once
 #include "Engine/3d/Model.h"
 #include <optional>
 #include "Engine/input/Input.h"
@@ -28,6 +29,8 @@ public:
 			playerModel_->matWorld_.m[3][2] };
 	}
 
+	bool GetIsBreak() const { return isBreak_; }
+
 private:
 
 	Input* input_ = nullptr;
@@ -39,7 +42,7 @@ private:
 		//ダッシュ用の媒介変数
 		uint32_t dashParamater_ = 0;
 		//ダッシュのスピード
-		float speed_ = 1.0f;
+		float speed_ = 3.0f;
 		//ダッシュ時間
 		int32_t dashTime_ = 15;
 	};
@@ -58,6 +61,12 @@ private:
 	//回転行列
 	Matrix4x4 directionToDirection_{};
 
+	//移動速度
+	Vector3 velocity_{};
+
+	//ブロック破壊フラグ
+	bool isBreak_ = false;
+
 	//通常行動更新
 	void BehaviorRootUpdate();
 
@@ -75,5 +84,8 @@ private:
 
 	//ダッシュ初期化
 	void BehaviorDashInitialize();
+
+	//ブロック数カウント
+	uint32_t blockCount_;
 
 };

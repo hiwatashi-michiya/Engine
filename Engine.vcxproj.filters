@@ -43,9 +43,6 @@
     <Filter Include="Game">
       <UniqueIdentifier>{ab1ff59b-4e59-4fc1-bb6b-0f667912d291}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\player">
-      <UniqueIdentifier>{917f4b7e-6a0d-44e4-a646-8f1b0084b8a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\gameScene">
       <UniqueIdentifier>{9faf39e3-20d2-4aac-9535-c1d01738b60f}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,12 @@
     </Filter>
     <Filter Include="Engine\MapEditor">
       <UniqueIdentifier>{0e3679e7-07f9-4d31-9250-af2cbdc32f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\block">
+      <UniqueIdentifier>{ef0e0772-d9e6-4fed-b0e1-f88b8749f259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\gameScene\player">
+      <UniqueIdentifier>{917f4b7e-6a0d-44e4-a646-8f1b0084b8a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +133,7 @@
       <Filter>Game\gameScene</Filter>
     </ClCompile>
     <ClCompile Include="Game\player\Player.cpp">
-      <Filter>Game\player</Filter>
+      <Filter>Game\gameScene\player</Filter>
     </ClCompile>
     <ClCompile Include="Game\stage\Stage.cpp">
       <Filter>Game\stage</Filter>
@@ -155,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\block\block.cpp">
+      <Filter>Game\block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -240,7 +246,7 @@
       <Filter>Game\gameScene</Filter>
     </ClInclude>
     <ClInclude Include="Game\player\Player.h">
-      <Filter>Game\player</Filter>
+      <Filter>Game\gameScene\player</Filter>
     </ClInclude>
     <ClInclude Include="Game\stage\Stage.h">
       <Filter>Game\stage</Filter>
@@ -268,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="Engine\math\Quaternion.h">
       <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\block\block.h">
+      <Filter>Game\block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,8 @@ void Player::Initialize() {
 
 void Player::Update() {
 
+	isBreak_ = false;
+
 	directionToDirection_ = MakeIdentity4x4();
 
 	if (behaviorRequest_) {
@@ -59,6 +61,13 @@ void Player::Update() {
 		break;
 	}
 
+	if (isBreak_) {
+
+	}
+	else {
+
+	}
+
 }
 
 void Player::Draw() {
@@ -76,10 +85,10 @@ void Player::BehaviorRootUpdate() {
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
 
 		// 移動量。Lスティックの入力を取る
-		Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
+		velocity_ = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
 
 		// 移動量に速さを反映
-		move = Multiply(speed, Normalize(move));
+		velocity_ = Multiply(speed, Normalize(velocity_));
 
 		Matrix4x4 matRotate = MakeIdentity4x4();
 
@@ -88,25 +97,25 @@ void Player::BehaviorRootUpdate() {
 		/*Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);*/
 
 		// 移動ベクトルをカメラの角度だけ回転させる
-		move = TransformNormal(move, matRotate);
+		velocity_ = TransformNormal(velocity_, matRotate);
 
-		move *= 0.4f;
+		velocity_ *= 0.8f;
 
 		// 回転
-		directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(move));
+		directionToDirection_ = DirectionToDirection(Normalize(preDirection_), Normalize(velocity_));
 
 		playerModel_->matRotate_ = playerModel_->matRotate_ * directionToDirection_;
 
-		preDirection_ = Normalize(move);
+		preDirection_ = Normalize(velocity_);
 
 		// 移動
-		playerModel_->position_ += move;
+		playerModel_->position_ += velocity_;
 
 
 	}
 
 	if (input_->TriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-		behaviorRequest_ = Behavior::kAttack;
+		isBreak_ = true;
 	}
 
 	if (input_->TriggerButton(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
@@ -131,12 +140,13 @@ void Player::BehaviorAttackInitialize() {
 
 void Player::BehaviorDashUpdate() {
 
-	//自キャラの向いている方向に移動
-	Vector3 move = { sinf(playerModel_->rotation_.y), 0.0f,cosf(playerModel_->rotation_.y) };
+	Vector3 tmpVel = Normalize(velocity_);
 
-	move *= workDash_.speed_;
+	tmpVel *= workDash_.speed_;
 
-	playerModel_->position_ += move;
+	velocity_ = tmpVel;
+
+	playerModel_->position_ += velocity_;
 
 	//ダッシュ時間
 	const uint32_t behaviorDashTime = workDash_.dashTime_;

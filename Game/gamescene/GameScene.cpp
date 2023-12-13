@@ -21,11 +21,20 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	Model::worldTransformCamera_.translation_ = { 0.0f,0.0f,-70.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.0f;
+	Model::worldTransformCamera_.rotation_.x = 0.2f;
 
 	player_ = std::make_unique<Player>();
 
 	player_->Initialize();
+
+	stage_ = std::make_unique<Stage>();
+	stage_->Initialize();
+
+	for (uint32_t i = 0; i < 11; i++) {
+		std::shared_ptr<Block> block = std::make_shared<Block>();
+		block->Initialize({ -25.0f + i * 5.0f, 3.0f, -25.0f + i * 5.0f }, player_.get(), { 2.0f,3.0f,4.0f });
+		blocks_.push_back(block);
+	}
 
 }
 
@@ -40,6 +49,16 @@ void GameScene::Update() {
 	ImGui::End();
 
 #endif // _DEBUG
+
+	blocks_.remove_if([](auto& block) {
+
+		if (block->GetIsDead()) {
+			return true;
+		}
+
+		return false;
+
+		});
 
 	if (input_->GetIsGamepad()) {
 
@@ -94,18 +113,28 @@ void GameScene::Update() {
 	Model::worldTransformCamera_.UpdateMatrix();
 
 	player_->Update();
+	stage_->Update();
+
+	for (auto& block : blocks_) {
+		block->Update();
+	}
 
 }
 
 void GameScene::Draw() {
 
 	player_->Draw();
+	stage_->Draw();
+
+	for (auto& block : blocks_) {
+		block->Draw();
+	}
 
 }
 
 Vector3 GameScene::CalcOffset() {
 
-	Vector3 offset = { 0.0f, 5.0f, -30.0f };
+	Vector3 offset = { 0.0f, 10.0f, -70.0f };
 
 	Matrix4x4 matRotate = MakeIdentity4x4();
 

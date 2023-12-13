@@ -59,7 +59,7 @@ public:
 
 	void Draw();
 
-	void ImGuiUpdate();
+	void ImGuiUpdate(const std::string& name);
 
 	void SetTexture(Texture* texture) { mesh_->SetTexture(texture); }
 

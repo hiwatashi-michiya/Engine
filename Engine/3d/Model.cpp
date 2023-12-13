@@ -368,26 +368,11 @@ void Model::Finalize() {
 
 }
 
-void Model::ImGuiUpdate() {
+void Model::ImGuiUpdate(const std::string& name) {
 
-	////識別ナンバー設定(ImGuiで使用)
-	//std::string name = "model ";
-
-	//name += std::to_string(modelNumber_);
-
-	//ImGui::Begin(name.c_str());
-	//ImGui::ColorEdit4("model Color", &constMap_->color.x);
-	//ImGui::DragFloat("shininess", &constMap_->shininess, 0.1f, 0.1f, 100.0f);
-	//ImGui::DragInt("gray scale", &constMap_->isGrayScale, 0.1f, 0, 1);
-	//ImGui::DragInt("inversion", &constMap_->isInversion, 0.1f, 0, 1);
-	//ImGui::DragInt("retro", &constMap_->isRetro, 0.1f, 0, 1);
-	//ImGui::DragInt("ave blur", &constMap_->isAverageBlur, 0.1f, 0, 1);
-	//ImGui::DragInt("emboss", &constMap_->isEmboss, 0.1f, 0, 1);
-	//ImGui::DragInt("sharpness", &constMap_->isSharpness, 0.1f, 0, 1);
-	//ImGui::DragInt("outline", &constMap_->isOutline, 0.1f, 0, 1);
-	//ImGui::End();
-
-	//modelNumber_++;
+	ImGui::Begin(name.c_str());
+	ImGui::Text("position : x %1.3f, y %1.3f, z %1.3f", position_.x, position_.y, position_.z);
+	ImGui::End();
 
 }
 

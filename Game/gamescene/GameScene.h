@@ -8,8 +8,10 @@
 #include <memory>
 #include "Game/player/Player.h"
 #include "Game/stage/Stage.h"
+#include "Game/block/block.h"
 #include "Engine/3d/Particle3D.h"
 #include "Engine/manager/AudioManager.h"
+#include <list>
 
 class GameScene
 {
@@ -36,11 +38,15 @@ private:
 	float destinationAngleY_ = 0.0f;
 
 	//遅延量
-	float delay_ = 20.0f;
+	float delay_ = 10.0f;
 
 	Vector3 CalcOffset();
 
 	std::unique_ptr<Player> player_;
+
+	std::unique_ptr<Stage> stage_;
+
+	std::list<std::shared_ptr<Block>> blocks_;
 
 };
 
