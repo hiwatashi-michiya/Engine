@@ -58,6 +58,15 @@ public:
 	//スプライト上の表示範囲
 	Vector2 viewRect_{};
 
+	//UVの位置
+	Vector2 uvTranslate_{};
+
+	//UV回転
+	float uvRotate_;
+
+	//UVスケール
+	Vector2 uvScale_{ 1.0f,1.0f };
+
 	//色
 	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 
