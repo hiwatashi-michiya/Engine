@@ -263,6 +263,15 @@ Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t) {
 
 	}
 
+	//零に近い値
+	float epsilon = 0.0005f;
+
+	//特異点に近い場合、sinを使わずに処理
+	if (dot >= 1.0f - epsilon) {
+		return (1.0f - t) * q0 + t * q1;
+	}
+
+
 	//為す角を求める
 	float theta = std::acosf(dot);
 
