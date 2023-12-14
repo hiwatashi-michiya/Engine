@@ -24,6 +24,8 @@ public:
 
 	void SetPosition(const Vector3& position) { model_->position_ = position; }
 
+	void Charge(const Vector3& position);
+
 private:
 
 	Player* player_ = nullptr;

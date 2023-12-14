@@ -48,6 +48,10 @@ void Bullet::Shot(const Vector3& position) {
 
 }
 
+void Bullet::Charge(const Vector3& position) {
+
+}
+
 void Bullet::Draw() {
 
 	model_->Draw();
