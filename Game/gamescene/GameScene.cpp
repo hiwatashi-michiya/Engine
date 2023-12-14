@@ -30,6 +30,13 @@ void GameScene::Initialize() {
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
 
+	tex_ = TextureManager::GetInstance()->Load("./resources/reticle.png");
+
+	reticle_.reset(Sprite::Create(tex_, { 0.0f,0.0f }));
+
+	reticle3D_.reset(Model::Create("./resources/cube/cube.obj"));
+	reticle3D_->scale_ *= 0.0f;
+
 	for (uint32_t i = 0; i < 11; i++) {
 		std::shared_ptr<Block> block = std::make_shared<Block>();
 		block->Initialize({ -25.0f + i * 5.0f, 3.0f, -25.0f + i * 5.0f }, player_.get(), { 2.0f,3.0f,4.0f });
@@ -58,15 +65,19 @@ void GameScene::Update() {
 
 		return false;
 
-		});
+	});
+
+	bullets_.remove_if([](auto& bullet) {
+
+		if (bullet->GetIsDead()) {
+			return true;
+		}
+
+		return false;
+
+	});
 
 	if (input_->GetIsGamepad()) {
-
-		/*if (isLockOnStart_) {
-			destinationAngleY_ = std::acosf(Model::worldTransformCamera_.rotateMatrix_.m[0][0]);
-			isLockOnStart_ = false;
-
-		}*/
 
 		float rotateSpeed = 0.000002f;
 
@@ -80,13 +91,6 @@ void GameScene::Update() {
 		else if (destinationAngleX_ > 0.2f) {
 			destinationAngleX_ = 0.2f;
 		}
-
-		/*if (destinationAngleY_ > 3.14f) {
-			destinationAngleY_ = -3.13f;
-		}
-		else if (destinationAngleY_ <= -3.14f) {
-			destinationAngleY_ = 3.14f;
-		}*/
 
 		//右スティック押し込みでリセット
 		if (input_->GetGamepad().wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
@@ -105,6 +109,34 @@ void GameScene::Update() {
 		//最短角度補間
 		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f);
 		Model::worldTransformCamera_.rotation_.x = std::lerp(Model::worldTransformCamera_.rotation_.x, destinationAngleX_, 1.0f);
+	}
+
+	//レティクル
+	{
+
+		//カメラからの距離
+		const float kDistance = 120.0f;
+		//オフセット
+		Vector3 offset = { 0.0f,0.0f,1.0f };
+		offset = TransformNormal(offset, Model::worldTransformCamera_.matWorld_);
+		offset = Normalize(offset) * kDistance;
+		reticlePos_ = Model::worldTransformCamera_.translation_ + offset;
+		reticle3D_->position_ = reticlePos_;
+
+	}
+
+	{
+
+		Vector3 posReticle = { reticle3D_->matWorld_.m[3][0],reticle3D_->matWorld_.m[3][1],reticle3D_->matWorld_.m[3][2] };
+		//ビューポート
+		Matrix4x4 matViewport = MakeViewportMatrix(0.0f, 0.0f, WinApp::kWindowWidth, WinApp::kWindowHeight, 0.0f, 1.0f);
+		Matrix4x4 cameraMatrix = Model::worldTransformCamera_.UpdateMatrix();
+		Matrix4x4 matView = Inverse(cameraMatrix);
+		Matrix4x4 matProjection = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
+		Matrix4x4 matViewProjectionViewport = matView * matProjection * matViewport;
+		posReticle = CoordTransform(posReticle, matViewProjectionViewport);
+		reticle_->position_ = { posReticle.x - 64.0f, posReticle.y - 64.0f };
+
 	}
 
 	if (player_) {
@@ -129,6 +161,22 @@ void GameScene::Update() {
 
 	for (auto& block : blocks_) {
 		block->Update();
+
+		if (block->GetIsDead()) {
+			block->SetBullet(bullets_);
+		}
+
+	}
+
+	for (auto& bullet : bullets_) {
+
+		bullet->Update();
+
+		if (player_->GetIsAttack() && !bullet->GetIsShot()) {
+			bullet->Shot(reticlePos_);
+			player_->SetIsAttack(false);
+		}
+
 	}
 
 }
@@ -138,8 +186,15 @@ void GameScene::Draw() {
 	player_->Draw();
 	stage_->Draw();
 
+	reticle_->Draw();
+	reticle3D_->Draw();
+
 	for (auto& block : blocks_) {
 		block->Draw();
+	}
+
+	for (auto& bullet : bullets_) {
+		bullet->Draw();
 	}
 
 }

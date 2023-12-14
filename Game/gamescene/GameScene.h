@@ -12,6 +12,7 @@
 #include "Engine/3d/Particle3D.h"
 #include "Engine/manager/AudioManager.h"
 #include <list>
+#include "Game/player/Bullet.h"
 
 class GameScene
 {
@@ -47,7 +48,17 @@ private:
 
 	std::unique_ptr<Stage> stage_;
 
+	std::unique_ptr<Sprite> reticle_;
+
+	std::unique_ptr<Model> reticle3D_;
+
+	Texture* tex_;
+
 	std::list<std::shared_ptr<Block>> blocks_;
+
+	std::list<std::shared_ptr<Bullet>> bullets_;
+
+	Vector3 reticlePos_{};
 
 };
 

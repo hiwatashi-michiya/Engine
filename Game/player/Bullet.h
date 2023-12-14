@@ -10,7 +10,7 @@ public:
 	Bullet();
 	~Bullet();
 
-	void Initialize(Player* player);
+	void Initialize(const Vector3& position);
 
 	void Update();
 
@@ -20,7 +20,7 @@ public:
 
 	bool GetIsShot() const { return isShot_; }
 
-	void Shot();
+	void Shot(const Vector3& position);
 
 	void SetPosition(const Vector3& position) { model_->position_ = position; }
 
@@ -39,6 +39,6 @@ private:
 	//生存時間
 	int32_t liveTime_;
 
-	uint32_t maxLiveTime_ = 60;
+	uint32_t maxLiveTime_ = 120;
 
 };

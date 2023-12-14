@@ -2,6 +2,8 @@
 #include "Engine/3d/Model.h"
 #include "Engine/3d/Particle3D.h"
 #include "Game/player/Player.h"
+#include "Game/player/Bullet.h"
+#include <memory>
 
 class Block
 {
@@ -31,11 +33,11 @@ public:
 
 	bool GetIsDead() { return isDead_; }
 
+	void SetBullet(std::list<std::shared_ptr<Bullet>>& bullets);
+
 private:
 
 	std::unique_ptr<Model> model_;
-
-	std::unique_ptr<Particle3D> particle_;
 
 	bool isBreak_ = false;
 

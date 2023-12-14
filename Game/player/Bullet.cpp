@@ -10,15 +10,12 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::Initialize(Player* player) {
-
-	player_ = player;
+void Bullet::Initialize(const Vector3& position) {
 
 	model_.reset(Model::Create("./resources/cube/cube.obj"));
-	model_->scale_ *= 0.3f;
+	model_->scale_ *= 0.7f;
 
-	model_->parent_ = player_->GetModel();
-	model_->position_ = { float(rand() % 6 - 3), float(rand() % 4 + 2), float(rand() % 6 - 3) };
+	model_->position_ = position;
 	model_->rotation_ = { float(rand() % 300) / 100.0f, float(rand() % 300) / 100.0f, float(rand() % 300) / 100.0f };
 	model_->matRotate_ = MakeRotateZMatrix(model_->rotation_.z) * MakeRotateYMatrix(model_->rotation_.y) * MakeRotateXMatrix(model_->rotation_.x);
 
@@ -42,14 +39,11 @@ void Bullet::Update() {
 
 }
 
-void Bullet::Shot() {
+void Bullet::Shot(const Vector3& position) {
 
-	model_->parent_ = nullptr;
-	model_->position_ = player_->GetPosition();
-	Vector3 vel{ 0.0f,0.0f,1.0f };
 	liveTime_ = maxLiveTime_;
-	model_->scale_ = { 0.5f,0.5f,0.5f };
-	velocity_ = TransformNormal(vel, player_->GetModel()->matWorld_);
+	velocity_ = Normalize(position - model_->position_);
+	velocity_ *= 2.0f;
 	isShot_ = true;
 
 }

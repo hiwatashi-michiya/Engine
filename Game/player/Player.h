@@ -2,7 +2,7 @@
 #include "Engine/3d/Model.h"
 #include <optional>
 #include "Engine/input/Input.h"
-#include "Bullet.h"
+#include "Engine/2d/Sprite.h"
 
 //振る舞い
 enum class Behavior {
@@ -35,6 +35,10 @@ public:
 	void AddBullet(uint32_t num);
 
 	Model* GetModel() const { return playerModel_.get(); }
+
+	bool GetIsAttack() const { return isAttack_; }
+
+	void SetIsAttack(bool flag) { isAttack_ = flag; }
 
 private:
 
@@ -81,9 +85,6 @@ private:
 	//移動速度
 	Vector3 velocity_{};
 
-	//弾リスト
-	std::list<std::shared_ptr<Bullet>> bullets_;
-
 	//ブロック破壊フラグ
 	bool isBreak_ = false;
 
@@ -107,5 +108,7 @@ private:
 
 	//攻撃
 	void Attack();
+
+	bool isAttack_ = false;
 
 };

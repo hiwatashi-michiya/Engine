@@ -20,29 +20,17 @@ void Player::Initialize() {
 
 	directionToDirection_ = MakeIdentity4x4();
 
+	velocity_ = { 0.0f,0.0f,1.0f };
+
 }
 
 void Player::Update() {
 
-	bullets_.remove_if([](auto& bullet) {
-
-		if (bullet->GetIsDead()) {
-			return true;
-		}
-
-		return false;
-
-	});
-
 	isBreak_ = false;
 
+	isAttack_ = false;
+
 	directionToDirection_ = MakeIdentity4x4();
-
-	for (auto& bullet : bullets_) {
-		
-		bullet->Update();
-
-	}
 
 	if (behaviorRequest_) {
 		//振る舞いを変更する
@@ -90,10 +78,6 @@ void Player::Draw() {
 
 	playerModel_->Draw();
 
-	for (auto& bullet : bullets_) {
-		bullet->Draw();
-	}
-
 }
 
 void Player::BehaviorRootUpdate() {
@@ -134,7 +118,7 @@ void Player::BehaviorRootUpdate() {
 
 	}
 
-	if (input_->TriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+	if (input_->TriggerButton(XINPUT_GAMEPAD_A)) {
 		isBreak_ = true;
 	}
 
@@ -143,7 +127,7 @@ void Player::BehaviorRootUpdate() {
 	}
 
 	//攻撃
-	if (input_->PushButton(XINPUT_GAMEPAD_A)) {
+	if (input_->PushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		Attack();
 	}
 
@@ -171,14 +155,7 @@ void Player::Attack() {
 
 	if (workAttack_.coolTime_ == 0) {
 		
-		for (auto& bullet : bullets_) {
-
-			if (!bullet->GetIsShot()) {
-				bullet->Shot();
-				break;
-			}
-
-		}
+		isAttack_ = true;
 
 	}
 
@@ -186,13 +163,6 @@ void Player::Attack() {
 
 void Player::AddBullet(uint32_t num) {
 
-	for (uint32_t i = 0; i < num; i++) {
-
-		std::shared_ptr<Bullet> newBullet = std::make_shared<Bullet>();
-		newBullet->Initialize(this);
-		bullets_.push_back(newBullet);
-
-	}
 
 }
 

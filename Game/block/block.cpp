@@ -20,44 +20,38 @@ void Block::Initialize(const Vector3& pos, Player* player, const Vector3& blockS
 	particleCount_ = sizeX_ * sizeY_ * sizeZ_;
 
 	model_.reset(Model::Create("./resources/cube/cube.obj"));
-	particle_.reset(Particle3D::Create("./resources/cube/cube.obj", particleCount_));
-	particle_->isBillboard_ = false;
 
 	model_->position_ = pos;
 
 	model_->scale_ = blockSize_;
 
-	{
+	player_ = player;
 
-		uint32_t i = 0;
+}
 
-		for (uint32_t z = 0; z < sizeZ_; z++) {
-			for (uint32_t y = 0; y < sizeY_; y++) {
-				for (uint32_t x = 0; x < sizeX_; x++) {
-					particle_->positions_[i] = Vector3{ (x - sizeX_ / 2.0f) * 2.0f + 1.0f, (y - sizeY_ / 2.0f) * 2.0f + 1.0f,
-						(z - sizeZ_ / 2.0f) * 2.0f + 1.0f } + model_->position_;
-					particle_->scales_[i] = { 0.7f,0.7f,0.7f };
-					particle_->rotations_[i] = { float(rand() % 300) / 100.0f, float(rand() % 300) / 100.0f, float(rand() % 300) / 100.0f };
-					i++;
-				}
+void Block::SetBullet(std::list<std::shared_ptr<Bullet>>& bullets) {
+
+
+	for (uint32_t z = 0; z < sizeZ_; z++) {
+		for (uint32_t y = 0; y < sizeY_; y++) {
+			for (uint32_t x = 0; x < sizeX_; x++) {
+
+				Vector3 bulletPos = Vector3{ (x - sizeX_ / 2.0f) * 2.0f + 1.0f, (y - sizeY_ / 2.0f) * 2.0f + 1.0f,
+					(z - sizeZ_ / 2.0f) * 2.0f + 1.0f } + model_->position_;
+
+				std::shared_ptr<Bullet> newBullet = std::make_shared<Bullet>();
+				newBullet->Initialize(bulletPos);
+				bullets.push_back(newBullet);
+
 			}
 		}
-
 	}
-
-	player_ = player;
 
 }
 
 void Block::Update() {
 
 	if (player_->GetIsBreak() && Length(GetPosition() - player_->GetPosition()) < 20.0f) {
-		isBreak_ = true;
-	}
-
-	if (isBreak_ && Length(GetPosition() - player_->GetPosition()) < 6.0f) {
-
-		player_->AddBullet(particleCount_);
 		isDead_ = true;
 	}
 
@@ -65,11 +59,6 @@ void Block::Update() {
 
 void Block::Draw() {
 
-	if (isBreak_) {
-		particle_->Draw();
-	}
-	else {
-		model_->Draw();
-	}
+	model_->Draw();
 
 }
