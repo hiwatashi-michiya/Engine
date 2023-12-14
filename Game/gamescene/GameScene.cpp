@@ -119,8 +119,8 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	/*plane_->Draw();
-	plane2_->Draw();
+	plane_->Draw();
+	/*plane2_->Draw();
 	plane3_->Draw();
 	plane4_->Draw();
 	plane5_->Draw();*/
