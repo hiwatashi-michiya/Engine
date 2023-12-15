@@ -44,12 +44,6 @@ public:
 
 	static void Finalize();
 
-	//カメラ
-	static WorldTransform worldTransformCamera_;
-
-	//プロジェクション行列
-	static 	Matrix4x4 matProjection_;
-
 	//モデル全体に影響を与えるImGui
 	static void StaticImGuiUpdate();
 
@@ -60,7 +54,7 @@ public:
 
 	void Initialize(const std::string& filename);
 
-	void Draw();
+	void Draw(Camera* camera);
 
 	void ImGuiUpdate();
 

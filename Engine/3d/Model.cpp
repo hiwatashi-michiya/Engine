@@ -15,8 +15,6 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> Model::pipelineStates_[Model::BlendM
 //ID3D12PipelineState* Model::pipelineState_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Model::vs3dBlob_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Model::ps3dBlob_ = nullptr;
-WorldTransform Model::worldTransformCamera_{};
-Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
 int Model::modelNumber_ = 0;
 Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
 std::unordered_map<std::string, std::shared_ptr<Mesh>> Model::meshes_;
@@ -317,8 +315,6 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
-	worldTransformCamera_.UpdateMatrix();
-
 }
 
 void Model::PostDraw() {
@@ -329,23 +325,20 @@ void Model::PostDraw() {
 
 }
 
-void Model::Draw() {
+void Model::Draw(Camera* camera) {
 
 	matWorld_ = MakeAffineMatrix(scale_, rotation_, position_);
 
 	if (parent_) {
 		matWorld_ = matWorld_ * parent_->matWorld_;
 	}
-
-	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-	Matrix4x4 worldViewProjectionMatrix = matWorld_ * (viewMatrix * matProjection_);
+	
+	Matrix4x4 worldViewProjectionMatrix = matWorld_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = matWorld_;
 	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(matWorld_));
 
-	cameraMap_->worldPosition = worldTransformCamera_.GetWorldPosition();
+	cameraMap_->worldPosition = camera->GetWorldPosition();
 
 	//PSO設定
 	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());

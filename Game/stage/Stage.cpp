@@ -76,11 +76,11 @@ void Stage::Update() {
 
 void Stage::Draw() {
 
-	for (int i = 0; i < 5; i++) {
+	/*for (int i = 0; i < 5; i++) {
 		modelFloor_[i]->Draw();
 	}
 
-	modelGoal_->Draw();
+	modelGoal_->Draw();*/
 
 }
 

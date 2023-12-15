@@ -79,9 +79,9 @@ void Enemy::Update() {
 
 void Enemy::Draw() {
 
-	modelBody_->Draw();
+	/*modelBody_->Draw();
 	modelL_arm_->Draw();
-	modelR_arm_->Draw();
+	modelR_arm_->Draw();*/
 
 }
 

@@ -71,10 +71,10 @@ void Player::Update() {
 	// 移動量に速さを反映
 	move = Multiply(speed, Normalize(move));
 
-	Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+	//Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
 
-	// 移動ベクトルをカメラの角度だけ回転させる
-	move = TransformNormal(move, matRotate);
+	//// 移動ベクトルをカメラの角度だけ回転させる
+	//move = TransformNormal(move, matRotate);
 
 	move *= 0.2f;
 
@@ -106,11 +106,6 @@ void Player::Update() {
 }
 
 void Player::Draw() {
-
-	modelBody_->Draw();
-	modelHead_->Draw();
-	modelL_arm_->Draw();
-	modelR_arm_->Draw();
 
 }
 

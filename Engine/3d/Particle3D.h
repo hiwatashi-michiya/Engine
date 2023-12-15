@@ -10,6 +10,7 @@
 #include "Mesh.h"
 #include <memory>
 #include <unordered_map>
+#include "Engine/base/Camera.h"
 
 class Particle3D
 {
@@ -37,10 +38,6 @@ public:
 
 	static void Finalize();
 
-	static WorldTransform worldTransformCamera_;
-
-	static 	Matrix4x4 matProjection_;
-
 	static void StaticImGuiUpdate();
 
 	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
@@ -49,7 +46,7 @@ public:
 
 	void Initialize(const std::string& filename, uint32_t instanceCount);
 
-	void Draw();
+	void Draw(Camera* camera);
 
 	void ImGuiUpdate();
 

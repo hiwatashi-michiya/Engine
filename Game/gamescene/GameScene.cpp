@@ -41,8 +41,10 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	Model::worldTransformCamera_.translation_ = { 0.0f,0.0f,-10.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.0f;
+
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
+	camera_->position_ = { 0.0f,0.0f, -10.0f };
 
 	plane_->position_.x = -2.0f;
 	plane2_->position_.y = 1.0f;
@@ -65,9 +67,9 @@ void GameScene::Update() {
 #ifdef _DEBUG
 
 	ImGui::Begin("camera");
-	ImGui::DragFloat3("scale", &Model::worldTransformCamera_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &Model::worldTransformCamera_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation", &Model::worldTransformCamera_.translation_.x, 0.1f);
+	ImGui::DragFloat3("scale", &camera_->scale_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
+	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
 	ImGui::Begin("worldTransform sphere");
@@ -115,17 +117,20 @@ void GameScene::Update() {
 		audioManager_->ReStart(audio_);
 	}
 
+	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
+	camera_->Update();
+
 }
 
 void GameScene::Draw() {
 
-	plane_->Draw();
+	plane_->Draw(camera_.get());
 	/*plane2_->Draw();
 	plane3_->Draw();
 	plane4_->Draw();
 	plane5_->Draw();*/
 	
-	particle_->Draw();
+	particle_->Draw(camera_.get());
 
 	/*for (uint32_t i = 0; i < 100; i++) {
 		planes_[i]->Draw();

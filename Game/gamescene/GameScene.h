@@ -30,6 +30,8 @@ private:
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 
+	std::unique_ptr<Camera> camera_;
+
 	std::unique_ptr<Model> plane_;
 
 	std::unique_ptr<Particle3D> particle_;
