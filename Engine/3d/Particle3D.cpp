@@ -15,10 +15,9 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> Particle3D::particlePipelineStates_[
 //ID3D12PipelineState* Particle3D::pipelineState_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Particle3D::vs3dParticleBlob_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Particle3D::ps3dParticleBlob_ = nullptr;
-WorldTransform Particle3D::worldTransformCamera_{};
-Matrix4x4 Particle3D::matProjection_ = MakeIdentity4x4();
 int Particle3D::modelNumber_ = 0;
 Particle3D::BlendMode Particle3D::currentBlendMode_ = Particle3D::BlendMode::kNormal;
+std::unordered_map<std::string, std::shared_ptr<Mesh>> Particle3D::meshes_;
 const char* Particle3D::BlendTexts[Particle3D::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
 void Particle3D::StaticInitialize(ID3D12Device* device) {
@@ -94,7 +93,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[3]{};
+	D3D12_ROOT_PARAMETER rootParameters[4]{};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
@@ -108,6 +107,11 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange; //Tableの中身の配列を指定
 	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); //Tableで利用する数
+
+	//平行光源
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //CBVを使う
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+	rootParameters[3].Descriptor.ShaderRegister = 1; //レジスタ番号1を使う
 
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
@@ -257,46 +261,33 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	assert(device_);
 
-	modelData_ = LoadObjFile(filename);
+	if (meshes_.find(filename) != meshes_.end()) {
 
-	instanceCount_ = instanceCount;
+		mesh_ = meshes_[filename].get();
 
-	//頂点バッファ
-	{
+	}
+	else {
 
-		vertBuff_ = CreateBufferResource(device_, sizeof(VertexData) * modelData_.vertices.size());
-
-		//頂点バッファビュー設定
-		vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
-		vbView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
-		vbView_.StrideInBytes = sizeof(VertexData);
-
-		//マッピングしてデータ転送
-		vertBuff_->Map(0, nullptr, reinterpret_cast<void**>(&vertMap_));
-
-		std::memcpy(vertMap_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-
-		//アンマップ
-		vertBuff_->Unmap(0, nullptr);
+		//メッシュを登録
+		meshes_[filename] = std::make_shared<Mesh>();
+		meshes_[filename]->Create(filename);
+		mesh_ = meshes_[filename].get();
 
 	}
 
+	instanceCount_ = instanceCount;
 
-	//定数バッファ
-	{
+	//トランスフォーム情報をインスタンス数に合わせてリサイズする
+	positions_.resize(instanceCount_);
+	rotations_.resize(instanceCount_);
+	scales_.resize(instanceCount_);
+	matWorlds_.resize(instanceCount_);
 
-		constBuff_ = CreateBufferResource(device_, sizeof(Material));
-
-		//マッピングしてデータ転送
-		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
-
-		constMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		constMap_->enableLighting = true;
-		constMap_->uvTransform = MakeIdentity4x4();
-
-		//アンマップ
-		constBuff_->Unmap(0, nullptr);
-
+	for (uint32_t i = 0; i < instanceCount_; i++) {
+		positions_[i] = Vector3::Zero();
+		rotations_[i] = Vector3::Zero();
+		scales_[i] = Vector3::Identity();
+		matWorlds_[i] = MakeIdentity4x4();
 	}
 
 	//transformMatrix
@@ -323,20 +314,6 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	}
 
-	//テクスチャ設定
-	{
-
-		//テクスチャ情報が空でない場合に設定
-		if (modelData_.material.textureFilePath != "") {
-			texture_ = TextureManager::GetInstance()->Load(modelData_.material.textureFilePath);
-		}
-		//テクスチャ情報が空の場合、既定の画像に設定
-		else {
-			texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
-		}
-
-	}
-
 }
 
 void Particle3D::PreDraw(ID3D12GraphicsCommandList* commandList) {
@@ -344,15 +321,6 @@ void Particle3D::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	assert(commandList_ == nullptr);
 
 	commandList_ = commandList;
-
-	worldTransformCamera_.UpdateMatrix();
-
-	//PSO設定
-	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_].Get());
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 }
 
@@ -364,47 +332,42 @@ void Particle3D::PostDraw() {
 
 }
 
-void Particle3D::Draw(std::vector<WorldTransform> worldTransform) {
+void Particle3D::Draw(Camera* camera) {
 
-	if (isBillboard_) {
+	matBillboard_ = camera->matWorld_;
 
-		matBillboard_ = Model::worldTransformCamera_.UpdateMatrix();
+	matBillboard_.m[3][0] = 0.0f;
+	matBillboard_.m[3][1] = 0.0f;
+	matBillboard_.m[3][2] = 0.0f;
 
-		matBillboard_.m[3][0] = 0.0f;
-		matBillboard_.m[3][1] = 0.0f;
-		matBillboard_.m[3][2] = 0.0f;
+	for (uint32_t i = 0; i < instanceCount_; i++) {
 
-	}
-	else {
-		matBillboard_ = MakeIdentity4x4();
-	}
-
-	for (uint32_t i = 0; i < worldTransform.size(); i++) {
-
-		//配列外参照防止
-		if (i >= instanceCount_) {
-			break;
+		if (isBillboard_) {
+			matWorlds_[i] = MakeScaleMatrix(scales_[i]) * matBillboard_ * MakeTranslateMatrix(positions_[i]);
 		}
-		Matrix4x4 worldMatrix = MakeScaleMatrix(worldTransform[i].scale_) * matBillboard_ * MakeTranslateMatrix(worldTransform[i].translation_);
+		else {
+			matWorlds_[i] = MakeAffineMatrix(scales_[i], rotations_[i], positions_[i]);
+		}
+
 		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
-		Matrix4x4 cameraMatrix = Model::worldTransformCamera_.UpdateMatrix();
-		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-		matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-		Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);
+		Matrix4x4 worldViewProjectionMatrix = matWorlds_[i] * camera->matViewProjection_;
 		matTransformMap_[i].WVP = worldViewProjectionMatrix;
-		matTransformMap_[i].World = worldMatrix;
-		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(worldMatrix));
+		matTransformMap_[i].World = matWorlds_[i];
+		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(matWorlds_[i]));
 
 	}
 
-	//Spriteの描画
-	commandList_->IASetVertexBuffers(0, 1, &vbView_);
+	//PSO設定
+	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_].Get());
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	commandList_->SetGraphicsRootDescriptorTable(1, instancingResource_.srvHandleGPU);
-	////SRVの設定
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
-	commandList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
+	
 	//描画
-	commandList_->DrawInstanced(UINT(modelData_.vertices.size()), instanceCount_, 0, 0);
+	mesh_->SetCommandMesh(commandList_, instanceCount_);
 
 }
 
@@ -422,16 +385,16 @@ void Particle3D::Finalize() {
 
 void Particle3D::ImGuiUpdate() {
 
-	//識別ナンバー設定(ImGuiで使用)
-	std::string name = "model Color";
+	////識別ナンバー設定(ImGuiで使用)
+	//std::string name = "model Color";
 
-	name += std::to_string(modelNumber_);
+	//name += std::to_string(modelNumber_);
 
-	ImGui::Begin("model Settings");
-	ImGui::ColorEdit4(name.c_str(), &constMap_->color.x);
-	ImGui::End();
+	//ImGui::Begin("model Settings");
+	//ImGui::ColorEdit4(name.c_str(), &constMap_->color.x);
+	//ImGui::End();
 
-	modelNumber_++;
+	//modelNumber_++;
 
 }
 

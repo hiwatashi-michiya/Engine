@@ -11,16 +11,23 @@ GameScene::GameScene()
 
 	tex_ = TextureManager::GetInstance()->Load("./resources/test.png");
 
-	plane_.reset(Model::Create("./resources/plane/plane.obj"));
-	plane2_.reset(Model::Create("./resources/sphere/sphere.obj"));
+	plane_.reset(Model::Create("./resources/sphere/sphere.obj"));
+	plane2_.reset(Model::Create("./resources/terrain/terrain.obj"));
+	plane3_.reset(Model::Create("./resources/plane/plane.obj"));
+	plane4_.reset(Model::Create("./resources/sphere/sphere.obj"));
+	plane5_ = plane4_.get();
 	particle_.reset(Particle3D::Create("./resources/plane/plane.obj", 10));
 	sprite_.reset(Sprite::Create(tex_, { 100.0f,100.0f }));
 
+	for (uint32_t i = 0; i < 100; i++) {
+
+		planes_[i].reset(Model::Create("./resources/plane/plane.obj"));
+
+	}
+
 	for (uint32_t i = 0; i < 10; i++) {
 		
-		WorldTransform worldTransform{};
-		worldTransform.translation_ = { 0.1f * i + 1.0f, 0.1f * i + 0.0f, 1.0f };
-		particleTransforms_.push_back(worldTransform);
+		particle_->positions_[i] = {0.1f * i + 1.0f, 0.1f * i + 0.0f, 1.0f};
 
 	}
 
@@ -34,11 +41,21 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	Model::worldTransformCamera_.translation_ = { 0.0f,0.0f,-10.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.0f;
 
-	worldTransformPlane_.translation_.x = -2.0f;
-	worldTransformPlane2_.translation_.x = 0.0f;
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
+	camera_->position_ = { 0.0f,0.0f, -10.0f };
+
+	plane_->position_.x = -2.0f;
+	plane2_->position_.y = -2.0f;
+	plane3_->position_.x = 1.5f;
+	plane4_->position_.x = 1.0f;
+	plane5_->position_.x = -1.0f;
+
+	for (uint32_t i = 0; i < 100; i++) {
+		planes_[i]->position_.x = 0.5f * i;
+		planes_[i]->rotation_.z = 0.05f * i;
+	}
 
 	audioManager_ = AudioManager::GetInstance();
 	audio_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
@@ -50,15 +67,15 @@ void GameScene::Update() {
 #ifdef _DEBUG
 
 	ImGui::Begin("camera");
-	ImGui::DragFloat3("scale", &Model::worldTransformCamera_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &Model::worldTransformCamera_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation", &Model::worldTransformCamera_.translation_.x, 0.1f);
+	ImGui::DragFloat3("scale", &camera_->scale_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
+	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
 	ImGui::Begin("worldTransform sphere");
-	ImGui::DragFloat3("translation", &worldTransformPlane2_.translation_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &worldTransformPlane2_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("scale", &worldTransformPlane2_.scale_.x, 0.1f);
+	ImGui::DragFloat3("translation", &plane5_->position_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &plane5_->rotation_.x, 0.1f);
+	ImGui::DragFloat3("scale", &plane5_->scale_.x, 0.1f);
 	ImGui::End();
 
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -76,12 +93,12 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	worldTransformPlane_.UpdateMatrix();
-	worldTransformPlane2_.UpdateMatrix();
+	if (input_->TriggerKey(DIK_Q)) {
+		plane_->SetMesh("./resources/sphere/sphere.obj");
+	}
 
-	for (WorldTransform& worldTransform : particleTransforms_) {
-		/*worldTransform.translation_.y += 0.01f;*/
-		worldTransform.UpdateMatrix();
+	if (input_->TriggerKey(DIK_E)) {
+		plane_->SetMesh("./resources/suzanne/suzanne.obj");
 	}
 
 	if (input_->TriggerKey(DIK_2)) {
@@ -100,45 +117,25 @@ void GameScene::Update() {
 		audioManager_->ReStart(audio_);
 	}
 
+	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
+	camera_->Update();
+
 }
 
 void GameScene::Draw() {
 
-	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
-
-	//3Dモデル描画
-	{
-
-		Model::PreDraw(commandList);
-
-		plane_->Draw(worldTransformPlane_);
-		plane2_->Draw(worldTransformPlane2_);
-
-		Model::PostDraw();
-
-	}
+	plane_->Draw(camera_.get());
+	plane2_->Draw(camera_.get());
+	/*plane3_->Draw();
+	plane4_->Draw();
+	plane5_->Draw();*/
 	
-	//パーティクル描画
-	{
+	particle_->Draw(camera_.get());
 
-		Particle3D::PreDraw(commandList);
+	/*for (uint32_t i = 0; i < 100; i++) {
+		planes_[i]->Draw();
+	}*/
 
-		particle_->Draw(particleTransforms_);
-
-		Particle3D::PostDraw();
-
-	}
-
-	//2Dスプライト描画
-	{
-
-		Sprite::PreDraw(commandList);
-
-		/*sprite_->Draw();*/
-
-		Sprite::PostDraw();
-
-	}
-
+	sprite_->Draw();
 
 }

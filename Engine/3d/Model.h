@@ -7,6 +7,9 @@
 #include "ModelManager.h"
 #include "WorldTransform.h"
 #include "Engine/base/Camera.h"
+#include "Mesh.h"
+#include <memory>
+#include <unordered_map>
 
 //ディレクトリパス
 const std::string modelDirectoryPath = "resources";
@@ -15,6 +18,7 @@ class Model
 {
 public:
 
+	//モデル全体の初期化
 	static void StaticInitialize(ID3D12Device* device);
 
 	enum BlendMode {
@@ -29,29 +33,45 @@ public:
 
 	static const char* BlendTexts[BlendMode::kCountBlend];
 
+	//モデル生成
 	static Model* Create(const std::string& filename);
 
-	void Initialize(const std::string& filename);
-
+	//描画前処理
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
 
+	//描画後処理
 	static void PostDraw();
-
-	void Draw(WorldTransform worldTransform);
 
 	static void Finalize();
 
-	static WorldTransform worldTransformCamera_;
-
-	static 	Matrix4x4 matProjection_;
-
+	//モデル全体に影響を与えるImGui
 	static void StaticImGuiUpdate();
+
+	//全体のブレンドモード変更
+	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
+
+public:
+
+	void Initialize(const std::string& filename);
+
+	void Draw(Camera* camera);
 
 	void ImGuiUpdate();
 
-	void SetTexture(Texture* texture) { texture_ = texture; }
+	void SetTexture(Texture* texture) { mesh_->SetTexture(texture); }
 
-	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
+	//メッシュ切り替え
+	void SetMesh(const std::string& objFileName);
+
+	Vector3 position_{};
+
+	Vector3 rotation_{};
+
+	Vector3 scale_{};
+
+	Matrix4x4 matWorld_{};
+
+	Model* parent_ = nullptr;
 
 private:
 
@@ -76,43 +96,22 @@ private:
 
 	static BlendMode currentBlendMode_;
 
+	static std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes_;
+
 private:
 
-	//頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> matBuff_;
-	//インデックスバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff_;
-	//定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
-	//平行光源バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> dLightBuff_;
 	//カメラ座標バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> cameraBuff_;
-
-	//頂点バッファマップ
-	VertexData* vertMap_ = nullptr;
-	//インデックスバッファマップ
-	uint32_t* indexMap_ = nullptr;
-	//定数バッファマップ
-	Material* constMap_ = nullptr;
+	//画面上のワールド座標バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> matBuff_;
+	
 	//TransformMatrix
 	TransformationMatrix* matTransformMap_ = nullptr;
-	//平行光源バッファマップ
-	DirectionalLight* dLightMap_ = nullptr;
 	//カメラ座標マップ
 	CameraForGPU* cameraMap_ = nullptr;
 
-	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView_{};
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView_{};
-
-	//テクスチャ
-	Texture* texture_;
-
-	//モデルデータ
-	ModelData modelData_;
+	//メッシュ
+	Mesh* mesh_;
 
 };
 

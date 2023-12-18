@@ -15,10 +15,9 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> Model::pipelineStates_[Model::BlendM
 //ID3D12PipelineState* Model::pipelineState_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Model::vs3dBlob_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Model::ps3dBlob_ = nullptr;
-WorldTransform Model::worldTransformCamera_{};
-Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
 int Model::modelNumber_ = 0;
 Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
+std::unordered_map<std::string, std::shared_ptr<Mesh>> Model::meshes_;
 const char* Model::BlendTexts[Model::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
 void Model::StaticInitialize(ID3D12Device* device) {
@@ -246,6 +245,11 @@ void Model::StaticInitialize(ID3D12Device* device) {
 
 	currentBlendMode_ = BlendMode::kNormal;
 
+	//メッシュの静的初期化
+	Mesh::StaticInitialize(device);
+	//マテリアルの静的初期化
+	Material::StaticInitialize(device);
+
 }
 
 Model* Model::Create(const std::string& filename) {
@@ -262,48 +266,19 @@ void Model::Initialize(const std::string& filename) {
 
 	assert(device_);
 
-	modelData_ = LoadObjFile(filename);
+	if (meshes_.find(filename) != meshes_.end()) {
 
-	//頂点バッファ
-	{
-
-		vertBuff_ = CreateBufferResource(device_, sizeof(VertexData) * modelData_.vertices.size());
-
-		//頂点バッファビュー設定
-		vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
-		vbView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
-		vbView_.StrideInBytes = sizeof(VertexData);
-
-		//マッピングしてデータ転送
-		vertBuff_->Map(0, nullptr, reinterpret_cast<void**>(&vertMap_));
-
-		std::memcpy(vertMap_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-
-		//アンマップ
-		vertBuff_->Unmap(0, nullptr);
+		mesh_ = meshes_[filename].get();
 
 	}
+	else {
 
-
-	//定数バッファ
-	{
-
-		constBuff_ = CreateBufferResource(device_, sizeof(Material));
-
-		//マッピングしてデータ転送
-		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
-
-		constMap_->color = Vector4(1.0f,1.0f,1.0f,1.0f);
-		constMap_->enableLighting = true;
-		constMap_->shininess = 1.0f;
-		constMap_->uvTransform = MakeIdentity4x4();
-
-		//アンマップ
-		constBuff_->Unmap(0, nullptr);
+		//メッシュを登録
+		meshes_[filename] = std::make_shared<Mesh>();
+		meshes_[filename]->Create(filename);
+		mesh_ = meshes_[filename].get();
 
 	}
-
-	
 
 	//transformMatrix
 	{
@@ -316,21 +291,6 @@ void Model::Initialize(const std::string& filename) {
 		matTransformMap_->World = MakeIdentity4x4();
 
 		matBuff_->Unmap(0, nullptr);
-
-	}
-
-	//平行光源バッファ設定
-	{
-
-		dLightBuff_ = CreateBufferResource(device_, sizeof(DirectionalLight));
-
-		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
-
-		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		dLightMap_->direction = { 0.0f,-1.0f,0.0f };
-		dLightMap_->intensity = 1.0f;
-
-		dLightBuff_->Unmap(0, nullptr);
 
 	}
 
@@ -347,19 +307,10 @@ void Model::Initialize(const std::string& filename) {
 
 	}
 
-	//テクスチャ設定
-	{
-
-		//テクスチャ情報が空でない場合に設定
-		if (modelData_.material.textureFilePath != "") {
-			texture_ = TextureManager::GetInstance()->Load(modelData_.material.textureFilePath);
-		}
-		//テクスチャ情報が空の場合、既定の画像に設定
-		else {
-			texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
-		}
-
-	}
+	//トランスフォーム設定
+	position_ = Vector3::Zero();
+	rotation_ = Vector3::Zero();
+	scale_ = Vector3::Identity();
 
 }
 
@@ -368,15 +319,6 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	assert(commandList_ == nullptr);
 
 	commandList_ = commandList;
-
-	worldTransformCamera_.UpdateMatrix();
-
-	//PSO設定
-	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 }
 
@@ -388,31 +330,34 @@ void Model::PostDraw() {
 
 }
 
-void Model::Draw(WorldTransform worldTransform) {
+void Model::Draw(Camera* camera) {
 
-	Matrix4x4 worldMatrix = worldTransform.matWorld_;
-	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-	Matrix4x4 worldViewProjectionMatrix = worldMatrix * (viewMatrix * matProjection_);
+	matWorld_ = MakeAffineMatrix(scale_, rotation_, position_);
+
+	if (parent_) {
+		matWorld_ = matWorld_ * parent_->matWorld_;
+	}
+	
+	Matrix4x4 worldViewProjectionMatrix = matWorld_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
-	matTransformMap_->World = worldMatrix;
-	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(worldMatrix));
+	matTransformMap_->World = matWorld_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(matWorld_));
 
-	cameraMap_->worldPosition = worldTransformCamera_.GetWorldPosition();
+	cameraMap_->worldPosition = camera->GetWorldPosition();
 
-	//平行光源設定
-	commandList_->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());
+	//PSO設定
+	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	//カメラ設定
 	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
-	//Spriteの描画
-	commandList_->IASetVertexBuffers(0, 1, &vbView_);
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
-	////SRVの設定
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
-	commandList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
+
 	//描画
-	commandList_->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	mesh_->SetCommandMesh(commandList_);
 
 }
 
@@ -422,24 +367,24 @@ void Model::Finalize() {
 
 void Model::ImGuiUpdate() {
 
-	//識別ナンバー設定(ImGuiで使用)
-	std::string name = "model ";
+	////識別ナンバー設定(ImGuiで使用)
+	//std::string name = "model ";
 
-	name += std::to_string(modelNumber_);
+	//name += std::to_string(modelNumber_);
 
-	ImGui::Begin(name.c_str());
-	ImGui::ColorEdit4("model Color", &constMap_->color.x);
-	ImGui::DragFloat("shininess", &constMap_->shininess, 0.1f, 0.1f, 100.0f);
-	ImGui::DragInt("gray scale", &constMap_->isGrayScale, 0.1f, 0, 1);
-	ImGui::DragInt("inversion", &constMap_->isInversion, 0.1f, 0, 1);
-	ImGui::DragInt("retro", &constMap_->isRetro, 0.1f, 0, 1);
-	ImGui::DragInt("ave blur", &constMap_->isAverageBlur, 0.1f, 0, 1);
-	ImGui::DragInt("emboss", &constMap_->isEmboss, 0.1f, 0, 1);
-	ImGui::DragInt("sharpness", &constMap_->isSharpness, 0.1f, 0, 1);
-	ImGui::DragInt("outline", &constMap_->isOutline, 0.1f, 0, 1);
-	ImGui::End();
+	//ImGui::Begin(name.c_str());
+	//ImGui::ColorEdit4("model Color", &constMap_->color.x);
+	//ImGui::DragFloat("shininess", &constMap_->shininess, 0.1f, 0.1f, 100.0f);
+	//ImGui::DragInt("gray scale", &constMap_->isGrayScale, 0.1f, 0, 1);
+	//ImGui::DragInt("inversion", &constMap_->isInversion, 0.1f, 0, 1);
+	//ImGui::DragInt("retro", &constMap_->isRetro, 0.1f, 0, 1);
+	//ImGui::DragInt("ave blur", &constMap_->isAverageBlur, 0.1f, 0, 1);
+	//ImGui::DragInt("emboss", &constMap_->isEmboss, 0.1f, 0, 1);
+	//ImGui::DragInt("sharpness", &constMap_->isSharpness, 0.1f, 0, 1);
+	//ImGui::DragInt("outline", &constMap_->isOutline, 0.1f, 0, 1);
+	//ImGui::End();
 
-	modelNumber_++;
+	//modelNumber_++;
 
 }
 
@@ -449,5 +394,23 @@ void Model::StaticImGuiUpdate() {
 	ImGui::Begin("Static model Settings");
 	ImGui::Combo("Blend", (int*)&currentBlendMode_, BlendTexts, IM_ARRAYSIZE(BlendTexts));
 	ImGui::End();
+
+}
+
+void Model::SetMesh(const std::string& objFileName) {
+
+	if (meshes_.find(objFileName) != meshes_.end()) {
+
+		mesh_ = meshes_[objFileName].get();
+
+	}
+	else {
+
+		//メッシュを登録
+		meshes_[objFileName] = std::make_shared<Mesh>();
+		meshes_[objFileName]->Create(objFileName);
+		mesh_ = meshes_[objFileName].get();
+
+	}
 
 }

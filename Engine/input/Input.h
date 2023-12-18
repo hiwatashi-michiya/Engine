@@ -27,11 +27,20 @@ public:
 
 	bool TriggerKey(BYTE keyNumber);
 
+	bool ReleaseKey(BYTE keyNumber);
+
 	bool GetJoyState(int32_t No, XINPUT_STATE& joyState);
 
 	bool PushButton(UINT button);
 
+	bool TriggerButton(UINT button);
+
+	bool ReleaseButton(UINT button);
+
 	XINPUT_GAMEPAD GetGamepad() { return joyState_.Gamepad; }
+
+	//コントローラーが繋がれているか
+	bool GetIsGamepad() { return isGetController_; }
 
 private:
 
@@ -47,6 +56,7 @@ private:
 	Microsoft::WRL::ComPtr<IDirectInput8> dInput_ = nullptr;
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
 	XINPUT_STATE joyState_;
+	XINPUT_STATE preJoyState_;
 
 	std::array<BYTE, 256> key_;
 	std::array<BYTE, 256> preKey_;

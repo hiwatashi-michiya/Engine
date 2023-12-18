@@ -10,7 +10,11 @@ public:
 	float y;
 	float z;
 
+	//全ての要素を0.0fで返す
 	static const Vector3 Zero() { return Vector3{ 0.0f,0.0f,0.0f }; }
+
+	//全ての要素を1.0fで返す
+	static const Vector3 Identity(){ return Vector3{ 1.0f,1.0f,1.0f }; }
 
 	Vector3& operator*=(float s) { x *= s; y *= s; z *= s; return *this; }
 	Vector3& operator-=(const Vector3& v) { x -= v.x;  y -= v.y; z -= v.z; return *this; }
