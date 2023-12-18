@@ -24,6 +24,9 @@ public:
 	//描画コマンドセット(パーティクル)
 	void SetCommandMesh(ID3D12GraphicsCommandList* commandList, uint32_t instanceCount);
 
+	//ImGui表示
+	void ImGuiUpdate();
+
 	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
 	//インデックスバッファ

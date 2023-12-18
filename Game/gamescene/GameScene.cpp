@@ -44,9 +44,10 @@ void GameScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,0.0f, -10.0f };
+	camera_->position_ = { 0.0f,10.0f, -30.0f };
+	camera_->rotation_.x = 0.3f;
 
-	plane_->position_.x = -2.0f;
+	plane_->position_.y = -2.0f;
 	plane2_->position_.y = -2.0f;
 	plane3_->position_.x = 1.5f;
 	plane4_->position_.x = 1.0f;
@@ -72,12 +73,6 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	ImGui::Begin("worldTransform sphere");
-	ImGui::DragFloat3("translation", &plane5_->position_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &plane5_->rotation_.x, 0.1f);
-	ImGui::DragFloat3("scale", &plane5_->scale_.x, 0.1f);
-	ImGui::End();
-
 	if (input_->TriggerKey(DIK_SPACE)) {
 		audioManager_->Play(audio_, 0.2f);
 	}
@@ -87,8 +82,8 @@ void GameScene::Update() {
 	if (input_->TriggerKey(DIK_1)) {
 		audioManager_->Play(audio_, 0.2f, true);
 	}
-	plane_->ImGuiUpdate();
-	plane2_->ImGuiUpdate();
+	plane_->ImGuiUpdate("plane");
+	plane2_->ImGuiUpdate("plane2");
 	sprite_->ImGuiUpdate("test");
 
 #endif // _DEBUG

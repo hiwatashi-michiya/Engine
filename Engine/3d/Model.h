@@ -56,12 +56,13 @@ public:
 
 	void Draw(Camera* camera);
 
-	void ImGuiUpdate();
-
 	void SetTexture(Texture* texture) { mesh_->SetTexture(texture); }
 
 	//メッシュ切り替え
 	void SetMesh(const std::string& objFileName);
+
+	//ImGui表示
+	void ImGuiUpdate(const std::string& name);
 
 	Vector3 position_{};
 

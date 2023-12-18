@@ -30,6 +30,8 @@ struct PointLight
     float32_t4 color; //ライトの色
     float32_t3 position; //ライトの位置
     float intensity; //輝度
+    float radius; //ライトの届く最大距離
+    float decay; //減衰率
 };
 
 struct Camera {
@@ -203,6 +205,9 @@ PixelShaderOutput main(VertexShaderOutput input) {
             
             float32_t3 pointLightDirection = normalize(input.worldPosition - gPointLight.position);
             
+            float32_t distance = length(gPointLight.position - input.worldPosition); //点光源への距離
+            float32_t factor = pow(saturate(-distance / gPointLight.radius + 1.0), gPointLight.decay); //指数によるコントロール
+            
             //half lambert
             float NdotL = dot(normalize(input.normal), -pointLightDirection);
             float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
@@ -218,11 +223,11 @@ PixelShaderOutput main(VertexShaderOutput input) {
     
             //拡散反射
             diffusePointLight =
-            gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity;
+            gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity * factor;
         
             //鏡面反射
             specularPointLight =
-            gPointLight.color.rgb * gPointLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f);
+            gPointLight.color.rgb * gPointLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f) * factor;
             
         }
         

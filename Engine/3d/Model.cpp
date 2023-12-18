@@ -365,29 +365,6 @@ void Model::Finalize() {
 
 }
 
-void Model::ImGuiUpdate() {
-
-	////識別ナンバー設定(ImGuiで使用)
-	//std::string name = "model ";
-
-	//name += std::to_string(modelNumber_);
-
-	//ImGui::Begin(name.c_str());
-	//ImGui::ColorEdit4("model Color", &constMap_->color.x);
-	//ImGui::DragFloat("shininess", &constMap_->shininess, 0.1f, 0.1f, 100.0f);
-	//ImGui::DragInt("gray scale", &constMap_->isGrayScale, 0.1f, 0, 1);
-	//ImGui::DragInt("inversion", &constMap_->isInversion, 0.1f, 0, 1);
-	//ImGui::DragInt("retro", &constMap_->isRetro, 0.1f, 0, 1);
-	//ImGui::DragInt("ave blur", &constMap_->isAverageBlur, 0.1f, 0, 1);
-	//ImGui::DragInt("emboss", &constMap_->isEmboss, 0.1f, 0, 1);
-	//ImGui::DragInt("sharpness", &constMap_->isSharpness, 0.1f, 0, 1);
-	//ImGui::DragInt("outline", &constMap_->isOutline, 0.1f, 0, 1);
-	//ImGui::End();
-
-	//modelNumber_++;
-
-}
-
 //デバッグ時に使用
 void Model::StaticImGuiUpdate() {
 
@@ -412,5 +389,29 @@ void Model::SetMesh(const std::string& objFileName) {
 		mesh_ = meshes_[objFileName].get();
 
 	}
+
+}
+
+void Model::ImGuiUpdate(const std::string& name) {
+
+	ImGui::Begin(name.c_str());
+
+	if (ImGui::BeginTabBar("Model", ImGuiTabBarFlags_None)) {
+
+		if (ImGui::BeginTabItem("translation")) {
+			ImGui::DragFloat3("position", &position_.x, 0.01f);
+			ImGui::DragFloat3("rotation", &rotation_.x, 0.01f);
+			ImGui::DragFloat3("scale", &scale_.x, 0.01f);
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("material")) {
+			mesh_->ImGuiUpdate();
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+
+	ImGui::End();
 
 }

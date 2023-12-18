@@ -3,6 +3,7 @@
 #include "Engine/manager/ShaderManager.h"
 #include <filesystem>
 #include <fstream>
+#include "Externals/imgui/imgui.h"
 
 ID3D12Device* Mesh::device_ = nullptr;
 
@@ -166,5 +167,11 @@ void Mesh::SetCommandMesh(ID3D12GraphicsCommandList* commandList, uint32_t insta
 	//描画
 	commandList->DrawInstanced(UINT(meshData_.vertices.size()), instanceCount, 0, 0);
 
+
+}
+
+void Mesh::ImGuiUpdate() {
+
+	material_->ImGuiUpdate();
 
 }

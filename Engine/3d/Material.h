@@ -24,6 +24,9 @@ public:
 	//テクスチャセット
 	void SetTexture(Texture* texture) { texture_ = texture; }
 
+	//ImGui表示
+	void ImGuiUpdate();
+
 	//定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 	//平行光源バッファ
