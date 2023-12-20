@@ -55,8 +55,8 @@
     <Filter Include="Game\stage">
       <UniqueIdentifier>{5825f192-7d68-4fbc-9f67-046c78643a1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\MapEditor">
-      <UniqueIdentifier>{0e3679e7-07f9-4d31-9250-af2cbdc32f60}</UniqueIdentifier>
+    <Filter Include="Engine\Tool">
+      <UniqueIdentifier>{8e837e6d-46fc-4c8d-8c49-3bd19f5bf5cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +164,12 @@
     </ClCompile>
     <ClCompile Include="Engine\math\Rand.cpp">
       <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Tool\MapEditor.cpp">
+      <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Tool\GlobalVariables.cpp">
+      <Filter>Engine\Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +289,12 @@
     </ClInclude>
     <ClInclude Include="Engine\math\Rand.h">
       <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\MapEditor.h">
+      <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\GlobalVariables.h">
+      <Filter>Engine\Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
