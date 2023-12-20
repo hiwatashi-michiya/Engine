@@ -153,9 +153,6 @@
     <ClCompile Include="Engine\3d\Particle3D.cpp">
       <Filter>Engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="ModelManager.cpp">
-      <Filter>Engine\3d</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\manager\AudioManager.cpp">
       <Filter>Engine\manager</Filter>
     </ClCompile>
@@ -170,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp">
       <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\manager\ModelManager.cpp">
+      <Filter>Engine\manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -278,9 +278,6 @@
     <ClInclude Include="Engine\3d\Particle3D.h">
       <Filter>Engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="ModelManager.h">
-      <Filter>Engine\3d</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\manager\AudioManager.h">
       <Filter>Engine\manager</Filter>
     </ClInclude>
@@ -295,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Tool\GlobalVariables.h">
       <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\manager\ModelManager.h">
+      <Filter>Engine\manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

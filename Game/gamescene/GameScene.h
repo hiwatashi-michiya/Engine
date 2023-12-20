@@ -11,6 +11,7 @@
 #include "Game/stage/Stage.h"
 #include "Engine/3d/Particle3D.h"
 #include "Engine/manager/AudioManager.h"
+#include "Engine/Tool/GlobalVariables.h"
 
 class GameScene
 {
@@ -29,6 +30,7 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
+	GlobalVariables* gv_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
 
@@ -57,6 +59,10 @@ private:
 	Texture* tex_;
 
 	std::unique_ptr<Sprite> sprite_;
+
+	ObjectData obj_;
+
+	std::string gName_ = "Test";
 
 };
 

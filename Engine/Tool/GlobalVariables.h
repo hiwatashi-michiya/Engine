@@ -5,6 +5,7 @@
 #include "Engine/math/Vector3.h"
 #include <map>
 #include <fstream>
+#include "Engine/manager/ModelManager.h"
 
 /// <summary>
 /// グローバル変数
@@ -17,7 +18,7 @@ public:
 	//項目
 	struct Item {
 		//項目の値
-		std::variant<int32_t, float, Vector3> value;
+		std::variant<int32_t, float, Vector3, ObjectData> value;
 	};
 
 	//グループ
@@ -43,6 +44,8 @@ public:
 	void SetValue(const std::string& groupName, const std::string& key, float value);
 	//値のセット(Vector3)
 	void SetValue(const std::string& groupName, const std::string& key, const Vector3& value);
+	//値のセット(ObjectData)
+	void SetValue(const std::string& groupName, const std::string& key, const ObjectData& value);
 
 	/// <summary>
 	/// 毎フレーム処理
@@ -72,11 +75,16 @@ public:
 	void AddItem(const std::string& groupName, const std::string& key, float value);
 	//項目の追加(Vector3)
 	void AddItem(const std::string& groupName, const std::string& key, const Vector3& value);
+	//項目の追加(ObjectData)
+	void AddItem(const std::string& groupName, const std::string& key, const ObjectData& value);
 
 	//値の取得
 	int32_t GetIntValue(const std::string& groupName, const std::string& key) const;
 	float GetFloatValue(const std::string& groupName, const std::string& key) const;
 	Vector3 GetVector3Value(const std::string& groupName, const std::string& key) const;
+	ObjectData GetObjectDataValue(const std::string& groupName, const std::string& key) const;
+
+	std::array<const char*, 2> strings_ = { "cube", "sphere" };
 
 private:
 	GlobalVariables() = default;

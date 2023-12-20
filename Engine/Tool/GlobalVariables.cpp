@@ -1,9 +1,9 @@
 #include "GlobalVariables.h"
-#include <json.hpp>
+#include "Externals/nlohmann/json.hpp"
 #include <Windows.h>
 
 #ifdef _DEBUG
-#include<imgui.h>
+#include "Externals/imgui/imgui.h"
 #endif // _DEBUG
 
 
@@ -60,6 +60,20 @@ void GlobalVariables::SetValue(
 
 }
 
+void GlobalVariables::SetValue(
+	const std::string& groupName,
+	const std::string& key, const ObjectData& value) {
+
+	// グループの参照を取得
+	Group& group = datas_[groupName];
+	// 新しい項目のデータを設定
+	Item newItem{};
+	newItem.value = value;
+	// 設定した項目をstd::mapに追加
+	group.items[key] = newItem;
+
+}
+
 void GlobalVariables::AddItem(const std::string& groupName,
 	const std::string& key, int32_t value) {
 
@@ -90,6 +104,16 @@ void GlobalVariables::AddItem(const std::string& groupName,
 
 }
 
+void GlobalVariables::AddItem(const std::string& groupName,
+	const std::string& key, const ObjectData& value) {
+
+	Group& group = datas_[groupName];
+	if (group.items.find(key) == group.items.end()) {
+		SetValue(groupName, key, value);
+	}
+
+}
+
 int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::string& key) const {
 
 	//指定グループが存在している
@@ -103,6 +127,7 @@ int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::st
 	return std::get<int32_t>(item.value);
 
 }
+
 float GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key) const {
 
 	// 指定グループが存在している
@@ -116,6 +141,7 @@ float GlobalVariables::GetFloatValue(const std::string& groupName, const std::st
 	return std::get<float>(item.value);
 
 }
+
 Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key) const {
 
 	// 指定グループが存在している
@@ -127,6 +153,20 @@ Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std
 	// 指定グループから指定のキーの値を取得
 	const Item& item = group.items.at(key);
 	return std::get<Vector3>(item.value);
+
+}
+
+ObjectData GlobalVariables::GetObjectDataValue(const std::string& groupName, const std::string& key) const {
+
+	// 指定グループが存在している
+	assert(&datas_.at(groupName));
+	// グループの参照を取得
+	const Group& group = datas_.at(groupName);
+	// 指定グループに指定のキーが存在している
+	assert(&group.items.at(key));
+	// 指定グループから指定のキーの値を取得
+	const Item& item = group.items.at(key);
+	return std::get<ObjectData>(item.value);
 
 }
 
@@ -183,6 +223,29 @@ void GlobalVariables::Update() {
 
 				Vector3* ptr = std::get_if<Vector3>(&item.value);
 				ImGui::SliderFloat3(itemName.c_str(), reinterpret_cast<float*>(ptr), -10.0f, 10.0f);
+
+			}
+
+			//ObjectData型の値を保持していれば
+			else if (std::holds_alternative<ObjectData>(item.value)) {
+
+				std::string strName = itemName + " : name";
+				std::string posName = itemName + " : position";
+				std::string rotName = itemName + " : rotation";
+				std::string scaName = itemName + " : scale";
+
+				ObjectData* ptr = std::get_if<ObjectData>(&item.value);
+				char* strPtr = ptr->objName.data();
+				Vector3* posPtr = &ptr->position;
+				Vector3* rotPtr = &ptr->rotation;
+				Vector3* scaPtr = &ptr->scale;
+				ImGui::InputText(strName.c_str(), strPtr, IM_ARRAYSIZE(ptr->objName.data()));
+				ImGui::SliderFloat3(posName.c_str(), reinterpret_cast<float*>(posPtr), -10.0f, 10.0f);
+				ImGui::SliderFloat3(rotName.c_str(), reinterpret_cast<float*>(rotPtr), -10.0f, 10.0f);
+				ImGui::SliderFloat3(scaName.c_str(), reinterpret_cast<float*>(scaPtr), -10.0f, 10.0f);
+
+				//入力した文字列を代入
+				ptr->objName = strPtr;
 
 			}
 
@@ -249,6 +312,16 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 			//float型のjson配列登録
 			Vector3 value = std::get<Vector3>(item.value);
 			root[groupName][itemName] = nlohmann::json::array({value.x, value.y, value.z});
+		}
+
+		//ObjectData型を保持していれば
+		else if (std::holds_alternative<ObjectData>(item.value)) {
+			//float型のjson配列登録
+			ObjectData value = std::get<ObjectData>(item.value);
+			root[groupName][itemName]["name"] = value.objName;
+			root[groupName][itemName]["position"] = nlohmann::json::array({value.position.x, value.position.y, value.position.z});
+			root[groupName][itemName]["rotation"] = nlohmann::json::array({ value.rotation.x, value.rotation.y, value.rotation.z });
+			root[groupName][itemName]["scale"] = nlohmann::json::array({ value.scale.x, value.scale.y, value.scale.z });
 		}
 
 	}
@@ -361,6 +434,52 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 		else if (itItem->is_array() && itItem->size() == 3) {
 			//float型のjson配列登録
 			Vector3 value = {itItem->at(0), itItem->at(1), itItem->at(2)};
+			SetValue(groupName, itemName, value);
+		}
+
+		//ObjectDataであれば
+		else {
+			//float型のjson配列登録
+			ObjectData value;
+			
+			//グループを検索
+			nlohmann::json::iterator itObject = itGroup->find(itemName);
+			//未登録チェック
+			assert(itObject != itGroup->end());
+
+			uint32_t roopCount = 0;
+
+			for (nlohmann::json::iterator itItemObject = itObject->begin(); itItemObject != itObject->end(); ++itItemObject) {
+
+				//アイテム名を取得
+				const std::string& itemNameObject = itItemObject.key();
+
+				//要素数3の配列であれば
+				if (itItemObject->is_array() && itItemObject->size() == 3) {
+
+					if (roopCount == 1) {
+						//float型のjson配列登録
+						value.position = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+					}
+					else if (roopCount == 2) {
+						//float型のjson配列登録
+						value.rotation = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+					}
+					else if (roopCount == 3) {
+						//float型のjson配列登録
+						value.scale = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+					}
+
+				}
+				//文字列の場合
+				else {
+					value.objName = itItemObject.value();
+				}
+
+				roopCount++;
+
+			}
+
 			SetValue(groupName, itemName, value);
 		}
 

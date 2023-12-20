@@ -41,6 +41,7 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
+	gv_ = GlobalVariables::GetInstance();
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
@@ -61,9 +62,14 @@ void GameScene::Initialize() {
 	audioManager_ = AudioManager::GetInstance();
 	audio_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
 	audio2_ = audioManager_->SoundLoadWave("./resources/tempo_02.wav");
+
+	gv_->AddItem(gName_, "test", obj_);
+
 }
 
 void GameScene::Update() {
+
+	obj_ = gv_->GetObjectDataValue(gName_, "test");
 
 #ifdef _DEBUG
 
