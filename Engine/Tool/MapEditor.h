@@ -27,9 +27,15 @@ private:
 //変数
 private:
 
+	struct 
+
 	GlobalVariables* globalVariables_ = nullptr;
 
+	std::list<ObjectData*> objData_;
 
+	std::string currentObject_;
+
+	bool isOpenFile_ = false;
 
 private:
 
