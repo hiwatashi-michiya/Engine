@@ -320,6 +320,9 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
+	//PSO設定
+	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());
+
 }
 
 void Model::PostDraw() {

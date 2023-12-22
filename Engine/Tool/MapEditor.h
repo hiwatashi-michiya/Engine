@@ -11,6 +11,8 @@ public:
 	
 	static MapEditor* GetInstance();
 
+	void Initialize();
+
 	void Edit();
 
 	void Draw(Camera* camera);
@@ -22,10 +24,14 @@ private:
 
 	void Load(const std::string& filename);
 
-	void AddObject();
+	void AddObject(char* name);
+
+	//同名オブジェクトを探す
+	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
 
 //変数
 private:
+
 
 	//マップに配置されているオブジェクトの構造体
 	struct MapObject {
@@ -44,9 +50,11 @@ private:
 
 	std::string currentObject_;
 
-	bool isOpenFile_ = false;
+	bool isOpenFile_ = true;
 
 	Vector3 spawnPoint_ = { 0.0f,0.0f,0.0f };
+
+	char name_[256];
 
 private:
 
