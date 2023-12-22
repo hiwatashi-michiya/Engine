@@ -12,6 +12,7 @@
 #include "Engine/3d/Particle3D.h"
 #include "Engine/manager/AudioManager.h"
 #include "Engine/Tool/GlobalVariables.h"
+#include "Engine/Tool/MapEditor.h"
 
 class GameScene
 {
@@ -31,6 +32,7 @@ private:
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 	GlobalVariables* gv_ = nullptr;
+	MapEditor* mapEditor_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
 

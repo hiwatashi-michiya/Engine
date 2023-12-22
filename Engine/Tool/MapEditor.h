@@ -9,11 +9,11 @@ class MapEditor
 {
 public:
 	
-	MapEditor* GetInstance();
+	static MapEditor* GetInstance();
 
 	void Edit();
 
-	void Draw();
+	void Draw(Camera* camera);
 
 //関数
 private:
@@ -27,15 +27,26 @@ private:
 //変数
 private:
 
-	struct 
+	//マップに配置されているオブジェクトの構造体
+	struct MapObject {
+
+		std::string objName;
+
+		std::unique_ptr<Model> model;
+
+		bool isSelect = false;
+
+	};
 
 	GlobalVariables* globalVariables_ = nullptr;
 
-	std::list<ObjectData*> objData_;
+	std::list<std::shared_ptr<MapObject>> mapObjData_;
 
 	std::string currentObject_;
 
 	bool isOpenFile_ = false;
+
+	Vector3 spawnPoint_ = { 0.0f,0.0f,0.0f };
 
 private:
 

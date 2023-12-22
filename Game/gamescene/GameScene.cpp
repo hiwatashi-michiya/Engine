@@ -42,6 +42,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	gv_ = GlobalVariables::GetInstance();
+	mapEditor_ = MapEditor::GetInstance();
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();

@@ -18,10 +18,27 @@ void MapEditor::Edit() {
 	//ファイルを開いている時の処理
 	if (isOpenFile_) {
 
+		if (ImGui::Button("Add Object")) {
+			AddObject();
+		}
 
+		for (auto& mapObject : mapObjData_) {
+
+			if (ImGui::TreeNode("obj")) {
+
+				ImGui::DragFloat3("position", &mapObject->model->position_.x, 0.1f);
+				ImGui::DragFloat3("rotation", &mapObject->model->rotation_.x, 0.01f);
+				ImGui::DragFloat3("scale", &mapObject->model->scale_.x, 0.01f);
+
+				ImGui::TreePop();
+			}
+
+		}
 
 	}
 	else {
+
+
 
 	}
 
@@ -29,16 +46,11 @@ void MapEditor::Edit() {
 
 }
 
-void MapEditor::Draw() {
+void MapEditor::Draw(Camera* camera) {
 
-	for (ObjectData* objData : objData_) {
+	for (auto& mapObjData : mapObjData_) {
 
-		if (objData->objName == "cube") {
-
-		}
-		else if (objData->objName == "sphere") {
-
-		}
+		mapObjData->model->Draw(camera);
 
 	}
 
@@ -73,12 +85,36 @@ void MapEditor::Load(const std::string& filename) {
 	//保険
 	assert(fp != NULL);
 
+
+	{
+
+		std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+
+		//オブジェクトのデータを読み取りきるまで回す
+		while (fscanf(fp, "%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,",
+			mapObject->objName, 
+			mapObject->model->position_.x, mapObject->model->position_.y, mapObject->model->position_.z,
+			mapObject->model->rotation_.x, mapObject->model->rotation_.y, mapObject->model->rotation_.z,
+			mapObject->model->scale_.x, mapObject->model->scale_.y, mapObject->model->scale_.z) != EOF)
+		{
+			mapObjData_.push_back(mapObject);
+			mapObject.reset();
+		}
+
+	}
 	
 
 }
 
 void MapEditor::AddObject() {
 
+	std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
 
+	mapObject->isSelect = true;
+	mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
+	mapObject->objName = "cube";
+	mapObject->model->position_ = spawnPoint_;
+
+	mapObjData_.push_back(mapObject);
 
 }
