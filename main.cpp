@@ -31,6 +31,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//フレーム終了
 		Engine::EndFrame();
 
+		if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
+			break;
+		}
+
 	}
 
 	delete gameScene;

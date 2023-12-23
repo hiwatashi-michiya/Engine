@@ -108,7 +108,7 @@ Material* Material::Create(const std::string& filename) {
 		pLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		pLightMap_->position = { 0.0f,0.0f,0.0f };
 		pLightMap_->intensity = 1.0f;
-		pLightMap_->radius = 10.0f;
+		pLightMap_->radius = 200.0f;
 		pLightMap_->decay = 1.0f;
 
 	}
