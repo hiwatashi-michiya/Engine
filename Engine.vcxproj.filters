@@ -171,6 +171,9 @@
     <ClCompile Include="Engine\manager\ModelManager.cpp">
       <Filter>Engine\manager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Tool\Particle.cpp">
+      <Filter>Engine\Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -295,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="Engine\manager\ModelManager.h">
       <Filter>Engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\Particle.h">
+      <Filter>Engine\Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

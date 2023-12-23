@@ -275,6 +275,8 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	}
 
+	texture_ = mesh_->texture_;
+
 	instanceCount_ = instanceCount;
 
 	//トランスフォーム情報をインスタンス数に合わせてリサイズする
@@ -282,6 +284,7 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 	rotations_.resize(instanceCount_);
 	scales_.resize(instanceCount_);
 	matWorlds_.resize(instanceCount_);
+	velocities_.resize(instanceCount_);
 
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 		positions_[i] = Vector3::Zero();
@@ -366,6 +369,8 @@ void Particle3D::Draw(Camera* camera) {
 
 	commandList_->SetGraphicsRootDescriptorTable(1, instancingResource_.srvHandleGPU);
 	
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+
 	//描画
 	mesh_->SetCommandMesh(commandList_, instanceCount_);
 

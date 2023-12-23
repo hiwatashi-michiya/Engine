@@ -56,7 +56,7 @@ public:
 
 	void Draw(Camera* camera);
 
-	void SetTexture(Texture* texture) { mesh_->SetTexture(texture); }
+	void SetTexture(Texture* texture) { texture_ = texture; }
 
 	//メッシュ切り替え
 	void SetMesh(const std::string& objFileName);
@@ -97,7 +97,7 @@ private:
 
 	static BlendMode currentBlendMode_;
 
-	static std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes_;
+	static std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes_;
 
 private:
 
@@ -113,6 +113,9 @@ private:
 
 	//メッシュ
 	Mesh* mesh_;
+
+	//テクスチャ
+	Texture* texture_;
 
 };
 

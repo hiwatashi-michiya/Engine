@@ -18,6 +18,9 @@ public:
 
 	void LoadObjFile(const std::string& filename);
 
+	//テクスチャ読み込み
+	void LoadMaterialTemplateFile(const std::string& filename);
+
 	//描画コマンドセット
 	void SetCommandMesh(ID3D12GraphicsCommandList* commandList);
 
@@ -42,7 +45,7 @@ public:
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
-	void SetTexture(Texture* texture) { material_->SetTexture(texture); }
+	Texture* texture_;
 
 private:
 

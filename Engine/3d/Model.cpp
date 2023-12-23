@@ -17,7 +17,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> Model::vs3dBlob_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Model::ps3dBlob_ = nullptr;
 int Model::modelNumber_ = 0;
 Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
-std::unordered_map<std::string, std::shared_ptr<Mesh>> Model::meshes_;
+std::unordered_map<std::string, std::unique_ptr<Mesh>> Model::meshes_;
 const char* Model::BlendTexts[Model::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
 void Model::StaticInitialize(ID3D12Device* device) {
@@ -274,11 +274,13 @@ void Model::Initialize(const std::string& filename) {
 	else {
 
 		//メッシュを登録
-		meshes_[filename] = std::make_shared<Mesh>();
+		meshes_[filename] = std::make_unique<Mesh>();
 		meshes_[filename]->Create(filename);
 		mesh_ = meshes_[filename].get();
 
 	}
+
+	texture_ = mesh_->texture_;
 
 	//transformMatrix
 	{
@@ -359,6 +361,8 @@ void Model::Draw(Camera* camera) {
 	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+
 	//描画
 	mesh_->SetCommandMesh(commandList_);
 
@@ -387,7 +391,7 @@ void Model::SetMesh(const std::string& objFileName) {
 	else {
 
 		//メッシュを登録
-		meshes_[objFileName] = std::make_shared<Mesh>();
+		meshes_[objFileName] = std::make_unique<Mesh>();
 		meshes_[objFileName]->Create(objFileName);
 		mesh_ = meshes_[objFileName].get();
 

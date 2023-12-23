@@ -9,7 +9,10 @@
 GameScene::GameScene()
 {
 
-	tex_ = TextureManager::GetInstance()->Load("./resources/test.png");
+	tex_ = TextureManager::GetInstance()->Load("./resources/plane/uvChecker.png");
+	tex2_ = TextureManager::GetInstance()->Load("./resources/Texture/block.png");
+	model_.reset(Model::Create("./resources/cube/cube.obj"));
+	model2_.reset(Model::Create("./resources/cube/cube.obj"));
 
 }
 
@@ -22,22 +25,23 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	gv_ = GlobalVariables::GetInstance();
-	mapEditor_ = MapEditor::GetInstance();
 
-	mapEditor_->Initialize();
+	particle_.Initialize(Particle::Type::k3D);
+	particle_.startPosition_ = { 0.0f,0.0f,0.0f };
+	particle_.AddParticle("./resources/plane/plane.obj", tex2_, 10);
+	particle_.AddParticle("./resources/plane/plane.obj", tex_, 20);
+	particle_.Reset();
+
+	model_->position_.x = 2.0f;
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,10.0f, -30.0f };
 	camera_->rotation_.x = 0.3f;
 	
-	gv_->AddItem(gName_, "test", obj_);
-
 }
 
 void GameScene::Update() {
-
-	obj_ = gv_->GetObjectDataValue(gName_, "test");
 
 #ifdef _DEBUG
 
@@ -47,17 +51,29 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	mapEditor_->Edit();
 
 #endif // _DEBUG
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
 
+	particle_.Update();
+
+	if (input_->TriggerKey(DIK_Q)) {
+		model2_->SetTexture(tex_);
+	}
+
+	if (input_->TriggerKey(DIK_S)) {
+		particle_.Reset();
+	}
+
 }
 
 void GameScene::Draw() {
 
-	mapEditor_->Draw(camera_.get());
+	model_->Draw(camera_.get());
+	model2_->Draw(camera_.get());
+
+	particle_.Draw(camera_.get());
 
 }

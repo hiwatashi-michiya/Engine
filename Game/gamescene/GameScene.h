@@ -13,6 +13,7 @@
 #include "Engine/manager/AudioManager.h"
 #include "Engine/Tool/GlobalVariables.h"
 #include "Engine/Tool/MapEditor.h"
+#include "Engine/Tool/Particle.h"
 
 class GameScene
 {
@@ -32,15 +33,16 @@ private:
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 	GlobalVariables* gv_ = nullptr;
-	MapEditor* mapEditor_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;	
 	
 	Texture* tex_;
+	Texture* tex2_;
 
-	ObjectData obj_;
+	std::unique_ptr<Model> model_;
+	std::unique_ptr<Model> model2_;
 
-	std::string gName_ = "Test";
+	Particle particle_;
 
 };
 

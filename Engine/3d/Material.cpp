@@ -128,7 +128,7 @@ void Material::SetCommandMaterial(ID3D12GraphicsCommandList* commandList) {
 	//点光源設定
 	commandList->SetGraphicsRootConstantBufferView(5, pLightBuff_->GetGPUVirtualAddress());
 	////SRVの設定
-	commandList->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+	/*commandList->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);*/
 	commandList->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 
 }
@@ -138,7 +138,7 @@ void Material::SetCommandMaterialForParticle(ID3D12GraphicsCommandList* commandL
 	//平行光源設定
 	commandList->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());
 	////SRVの設定
-	commandList->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+	/*commandList->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);*/
 	commandList->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 
 }

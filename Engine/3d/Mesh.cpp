@@ -15,6 +15,53 @@ void Mesh::StaticInitialize(ID3D12Device* device) {
 
 }
 
+//mtlファイル読み込み関数
+void Mesh::LoadMaterialTemplateFile(const std::string& filename) {
+
+	//1.中で必要となる変数の宣言
+	TextureData textureData; //構築するtextureData
+	std::string line; //ファイルから読んだ1行を格納するもの
+
+	//2.ファイルを開く
+	std::ifstream file(filename); //ファイルを開く
+	assert(file.is_open()); //開けなかったら止める
+
+	//3.実際にファイルを読み、textureDataを構築していく
+	while (std::getline(file, line)) {
+		std::string identifier;
+		std::istringstream s(line);
+		s >> identifier;
+
+		//identifierに応じた処理
+		if (identifier == "map_Kd") {
+			//フルパス取得
+			std::filesystem::path fullPath(filename);
+			//画像ファイルのパス取得
+			std::string textureFilename;
+			s >> textureFilename;
+			//連結してファイルパスにする
+			textureData.textureFilePath = fullPath.parent_path().string() + "/" + textureFilename;
+
+		}
+
+	}
+
+	//テクスチャ設定
+	{
+
+		//テクスチャ情報が空でない場合に設定
+		if (textureData.textureFilePath != "") {
+			texture_ = TextureManager::GetInstance()->Load(textureData.textureFilePath);
+		}
+		//テクスチャ情報が空の場合、既定の画像に設定
+		else {
+			texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
+		}
+
+	}
+
+}
+
 void Mesh::LoadObjFile(const std::string& filename) {
 
 	//1.必要となる変数の宣言
@@ -109,6 +156,7 @@ void Mesh::LoadObjFile(const std::string& filename) {
 			//マテリアルを生成
 			material_ = std::make_unique<Material>();
 			material_->Create(fullPath.parent_path().string() + "/" + materialFilename);
+			LoadMaterialTemplateFile(fullPath.parent_path().string() + "/" + materialFilename);
 
 		}
 

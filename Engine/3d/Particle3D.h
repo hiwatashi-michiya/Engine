@@ -50,6 +50,8 @@ public:
 
 	void ImGuiUpdate();
 
+	void SetTexture(Texture* texture) { texture_ = texture; }
+
 	//ビルボードを使うかどうか
 	bool isBillboard_ = true;
 
@@ -60,6 +62,11 @@ public:
 	std::vector<Vector3> scales_{};
 
 	std::vector<Matrix4x4> matWorlds_{};
+
+	std::vector<Vector3> velocities_{};
+
+	//インスタンシングの数
+	uint32_t instanceCount_;
 
 private:
 
@@ -97,14 +104,14 @@ private:
 	//メッシュ
 	Mesh* mesh_;
 
+	//テクスチャ
+	Texture* texture_;
+
 	//ビルボード行列
 	Matrix4x4 matBillboard_;
 
 	//インスタンシングリソース
 	InstancingResource instancingResource_;
-
-	//インスタンシングの数
-	uint32_t instanceCount_;
 
 };
 
