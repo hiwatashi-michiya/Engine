@@ -20,11 +20,17 @@ public:
 //関数
 private:
 
-	void Save();
+	void Create(const std::string& filename);
+
+	void Save(const std::string& filename);
+
+	void Close();
 
 	void Load(const std::string& filename);
 
 	void AddObject(char* name);
+
+	bool CheckIsEmpty(const std::string& name);
 
 	//同名オブジェクトを探す
 	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
@@ -50,11 +56,15 @@ private:
 
 	std::string currentObject_;
 
-	bool isOpenFile_ = true;
+	bool isOpenFile_ = false;
 
 	Vector3 spawnPoint_ = { 0.0f,0.0f,0.0f };
 
 	char name_[256];
+
+	char fileName_[256];
+
+	bool isSave_ = true;
 
 private:
 
