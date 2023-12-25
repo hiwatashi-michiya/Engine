@@ -15,11 +15,9 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> Model::pipelineStates_[Model::BlendM
 //ID3D12PipelineState* Model::pipelineState_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Model::vs3dBlob_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Model::ps3dBlob_ = nullptr;
-WorldTransform Model::worldTransformCamera_{};
-Matrix4x4 Model::matProjection_ = MakeIdentity4x4();
 int Model::modelNumber_ = 0;
 Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
-std::unordered_map<std::string, std::shared_ptr<Mesh>> Model::meshes_;
+std::unordered_map<std::string, std::unique_ptr<Mesh>> Model::meshes_;
 const char* Model::BlendTexts[Model::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
 void Model::StaticInitialize(ID3D12Device* device) {
@@ -89,7 +87,7 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[5]{};
+	D3D12_ROOT_PARAMETER rootParameters[6]{};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
@@ -112,6 +110,11 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[4].Descriptor.ShaderRegister = 2;
+
+	//点光源
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[5].Descriptor.ShaderRegister = 3;
 
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
@@ -271,11 +274,13 @@ void Model::Initialize(const std::string& filename) {
 	else {
 
 		//メッシュを登録
-		meshes_[filename] = std::make_shared<Mesh>();
+		meshes_[filename] = std::make_unique<Mesh>();
 		meshes_[filename]->Create(filename);
 		mesh_ = meshes_[filename].get();
 
 	}
+
+	texture_ = mesh_->texture_;
 
 	//transformMatrix
 	{
@@ -318,7 +323,8 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
-	worldTransformCamera_.UpdateMatrix();
+	//PSO設定
+	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());
 
 }
 
@@ -330,23 +336,20 @@ void Model::PostDraw() {
 
 }
 
-void Model::Draw() {
+void Model::Draw(Camera* camera) {
 
 	matWorld_ = MakeScaleMatrix(scale_) * matRotate_ * MakeTranslateMatrix(position_);
 
 	if (parent_) {
 		matWorld_ = matWorld_ * parent_->matWorld_;
 	}
-
-	Matrix4x4 cameraMatrix = worldTransformCamera_.UpdateMatrix();
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-	Matrix4x4 worldViewProjectionMatrix = matWorld_ * (viewMatrix * matProjection_);
+	
+	Matrix4x4 worldViewProjectionMatrix = matWorld_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = matWorld_;
 	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(matWorld_));
 
-	cameraMap_->worldPosition = worldTransformCamera_.GetWorldPosition();
+	cameraMap_->worldPosition = camera->GetWorldPosition();
 
 	//PSO設定
 	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());
@@ -359,20 +362,14 @@ void Model::Draw() {
 	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+
 	//描画
 	mesh_->SetCommandMesh(commandList_);
 
 }
 
 void Model::Finalize() {
-
-}
-
-void Model::ImGuiUpdate(const std::string& name) {
-
-	ImGui::Begin(name.c_str());
-	ImGui::Text("position : x %1.3f, y %1.3f, z %1.3f", position_.x, position_.y, position_.z);
-	ImGui::End();
 
 }
 
@@ -395,10 +392,34 @@ void Model::SetMesh(const std::string& objFileName) {
 	else {
 
 		//メッシュを登録
-		meshes_[objFileName] = std::make_shared<Mesh>();
+		meshes_[objFileName] = std::make_unique<Mesh>();
 		meshes_[objFileName]->Create(objFileName);
 		mesh_ = meshes_[objFileName].get();
 
 	}
+
+}
+
+void Model::ImGuiUpdate(const std::string& name) {
+
+	ImGui::Begin(name.c_str());
+
+	if (ImGui::BeginTabBar("Model", ImGuiTabBarFlags_None)) {
+
+		if (ImGui::BeginTabItem("translation")) {
+			ImGui::DragFloat3("position", &position_.x, 0.01f);
+			ImGui::DragFloat3("rotation", &rotation_.x, 0.01f);
+			ImGui::DragFloat3("scale", &scale_.x, 0.01f);
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("material")) {
+			mesh_->ImGuiUpdate();
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+
+	ImGui::End();
 
 }

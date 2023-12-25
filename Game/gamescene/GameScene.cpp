@@ -20,12 +20,18 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	Model::worldTransformCamera_.translation_ = { 0.0f,0.0f,-70.0f };
-	Model::worldTransformCamera_.rotation_.x = 0.2f;
+
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
+	camera_->position_ = { 0.0f,0.0f,-70.0f };
+	camera_->rotation_.x = 0.2f;
+	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
+	camera_->Update();
 
 	player_ = std::make_unique<Player>();
 
 	player_->Initialize();
+	player_->SetCamera(camera_.get());
 
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
@@ -50,9 +56,9 @@ void GameScene::Update() {
 #ifdef _DEBUG
 
 	ImGui::Begin("camera");
-	ImGui::DragFloat3("scale", &Model::worldTransformCamera_.scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &Model::worldTransformCamera_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation", &Model::worldTransformCamera_.translation_.x, 0.1f);
+	ImGui::DragFloat3("scale", &camera_->scale_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
+	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
 #endif // _DEBUG
@@ -102,13 +108,13 @@ void GameScene::Update() {
 
 	if (delay_ > 0.01f) {
 		//最短角度補間
-		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f / delay_);
-		Model::worldTransformCamera_.rotation_.x = std::lerp(Model::worldTransformCamera_.rotation_.x, destinationAngleX_, 1.0f / delay_);
+		camera_->rotation_.y = std::lerp(camera_->rotation_.y, destinationAngleY_, 1.0f / delay_);
+		camera_->rotation_.x = std::lerp(camera_->rotation_.x, destinationAngleX_, 1.0f / delay_);
 	}
 	else {
 		//最短角度補間
-		Model::worldTransformCamera_.rotation_.y = std::lerp(Model::worldTransformCamera_.rotation_.y, destinationAngleY_, 1.0f);
-		Model::worldTransformCamera_.rotation_.x = std::lerp(Model::worldTransformCamera_.rotation_.x, destinationAngleX_, 1.0f);
+		camera_->rotation_.y = std::lerp(camera_->rotation_.y, destinationAngleY_, 1.0f);
+		camera_->rotation_.x = std::lerp(camera_->rotation_.x, destinationAngleX_, 1.0f);
 	}
 
 	//レティクル
@@ -118,9 +124,9 @@ void GameScene::Update() {
 		const float kDistance = 120.0f;
 		//オフセット
 		Vector3 offset = { 0.0f,0.0f,1.0f };
-		offset = TransformNormal(offset, Model::worldTransformCamera_.matWorld_);
+		offset = TransformNormal(offset, camera_->matWorld_);
 		offset = Normalize(offset) * kDistance;
-		reticlePos_ = Model::worldTransformCamera_.translation_ + offset;
+		reticlePos_ = camera_->position_ + offset;
 		reticle3D_->position_ = reticlePos_;
 
 	}
@@ -130,7 +136,7 @@ void GameScene::Update() {
 		Vector3 posReticle = { reticle3D_->matWorld_.m[3][0],reticle3D_->matWorld_.m[3][1],reticle3D_->matWorld_.m[3][2] };
 		//ビューポート
 		Matrix4x4 matViewport = MakeViewportMatrix(0.0f, 0.0f, WinApp::kWindowWidth, WinApp::kWindowHeight, 0.0f, 1.0f);
-		Matrix4x4 cameraMatrix = Model::worldTransformCamera_.UpdateMatrix();
+		Matrix4x4 cameraMatrix = camera_->matWorld_;
 		Matrix4x4 matView = Inverse(cameraMatrix);
 		Matrix4x4 matProjection = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
 		Matrix4x4 matViewProjectionViewport = matView * matProjection * matViewport;
@@ -152,9 +158,10 @@ void GameScene::Update() {
 
 	Vector3 tmpOffset = CalcOffset();
 
-	Model::worldTransformCamera_.translation_ = interTarget_ + tmpOffset;
+	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
+	camera_->position_ = interTarget_ + tmpOffset;
 
-	Model::worldTransformCamera_.UpdateMatrix();
+	camera_->Update();
 
 	player_->Update();
 	stage_->Update();
@@ -184,17 +191,17 @@ void GameScene::Update() {
 void GameScene::Draw() {
 
 	player_->Draw();
-	stage_->Draw();
+	stage_->Draw(camera_.get());
 
 	reticle_->Draw();
-	reticle3D_->Draw();
+	reticle3D_->Draw(camera_.get());
 
 	for (auto& block : blocks_) {
-		block->Draw();
+		block->Draw(camera_.get());
 	}
 
 	for (auto& bullet : bullets_) {
-		bullet->Draw();
+		bullet->Draw(camera_.get());
 	}
 
 }
@@ -205,9 +212,9 @@ Vector3 GameScene::CalcOffset() {
 
 	Matrix4x4 matRotate = MakeIdentity4x4();
 
-	matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+	matRotate = MakeRotateYMatrix(camera_->rotation_.y);
 
-	/*Matrix4x4 tmprotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);*/
+	/*Matrix4x4 tmprotate = MakeRotateYMatrix(camera_->rotation_.y);*/
 
 	//オフセットをカメラの回転に合わせて回転させる
 	offset = TransformNormal(offset, matRotate);

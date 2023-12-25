@@ -11,7 +11,7 @@ public:
 
 	void Update();
 
-	void Draw();
+	void Draw(Camera* camera);
 
 private:
 

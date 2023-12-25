@@ -38,7 +38,8 @@ private:
 	//目標角度
 	float destinationAngleY_ = 0.0f;
 	float destinationAngleX_ = 0.2f;
-
+	std::unique_ptr<Camera> camera_;	
+	
 	//遅延量
 	float delay_ = 10.0f;
 

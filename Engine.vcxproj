@@ -43,6 +43,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir)..\External\nlohmann;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)..\External\nlohmann;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -104,6 +110,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\Leak.cpp" />
     <ClCompile Include="Engine\manager\AudioManager.cpp" />
+    <ClCompile Include="Engine\manager\ModelManager.cpp" />
     <ClCompile Include="Engine\manager\ShaderManager.cpp" />
     <ClCompile Include="Engine\manager\TextureManager.cpp" />
     <ClCompile Include="Engine\math\Collision.cpp" />
@@ -112,6 +119,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\Rand.cpp" />
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
+    <ClCompile Include="Engine\Tool\MapEditor.cpp" />
+    <ClCompile Include="Engine\Tool\Particle.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="externals\imgui\imgui_draw.cpp" />
@@ -125,7 +135,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\player\Player.cpp" />
     <ClCompile Include="Game\stage\Stage.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ModelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2d\Sprite.h" />
@@ -144,6 +153,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Leak.h" />
     <ClInclude Include="Engine\manager\AudioManager.h" />
     <ClInclude Include="Engine\manager\ImGuiManager.h" />
+    <ClInclude Include="Engine\manager\ModelManager.h" />
     <ClInclude Include="Engine\manager\ShaderManager.h" />
     <ClInclude Include="Engine\manager\TextureManager.h" />
     <ClInclude Include="Engine\math\Collision.h" />
@@ -154,6 +164,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\Vector3.h" />
     <ClInclude Include="Engine\math\Vector4.h" />
     <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Engine\Tool\GlobalVariables.h" />
+    <ClInclude Include="Engine\Tool\MapEditor.h" />
+    <ClInclude Include="Engine\Tool\Particle.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
@@ -167,7 +180,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\player\Bullet.h" />
     <ClInclude Include="Game\player\Player.h" />
     <ClInclude Include="Game\stage\Stage.h" />
-    <ClInclude Include="ModelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

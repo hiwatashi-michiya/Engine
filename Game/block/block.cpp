@@ -57,8 +57,8 @@ void Block::Update() {
 
 }
 
-void Block::Draw() {
+void Block::Draw(Camera* camera) {
 
-	model_->Draw();
+	model_->Draw(camera);
 
 }

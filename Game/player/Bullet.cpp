@@ -52,8 +52,8 @@ void Bullet::Charge(const Vector3& position) {
 
 }
 
-void Bullet::Draw() {
+void Bullet::Draw(Camera* camera) {
 
-	model_->Draw();
+	model_->Draw(camera);
 
 }

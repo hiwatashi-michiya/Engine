@@ -1,7 +1,7 @@
 #pragma once
 #include <wrl.h>
 #include <d3d12.h>
-#include "ModelManager.h"
+#include "Engine/manager/ModelManager.h"
 #include "Material.h"
 #include <memory>
 
@@ -18,11 +18,17 @@ public:
 
 	void LoadObjFile(const std::string& filename);
 
+	//テクスチャ読み込み
+	void LoadMaterialTemplateFile(const std::string& filename);
+
 	//描画コマンドセット
 	void SetCommandMesh(ID3D12GraphicsCommandList* commandList);
 
 	//描画コマンドセット(パーティクル)
 	void SetCommandMesh(ID3D12GraphicsCommandList* commandList, uint32_t instanceCount);
+
+	//ImGui表示
+	void ImGuiUpdate();
 
 	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_;
@@ -39,7 +45,7 @@ public:
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
-	void SetTexture(Texture* texture) { material_->SetTexture(texture); }
+	Texture* texture_;
 
 private:
 

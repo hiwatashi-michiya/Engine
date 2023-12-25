@@ -15,8 +15,6 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> Particle3D::particlePipelineStates_[
 //ID3D12PipelineState* Particle3D::pipelineState_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Particle3D::vs3dParticleBlob_ = nullptr;
 Microsoft::WRL::ComPtr<IDxcBlob> Particle3D::ps3dParticleBlob_ = nullptr;
-WorldTransform Particle3D::worldTransformCamera_{};
-Matrix4x4 Particle3D::matProjection_ = MakeIdentity4x4();
 int Particle3D::modelNumber_ = 0;
 Particle3D::BlendMode Particle3D::currentBlendMode_ = Particle3D::BlendMode::kNormal;
 std::unordered_map<std::string, std::shared_ptr<Mesh>> Particle3D::meshes_;
@@ -277,6 +275,8 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	}
 
+	texture_ = mesh_->texture_;
+
 	instanceCount_ = instanceCount;
 
 	//トランスフォーム情報をインスタンス数に合わせてリサイズする
@@ -284,6 +284,7 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 	rotations_.resize(instanceCount_);
 	scales_.resize(instanceCount_);
 	matWorlds_.resize(instanceCount_);
+	velocities_.resize(instanceCount_);
 
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 		positions_[i] = Vector3::Zero();
@@ -324,8 +325,6 @@ void Particle3D::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
-	worldTransformCamera_.UpdateMatrix();
-
 }
 
 void Particle3D::PostDraw() {
@@ -336,9 +335,9 @@ void Particle3D::PostDraw() {
 
 }
 
-void Particle3D::Draw() {
+void Particle3D::Draw(Camera* camera) {
 
-	matBillboard_ = Model::worldTransformCamera_.UpdateMatrix();
+	matBillboard_ = camera->matWorld_;
 
 	matBillboard_.m[3][0] = 0.0f;
 	matBillboard_.m[3][1] = 0.0f;
@@ -354,10 +353,7 @@ void Particle3D::Draw() {
 		}
 
 		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
-		Matrix4x4 cameraMatrix = Model::worldTransformCamera_.UpdateMatrix();
-		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-		matProjection_ = MakePerspectiveFovMatrix(0.45f, float(1280.0f) / float(720.0f), 0.1f, 1000.0f);
-		Matrix4x4 worldViewProjectionMatrix = matWorlds_[i] * (viewMatrix * matProjection_);
+		Matrix4x4 worldViewProjectionMatrix = matWorlds_[i] * camera->matViewProjection_;
 		matTransformMap_[i].WVP = worldViewProjectionMatrix;
 		matTransformMap_[i].World = matWorlds_[i];
 		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(matWorlds_[i]));
@@ -373,6 +369,8 @@ void Particle3D::Draw() {
 
 	commandList_->SetGraphicsRootDescriptorTable(1, instancingResource_.srvHandleGPU);
 	
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+
 	//描画
 	mesh_->SetCommandMesh(commandList_, instanceCount_);
 

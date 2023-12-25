@@ -49,8 +49,8 @@
     <Filter Include="Game\stage">
       <UniqueIdentifier>{5825f192-7d68-4fbc-9f67-046c78643a1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\MapEditor">
-      <UniqueIdentifier>{0e3679e7-07f9-4d31-9250-af2cbdc32f60}</UniqueIdentifier>
+    <Filter Include="Engine\Tool">
+      <UniqueIdentifier>{8e837e6d-46fc-4c8d-8c49-3bd19f5bf5cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\block">
       <UniqueIdentifier>{ef0e0772-d9e6-4fed-b0e1-f88b8749f259}</UniqueIdentifier>
@@ -150,9 +150,6 @@
     <ClCompile Include="Engine\3d\Particle3D.cpp">
       <Filter>Engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="ModelManager.cpp">
-      <Filter>Engine\3d</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\manager\AudioManager.cpp">
       <Filter>Engine\manager</Filter>
     </ClCompile>
@@ -167,6 +164,18 @@
     </ClCompile>
     <ClCompile Include="Engine\math\Rand.cpp">
       <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Tool\MapEditor.cpp">
+      <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Tool\GlobalVariables.cpp">
+      <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\manager\ModelManager.cpp">
+      <Filter>Engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Tool\Particle.cpp">
+      <Filter>Engine\Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,9 +281,6 @@
     <ClInclude Include="Engine\3d\Particle3D.h">
       <Filter>Engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="ModelManager.h">
-      <Filter>Engine\3d</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\manager\AudioManager.h">
       <Filter>Engine\manager</Filter>
     </ClInclude>
@@ -289,6 +295,18 @@
     </ClInclude>
     <ClInclude Include="Engine\math\Rand.h">
       <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\MapEditor.h">
+      <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\GlobalVariables.h">
+      <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\manager\ModelManager.h">
+      <Filter>Engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\Particle.h">
+      <Filter>Engine\Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

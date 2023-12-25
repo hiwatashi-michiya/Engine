@@ -3,7 +3,7 @@
 #include "Engine/math/Vector4.h"
 #include "Engine/math/Vector3.h"
 #include "Engine/math/Vector2.h"
-#include"Engine/manager/TextureManager.h"
+#include "TextureManager.h"
 #include <string>
 #include <vector>
 
@@ -42,12 +42,35 @@ struct DirectionalLight {
 	float intensity;
 };
 
+struct PointLight {
+	Vector4 color; //ライトの色
+	Vector3 position; //ライトの位置
+	float intensity; //輝度
+	float radius; //ライトの届く最大距離
+	float decay; //減衰率
+	float padding[2];
+};
+
 struct TextureData {
 	std::string textureFilePath;
 };
 
 struct MeshData {
 	std::vector<VertexData> vertices;
+};
+
+//マップエディター用のデータ構造体
+struct ObjectData
+{
+	//オブジェクトの形状を決める名前
+	std::string objName;
+	//位置
+	Vector3 position;
+	//回転
+	Vector3 rotation;
+	//スケール
+	Vector3 scale;
+
 };
 
 //TextureData LoadMaterialTemplateFile(const std::string& filename);

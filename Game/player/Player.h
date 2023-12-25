@@ -40,11 +40,15 @@ public:
 
 	void SetIsAttack(bool flag) { isAttack_ = flag; }
 
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
 private:
 
 	Input* input_ = nullptr;
 
 	std::unique_ptr<Model> playerModel_;
+
+	Camera* camera_ = nullptr;
 
 	//ダッシュ用ワーク
 	struct WorkDash {

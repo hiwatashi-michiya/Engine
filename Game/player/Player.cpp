@@ -76,7 +76,7 @@ void Player::Update() {
 
 void Player::Draw() {
 
-	playerModel_->Draw();
+	playerModel_->Draw(camera_);
 
 }
 
@@ -96,7 +96,7 @@ void Player::BehaviorRootUpdate() {
 
 		Matrix4x4 matRotate = MakeIdentity4x4();
 
-		matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
+		matRotate = MakeRotateYMatrix(camera_->rotation_.y);
 
 		/*Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);*/
 

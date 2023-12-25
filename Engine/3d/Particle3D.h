@@ -4,12 +4,13 @@
 #include <string>
 #include <vector>
 #include <dxcapi.h>
-#include "ModelManager.h"
+#include "Engine/manager/ModelManager.h"
 #include "WorldTransform.h"
 #include <vector>
 #include "Mesh.h"
 #include <memory>
 #include <unordered_map>
+#include "Engine/base/Camera.h"
 
 class Particle3D
 {
@@ -37,10 +38,6 @@ public:
 
 	static void Finalize();
 
-	static WorldTransform worldTransformCamera_;
-
-	static 	Matrix4x4 matProjection_;
-
 	static void StaticImGuiUpdate();
 
 	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
@@ -49,9 +46,11 @@ public:
 
 	void Initialize(const std::string& filename, uint32_t instanceCount);
 
-	void Draw();
+	void Draw(Camera* camera);
 
 	void ImGuiUpdate();
+
+	void SetTexture(Texture* texture) { texture_ = texture; }
 
 	//ビルボードを使うかどうか
 	bool isBillboard_ = true;
@@ -63,6 +62,11 @@ public:
 	std::vector<Vector3> scales_{};
 
 	std::vector<Matrix4x4> matWorlds_{};
+
+	std::vector<Vector3> velocities_{};
+
+	//インスタンシングの数
+	uint32_t instanceCount_;
 
 private:
 
@@ -100,14 +104,14 @@ private:
 	//メッシュ
 	Mesh* mesh_;
 
+	//テクスチャ
+	Texture* texture_;
+
 	//ビルボード行列
 	Matrix4x4 matBillboard_;
 
 	//インスタンシングリソース
 	InstancingResource instancingResource_;
-
-	//インスタンシングの数
-	uint32_t instanceCount_;
 
 };
 

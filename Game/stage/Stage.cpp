@@ -30,9 +30,9 @@ void Stage::Update() {
 
 }
 
-void Stage::Draw() {
+void Stage::Draw(Camera* camera) {
 
-	skydome_->Draw();
-	model_->Draw();
+	skydome_->Draw(camera);
+	model_->Draw(camera);
 
 }

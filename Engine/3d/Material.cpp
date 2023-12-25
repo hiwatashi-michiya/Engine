@@ -3,6 +3,7 @@
 #include "Engine/manager/ShaderManager.h"
 #include <filesystem>
 #include <fstream>
+#include "Externals/imgui/imgui.h"
 
 ID3D12Device* Material::device_ = nullptr;
 
@@ -91,9 +92,24 @@ Material* Material::Create(const std::string& filename) {
 
 		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		dLightMap_->direction = { 0.0f,-1.0f,0.0f };
-		dLightMap_->intensity = 1.0f;
+		dLightMap_->intensity = 0.0f;
 
 		dLightBuff_->Unmap(0, nullptr);
+
+	}
+
+	//点光源バッファ設定
+	{
+
+		pLightBuff_ = CreateBufferResource(device_, sizeof(PointLight));
+
+		pLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&pLightMap_));
+
+		pLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		pLightMap_->position = { 0.0f,0.0f,0.0f };
+		pLightMap_->intensity = 1.0f;
+		pLightMap_->radius = 200.0f;
+		pLightMap_->decay = 1.0f;
 
 	}
 
@@ -105,10 +121,58 @@ Material* Material::Create(const std::string& filename) {
 
 void Material::SetCommandMaterial(ID3D12GraphicsCommandList* commandList) {
 
+	dLightMap_->direction = Normalize(dLightMap_->direction);
+
+	//平行光源設定
+	commandList->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());
+	//点光源設定
+	commandList->SetGraphicsRootConstantBufferView(5, pLightBuff_->GetGPUVirtualAddress());
+	////SRVの設定
+	/*commandList->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);*/
+	commandList->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
+
+}
+
+void Material::SetCommandMaterialForParticle(ID3D12GraphicsCommandList* commandList) {
+
 	//平行光源設定
 	commandList->SetGraphicsRootConstantBufferView(3, dLightBuff_->GetGPUVirtualAddress());
 	////SRVの設定
-	commandList->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+	/*commandList->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);*/
 	commandList->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
+
+}
+
+void Material::ImGuiUpdate() {
+
+	if (ImGui::TreeNode("Base Material")) {
+		ImGui::ColorEdit4("C_color", &constMap_->color.x);
+		ImGui::SliderInt("C_Lighting", &constMap_->enableLighting, 0, 1);
+		ImGui::DragFloat("C_shininess", &constMap_->shininess, 0.05f, 0.0f, 100.0f);
+		ImGui::SliderInt("C_is_gray", &constMap_->isGrayScale, 0, 1);
+		ImGui::SliderInt("C_is_inversion", &constMap_->isInversion, 0, 1);
+		ImGui::SliderInt("C_is_retro", &constMap_->isRetro, 0, 1);
+		ImGui::SliderInt("C_is_aveblur", &constMap_->isAverageBlur, 0, 1);
+		ImGui::SliderInt("C_is_emboss", &constMap_->isEmboss, 0, 1);
+		ImGui::SliderInt("C_is_sharp", &constMap_->isSharpness, 0, 1);
+		ImGui::SliderInt("C_is_outline", &constMap_->isOutline, 0, 1);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Directional Light")) {
+		ImGui::ColorEdit4("D_color", &dLightMap_->color.x);
+		ImGui::DragFloat3("D_direction", &dLightMap_->direction.x, 0.01f, -1.0f, 1.0f);
+		ImGui::DragFloat("D_intencity", &dLightMap_->intensity, 0.01f, 0.0f, 100.0f);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Point Light")) {
+		ImGui::ColorEdit4("P_color", &pLightMap_->color.x);
+		ImGui::DragFloat3("P_position", &pLightMap_->position.x, 0.01f);
+		ImGui::DragFloat("P_intencity", &pLightMap_->intensity, 0.01f, 0.0f, 100.0f);
+		ImGui::DragFloat("P_radius", &pLightMap_->radius, 0.01f);
+		ImGui::DragFloat("P_decay", &pLightMap_->decay, 0.05f, 0.0f, 100.0f);
+		ImGui::TreePop();
+	}
+
+
 
 }

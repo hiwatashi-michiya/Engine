@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <dxcapi.h>
-#include "ModelManager.h"
+#include "Engine/manager/ModelManager.h"
 #include "WorldTransform.h"
 #include "Engine/base/Camera.h"
 #include "Mesh.h"
@@ -41,12 +41,6 @@ public:
 
 	static void Finalize();
 
-	//カメラ
-	static WorldTransform worldTransformCamera_;
-
-	//プロジェクション行列
-	static 	Matrix4x4 matProjection_;
-
 	//モデル全体に影響を与えるImGui
 	static void StaticImGuiUpdate();
 
@@ -57,14 +51,15 @@ public:
 
 	void Initialize(const std::string& filename);
 
-	void Draw();
+	void Draw(Camera* camera);
 
-	void ImGuiUpdate(const std::string& name);
-
-	void SetTexture(Texture* texture) { mesh_->SetTexture(texture); }
+	void SetTexture(Texture* texture) { texture_ = texture; }
 
 	//メッシュ切り替え
 	void SetMesh(const std::string& objFileName);
+
+	//ImGui表示
+	void ImGuiUpdate(const std::string& name);
 
 	Vector3 position_{};
 
@@ -101,7 +96,7 @@ private:
 
 	static BlendMode currentBlendMode_;
 
-	static std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes_;
+	static std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes_;
 
 private:
 
@@ -117,6 +112,9 @@ private:
 
 	//メッシュ
 	Mesh* mesh_;
+
+	//テクスチャ
+	Texture* texture_;
 
 };
 

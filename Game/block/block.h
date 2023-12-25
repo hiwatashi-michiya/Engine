@@ -21,7 +21,7 @@ public:
 
 	void Update();
 
-	void Draw();
+	void Draw(Camera* camera);
 
 	Vector3 GetPosition() {
 		return Vector3{

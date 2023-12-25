@@ -14,7 +14,7 @@ public:
 
 	void Update();
 
-	void Draw();
+	void Draw(Camera* camera);
 
 	bool GetIsDead() const { return isDead_; }
 

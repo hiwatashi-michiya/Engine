@@ -341,12 +341,22 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 
 }
 
+Matrix4x4 MakeRotateMatrix(const Vector3& rotation) {
+
+	Matrix4x4 m{};
+
+	m = Multiply(MakeRotateXMatrix(rotation.x),
+		Multiply(MakeRotateYMatrix(rotation.y), MakeRotateZMatrix(rotation.z)));
+
+	return m;
+
+}
+
 //3次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 
 	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
-	Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix(rotate.x),
-		Multiply(MakeRotateYMatrix(rotate.y), MakeRotateZMatrix(rotate.z)));
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
 	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
 
 	Matrix4x4 m{};
@@ -458,7 +468,7 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
 
 	//回転軸
-	Vector3 n;
+	Vector3 n{};
 
 	//cosを求める
 	float cosTheta = Dot(from, to);
