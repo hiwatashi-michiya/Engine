@@ -48,11 +48,35 @@ void GameScene::Initialize() {
 	reticle3D_.reset(Model::Create("./resources/cube/cube.obj"));
 	reticle3D_->scale_ *= 0.0f;
 
-	for (uint32_t i = 0; i < 11; i++) {
+	blocks_.clear();
+	bullets_.clear();
+
+	/*for (uint32_t i = 0; i < 11; i++) {
 		std::shared_ptr<Block> block = std::make_shared<Block>();
 		block->Initialize({ -25.0f + i * 5.0f, 3.0f, -25.0f + i * 5.0f }, player_.get(), { 2.0f,3.0f,4.0f });
 		blocks_.push_back(block);
-	}
+	}*/
+
+}
+
+void GameScene::Reset() {
+
+	camera_->position_ = { 0.0f,0.0f,-70.0f };
+	camera_->rotation_.x = 0.2f;
+	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
+	camera_->Update();
+
+	player_->Initialize();
+	player_->SetCamera(camera_.get());
+
+	enemy_->Initialize();
+	enemy_->SetPlayer(player_.get());
+	enemy_->SetBlockList(&blocks_);
+
+	stage_->Initialize();
+
+	blocks_.clear();
+	bullets_.clear();
 
 }
 
@@ -67,6 +91,10 @@ void GameScene::Update() {
 	ImGui::End();
 
 #endif // _DEBUG
+
+	if (input_->TriggerKey(DIK_R)) {
+		Reset();
+	}
 
 	blocks_.remove_if([](auto& block) {
 
@@ -218,6 +246,11 @@ void GameScene::Update() {
 		if (player_->GetIsAttack() && !bullet->GetIsShot()) {
 			bullet->Shot(reticlePos_);
 			player_->SetIsAttack(false);
+		}
+
+		if (!enemy_->GetIsDead() && bullet->GetIsShot() && IsCollision(enemy_->GetCollision(), bullet->GetCollision())) {
+			enemy_->Damage(1);
+			bullet->SetIsDead(true);
 		}
 
 	}

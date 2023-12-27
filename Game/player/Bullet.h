@@ -19,6 +19,8 @@ public:
 
 	bool GetIsDead() const { return isDead_; }
 
+	void SetIsDead(bool flag) { isDead_ = flag; }
+
 	bool GetIsShot() const { return isShot_; }
 
 	void Shot(const Vector3& position);

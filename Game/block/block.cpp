@@ -54,7 +54,10 @@ void Block::SetBullet(std::list<std::shared_ptr<Bullet>>& bullets) {
 
 void Block::Update() {
 
-	if (player_->GetIsBreak() && Length(GetPosition() - player_->GetPosition()) < 20.0f) {
+	Vector3 posA = { model_->position_.x, 0.0f,model_->position_.z };
+	Vector3 posB = { player_->GetLocalPosition().x, 0.0f,player_->GetLocalPosition().z };
+
+	if (player_->GetIsBreak() && Length(posB - posA) < 20.0f) {
 		isDead_ = true;
 	}
 

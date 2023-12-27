@@ -27,6 +27,8 @@ public:
 
 	void Draw();
 
+	void Reset();
+
 private:
 
 	DirectXCommon* dxCommon_ = nullptr;
