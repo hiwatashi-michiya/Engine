@@ -18,6 +18,11 @@ void Player::Initialize() {
 
 	preDirection_ = { 0.0f,0.0f,1.0f };
 
+	hp_ = kMaxHp_;
+
+	collision_.center = playerModel_->position_;
+	collision_.radius = 1.0f;
+
 	directionToDirection_ = MakeIdentity4x4();
 
 	velocity_ = { 0.0f,0.0f,1.0f };
@@ -26,49 +31,64 @@ void Player::Initialize() {
 
 void Player::Update() {
 
+	prePosition_ = Vector3{
+			playerModel_->matWorld_.m[3][0],
+			playerModel_->matWorld_.m[3][1] ,
+			playerModel_->matWorld_.m[3][2] };
+
 	isBreak_ = false;
 
 	isAttack_ = false;
 
 	directionToDirection_ = MakeIdentity4x4();
 
-	if (behaviorRequest_) {
-		//振る舞いを変更する
-		behavior_ = behaviorRequest_.value();
-		//各振る舞いごとの初期化を実行
+	if (!isDead_) {
+
+		if (behaviorRequest_) {
+			//振る舞いを変更する
+			behavior_ = behaviorRequest_.value();
+			//各振る舞いごとの初期化を実行
+			switch (behavior_) {
+			case Behavior::kRoot:
+			default:
+				BehaviorRootInitialize();
+				break;
+			case Behavior::kAttack:
+				BehaviorAttackInitialize();
+				break;
+			case Behavior::kDash:
+				BehaviorDashInitialize();
+				break;
+			}
+			//振る舞いリクエストをリセット
+			behaviorRequest_ = std::nullopt;
+		}
+
 		switch (behavior_) {
 		case Behavior::kRoot:
 		default:
-			BehaviorRootInitialize();
+			BehaviorRootUpdate();
 			break;
 		case Behavior::kAttack:
-			BehaviorAttackInitialize();
+			BehaviorAttackUpdate();
 			break;
 		case Behavior::kDash:
-			BehaviorDashInitialize();
+			BehaviorDashUpdate();
 			break;
 		}
-		//振る舞いリクエストをリセット
-		behaviorRequest_ = std::nullopt;
-	}
 
-	switch (behavior_) {
-	case Behavior::kRoot:
-	default:
-		BehaviorRootUpdate();
-		break;
-	case Behavior::kAttack:
-		BehaviorAttackUpdate();
-		break;
-	case Behavior::kDash:
-		BehaviorDashUpdate();
-		break;
-	}
+		if (isBreak_) {
 
-	if (isBreak_) {
+		}
+		else {
 
-	}
-	else {
+		}
+
+		if (hp_ <= 0) {
+			isDead_ = true;
+		}
+
+		collision_.center = playerModel_->position_;
 
 	}
 

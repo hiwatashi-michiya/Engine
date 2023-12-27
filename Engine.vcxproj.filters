@@ -58,6 +58,9 @@
     <Filter Include="Game\gameScene\player">
       <UniqueIdentifier>{917f4b7e-6a0d-44e4-a646-8f1b0084b8a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\gameScene\enemy">
+      <UniqueIdentifier>{0ce2484c-e8b5-4dc8-a335-f2833dcaed3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -175,6 +178,18 @@
       <Filter>Engine\manager</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Tool\Particle.cpp">
+      <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\enemy\Enemy.cpp">
+      <Filter>Game\gameScene\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\enemy\EnemyBullet.cpp">
+      <Filter>Game\gameScene\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Tool\Collider.cpp">
+      <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Tool\CollisionManager.cpp">
       <Filter>Engine\Tool</Filter>
     </ClCompile>
   </ItemGroup>
@@ -306,6 +321,18 @@
       <Filter>Engine\manager</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Tool\Particle.h">
+      <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\enemy\Enemy.h">
+      <Filter>Game\gameScene\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\enemy\EnemyBullet.h">
+      <Filter>Game\gameScene\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\Collider.h">
+      <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\CollisionManager.h">
       <Filter>Engine\Tool</Filter>
     </ClInclude>
   </ItemGroup>

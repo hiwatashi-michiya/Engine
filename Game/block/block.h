@@ -4,6 +4,7 @@
 #include "Game/player/Player.h"
 #include "Game/player/Bullet.h"
 #include <memory>
+#include "Engine/math/Collision.h"
 
 class Block
 {
@@ -35,6 +36,8 @@ public:
 
 	void SetBullet(std::list<std::shared_ptr<Bullet>>& bullets);
 
+	const AABB& GetCollision() { return collision_; }
+
 private:
 
 	std::unique_ptr<Model> model_;
@@ -53,6 +56,9 @@ private:
 	uint32_t sizeZ_;
 
 	uint32_t particleCount_;
+
+	//当たり判定(aabb)
+	AABB collision_{};
 
 };
 

@@ -13,6 +13,7 @@
 #include "Engine/manager/AudioManager.h"
 #include <list>
 #include "Game/player/Bullet.h"
+#include "Game/enemy/Enemy.h"
 
 class GameScene
 {
@@ -52,6 +53,8 @@ private:
 	std::unique_ptr<Sprite> reticle_;
 
 	std::unique_ptr<Model> reticle3D_;
+
+	std::unique_ptr<Enemy> enemy_;
 
 	Texture* tex_;
 

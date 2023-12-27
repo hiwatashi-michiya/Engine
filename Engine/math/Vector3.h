@@ -155,6 +155,11 @@ void ClampAABB(AABB& aabb);
 // OBB回転
 void RotateOBB(OBB& obb, const Vector3& rotate);
 
+//二点間の距離
+float Distance(const Vector3& v1, const Vector3& v2);
+
+float HitRadius(float r1, float r2);
+
 //二項演算子
 Vector3 operator+(const Vector3& v1, const Vector3& v2);
 Vector3 operator-(const Vector3& v1, const Vector3& v2);

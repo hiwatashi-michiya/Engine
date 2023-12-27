@@ -272,6 +272,23 @@ void RotateOBB(OBB& obb, const Vector3& rotate) {
 
 }
 
+// 2点間の距離を求める
+float Distance(const Vector3& v1, const Vector3& v2) {
+
+	Vector3 v = Subtract(v2, v1);
+	float result = Dot(v, v);
+
+	return result;
+}
+
+float HitRadius(float r1, float r2) {
+
+	float totalRadius = r1 + r2;
+
+	float result = totalRadius * totalRadius;
+
+	return result;
+}
 
 //二項演算子
 Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Add(v1, v2); }

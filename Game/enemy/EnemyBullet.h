@@ -3,13 +3,11 @@
 #include <memory>
 #include "Engine/math/Collision.h"
 
-class Player;
-
-class Bullet
+class EnemyBullet
 {
 public:
-	Bullet();
-	~Bullet();
+	EnemyBullet();
+	~EnemyBullet();
 
 	void Initialize(const Vector3& position);
 
@@ -30,8 +28,6 @@ public:
 	const Sphere& GetCollision() { return collision_; }
 
 private:
-
-	Player* player_ = nullptr;
 
 	std::unique_ptr<Model> model_;
 

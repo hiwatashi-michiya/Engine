@@ -33,6 +33,11 @@ void GameScene::Initialize() {
 	player_->Initialize();
 	player_->SetCamera(camera_.get());
 
+	enemy_ = std::make_unique<Enemy>();
+	enemy_->Initialize();
+	enemy_->SetPlayer(player_.get());
+	enemy_->SetBlockList(&blocks_);
+
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
 
@@ -166,8 +171,39 @@ void GameScene::Update() {
 	player_->Update();
 	stage_->Update();
 
+	enemy_->Update();
+
 	for (auto& block : blocks_) {
 		block->Update();
+
+		if (IsCollision(block->GetCollision(), player_->GetCollision())) {
+
+			//前フレームのZ位置がブロックのZ判定の内側だった場合、左右どちらかから当たっているので左右の処理をする
+			if (player_->GetPrePosition().z < block->GetCollision().max.z &&
+				player_->GetPrePosition().z > block->GetCollision().min.z) {
+
+				if (player_->GetPosition().x > block->GetPosition().x) {
+					player_->SetPosition(Vector3{ block->GetCollision().max.x + 1.0f, player_->GetLocalPosition().y,player_->GetLocalPosition().z });
+				}
+				else {
+					player_->SetPosition(Vector3{ block->GetCollision().min.x - 1.0f, player_->GetLocalPosition().y,player_->GetLocalPosition().z });
+				}
+
+			}
+			//そうでない場合、上下どちらかから当たっているのでその処理をする
+			if (player_->GetPrePosition().x < block->GetCollision().max.x &&
+				player_->GetPrePosition().x > block->GetCollision().min.x) {
+
+				if (player_->GetPosition().z > block->GetPosition().z) {
+					player_->SetPosition(Vector3{ player_->GetLocalPosition().x,player_->GetLocalPosition().y,block->GetCollision().max.z + 1.0f });
+				}
+				else {
+					player_->SetPosition(Vector3{ player_->GetLocalPosition().x,player_->GetLocalPosition().y,block->GetCollision().min.z - 1.0f });
+				}
+
+			}
+
+		}
 
 		if (block->GetIsDead()) {
 			block->SetBullet(bullets_);
@@ -192,6 +228,8 @@ void GameScene::Draw() {
 
 	player_->Draw();
 	stage_->Draw(camera_.get());
+
+	enemy_->Draw(camera_.get());
 
 	reticle_->Draw();
 	reticle3D_->Draw(camera_.get());

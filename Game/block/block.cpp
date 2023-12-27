@@ -25,6 +25,9 @@ void Block::Initialize(const Vector3& pos, Player* player, const Vector3& blockS
 
 	model_->scale_ = blockSize_;
 
+	collision_.min = model_->position_ - Vector3{ float(sizeX_), float(sizeY_), float(sizeZ_) };
+	collision_.max = model_->position_ + Vector3{ float(sizeX_), float(sizeY_), float(sizeZ_) };
+
 	player_ = player;
 
 }

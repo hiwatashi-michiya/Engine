@@ -119,6 +119,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\Rand.cpp" />
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\Tool\Collider.cpp" />
+    <ClCompile Include="Engine\Tool\CollisionManager.cpp" />
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
     <ClCompile Include="Engine\Tool\MapEditor.cpp" />
     <ClCompile Include="Engine\Tool\Particle.cpp" />
@@ -130,6 +132,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Game\block\block.cpp" />
+    <ClCompile Include="Game\enemy\Enemy.cpp" />
+    <ClCompile Include="Game\enemy\EnemyBullet.cpp" />
     <ClCompile Include="Game\gamescene\GameScene.cpp" />
     <ClCompile Include="Game\player\Bullet.cpp" />
     <ClCompile Include="Game\player\Player.cpp" />
@@ -164,6 +168,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\Vector3.h" />
     <ClInclude Include="Engine\math\Vector4.h" />
     <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Engine\Tool\Collider.h" />
+    <ClInclude Include="Engine\Tool\CollisionManager.h" />
     <ClInclude Include="Engine\Tool\GlobalVariables.h" />
     <ClInclude Include="Engine\Tool\MapEditor.h" />
     <ClInclude Include="Engine\Tool\Particle.h" />
@@ -176,6 +182,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Game\block\block.h" />
+    <ClInclude Include="Game\enemy\Enemy.h" />
+    <ClInclude Include="Game\enemy\EnemyBullet.h" />
     <ClInclude Include="Game\gamescene\GameScene.h" />
     <ClInclude Include="Game\player\Bullet.h" />
     <ClInclude Include="Game\player\Player.h" />

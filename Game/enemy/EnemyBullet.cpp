@@ -1,16 +1,14 @@
-#include "Bullet.h"
-#include "Player.h"
-#include "Engine/math/Rand.h"
+#include "EnemyBullet.h"
 
-Bullet::Bullet()
+EnemyBullet::EnemyBullet()
 {
 }
 
-Bullet::~Bullet()
+EnemyBullet::~EnemyBullet()
 {
 }
 
-void Bullet::Initialize(const Vector3& position) {
+void EnemyBullet::Initialize(const Vector3& position) {
 
 	model_.reset(Model::Create("./resources/cube/cube.obj"));
 	model_->scale_ *= 0.7f;
@@ -23,7 +21,7 @@ void Bullet::Initialize(const Vector3& position) {
 
 }
 
-void Bullet::Update() {
+void EnemyBullet::Update() {
 
 	if (isShot_ && !isDead_) {
 		model_->position_ += velocity_;
@@ -42,7 +40,7 @@ void Bullet::Update() {
 
 }
 
-void Bullet::Shot(const Vector3& position) {
+void EnemyBullet::Shot(const Vector3& position) {
 
 	liveTime_ = maxLiveTime_;
 	velocity_ = Normalize(position - model_->position_);
@@ -51,11 +49,11 @@ void Bullet::Shot(const Vector3& position) {
 
 }
 
-void Bullet::Charge(const Vector3& position) {
+void EnemyBullet::Charge(const Vector3& position) {
 
 }
 
-void Bullet::Draw(Camera* camera) {
+void EnemyBullet::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 

@@ -3,6 +3,7 @@
 #include <optional>
 #include "Engine/input/Input.h"
 #include "Engine/2d/Sprite.h"
+#include "Engine/math/Collision.h"
 
 //振る舞い
 enum class Behavior {
@@ -23,12 +24,20 @@ public:
 
 	void Draw();
 
+	const Vector3& GetLocalPosition() { return playerModel_->position_; }
+
 	Vector3 GetPosition() {
 		return Vector3{ 
 			playerModel_->matWorld_.m[3][0],
 			playerModel_->matWorld_.m[3][1] ,
 			playerModel_->matWorld_.m[3][2] };
 	}
+
+	Vector3 GetPrePosition() {
+		return prePosition_;
+	}
+
+	void SetPosition(const Vector3& position) { playerModel_->position_ = position; }
 
 	bool GetIsBreak() const { return isBreak_; }
 
@@ -42,6 +51,8 @@ public:
 
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
+	const Sphere& GetCollision() { return collision_; }
+
 private:
 
 	Input* input_ = nullptr;
@@ -49,6 +60,9 @@ private:
 	std::unique_ptr<Model> playerModel_;
 
 	Camera* camera_ = nullptr;
+
+	//前フレームの位置
+	Vector3 prePosition_{};
 
 	//ダッシュ用ワーク
 	struct WorkDash {
@@ -73,6 +87,10 @@ private:
 	WorkDash workDash_;
 
 	WorkAttack workAttack_;
+
+	uint32_t kMaxHp_ = 10;
+
+	int32_t hp_;
 
 	//振る舞い
 	Behavior behavior_ = Behavior::kRoot;
@@ -114,5 +132,11 @@ private:
 	void Attack();
 
 	bool isAttack_ = false;
+
+	//死亡フラグ
+	bool isDead_ = false;
+
+	//当たり判定(球)
+	Sphere collision_{};
 
 };
