@@ -44,7 +44,7 @@ void EnemyBullet::Shot(const Vector3& position) {
 
 	liveTime_ = maxLiveTime_;
 	velocity_ = Normalize(position - model_->position_);
-	velocity_ *= 2.0f;
+	velocity_ *= 3.0f;
 	isShot_ = true;
 
 }

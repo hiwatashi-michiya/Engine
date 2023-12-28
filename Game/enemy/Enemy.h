@@ -6,6 +6,7 @@
 #include "Game/player/Player.h"
 #include "Engine/math/Collision.h"
 #include "EnemyBullet.h"
+#include "Engine/manager/AudioManager.h"
 
 class Enemy
 {
@@ -39,6 +40,7 @@ private:
 
 private:
 
+	AudioManager* audioManager_ = nullptr;
 
 	struct WorkAttack
 	{
@@ -101,5 +103,9 @@ private:
 	Texture* hpTex_;
 
 	std::unique_ptr<Sprite> hpSprite_;
+
+	uint32_t groundAttackSE_;
+	uint32_t shotSE_;
+	uint32_t deathSE_;
 
 };

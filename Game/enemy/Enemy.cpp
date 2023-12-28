@@ -26,6 +26,8 @@ Enemy::~Enemy()
 
 void Enemy::Initialize() {
 
+	audioManager_ = AudioManager::GetInstance();
+
 	model_->position_ = { 0.0f,10.0f,50.0f };
 	model_->scale_ = { 20.0f,20.0f,20.0f };
 	collision_.max = model_->position_ + model_->scale_;
@@ -49,6 +51,10 @@ void Enemy::Initialize() {
 	hpSprite_->size_.y = 64.0f;
 
 	bullets_.clear();
+
+	groundAttackSE_ = audioManager_->SoundLoadWave("./resources/proto_sound/boss_groundAttack.wav");
+	shotSE_ = audioManager_->SoundLoadWave("./resources/proto_sound/boss_shot.wav");
+	deathSE_ = audioManager_->SoundLoadWave("./resources/proto_sound/disolve.wav");
 
 }
 
@@ -99,6 +105,7 @@ void Enemy::Update() {
 
 		if (hp_ <= 0) {
 			isDead_ = true;
+			audioManager_->Play(deathSE_, 0.2f);
 		}
 
 		
@@ -119,6 +126,7 @@ void Enemy::Update() {
 
 		if (workShot_.shotTimer % 10 == 0 && !bullet->GetIsShot()) {
 			bullet->Shot(player_->GetPosition());
+			audioManager_->Play(shotSE_, 0.2f);
 			break;
 		}
 
@@ -158,6 +166,10 @@ void Enemy::Attack() {
 
 	}
 	else {
+
+		if (workAttack_.startAttackTimer == 30) {
+			audioManager_->Play(groundAttackSE_, 0.2f);
+		}
 
 	}
 

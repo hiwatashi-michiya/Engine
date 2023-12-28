@@ -245,7 +245,7 @@ void GameScene::Update() {
 
 		if (player_->GetIsAttack() && !bullet->GetIsShot()) {
 			bullet->Shot(reticlePos_);
-			player_->SetIsAttack(false);
+			/*player_->SetIsAttack(false);*/
 		}
 
 		if (!enemy_->GetIsDead() && bullet->GetIsShot() && IsCollision(enemy_->GetCollision(), bullet->GetCollision())) {

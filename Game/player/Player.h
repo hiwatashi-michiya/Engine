@@ -4,6 +4,7 @@
 #include "Engine/input/Input.h"
 #include "Engine/2d/Sprite.h"
 #include "Engine/math/Collision.h"
+#include "Engine/manager/AudioManager.h"
 
 //振る舞い
 enum class Behavior {
@@ -62,6 +63,7 @@ public:
 private:
 
 	Input* input_ = nullptr;
+	AudioManager* audioManager_ = nullptr;
 
 	std::unique_ptr<Model> playerModel_;
 
@@ -158,5 +160,10 @@ private:
 	Texture* hpTex_;
 
 	std::unique_ptr<Sprite> hpSprite_;
+
+	uint32_t dashSE_;
+	uint32_t deathSE_;
+	uint32_t shootSE_;
+	uint32_t crashSE_;
 
 };

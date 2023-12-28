@@ -18,9 +18,12 @@ Player::~Player()
 void Player::Initialize() {
 
 	input_ = Input::GetInstance();
-
+	audioManager_ = AudioManager::GetInstance();
 	
 	playerModel_->scale_.z = 2.0f;
+
+	playerModel_->matRotate_ = MakeIdentity4x4();
+	playerModel_->position_ = { 0.0f,0.0f,0.0f };
 
 	preDirection_ = { 0.0f,0.0f,1.0f };
 
@@ -49,6 +52,11 @@ void Player::Initialize() {
 
 	hpSprite_->size_.x = 10.0f * hp_;
 	hpSprite_->size_.y = 64.0f;
+
+	dashSE_ = audioManager_->SoundLoadWave("./resources/proto_sound/dash.wav");
+	deathSE_ = audioManager_->SoundLoadWave("./resources/proto_sound/disolve.wav");
+	shootSE_ = audioManager_->SoundLoadWave("./resources/proto_sound/shoot.wav");
+	crashSE_ = audioManager_->SoundLoadWave("./resources/proto_sound/crash.wav");
 
 }
 
@@ -117,6 +125,7 @@ void Player::Update() {
 
 		if (hp_ <= 0) {
 			isDead_ = true;
+			audioManager_->Play(deathSE_, 0.2f);
 		}
 
 		collision_.center = playerModel_->position_;
@@ -181,14 +190,17 @@ void Player::BehaviorRootUpdate() {
 
 	if (input_->TriggerButton(XINPUT_GAMEPAD_A)) {
 		isBreak_ = true;
+		audioManager_->Play(crashSE_, 0.2f);
+
 	}
 
 	if (input_->TriggerButton(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
 		behaviorRequest_ = Behavior::kDash;
+		audioManager_->Play(dashSE_, 0.2f);
 	}
 
 	//攻撃
-	if (input_->PushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+	if (input_->TriggerButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		Attack();
 	}
 
@@ -217,6 +229,7 @@ void Player::Attack() {
 	if (workAttack_.coolTime_ == 0) {
 		
 		isAttack_ = true;
+		audioManager_->Play(shootSE_, 0.2f);
 
 	}
 
