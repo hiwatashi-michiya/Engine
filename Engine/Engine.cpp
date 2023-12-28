@@ -112,7 +112,7 @@ void Engine::BeginFrame() {
 	Particle3D::PreDraw(dxCommon_->GetCommandList());
 	Sprite::PreDraw(dxCommon_->GetCommandList());
 
-	GlobalVariables::GetInstance()->Update();
+	/*GlobalVariables::GetInstance()->Update();*/
 
 }
 

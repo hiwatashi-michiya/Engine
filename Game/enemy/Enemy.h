@@ -79,9 +79,12 @@ private:
 	//速度
 	Vector3 velocity_{};
 
-	uint32_t kMaxHp_ = 30;
+	uint32_t kMaxHp_ = 150;
 
 	int32_t hp_ = kMaxHp_;
+
+	//1hp辺りの長さ
+	float hpWidth_ = float(300.0f / kMaxHp_);
 
 	bool isDead_ = false;
 
@@ -95,6 +98,8 @@ private:
 	std::array<Vector3, 10> attackPositions_;
 	//攻撃のサイズ
 	std::array<Vector3, 10> attackSizes_;
+	//攻撃の当たり判定
+	std::array<AABB, 10> attackCollisions_;
 
 	Texture* attackLangeTex_ = nullptr;
 

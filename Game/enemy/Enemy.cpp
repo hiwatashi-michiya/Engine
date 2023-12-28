@@ -15,7 +15,7 @@ Enemy::Enemy()
 	hpTex_ = TextureManager::GetInstance()->Load("./resources/e_life.png");
 
 	hpSprite_.reset(Sprite::Create(hpTex_, { 490.0f,20.0f }));
-	hpSprite_->size_.x = 10.0f * hp_;
+	hpSprite_->size_.x = hpWidth_ * hp_;
 	hpSprite_->size_.y = 64.0f;
 
 }
@@ -47,7 +47,7 @@ void Enemy::Initialize() {
 	workShot_.shotCount = 10;
 	workShot_.shotTimer = workShot_.shotInterval;
 
-	hpSprite_->size_.x = 10.0f * hp_;
+	hpSprite_->size_.x = hpWidth_ * hp_;
 	hpSprite_->size_.y = 64.0f;
 
 	bullets_.clear();
@@ -88,6 +88,8 @@ void Enemy::Update() {
 					attackModels_[i]->scale_ = attackSizes_[i];
 					attackModels_[i]->position_ = player_->GetPosition() + attackPositions_[i] - Vector3{ 0.0f, attackPositions_[i].y * 2.0f + 0.1f, 0.0f };
 					attackModels_[i]->SetTexture(attackLangeTex_);
+					attackCollisions_[i].max = attackModels_[i]->position_ + attackSizes_[i];
+					attackCollisions_[i].min = attackModels_[i]->position_ - attackSizes_[i];
 				}
 
 				workAttack_.isStartAttack = true;
@@ -132,7 +134,7 @@ void Enemy::Update() {
 
 	}
 
-	hpSprite_->size_.x = 10.0f * hp_;
+	hpSprite_->size_.x = hpWidth_ * hp_;
 
 }
 
@@ -144,6 +146,10 @@ void Enemy::Attack() {
 		for (uint32_t i = 0; i < workAttack_.attackCount; i++) {
 			
 			attackModels_[i]->position_.y += attackSizes_[i].y * 2.0f / 30.0f;
+
+			if (IsCollision(attackCollisions_[i], player_->GetCollision())) {
+				player_->Damage(3);
+			}
 
 		}
 
