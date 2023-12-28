@@ -53,6 +53,8 @@ public:
 
 	const Sphere& GetCollision() { return collision_; }
 
+	void Damage(uint32_t val) { hp_ -= val; }
+
 private:
 
 	Input* input_ = nullptr;

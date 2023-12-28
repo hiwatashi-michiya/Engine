@@ -35,9 +35,25 @@ void Enemy::Initialize() {
 	workAttack_.startAttackInterval = 90;
 	workAttack_.startAttackTimer = 0;
 
+	workShot_.shotInterval = 180;
+	workShot_.shotCount = 10;
+	workShot_.shotTimer = workShot_.shotInterval;
+
+	bullets_.clear();
+
 }
 
 void Enemy::Update() {
+
+	bullets_.remove_if([](auto& bullet) {
+
+		if (bullet->GetIsDead()) {
+			return true;
+		}
+
+		return false;
+
+		});
 
 	if (!isDead_) {
 
@@ -67,11 +83,35 @@ void Enemy::Update() {
 
 		}
 
+		if (--workShot_.shotTimer <= 0) {
+			AddBullet();
+			workShot_.shotTimer = workShot_.shotInterval;
+		}
+
 		if (hp_ <= 0) {
 			isDead_ = true;
 		}
 
 		
+
+	}
+
+	for (auto& bullet : bullets_) {
+		bullet->Update();
+
+		if (IsCollision(bullet->GetCollision(), player_->GetCollision())) {
+			player_->Damage(1);
+			bullet->SetIsDead(true);
+		}
+
+	}
+
+	for (auto& bullet : bullets_) {
+
+		if (workShot_.shotTimer % 10 == 0 && !bullet->GetIsShot()) {
+			bullet->Shot(player_->GetPosition());
+			break;
+		}
 
 	}
 
@@ -112,6 +152,25 @@ void Enemy::Attack() {
 
 }
 
+void Enemy::AddBullet() {
+
+	for (uint32_t i = 0; i < workShot_.shotCount; i++) {
+
+		std::shared_ptr<EnemyBullet> newBullet = std::make_shared<EnemyBullet>();
+
+		if (i < 5) {
+			newBullet->Initialize(model_->position_ + Vector3{(5.0f + i) * 5.0f, 0.0f, 0.0f});
+		}
+		else {
+			newBullet->Initialize(model_->position_ + Vector3{i * -5.0f, 0.0f, 0.0f });
+		}
+
+		bullets_.push_back(newBullet);
+
+	}
+
+}
+
 void Enemy::Draw(Camera* camera) {
 
 	if (!isDead_) {
@@ -126,6 +185,10 @@ void Enemy::Draw(Camera* camera) {
 			attackModels_[i]->Draw(camera);
 		}
 
+	}
+
+	for (auto& bullet : bullets_) {
+		bullet->Draw(camera);
 	}
 
 }

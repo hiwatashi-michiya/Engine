@@ -5,6 +5,7 @@
 #include "Game/block/block.h"
 #include "Game/player/Player.h"
 #include "Engine/math/Collision.h"
+#include "EnemyBullet.h"
 
 class Enemy
 {
@@ -32,6 +33,8 @@ private:
 
 	void Attack();
 
+	void AddBullet();
+
 private:
 
 
@@ -45,6 +48,13 @@ private:
 		int32_t startAttackTimer; //攻撃中のカウント
 	};
 
+	struct WorkShot
+	{
+		uint32_t shotInterval; //発射間隔
+		uint32_t shotCount; //弾を発射する数
+		int32_t shotTimer; //弾の発射管理をするタイマー
+	};
+
 	std::unique_ptr<Model> model_;
 
 	//攻撃場所を表示する用のモデル
@@ -55,7 +65,12 @@ private:
 	//ブロックリストのポインタ。ブロックを追加するのに使用
 	std::list<std::shared_ptr<Block>>* blocksPtr_ = nullptr;
 
+	//敵弾
+	std::list<std::shared_ptr<EnemyBullet>> bullets_;
+
 	WorkAttack workAttack_;
+
+	WorkShot workShot_;
 
 	//速度
 	Vector3 velocity_{};

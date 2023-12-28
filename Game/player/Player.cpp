@@ -18,6 +18,7 @@ void Player::Initialize() {
 
 	preDirection_ = { 0.0f,0.0f,1.0f };
 
+	isDead_ = false;
 	hp_ = kMaxHp_;
 
 	collision_.center = playerModel_->position_;
@@ -96,7 +97,9 @@ void Player::Update() {
 
 void Player::Draw() {
 
-	playerModel_->Draw(camera_);
+	if (!isDead_) {
+		playerModel_->Draw(camera_);
+	}
 
 }
 
