@@ -3,6 +3,12 @@
 
 Player::Player()
 {
+
+	playerModel_.reset(Model::Create("./resources/cube/cube.obj"));
+	hpTex_ = TextureManager::GetInstance()->Load("./resources/p_life.png");
+
+	hpSprite_.reset(Sprite::Create(hpTex_, { 490.0f,650.0f }));
+
 }
 
 Player::~Player()
@@ -13,8 +19,8 @@ void Player::Initialize() {
 
 	input_ = Input::GetInstance();
 
-	playerModel_.reset(Model::Create("./resources/cube/cube.obj"));
-	playerModel_->scale_.z *= 2.0f;
+	
+	playerModel_->scale_.z = 2.0f;
 
 	preDirection_ = { 0.0f,0.0f,1.0f };
 
@@ -28,6 +34,22 @@ void Player::Initialize() {
 
 	velocity_ = { 0.0f,0.0f,1.0f };
 
+	behavior_ = Behavior::kRoot;
+
+	workDash_.dashParamater_ = 0;
+	workDash_.speed_ = 2.0f;
+	workDash_.dashTime_ = 10;
+
+	workAttack_.blockCount_ = 0;
+	workAttack_.coolTime_ = 0;
+	workAttack_.interval_ = 5;
+
+	workInvincible_.invincibleTimer = 0;
+	workInvincible_.isInvincible = false;
+
+	hpSprite_->size_.x = 10.0f * hp_;
+	hpSprite_->size_.y = 64.0f;
+
 }
 
 void Player::Update() {
@@ -40,6 +62,14 @@ void Player::Update() {
 	isBreak_ = false;
 
 	isAttack_ = false;
+
+	if (workInvincible_.isInvincible) {
+
+		if (--workInvincible_.invincibleTimer <= 0) {
+			workInvincible_.isInvincible = false;
+		}
+
+	}
 
 	directionToDirection_ = MakeIdentity4x4();
 
@@ -93,13 +123,21 @@ void Player::Update() {
 
 	}
 
+	hpSprite_->size_.x = 20.0f * hp_;
+
 }
 
 void Player::Draw() {
 
-	if (!isDead_) {
+	if (!isDead_ && workInvincible_.invincibleTimer % 2 == 0) {
 		playerModel_->Draw(camera_);
 	}
+
+}
+
+void Player::DrawTexture() {
+
+	hpSprite_->Draw();
 
 }
 
@@ -212,5 +250,15 @@ void Player::BehaviorDashUpdate() {
 void Player::BehaviorDashInitialize() {
 
 	workDash_.dashParamater_ = 0;
+
+}
+
+void Player::Damage(uint32_t val) {
+
+	if (!workInvincible_.isInvincible) {
+		hp_ -= val;
+		workInvincible_.invincibleTimer = 60;
+		workInvincible_.isInvincible = true;
+	}
 
 }

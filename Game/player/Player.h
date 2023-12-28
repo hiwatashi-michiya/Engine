@@ -24,6 +24,8 @@ public:
 
 	void Draw();
 
+	void DrawTexture();
+
 	const Vector3& GetLocalPosition() { return playerModel_->position_; }
 
 	Vector3 GetPosition() {
@@ -53,7 +55,9 @@ public:
 
 	const Sphere& GetCollision() { return collision_; }
 
-	void Damage(uint32_t val) { hp_ -= val; }
+	void Damage(uint32_t val);
+
+	bool GetIsInvincible() const { return workInvincible_.isInvincible; }
 
 private:
 
@@ -86,9 +90,19 @@ private:
 		uint32_t coolTime_;
 	};
 
+	//無敵状態ワーク
+	struct WorkInvincible {
+		//無敵中かどうか
+		bool isInvincible;
+		//無敵時間
+		int32_t invincibleTimer;
+	};
+
 	WorkDash workDash_;
 
 	WorkAttack workAttack_;
+
+	WorkInvincible workInvincible_;
 
 	uint32_t kMaxHp_ = 10;
 
@@ -140,5 +154,9 @@ private:
 
 	//当たり判定(球)
 	Sphere collision_{};
+
+	Texture* hpTex_;
+
+	std::unique_ptr<Sprite> hpSprite_;
 
 };

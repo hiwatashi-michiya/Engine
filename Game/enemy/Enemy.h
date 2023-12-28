@@ -19,6 +19,8 @@ public:
 
 	void Draw(Camera* camera);
 
+	void DrawTexture();
+
 	void SetBlockList(std::list<std::shared_ptr<Block>>* ptr) { blocksPtr_ = ptr; }
 
 	void SetPlayer(Player* player) { player_ = player; }
@@ -95,5 +97,9 @@ private:
 	Texture* attackLangeTex_ = nullptr;
 
 	Texture* blockTex_ = nullptr;
+
+	Texture* hpTex_;
+
+	std::unique_ptr<Sprite> hpSprite_;
 
 };

@@ -12,6 +12,12 @@ Enemy::Enemy()
 	attackLangeTex_ = TextureManager::GetInstance()->Load("./resources/enemy/attack.png");
 	blockTex_ = TextureManager::GetInstance()->Load("./resources/cube/stage.png");
 
+	hpTex_ = TextureManager::GetInstance()->Load("./resources/e_life.png");
+
+	hpSprite_.reset(Sprite::Create(hpTex_, { 490.0f,20.0f }));
+	hpSprite_->size_.x = 10.0f * hp_;
+	hpSprite_->size_.y = 64.0f;
+
 }
 
 Enemy::~Enemy()
@@ -38,6 +44,9 @@ void Enemy::Initialize() {
 	workShot_.shotInterval = 180;
 	workShot_.shotCount = 10;
 	workShot_.shotTimer = workShot_.shotInterval;
+
+	hpSprite_->size_.x = 10.0f * hp_;
+	hpSprite_->size_.y = 64.0f;
 
 	bullets_.clear();
 
@@ -99,7 +108,7 @@ void Enemy::Update() {
 	for (auto& bullet : bullets_) {
 		bullet->Update();
 
-		if (IsCollision(bullet->GetCollision(), player_->GetCollision())) {
+		if (IsCollision(bullet->GetCollision(), player_->GetCollision()) && !player_->GetIsInvincible()) {
 			player_->Damage(1);
 			bullet->SetIsDead(true);
 		}
@@ -114,6 +123,8 @@ void Enemy::Update() {
 		}
 
 	}
+
+	hpSprite_->size_.x = 10.0f * hp_;
 
 }
 
@@ -190,5 +201,11 @@ void Enemy::Draw(Camera* camera) {
 	for (auto& bullet : bullets_) {
 		bullet->Draw(camera);
 	}
+
+}
+
+void Enemy::DrawTexture() {
+
+	hpSprite_->Draw();
 
 }

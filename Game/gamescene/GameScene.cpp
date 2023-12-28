@@ -275,6 +275,9 @@ void GameScene::Draw() {
 		bullet->Draw(camera_.get());
 	}
 
+	player_->DrawTexture();
+	enemy_->DrawTexture();
+
 }
 
 Vector3 GameScene::CalcOffset() {
