@@ -1,10 +1,12 @@
 #include "MapEditor.h"
 #include "Externals/imgui/imgui.h"
+#include "Externals/nlohmann/json.hpp"
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <cassert>
+#include <filesystem>
 
 MapEditor* MapEditor::GetInstance() {
 	static MapEditor instance;
@@ -36,6 +38,7 @@ void MapEditor::Edit() {
 
 			if (!CheckIsEmpty(name_)) {
 				AddObject(name_);
+				isSave_ = false;
 			}
 			else {
 				MessageBox(nullptr, L"オブジェクト名を入力してください。", L"Map Editor - Add Object", 0);
@@ -69,7 +72,7 @@ void MapEditor::Edit() {
 	}
 	else {
 
-		ImGui::InputText(".csv", fileName_, sizeof(name_));
+		ImGui::InputText(".json", fileName_, sizeof(fileName_));
 
 		if (ImGui::Button("Create")) {
 
@@ -113,63 +116,46 @@ void MapEditor::Draw(Camera* camera) {
 
 void MapEditor::Save(const std::string& filename) {
 
-	FILE* fp = NULL;
+	nlohmann::json root;
 
-	//ファイルパスの挿入
-	std::string tmpFileName = "./resources/Maps/";
+	root = nlohmann::json::object();
 
-	tmpFileName += filename;
+	root[filename] = nlohmann::json::object();
 
-	tmpFileName += ".csv";
-
-	//以前のファイルデータ削除、新規ファイル作成
-	fopen_s(&fp, tmpFileName.c_str(), "w+b");
-
-	if (fp == NULL) {
-
-		MessageBox(nullptr, L"指定したファイルを開けませんでした。", L"Map Editor - Save", 0);
-
-		return;
-
-	}
-
-	//保険
-	assert(fp != NULL);
-
-	//オブジェクト全てをファイルに保存
 	for (auto& mapObjectData : mapObjData_) {
 
-		fseek(fp, 0, SEEK_END);
-
-		std::string str;
-
-		str += mapObjectData->objName;
-		str += "\n";
-		str += std::to_string(mapObjectData->model->position_.x);
-		str += ",";
-		str += std::to_string(mapObjectData->model->position_.y);
-		str += ",";
-		str += std::to_string(mapObjectData->model->position_.z);
-		str += ",\n";
-		str += std::to_string(mapObjectData->model->rotation_.x);
-		str += ",";
-		str += std::to_string(mapObjectData->model->rotation_.y);
-		str += ",";
-		str += std::to_string(mapObjectData->model->rotation_.z);
-		str += ",\n";
-		str += std::to_string(mapObjectData->model->scale_.x);
-		str += ",";
-		str += std::to_string(mapObjectData->model->scale_.y);
-		str += ",";
-		str += std::to_string(mapObjectData->model->scale_.z);
-		str += ",\n";
-
-		//データをファイルに書き込む
-		fputs(str.c_str(), fp);
+		root[filename][mapObjectData->objName]["position"] =
+			nlohmann::json::array({ mapObjectData->model->position_.x, mapObjectData->model->position_.y, mapObjectData->model->position_.z });
+		root[filename][mapObjectData->objName]["rotation"] =
+			nlohmann::json::array({ mapObjectData->model->rotation_.x, mapObjectData->model->rotation_.y, mapObjectData->model->rotation_.z });
+		root[filename][mapObjectData->objName]["scale"] =
+			nlohmann::json::array({ mapObjectData->model->scale_.x, mapObjectData->model->scale_.y, mapObjectData->model->scale_.z });
 
 	}
 
-	fclose(fp);
+	//ディレクトリが無ければ作成する
+	std::filesystem::path dir(kDirectoryPath_);
+	if (!std::filesystem::exists(dir)) {
+		std::filesystem::create_directory(dir);
+	}
+
+	//書き込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath_ + filename + ".json";
+	//書き込み用ファイルストリーム
+	std::ofstream ofs;
+	//ファイルを書き込み用に開く
+	ofs.open(filePath);
+
+	//ファイルオープン失敗したら表示
+	if (ofs.fail()) {
+		MessageBox(nullptr, L"ファイルを開くのに失敗しました。", L"Map Editor - Save", 0);
+		return;
+	}
+
+	//ファイルにjson文字列を書き込む(インデント幅4)
+	ofs << std::setw(4) << root << std::endl;
+	//ファイルを閉じる
+	ofs.close();
 
 	MessageBox(nullptr, L"セーブしました。", L"Map Editor - Save", 0);
 
@@ -209,55 +195,94 @@ void MapEditor::Close() {
 
 void MapEditor::Load(const std::string& filename) {
 
-	FILE* fp = NULL;
+	//読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath_ + filename + ".json";
+	//読み込み用ファイルストリーム
+	std::ifstream ifs;
+	//ファイルを読み込み用に開く
+	ifs.open(filePath);
 
-	//ファイルパスの挿入
-	std::string tmpFileName = "./resources/Maps/";
-
-	tmpFileName += filename;
-
-	tmpFileName += ".csv";
-
-	fopen_s(&fp, tmpFileName.c_str(), "rb");
-
-	//ファイルが開けなかったらメッセージ表示
-	if (fp == NULL) {
-
+	//ファイルオープン失敗したら表示
+	if (ifs.fail()) {
 		MessageBox(nullptr, L"指定したファイルは存在しません。", L"Map Editor - Load", 0);
-
 		return;
+	}
 
+	nlohmann::json root;
+
+	//json文字列からjsonのデータ構造に展開
+	ifs >> root;
+	//ファイルを閉じる
+	ifs.close();
+	//グループを検索
+	nlohmann::json::iterator itGroup = root.find(filename);
+	//未登録チェック
+	if (itGroup == root.end()) {
+		MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
 	}
 
 	//保険
-	assert(fp != NULL);
+	assert(itGroup != root.end());
 
+	//各アイテムについて
+	for (nlohmann::json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
 
-	{
+		//アイテム名を取得
+		const std::string& itemName = itItem.key();
 
-		char tmpObjName[256];
+		//グループを検索
+		nlohmann::json::iterator itObject = itGroup->find(itemName);
 
-		//オブジェクトのデータを読み取りきるまで回す
-		while (fscanf_s(fp, "%255s",&tmpObjName, static_cast<unsigned int>(sizeof(tmpObjName))) != EOF)
-		{
-
-			std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
-			mapObject->isSelect = true;
-			mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
-
-			//モデルのSRT取得
-			fscanf_s(fp, "%f,%f,%f,%f,%f,%f,%f,%f,%f,",
-				&mapObject->model->position_.x, &mapObject->model->position_.y, &mapObject->model->position_.z,
-				&mapObject->model->rotation_.x, &mapObject->model->rotation_.y, &mapObject->model->rotation_.z,
-				&mapObject->model->scale_.x, &mapObject->model->scale_.y, &mapObject->model->scale_.z);
-
-			mapObject->objName = tmpObjName;
-			mapObjData_.push_back(mapObject);
+		//未登録チェック
+		if (itObject == itGroup->end()) {
+			MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
 		}
 
+		//保険
+		assert(itObject != itGroup->end());
+
+		std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+
+		mapObject->isSelect = true;
+		mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
+		mapObject->objName = itemName;
+
+		uint32_t roopCount = 0;
+
+		for (nlohmann::json::iterator itItemObject = itObject->begin(); itItemObject != itObject->end(); ++itItemObject) {
+
+			//アイテム名を取得
+			const std::string& itemNameObject = itItemObject.key();
+
+			//要素数3の配列であれば
+			if (itItemObject->is_array() && itItemObject->size() == 3) {
+
+				if (roopCount == 0) {
+					//float型のjson配列登録
+					mapObject->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+				}
+				else if (roopCount == 1) {
+					//float型のjson配列登録
+					mapObject->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+				}
+				else if (roopCount == 2) {
+					//float型のjson配列登録
+					mapObject->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+				}
+
+			}
+			//文字列の場合
+			else {
+				
+			}
+
+			roopCount++;
+
+		}
+
+		mapObjData_.push_back(mapObject);
+
 	}
-	
-	fclose(fp);
 
 	isOpenFile_ = true;
 
@@ -265,48 +290,31 @@ void MapEditor::Load(const std::string& filename) {
 
 void MapEditor::Create(const std::string& filename) {
 
-	FILE* fp = NULL;
+	//読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath_ + filename + ".json";
 
-	//ファイルパスの挿入
-	std::string tmpFileName = "./resources/Maps/";
+	std::filesystem::path path(filePath);
 
-	tmpFileName += filename;
+	//ファイルパスが存在するか確認
+	if (std::filesystem::exists(path)) {
 
-	tmpFileName += ".csv";
-
-	//作成する前に、同名ファイルがあるかチェック
-	fopen_s(&fp, tmpFileName.c_str(), "rb");
-
-	if (fp != NULL) {
-
-		//作成しないならファイルをそのまま閉じて戻る
 		if (MessageBox(nullptr, L"同名ファイルが既にあります。上書きしますか？", L"Map Editor - Create", MB_OKCANCEL) == IDCANCEL) {
-
-			fclose(fp);
 
 			return;
 
 		}
 
-		fclose(fp);
-
 	}
+
+	std::ofstream newFile(filePath);
 
 	//新規ファイル作成
-	fopen_s(&fp, tmpFileName.c_str(), "w");
-
-	if (fp == NULL) {
-
-		MessageBox(nullptr, L"ファイルの作成に失敗しました。", L"Map Editor - Create", 0);
-
-		return;
-
+	if (newFile.is_open()) {
+		newFile.close();
 	}
-
-	//保険
-	assert(fp != NULL);
-
-	fclose(fp);
+	else {
+		MessageBox(nullptr, L"ファイルを作成できませんでした。", L"Map Editor - Create", 0);
+	}
 
 	isOpenFile_ = true;
 

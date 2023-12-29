@@ -17,6 +17,8 @@ public:
 
 	void Draw(Camera* camera);
 
+	const std::string& kDirectoryPath_ = "./resources/Maps/";
+
 //関数
 private:
 
