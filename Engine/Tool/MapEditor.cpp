@@ -15,6 +15,12 @@ MapEditor* MapEditor::GetInstance() {
 
 void MapEditor::Initialize() {
 
+	for (const auto& tag : tagData_) {
+
+		tags_.push_back(tag.c_str());
+
+	}
+
 }
 
 void MapEditor::Edit() {
@@ -45,6 +51,20 @@ void MapEditor::Edit() {
 			}
 		}
 
+		ImGui::InputText("Tag name", tagName_, sizeof(tagName_));
+
+		if (ImGui::Button("Add Tag")) {
+
+			if (!CheckIsEmpty(tagName_)) {
+				AddTag(tagName_);
+				isSave_ = false;
+			}
+			else {
+				MessageBox(nullptr, L"タグ名を入力してください。", L"Map Editor - Add Tag", 0);
+			}
+
+		}
+
 		for (auto& mapObjectData : mapObjData_) {
 
 			std::string showObjName = mapObjectData->objName.c_str();
@@ -61,6 +81,11 @@ void MapEditor::Edit() {
 				}
 
 				if (ImGui::DragFloat3("scale", &mapObjectData->model->scale_.x, 0.01f)) {
+					isSave_ = false;
+				}
+
+				if (ImGui::Combo("tag", &mapObjectData->tagNumber, tags_.data(), tags_.size())) {
+					mapObjectData->tag = tags_[mapObjectData->tagNumber];
 					isSave_ = false;
 				}
 
@@ -122,14 +147,25 @@ void MapEditor::Save(const std::string& filename) {
 
 	root[filename] = nlohmann::json::object();
 
+	//設定したタグを保存
+	nlohmann::json tagArray;
+
+	for (const auto& tag : tagData_) {
+		tagArray += tag;
+	}
+
+	root[filename]["tags"] = tagArray;
+
 	for (auto& mapObjectData : mapObjData_) {
 
-		root[filename][mapObjectData->objName]["position"] =
+		root[filename]["objectData"][mapObjectData->objName]["position"] =
 			nlohmann::json::array({ mapObjectData->model->position_.x, mapObjectData->model->position_.y, mapObjectData->model->position_.z });
-		root[filename][mapObjectData->objName]["rotation"] =
+		root[filename]["objectData"][mapObjectData->objName]["rotation"] =
 			nlohmann::json::array({ mapObjectData->model->rotation_.x, mapObjectData->model->rotation_.y, mapObjectData->model->rotation_.z });
-		root[filename][mapObjectData->objName]["scale"] =
+		root[filename]["objectData"][mapObjectData->objName]["scale"] =
 			nlohmann::json::array({ mapObjectData->model->scale_.x, mapObjectData->model->scale_.y, mapObjectData->model->scale_.z });
+		mapObjectData->tag = tags_[mapObjectData->tagNumber];
+		root[filename]["objectData"][mapObjectData->objName]["tag"] = mapObjectData->tag;
 
 	}
 
@@ -189,6 +225,14 @@ void MapEditor::Close() {
 
 	mapObjData_.clear();
 
+	tagData_.clear();
+
+	tagData_ = { "None" };
+
+	tags_.clear();
+
+	tags_ = { "None" };
+
 	isOpenFile_ = false;
 
 }
@@ -241,46 +285,74 @@ void MapEditor::Load(const std::string& filename) {
 		//保険
 		assert(itObject != itGroup->end());
 
-		std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+		//アイテム名がオブジェクトデータだった場合、登録
+		if (itemName == "objectData") {
 
-		mapObject->isSelect = true;
-		mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
-		mapObject->objName = itemName;
+			//各オブジェクトについて
+			for (nlohmann::json::iterator itObjectData = itObject->begin(); itObjectData != itObject->end(); ++itObjectData) {
 
-		uint32_t roopCount = 0;
+				//アイテム名を取得
+				const std::string& objectName = itObjectData.key();
 
-		for (nlohmann::json::iterator itItemObject = itObject->begin(); itItemObject != itObject->end(); ++itItemObject) {
+				//グループを検索
+				nlohmann::json::iterator itData = itObject->find(objectName);
 
-			//アイテム名を取得
-			const std::string& itemNameObject = itItemObject.key();
-
-			//要素数3の配列であれば
-			if (itItemObject->is_array() && itItemObject->size() == 3) {
-
-				if (roopCount == 0) {
-					//float型のjson配列登録
-					mapObject->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+				//未登録チェック
+				if (itData == itObject->end()) {
+					MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
 				}
-				else if (roopCount == 1) {
-					//float型のjson配列登録
-					mapObject->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+
+				//保険
+				assert(itData != itObject->end());
+
+				std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+
+				mapObject->isSelect = true;
+				mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
+				mapObject->objName = objectName;
+
+				uint32_t roopCount = 0;
+
+				for (nlohmann::json::iterator itItemObject = itData->begin(); itItemObject != itData->end(); ++itItemObject) {
+
+					//アイテム名を取得
+					const std::string& itemNameObject = itItemObject.key();
+
+					//要素数3の配列であれば
+					if (itItemObject->is_array() && itItemObject->size() == 3) {
+
+						if (roopCount == 0) {
+							//float型のjson配列登録
+							mapObject->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+						}
+						else if (roopCount == 1) {
+							//float型のjson配列登録
+							mapObject->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+						}
+						else if (roopCount == 2) {
+							//float型のjson配列登録
+							mapObject->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+						}
+
+					}
+					//文字列の場合
+					else {
+
+						if (roopCount == 3) {
+							mapObject->tag = itItemObject.value();
+						}
+
+					}
+
+					roopCount++;
+
 				}
-				else if (roopCount == 2) {
-					//float型のjson配列登録
-					mapObject->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
-				}
+
+				mapObjData_.push_back(mapObject);
 
 			}
-			//文字列の場合
-			else {
-				
-			}
-
-			roopCount++;
 
 		}
-
-		mapObjData_.push_back(mapObject);
 
 	}
 
@@ -334,6 +406,20 @@ void MapEditor::AddObject(char* name) {
 	mapObject->model->position_ = spawnPoint_;
 
 	mapObjData_.push_back(mapObject);
+
+}
+
+void MapEditor::AddTag(const std::string& tagname) {
+
+	tagData_.push_back(tagname);
+
+	tags_.clear();
+
+	for (const auto& tag : tagData_) {
+
+		tags_.push_back(tag.c_str());
+
+	}
 
 }
 

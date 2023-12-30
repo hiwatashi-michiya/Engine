@@ -4,6 +4,7 @@
 #include "Engine/3d/Model.h"
 #include "Engine/Tool/GlobalVariables.h"
 #include <string>
+#include <vector>
 
 class MapEditor
 {
@@ -34,6 +35,8 @@ private:
 
 	bool CheckIsEmpty(const std::string& name);
 
+	void AddTag(const std::string& tagname);
+
 	//同名オブジェクトを探す
 	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
 
@@ -47,6 +50,11 @@ private:
 		std::string objName;
 
 		std::unique_ptr<Model> model;
+
+		//オブジェクトの役割を表すタグ
+		std::string tag;
+
+		int32_t tagNumber = 0;
 
 		bool isSelect = false;
 
@@ -67,6 +75,12 @@ private:
 	char fileName_[256];
 
 	bool isSave_ = true;
+
+	char tagName_[256];
+
+	std::vector<std::string> tagData_ = { "None" };
+
+	std::vector<const char*> tags_;
 
 private:
 
