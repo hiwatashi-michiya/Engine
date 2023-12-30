@@ -1,0 +1,116 @@
+{
+    "test": {
+        "objectData": {
+            "cube": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    6.599999904632568,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    2.990000009536743,
+                    6.53000020980835
+                ],
+                "tag": "None",
+                "tagNumber": 0
+            },
+            "cube1": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    0.0,
+                    -3.200000047683716,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    3.359999895095825,
+                    0.8799999952316284,
+                    8.050000190734863
+                ],
+                "tag": "Player",
+                "tagNumber": 1
+            },
+            "plane": {
+                "mesh": "plane",
+                "meshNumber": 2,
+                "position": [
+                    0.800000011920929,
+                    0.0,
+                    4.599999904632568
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    4.039999961853027,
+                    1.6299999952316284,
+                    2.640000104904175
+                ],
+                "tag": "enemy",
+                "tagNumber": 2
+            },
+            "sphere": {
+                "mesh": "sphere",
+                "meshNumber": 1,
+                "position": [
+                    2.5999999046325684,
+                    3.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "enemy",
+                "tagNumber": 2
+            },
+            "sphere1": {
+                "mesh": "sphere",
+                "meshNumber": 1,
+                "position": [
+                    0.0,
+                    -2.200000047683716,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.03999999910593033,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.059999942779541,
+                    1.0
+                ],
+                "tag": "enemy",
+                "tagNumber": 2
+            }
+        },
+        "tags": [
+            "None",
+            "Player",
+            "enemy"
+        ]
+    }
+}
