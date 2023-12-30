@@ -40,6 +40,11 @@ private:
 	//同名オブジェクトを探す
 	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
 
+	//同名タグを探す
+	bool CheckSameTag(const std::string& name);
+
+	void ChangeMesh(Model* model, const std::string& name);
+
 //変数
 private:
 
@@ -50,6 +55,11 @@ private:
 		std::string objName;
 
 		std::unique_ptr<Model> model;
+
+		//メッシュ
+		std::string meshName;
+
+		int32_t meshNumber = 0;
 
 		//オブジェクトの役割を表すタグ
 		std::string tag;
@@ -81,6 +91,8 @@ private:
 	std::vector<std::string> tagData_ = { "None" };
 
 	std::vector<const char*> tags_;
+
+	std::vector<const char*> meshNames_ = { "cube", "sphere", "plane" };
 
 private:
 

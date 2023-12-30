@@ -89,6 +89,12 @@ void MapEditor::Edit() {
 					isSave_ = false;
 				}
 
+				if (ImGui::Combo("mesh", &mapObjectData->meshNumber, meshNames_.data(), meshNames_.size())) {
+					mapObjectData->meshName = meshNames_[mapObjectData->meshNumber];
+					ChangeMesh(mapObjectData->model.get(), mapObjectData->meshName);
+					isSave_ = false;
+				}
+
 				ImGui::TreePop();
 			}
 
@@ -166,6 +172,10 @@ void MapEditor::Save(const std::string& filename) {
 			nlohmann::json::array({ mapObjectData->model->scale_.x, mapObjectData->model->scale_.y, mapObjectData->model->scale_.z });
 		mapObjectData->tag = tags_[mapObjectData->tagNumber];
 		root[filename]["objectData"][mapObjectData->objName]["tag"] = mapObjectData->tag;
+		root[filename]["objectData"][mapObjectData->objName]["tagNumber"] = mapObjectData->tagNumber;
+		mapObjectData->meshName = meshNames_[mapObjectData->meshNumber];
+		root[filename]["objectData"][mapObjectData->objName]["mesh"] = mapObjectData->meshName;
+		root[filename]["objectData"][mapObjectData->objName]["meshNumber"] = mapObjectData->meshNumber;
 
 	}
 
@@ -321,25 +331,40 @@ void MapEditor::Load(const std::string& filename) {
 					//要素数3の配列であれば
 					if (itItemObject->is_array() && itItemObject->size() == 3) {
 
-						if (roopCount == 0) {
+						//名前がpositionだった場合、positionを登録
+						if (itemNameObject == "position") {
 							//float型のjson配列登録
 							mapObject->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
-						else if (roopCount == 1) {
+						//名前がrotationだった場合、rotationを登録
+						else if (itemNameObject == "rotation") {
 							//float型のjson配列登録
 							mapObject->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
-						else if (roopCount == 2) {
+						//名前がscaleだった場合、scaleを登録
+						else if (itemNameObject == "scale") {
 							//float型のjson配列登録
 							mapObject->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 
 					}
-					//文字列の場合
+					//Vector3以外の場合
 					else {
 
-						if (roopCount == 3) {
+						//タグを登録
+						if (itemNameObject == "tag") {
 							mapObject->tag = itItemObject.value();
+						}
+						else if (itemNameObject == "tagNumber") {
+							mapObject->tagNumber = itItemObject->get<int32_t>();
+						}
+						//メッシュを登録
+						else if (itemNameObject == "mesh") {
+							mapObject->meshName = itItemObject.value();
+							ChangeMesh(mapObject->model.get(), mapObject->meshName);
+						}
+						else if (itemNameObject == "meshNumber") {
+							mapObject->meshNumber = itItemObject->get<int32_t>();
 						}
 
 					}
@@ -353,7 +378,22 @@ void MapEditor::Load(const std::string& filename) {
 			}
 
 		}
+		//追加したタグを登録
+		else if (itemName == "tags") {
+			
+			/*tagData_.clear();*/
 
+			tagData_ = root[filename]["tags"];
+
+			tags_.clear();
+
+			for (const auto& tag : tagData_) {
+
+				tags_.push_back(tag.c_str());
+
+			}
+
+		}
 	}
 
 	isOpenFile_ = true;
@@ -411,6 +451,14 @@ void MapEditor::AddObject(char* name) {
 
 void MapEditor::AddTag(const std::string& tagname) {
 
+	if (CheckSameTag(tagname)) {
+
+		MessageBox(nullptr, L"既に同名のタグがあります。", L"Map Editor - Add Tag", 0);
+
+		return;
+
+	}
+
 	tagData_.push_back(tagname);
 
 	tags_.clear();
@@ -420,6 +468,8 @@ void MapEditor::AddTag(const std::string& tagname) {
 		tags_.push_back(tag.c_str());
 
 	}
+
+	
 
 }
 
@@ -441,6 +491,31 @@ std::string MapEditor::CheckSameName(std::string name, uint32_t addNumber) {
 	}
 
 	return newName;
+
+}
+
+bool MapEditor::CheckSameTag(const std::string& name) {
+
+	std::string newName = name;
+
+	for (auto& tag : tagData_) {
+
+		if (tag.c_str() == newName) {
+			return true;
+		}
+
+	}
+
+	return false;
+
+}
+
+void MapEditor::ChangeMesh(Model* model, const std::string& name) {
+
+	std::string newMeshName = "./resources/";
+	newMeshName += name + "/" + name;
+	newMeshName += ".obj";
+	model->SetMesh(newMeshName);
 
 }
 
