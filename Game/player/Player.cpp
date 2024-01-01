@@ -9,6 +9,15 @@ Player::Player()
 
 	hpSprite_.reset(Sprite::Create(hpTex_, { 490.0f,650.0f }));
 
+	ui_1_ = TextureManager::GetInstance()->Load("./resources/ui_1.png");
+	ui_2_ = TextureManager::GetInstance()->Load("./resources/ui_2.png");
+	ui_3_ = TextureManager::GetInstance()->Load("./resources/ui_3.png");
+
+	ui_A_.reset(Sprite::Create(ui_1_, { 1000.0f,450.0f }));
+	ui_LB_.reset(Sprite::Create(ui_2_, { 1000.0f,550.0f }));
+	ui_RB_.reset(Sprite::Create(ui_3_, { 872.0f,650.0f }));
+
+
 }
 
 Player::~Player()
@@ -147,6 +156,10 @@ void Player::Draw() {
 void Player::DrawTexture() {
 
 	hpSprite_->Draw();
+
+	ui_A_->Draw();
+	ui_LB_->Draw();
+	ui_RB_->Draw();
 
 }
 

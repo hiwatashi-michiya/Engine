@@ -161,6 +161,14 @@ private:
 
 	std::unique_ptr<Sprite> hpSprite_;
 
+	Texture* ui_1_;
+	Texture* ui_2_;
+	Texture* ui_3_;
+
+	std::unique_ptr<Sprite> ui_A_;
+	std::unique_ptr<Sprite> ui_LB_;
+	std::unique_ptr<Sprite> ui_RB_;
+
 	uint32_t dashSE_;
 	uint32_t deathSE_;
 	uint32_t shootSE_;

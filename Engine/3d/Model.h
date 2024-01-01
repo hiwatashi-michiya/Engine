@@ -73,6 +73,8 @@ public:
 
 	Model* parent_ = nullptr;
 
+	Vector4 color_{ 1.0f,1.0f,1.0f,1.0f };
+
 private:
 
 	//静的メンバ変数

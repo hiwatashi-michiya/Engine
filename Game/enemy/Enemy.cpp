@@ -126,7 +126,7 @@ void Enemy::Update() {
 
 	for (auto& bullet : bullets_) {
 
-		if (workShot_.shotTimer % 10 == 0 && !bullet->GetIsShot()) {
+		if (workShot_.shotTimer % 10 == 0 && workShot_.shotTimer <= 120 && !bullet->GetIsShot()) {
 			bullet->Shot(player_->GetPosition());
 			audioManager_->Play(shotSE_, 0.2f);
 			break;
@@ -188,10 +188,10 @@ void Enemy::AddBullet() {
 		std::shared_ptr<EnemyBullet> newBullet = std::make_shared<EnemyBullet>();
 
 		if (i < 5) {
-			newBullet->Initialize(model_->position_ + Vector3{(5.0f + i) * 5.0f, 0.0f, 0.0f});
+			newBullet->Initialize(model_->position_ + Vector3{(5.0f + i) * 5.0f, float(rand() % 10 - 5), float(rand() % 10 - 5) });
 		}
 		else {
-			newBullet->Initialize(model_->position_ + Vector3{i * -5.0f, 0.0f, 0.0f });
+			newBullet->Initialize(model_->position_ + Vector3{i * -5.0f, float(rand() % 10 - 5), float(rand() % 10 - 5) });
 		}
 
 		bullets_.push_back(newBullet);
