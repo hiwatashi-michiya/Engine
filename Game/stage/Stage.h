@@ -50,7 +50,7 @@ private:
 
 	std::list<std::shared_ptr<MapObject>> mapObjData_;
 
-	std::list<Block> blocks_;
+	std::list<std::shared_ptr<Block>> blocks_;
 
 };
 

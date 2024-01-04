@@ -50,7 +50,7 @@ void Player::Update() {
 
 	// 回転
 	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
-		model_->rotation_ = 
+		model_->rotation_.y = float(std::atan2(double(move.x), double(move.z)));
 	}
 
 }

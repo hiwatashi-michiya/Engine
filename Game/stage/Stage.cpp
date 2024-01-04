@@ -22,6 +22,12 @@ void Stage::Update() {
 
 	player_->Update();
 
+	for (auto& block : blocks_) {
+		block->Update();
+	}
+
+
+
 }
 
 void Stage::Draw(Camera* camera) {

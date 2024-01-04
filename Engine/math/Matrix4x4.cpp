@@ -533,7 +533,7 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
 	result.m[0][2] = 2.0f * (quaternion.x * quaternion.z - quaternion.w * quaternion.y);
 	result.m[0][3] = 0.0f;
 
-
+	
 	result.m[1][0] = 2.0f * (quaternion.x * quaternion.y - quaternion.w * quaternion.z);
 	result.m[1][1] = quaternion.w * quaternion.w - quaternion.x * quaternion.x +
 		quaternion.y * quaternion.y - quaternion.z * quaternion.z;

@@ -3,6 +3,7 @@
 #include <memory>
 #include "Engine/input/Input.h"
 #include "Engine/math/Quaternion.h"
+#include "Engine/math/Collision.h"
 
 class Player
 {
@@ -29,6 +30,8 @@ private:
 	bool canJump_ = true;
 
 	Quaternion rotation_;
+
+	Sphere collision_{};
 
 };
 

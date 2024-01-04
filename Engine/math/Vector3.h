@@ -14,7 +14,8 @@ public:
 	static const Vector3 Zero() { return Vector3{ 0.0f,0.0f,0.0f }; }
 
 	//全ての要素を1.0fで返す
-	static const Vector3 Identity(){ return Vector3{ 1.0f,1.0f,1.0f }; }
+	static const Vector3 Identity() { return Vector3{ 1.0f,1.0f,1.0f }; }
+
 
 	Vector3& operator*=(float s) { x *= s; y *= s; z *= s; return *this; }
 	Vector3& operator-=(const Vector3& v) { x -= v.x;  y -= v.y; z -= v.z; return *this; }
@@ -110,6 +111,8 @@ struct Capsule {
 
 class Matrix4x4;
 
+class Quaternion;
+
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
@@ -123,7 +126,7 @@ float Length(const Vector3& v);
 Vector3 Normalize(const Vector3& v);
 
 //座標変換
-Vector3 CoordTransform(const Vector3& vector, const Matrix4x4& matrix);
+Vector3 TransformCoord(const Vector3& vector, const Matrix4x4& matrix);
 
 //ベクトル変換(スケールと回転)
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
@@ -139,8 +142,6 @@ Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
 
 Vector3 CatmullRomPoint(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
 
-float Clamp(float x, float min, float max);
-
 Vector3 Project(const Vector3& v1, const Vector3& v2);
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 
@@ -149,6 +150,9 @@ Vector3 Perpendicular(const Vector3& vector);
 
 //反射ベクトル
 Vector3 Reflect(const Vector3& input, const Vector3& normal);
+
+//ベクトルをクォータニオンで回転させた結果のベクトルを求める
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
 
 void ClampAABB(AABB& aabb);
 

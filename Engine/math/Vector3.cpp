@@ -1,6 +1,7 @@
 #include "Vector3.h"
 #include <math.h>
 #include "Matrix4x4.h"
+#include "Quaternion.h"
 #include <cassert>
 #include <iostream>
 #include <algorithm>
@@ -82,7 +83,7 @@ Vector3 Normalize(const Vector3& v) {
 	return newV;
 }
 
-Vector3 CoordTransform(const Vector3& vector, const Matrix4x4& matrix) {
+Vector3 TransformCoord(const Vector3& vector, const Matrix4x4& matrix) {
 
 	Vector3 result = {};
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] +
@@ -127,7 +128,7 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 //線形補間
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 
-	t = Clamp(t, 0, 1.0f);
+	t = std::clamp(t, 0.0f, 1.0f);
 
 	Vector3 p = Vector3(
 		v1.x + t * (v2.x - v1.x),
@@ -142,9 +143,9 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 //球面線形補間
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 
-	t = Clamp(t, 0, 1.0f);
+	t = std::clamp(t, 0.0f, 1.0f);
 
-	float theta = acosf(Clamp(Dot(v1, v2), 0, 1.0f) / (Length(v1) * Length(v2)));
+	float theta = acosf(std::clamp(Dot(v1, v2), 0.0f, 1.0f) / (Length(v1) * Length(v2)));
 
 	float s = (1.0f - t) * Length(v1) + t * Length(v2);
 
@@ -177,20 +178,6 @@ Vector3 CatmullRomPoint(const Vector3& p0, const Vector3& p1, const Vector3& p2,
 		(-p0.z + p2.z) * t + (2 * p1.z)) / 2.0f;
 
 	return p;
-
-}
-
-float Clamp(float x, float min, float max) {
-
-	if (x > max) {
-		return max;
-	}
-
-	if (x < min) {
-		return min;
-	}
-
-	return x;
 
 }
 
@@ -232,6 +219,26 @@ Vector3 Reflect(const Vector3& input, const Vector3& normal) {
 	r = Subtract(input, Multiply(2 * Dot(input, normal), normal));
 
 	return r;
+
+}
+
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
+
+	//正規化前提
+	Quaternion normQr = Normalize(quaternion);
+
+	Quaternion qr;
+
+	qr.w = 0.0f;
+	qr.x = vector.x;
+	qr.y = vector.y;
+	qr.z = vector.z;
+
+	qr = normQr * qr * Inverse(normQr);
+
+	Vector3 result = { qr.x,qr.y,qr.z };
+
+	return result;
 
 }
 
