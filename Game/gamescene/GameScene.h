@@ -36,12 +36,8 @@ private:
 	MapEditor* mapEditor_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;	
-	
-	Texture* tex_;
-	Texture* tex2_;
 
-	std::unique_ptr<Model> model_;
-	std::unique_ptr<Model> model2_;
+	std::unique_ptr<Stage> stage_;
 
 };
 

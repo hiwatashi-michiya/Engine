@@ -9,9 +9,9 @@ Particle::~Particle()
 {
 }
 
-void Particle::Initialize(const Type& type) {
+void Particle::Initialize(const Dimension& dimension) {
 
-	type_ = type;
+	dimension_ = dimension;
 
 }
 

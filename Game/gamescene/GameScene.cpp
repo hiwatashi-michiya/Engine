@@ -9,11 +9,6 @@
 GameScene::GameScene()
 {
 
-	tex_ = TextureManager::GetInstance()->Load("./resources/plane/uvChecker.png");
-	tex2_ = TextureManager::GetInstance()->Load("./resources/Texture/block.png");
-	model_.reset(Model::Create("./resources/cube/cube.obj"));
-	model2_.reset(Model::Create("./resources/cube/cube.obj"));
-
 }
 
 GameScene::~GameScene()
@@ -29,13 +24,15 @@ void GameScene::Initialize() {
 
 	mapEditor_->Initialize();
 
-	model_->position_.x = 2.0f;
-
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,10.0f, -30.0f };
 	camera_->rotation_.x = 0.3f;
 	
+	stage_ = std::make_unique<Stage>();
+
+	stage_->Initialize();
+
 }
 
 void GameScene::Update() {
@@ -54,17 +51,16 @@ void GameScene::Update() {
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
 
+	stage_->Update();
+
 	mapEditor_->Edit();
-
-	if (input_->TriggerKey(DIK_Q)) {
-		model2_->SetTexture(tex_);
-	}
-
 
 }
 
 void GameScene::Draw() {
 
 	mapEditor_->Draw(camera_.get());
+
+	stage_->Draw(camera_.get());
 
 }

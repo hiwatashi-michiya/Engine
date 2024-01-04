@@ -10,12 +10,16 @@ public:
 	~Particle();
 
 	//3dか2dか
-	enum Type 
+	enum Dimension 
 	{
 		k3D,
 	};
 
-	void Initialize(const Type& type);
+	enum Type {
+		kCircle,
+	};
+
+	void Initialize(const Dimension& dimension);
 
 	void Reset();
 
@@ -30,6 +34,8 @@ public:
 private:
 
 	std::vector<std::shared_ptr<Particle3D>> particles3D_;
+
+	Dimension dimension_;
 
 	Type type_;
 

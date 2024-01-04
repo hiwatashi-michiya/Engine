@@ -1,5 +1,7 @@
 #include "Stage.h"
 #include "Engine/math/Collision.h"
+#include "Externals/nlohmann/json.hpp"
+#include <fstream>
 
 Stage::Stage()
 {
@@ -11,169 +13,153 @@ Stage::~Stage()
 
 void Stage::Initialize() {
 
-	for (int i = 0; i < 5; i++) {
-		modelFloor_[i].reset(Model::Create("ground"));
-
-		if (i < 2) {
-			worldTransforms_[i].scale_ = { 5.0f,1.0f,5.0f };
-			worldTransforms_[i].translation_ = { 0.0f,0.0f, i * 10.0f };
-		}
-		else {
-			worldTransforms_[i].scale_ = { 10.0f,1.0f,10.0f };
-			worldTransforms_[i].translation_ = { 0.0f,0.0f, i * 20.0f - 15.0f };
-		}
-
-		obbs_[i].center = worldTransforms_[i].translation_;
-		obbs_[i].orientations[0] = { 1.0f,0.0f,0.0f };
-		obbs_[i].orientations[1] = { 0.0f,1.0f,0.0f };
-		obbs_[i].orientations[2] = { 0.0f,0.0f,1.0f };
-		obbs_[i].size = worldTransforms_[i].scale_;
-	}
-
-	modelGoal_.reset(Model::Create("goal"));
-	worldTransformGoal_.translation_ = { 0.0f,1.0f,65.0f };
-	obbGoal_.center = worldTransformGoal_.translation_;
-	obbGoal_.orientations[0] = { 1.0f,0.0f,0.0f };
-	obbGoal_.orientations[1] = { 0.0f,1.0f,0.0f };
-	obbGoal_.orientations[2] = { 0.0f,0.0f,1.0f };
-	obbGoal_.size = worldTransformGoal_.scale_;
-
-	velocity_[0] = { -0.1f,0.0f,0.0f };
-	velocity_[1] = { 0.1f,0.0f,0.0f };
+	player_ = std::make_unique<Player>();
+	player_->Initialize();
 
 }
 
 void Stage::Update() {
 
-	worldTransforms_[1].translation_ += velocity_[0];
-	worldTransforms_[3].translation_ += velocity_[1];
-
-	if (worldTransforms_[1].translation_.x < -10.0f) {
-		velocity_[0] *= -1.0f;
-	}
-
-	if (worldTransforms_[1].translation_.x > 10.0f) {
-		velocity_[0] *= -1.0f;
-	}
-
-	if (worldTransforms_[3].translation_.x < -10.0f) {
-		velocity_[1] *= -1.0f;
-	}
-
-	if (worldTransforms_[3].translation_.x > 10.0f) {
-		velocity_[1] *= -1.0f;
-	}
-
-	for (int i = 0; i < 5; i++) {
-		worldTransforms_[i].UpdateMatrix();
-	}
-
-	worldTransformGoal_.UpdateMatrix();
-
-	SetOBB();
+	player_->Update();
 
 }
 
-void Stage::Draw() {
+void Stage::Draw(Camera* camera) {
 
-	/*for (int i = 0; i < 5; i++) {
-		modelFloor_[i]->Draw();
-	}
-
-	modelGoal_->Draw();*/
+	player_->Draw(camera);
 
 }
 
-void Stage::Collision(Player* player, Enemy* enemy) {
+void Stage::LoadStage(const std::string& filename) {
 
-	for (size_t i = 0; i < 5; i++) {
+	//読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath_ + filename + ".json";
+	//読み込み用ファイルストリーム
+	std::ifstream ifs;
+	//ファイルを読み込み用に開く
+	ifs.open(filePath);
 
-		if (IsCollision(obbs_[i], enemy->GetOBB())) {
-			enemy->SetPositionY(worldTransforms_[i].translation_.y + enemy->GetOBB().size.y);
-			enemy->SetOBB();
+	//ファイルオープン失敗したら表示
+	if (ifs.fail()) {
+		MessageBox(nullptr, L"指定したファイルは存在しません。", L"Map Editor - Load", 0);
+		return;
+	}
+
+	nlohmann::json root;
+
+	//json文字列からjsonのデータ構造に展開
+	ifs >> root;
+	//ファイルを閉じる
+	ifs.close();
+	//グループを検索
+	nlohmann::json::iterator itGroup = root.find(filename);
+	//未登録チェック
+	if (itGroup == root.end()) {
+		MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
+	}
+
+	//保険
+	assert(itGroup != root.end());
+
+	//各アイテムについて
+	for (nlohmann::json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
+
+		//アイテム名を取得
+		const std::string& itemName = itItem.key();
+
+		//グループを検索
+		nlohmann::json::iterator itObject = itGroup->find(itemName);
+
+		//未登録チェック
+		if (itObject == itGroup->end()) {
+			MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
 		}
 
-	}
+		//保険
+		assert(itObject != itGroup->end());
 
-	for (size_t i = 0; i < 5; i++) {
+		//アイテム名がオブジェクトデータだった場合、登録
+		if (itemName == "objectData") {
 
-		if (IsCollision(obbs_[i], player->GetOBB())) {
-			player->SetParent(&worldTransforms_[i]);
-			if (i == 1) {
-				player->SetPosition(player->GetTranslation() + velocity_[0]);
+			//各オブジェクトについて
+			for (nlohmann::json::iterator itObjectData = itObject->begin(); itObjectData != itObject->end(); ++itObjectData) {
+
+				//アイテム名を取得
+				const std::string& objectName = itObjectData.key();
+
+				//グループを検索
+				nlohmann::json::iterator itData = itObject->find(objectName);
+
+				//未登録チェック
+				if (itData == itObject->end()) {
+					MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
+				}
+
+				//保険
+				assert(itData != itObject->end());
+
+				std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+
+				mapObject->isSelect = true;
+				mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
+				mapObject->objName = objectName;
+
+				uint32_t roopCount = 0;
+
+				for (nlohmann::json::iterator itItemObject = itData->begin(); itItemObject != itData->end(); ++itItemObject) {
+
+					//アイテム名を取得
+					const std::string& itemNameObject = itItemObject.key();
+
+					//要素数3の配列であれば
+					if (itItemObject->is_array() && itItemObject->size() == 3) {
+
+						//名前がpositionだった場合、positionを登録
+						if (itemNameObject == "position") {
+							//float型のjson配列登録
+							mapObject->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+						}
+						//名前がrotationだった場合、rotationを登録
+						else if (itemNameObject == "rotation") {
+							//float型のjson配列登録
+							mapObject->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+						}
+						//名前がscaleだった場合、scaleを登録
+						else if (itemNameObject == "scale") {
+							//float型のjson配列登録
+							mapObject->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+						}
+
+					}
+					//Vector3以外の場合
+					else {
+
+						//タグを登録
+						if (itemNameObject == "tag") {
+							mapObject->tag = itItemObject.value();
+						}
+						else if (itemNameObject == "tagNumber") {
+							mapObject->tagNumber = itItemObject->get<int32_t>();
+						}
+						//メッシュを登録
+						else if (itemNameObject == "mesh") {
+							mapObject->meshName = itItemObject.value();
+						}
+						else if (itemNameObject == "meshNumber") {
+							mapObject->meshNumber = itItemObject->get<int32_t>();
+						}
+
+					}
+
+					roopCount++;
+
+				}
+
+				mapObjData_.push_back(mapObject);
+
 			}
-			if (i == 3) {
-				player->SetPosition(player->GetTranslation() + velocity_[1]);
-			}
-			player->SetPositionY(worldTransforms_[i].translation_.y + player->GetOBB().size.y);
-			player->SetOBB();
-			break;
+
 		}
-		else {
-			player->SetParent(nullptr);
-		}
-
 	}
-
-	if (IsCollision(obbGoal_, player->GetOBB())) {
-		player->SetPosition({ 0.0f,0.0f,0.0f });
-		player->SetOBB();
-	}
-
-}
-
-void Stage::SetOBB() {
-
-	for (size_t i = 0; i < 5; i++) {
-
-		obbs_[i].center = worldTransforms_[i].translation_;
-		obbs_[i].size = worldTransforms_[i].scale_;
-
-		//回転行列を生成
-		Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix(worldTransforms_[i].rotation_.x),
-			Multiply(MakeRotateYMatrix(worldTransforms_[i].rotation_.y), MakeRotateZMatrix(worldTransforms_[i].rotation_.z)));
-
-		//回転行列から軸を抽出
-		obbs_[i].orientations[0].x = rotateMatrix.m[0][0];
-		obbs_[i].orientations[0].y = rotateMatrix.m[0][1];
-		obbs_[i].orientations[0].z = rotateMatrix.m[0][2];
-
-		obbs_[i].orientations[1].x = rotateMatrix.m[1][0];
-		obbs_[i].orientations[1].y = rotateMatrix.m[1][1];
-		obbs_[i].orientations[1].z = rotateMatrix.m[1][2];
-
-		obbs_[i].orientations[2].x = rotateMatrix.m[2][0];
-		obbs_[i].orientations[2].y = rotateMatrix.m[2][1];
-		obbs_[i].orientations[2].z = rotateMatrix.m[2][2];
-
-		obbs_[i].orientations[0] = Normalize(obbs_[i].orientations[0]);
-		obbs_[i].orientations[1] = Normalize(obbs_[i].orientations[1]);
-		obbs_[i].orientations[2] = Normalize(obbs_[i].orientations[2]);
-
-	}
-
-	obbGoal_.center = worldTransformGoal_.translation_;
-	obbGoal_.size = worldTransformGoal_.scale_;
-
-	//回転行列を生成
-	Matrix4x4 rotateGoalMatrix = Multiply(MakeRotateXMatrix(worldTransformGoal_.rotation_.x),
-		Multiply(MakeRotateYMatrix(worldTransformGoal_.rotation_.y), MakeRotateZMatrix(worldTransformGoal_.rotation_.z)));
-
-	//回転行列から軸を抽出
-	obbGoal_.orientations[0].x = rotateGoalMatrix.m[0][0];
-	obbGoal_.orientations[0].y = rotateGoalMatrix.m[0][1];
-	obbGoal_.orientations[0].z = rotateGoalMatrix.m[0][2];
-
-	obbGoal_.orientations[1].x = rotateGoalMatrix.m[1][0];
-	obbGoal_.orientations[1].y = rotateGoalMatrix.m[1][1];
-	obbGoal_.orientations[1].z = rotateGoalMatrix.m[1][2];
-
-	obbGoal_.orientations[2].x = rotateGoalMatrix.m[2][0];
-	obbGoal_.orientations[2].y = rotateGoalMatrix.m[2][1];
-	obbGoal_.orientations[2].z = rotateGoalMatrix.m[2][2];
-
-	obbGoal_.orientations[0] = Normalize(obbGoal_.orientations[0]);
-	obbGoal_.orientations[1] = Normalize(obbGoal_.orientations[1]);
-	obbGoal_.orientations[2] = Normalize(obbGoal_.orientations[2]);
 
 }

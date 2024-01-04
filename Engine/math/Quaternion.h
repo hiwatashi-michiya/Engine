@@ -65,6 +65,13 @@ public:
 
 	Quaternion operator*=(const Quaternion& qr) { return this->Multiply(qr); }
 
+	Quaternion operator=(const Vector3& vector) { 
+		this->x = vector.x;
+		this->y = vector.y;
+		this->z = vector.z;
+		return *this;
+	}
+
 };
 
 /// <summary>

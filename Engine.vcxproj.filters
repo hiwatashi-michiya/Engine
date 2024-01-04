@@ -58,6 +58,9 @@
     <Filter Include="Engine\Tool">
       <UniqueIdentifier>{8e837e6d-46fc-4c8d-8c49-3bd19f5bf5cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\block">
+      <UniqueIdentifier>{8e28afe3-9900-4261-9580-e4a01c7b270c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -173,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Tool\Particle.cpp">
       <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\block\Block.cpp">
+      <Filter>Game\block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Tool\Particle.h">
       <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\block\Block.h">
+      <Filter>Game\block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

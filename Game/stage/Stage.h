@@ -4,6 +4,8 @@
 #include <memory>
 #include "Game/player/Player.h"
 #include "Game/enemy/Enemy.h"
+#include <string>
+#include "Game/block/Block.h"
 
 class Stage
 {
@@ -15,27 +17,40 @@ public:
 
 	void Update();
 
-	void Draw();
+	void Draw(Camera* camera);
 
-	void Collision(Player* player, Enemy* enemy);
+	void LoadStage(const std::string& filename);
 
-	void SetOBB();
+	const std::string& kDirectoryPath_ = "./resources/Maps/";
 
 private:
 
-	std::unique_ptr<Model> modelFloor_[5];
+	//マップに配置されているオブジェクトの構造体
+	struct MapObject {
 
-	std::unique_ptr<Model> modelGoal_;
+		std::string objName;
 
-	WorldTransform worldTransforms_[5];
+		std::unique_ptr<Model> model;
 
-	WorldTransform worldTransformGoal_;
+		//メッシュ
+		std::string meshName;
 
-	Vector3 velocity_[2]{};
+		int32_t meshNumber = 0;
 
-	OBB obbs_[5];
+		//オブジェクトの役割を表すタグ
+		std::string tag;
 
-	OBB obbGoal_;
+		int32_t tagNumber = 0;
+
+		bool isSelect = false;
+
+	};
+
+	std::unique_ptr<Player> player_;
+
+	std::list<std::shared_ptr<MapObject>> mapObjData_;
+
+	std::list<Block> blocks_;
 
 };
 
