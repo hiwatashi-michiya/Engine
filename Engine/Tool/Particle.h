@@ -32,6 +32,8 @@ public:
 
 	void SetColor(const Vector4& color) { color_ = color; }
 
+	void SetIsStart(bool flag) { isStart_ = flag; }
+
 	Vector3 startPosition_{};
 
 	//終点座標、半径
@@ -49,5 +51,7 @@ private:
 	Type type_;
 
 	Vector4 color_{ 1.0f,1.0f,1.0f,1.0f };
+
+	bool isStart_ = false;
 
 };

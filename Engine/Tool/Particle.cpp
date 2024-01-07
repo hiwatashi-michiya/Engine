@@ -33,19 +33,23 @@ void Particle::Reset() {
 					particle->velocities_[i].z = 0.2f;
 				}
 
+				particle->scales_[i] = { 0.5f,0.5f,0.5f };
+
 				particle->positions_[i] = startPosition_;
 
 				break;
 			case Particle::kUp:
 
-				particle->velocities_[i] = { 0.0f,0.0f,float((rand() % 40 - 20) * 0.02f + 0.01f) };
+				particle->scales_[i] = { 1.0f,1.0f,1.0f };
 
-				if (particle->velocities_[i].z == 0.0f) {
-					particle->velocities_[i].z = 0.2f;
+				particle->velocities_[i] = { 0.0f,float((rand() % 40) * 0.02f + 0.01f),0.0f };
+
+				if (particle->velocities_[i].y == 0.0f) {
+					particle->velocities_[i].y = 0.2f;
 				}
 
-				particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 40 - 20) * 0.02f + 0.01f), float((rand() % 40 - 20) * 0.02f + 0.01f),
-					float((rand() % 20 - 10) * 0.02f + 0.01f) };
+				particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 40 - 20) * 0.02f + 0.01f), float((rand() % 20 - 10) * 0.02f + 0.01f),
+					float((rand() % 40 - 20) * 0.02f + 0.01f) };
 
 				break;
 			default:
@@ -61,56 +65,67 @@ void Particle::Reset() {
 
 void Particle::Update() {
 
-	for (auto& particle : particles3D_) {
-		
-		for (uint32_t i = 0; i < particle->instanceCount_; i++) {
+	if (isStart_) {
+
+		for (auto& particle : particles3D_) {
+
+			for (uint32_t i = 0; i < particle->instanceCount_; i++) {
+
+				switch (type_)
+				{
+				case Particle::kCircle:
+
+					if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
+						particle->positions_[i] += particle->velocities_[i];
+					}
+
+					break;
+				case Particle::kUp:
+
+					particle->positions_[i] += particle->velocities_[i];
+
+					if (particle->scales_[i].x > 0.0f || particle->scales_[i].y > 0.0f ||
+						particle->scales_[i].z > 0.0f) {
+						particle->scales_[i] -= Vector3{ 0.02f,0.02f,0.02f };
+					}
+
+					if (particle->positions_[i].y >= endY_ || particle->scales_[i].x <= 0.0f) {
+
+						particle->scales_[i] = { 1.0f,1.0f,1.0f };
+
+						particle->velocities_[i] = { 0.0f,float((rand() % 40) * 0.02f + 0.01f),0.0f };
+
+						if (particle->velocities_[i].y == 0.0f) {
+							particle->velocities_[i].y = 0.2f;
+						}
+
+						particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 40 - 20) * 0.02f + 0.01f), float((rand() % 20 - 10) * 0.02f + 0.01f),
+							float((rand() % 40 - 20) * 0.02f + 0.01f) };
+
+					}
+
+					break;
+				default:
+					break;
+				}
+
+			}
 
 			switch (type_)
 			{
 			case Particle::kCircle:
 
 				if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
-					particle->positions_[i] += particle->velocities_[i];
+					particle->mesh_->material_->constMap_->color.w -= 0.1f;
 				}
 
 				break;
 			case Particle::kUp:
-
-				particle->positions_[i] += particle->velocities_[i];
-
-				if (particle->positions_[i].z >= endZ_) {
-
-					particle->velocities_[i] = { 0.0f,0.0f,float((rand() % 40 - 20) * 0.02f + 0.01f) };
-
-					if (particle->velocities_[i].z == 0.0f) {
-						particle->velocities_[i].z = 0.2f;
-					}
-
-					particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 40 - 20) * 0.02f + 0.01f), float((rand() % 40 - 20) * 0.02f + 0.01f),
-						float((rand() % 20 - 10) * 0.02f + 0.01f) };
-
-				}
-
 				break;
 			default:
 				break;
 			}
 
-		}
-
-		switch (type_)
-		{
-		case Particle::kCircle:
-
-			if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
-				particle->mesh_->material_->constMap_->color.w -= 0.1f;
-			}
-
-			break;
-		case Particle::kUp:
-			break;
-		default:
-			break;
 		}
 
 	}
@@ -119,10 +134,14 @@ void Particle::Update() {
 
 void Particle::Draw(Camera* camera) {
 
-	for (auto& particle : particles3D_) {
+	if (isStart_) {
 
-		if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
-			particle->Draw(camera);
+		for (auto& particle : particles3D_) {
+
+			if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
+				particle->Draw(camera);
+			}
+
 		}
 
 	}

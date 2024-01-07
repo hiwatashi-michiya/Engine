@@ -4,6 +4,7 @@
 #include "Engine/input/Input.h"
 #include "Engine/math/Quaternion.h"
 #include "Engine/math/Collision.h"
+#include "Engine/Tool/Particle.h"
 
 class Player
 {
@@ -38,6 +39,8 @@ private:
 
 	std::unique_ptr<Model> model_;
 
+	std::unique_ptr<Particle> particle_;
+
 	Vector3 velocity_{};
 
 	bool canJump_ = true;
@@ -53,6 +56,8 @@ private:
 	const uint32_t kMaxCoolTime_ = 5;
 
 	uint32_t moveCoolTimer_ = 0;
+
+	Texture* tex_;
 
 };
 

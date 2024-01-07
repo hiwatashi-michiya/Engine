@@ -24,7 +24,11 @@ public:
 
 	void Draw(Camera* camera);
 
-	void SetPosition(const Vector3& position) { model_->position_ = position; }
+	void SetPosition(const Vector3& position) { 
+		model_->position_ = position;
+		particle_->startPosition_ = model_->position_;
+		particle_->Reset();
+	}
 
 	const AABB& GetCollision() { return collision_; }
 
@@ -43,5 +47,8 @@ private:
 	Color color_;
 
 	bool isGoal_ = false;
+
+	Texture* tex1_;
+	Texture* tex2_;
 
 };

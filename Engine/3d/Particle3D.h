@@ -69,7 +69,7 @@ public:
 	uint32_t instanceCount_;
 
 	//メッシュ
-	Mesh* mesh_;
+	std::unique_ptr<Mesh> mesh_;
 
 private:
 
