@@ -17,9 +17,10 @@ public:
 
 	enum Type {
 		kCircle,
+		kUp,
 	};
 
-	void Initialize(const Dimension& dimension);
+	void Initialize(const Dimension& dimension, const Type& type);
 
 	void Reset();
 
@@ -29,7 +30,15 @@ public:
 
 	void Draw(Camera* camera);
 
+	void SetColor(const Vector4& color) { color_ = color; }
+
 	Vector3 startPosition_{};
+
+	//終点座標、半径
+	float endX_ = 0.0f;
+	float endY_ = 0.0f;
+	float endZ_ = 0.0f;
+	float endRadius_ = 10.0f;
 
 private:
 
@@ -38,5 +47,7 @@ private:
 	Dimension dimension_;
 
 	Type type_;
+
+	Vector4 color_{ 1.0f,1.0f,1.0f,1.0f };
 
 };

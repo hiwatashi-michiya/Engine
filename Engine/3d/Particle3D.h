@@ -68,6 +68,9 @@ public:
 	//インスタンシングの数
 	uint32_t instanceCount_;
 
+	//メッシュ
+	Mesh* mesh_;
+
 private:
 
 	//静的メンバ変数
@@ -100,9 +103,6 @@ private:
 	
 	//TransformMatrix
 	TransformationMatrix* matTransformMap_ = nullptr;
-	
-	//メッシュ
-	Mesh* mesh_;
 
 	//テクスチャ
 	Texture* texture_;

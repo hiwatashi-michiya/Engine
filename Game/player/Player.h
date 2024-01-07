@@ -17,7 +17,20 @@ public:
 
 	void Draw(Camera* camera);
 
-	void SetPosition(Vector3& position) { model_->position_ = position; }
+	void SetPosition(const Vector3& position) { model_->position_ = position; }
+
+	const AABB& GetCollision() { return collision_; }
+
+	enum Move {
+		kUp,
+		kDown,
+		kRight,
+		kLeft
+	};
+
+	Move move_ = kDown;
+
+private:
 
 private:
 
@@ -31,7 +44,15 @@ private:
 
 	Quaternion rotation_;
 
-	Sphere collision_{};
+	AABB collision_{};
+
+	bool isMove_ = false;
+
+	const float moveVal_ = 2.0f;
+
+	const uint32_t kMaxCoolTime_ = 5;
+
+	uint32_t moveCoolTimer_ = 0;
 
 };
 

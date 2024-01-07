@@ -27,6 +27,34 @@ public:
 
 	void Draw();
 
+	enum Scene {
+		kTitle,
+		kSelect,
+		kGame
+	};
+
+private:
+
+	void TitleUpdate();
+
+	void SelectUpdate();
+
+	void GameUpdate();
+
+	void TitleInitialize();
+
+	void SelectInitialize();
+
+	void GameInitialize();
+
+	void TitleDraw();
+
+	void SelectDraw();
+
+	void GameDraw();
+
+	void SceneChange();
+
 private:
 
 	DirectXCommon* dxCommon_ = nullptr;
@@ -38,6 +66,47 @@ private:
 	std::unique_ptr<Camera> camera_;	
 
 	std::unique_ptr<Stage> stage_;
+
+	std::unique_ptr<Model> skydome_;
+
+	Scene currentScene_ = kTitle;
+
+	Scene nextScene_ = kTitle;
+
+	bool isInitialize_ = false;
+
+	bool isSceneChange_ = false;
+
+	//ゲーム中クリアしたかどうか
+	bool isClear_ = false;
+
+	const uint32_t kMaxStage_ = 3;
+
+	uint32_t stageNumber_ = 1;
+
+	Texture* blackTex_ = nullptr;
+
+	std::unique_ptr<Sprite> fade_;
+
+	Texture* stage1Tex_;
+	Texture* stage2Tex_;
+	Texture* stage3Tex_;
+
+	Texture* push_A_Tex_;
+	Texture* moveTex_;
+	Texture* stageSelectTex_;
+	Texture* stageClearTex_;
+	Texture* titleTex_;
+
+	std::unique_ptr<Sprite> stage1Sprite_;
+	std::unique_ptr<Sprite> stage2Sprite_;
+	std::unique_ptr<Sprite> stage3Sprite_;
+
+	std::unique_ptr<Sprite> push_A_Sprite_;
+	std::unique_ptr<Sprite> moveSprite_;
+	std::unique_ptr<Sprite> stageSelectSprite_;
+	std::unique_ptr<Sprite> stageClearSprite_;
+	std::unique_ptr<Sprite> titleSprite_;
 
 };
 

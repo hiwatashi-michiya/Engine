@@ -6,6 +6,7 @@
 #include "Game/enemy/Enemy.h"
 #include <string>
 #include "Game/block/Block.h"
+#include "Game/goal/Goal.h"
 
 class Stage
 {
@@ -22,6 +23,12 @@ public:
 	void LoadStage(const std::string& filename);
 
 	const std::string& kDirectoryPath_ = "./resources/Maps/";
+
+	bool GetAllBlockRock();
+
+private:
+
+	void CheckRockBlock(std::shared_ptr<Block> checkBlock, uint32_t num);
 
 private:
 
@@ -51,6 +58,8 @@ private:
 	std::list<std::shared_ptr<MapObject>> mapObjData_;
 
 	std::list<std::shared_ptr<Block>> blocks_;
+
+	std::list<std::shared_ptr<Goal>> goals_;
 
 };
 

@@ -74,7 +74,7 @@ Material* Material::Create(const std::string& filename) {
 		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
 
 		constMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		constMap_->enableLighting = true;
+		constMap_->enableLighting = false;
 		constMap_->shininess = 50.0f;
 		constMap_->uvTransform = MakeIdentity4x4();
 

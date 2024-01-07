@@ -74,6 +74,9 @@ public:
 
 	Model* parent_ = nullptr;
 
+	//メッシュ
+	std::unique_ptr<Mesh> mesh_;
+
 private:
 
 	//静的メンバ変数
@@ -110,9 +113,6 @@ private:
 	TransformationMatrix* matTransformMap_ = nullptr;
 	//カメラ座標マップ
 	CameraForGPU* cameraMap_ = nullptr;
-
-	//メッシュ
-	Mesh* mesh_;
 
 	//テクスチャ
 	Texture* texture_;

@@ -30,6 +30,12 @@ struct Transform {
 	Vector3 translate;
 };
 
+struct Particle
+{
+	Transform transform;
+	Vector3 velocity;
+};
+
 // 直線
 struct Line {
 	Vector3 origin; // 始点

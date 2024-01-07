@@ -24,34 +24,33 @@ void Player::Initialize() {
 
 void Player::Update() {
 
-	// 速さ
-	const float speed = 0.7f;
-
-	/*if (velocity_.y > -5.0f) {
-		velocity_.y -= 0.1f;
-	}*/
-
-	// 移動量。Lスティックの入力を取る
-	Vector3 move = { float(input_->GetGamepad().sThumbLX), 0.0f, float(input_->GetGamepad().sThumbLY) };
-	// 移動量に速さを反映
-	move = Multiply(speed, Normalize(move));
-
-	//Matrix4x4 matRotate = MakeRotateYMatrix(Model::worldTransformCamera_.rotation_.y);
-
-	//// 移動ベクトルをカメラの角度だけ回転させる
-	//move = TransformNormal(move, matRotate);
-
-	move *= 0.2f;
-
-	// 移動
-	model_->position_ += move;
-	//落下処理
-	model_->position_ += velocity_;
-
-	// 回転
-	if (input_->GetGamepad().sThumbLX != 0 || input_->GetGamepad().sThumbLY != 0) {
-		model_->rotation_.y = float(std::atan2(double(move.x), double(move.z)));
+	if (moveCoolTimer_ > 0) {
+		moveCoolTimer_--;
 	}
+
+	if (input_->PushButton(XINPUT_GAMEPAD_DPAD_UP) && moveCoolTimer_ == 0) {
+		model_->position_.z += moveVal_;
+		moveCoolTimer_ = kMaxCoolTime_;
+		move_ = kUp;
+	}
+	else if (input_->PushButton(XINPUT_GAMEPAD_DPAD_DOWN) && moveCoolTimer_ == 0) {
+		model_->position_.z -= moveVal_;
+		moveCoolTimer_ = kMaxCoolTime_;
+		move_ = kDown;
+	}
+	else if (input_->PushButton(XINPUT_GAMEPAD_DPAD_RIGHT) && moveCoolTimer_ == 0) {
+		model_->position_.x += moveVal_;
+		moveCoolTimer_ = kMaxCoolTime_;
+		move_ = kRight;
+	}
+	else if (input_->PushButton(XINPUT_GAMEPAD_DPAD_LEFT) && moveCoolTimer_ == 0) {
+		model_->position_.x -= moveVal_;
+		moveCoolTimer_ = kMaxCoolTime_;
+		move_ = kLeft;
+	}
+
+	collision_.max = model_->position_ + model_->scale_;
+	collision_.min = model_->position_ - model_->scale_;
 
 }
 
