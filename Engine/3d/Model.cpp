@@ -375,9 +375,13 @@ void Model::Finalize() {
 //デバッグ時に使用
 void Model::StaticImGuiUpdate() {
 
+#ifdef _DEBUG
+
 	ImGui::Begin("Static model Settings");
 	ImGui::Combo("Blend", (int*)&currentBlendMode_, BlendTexts, IM_ARRAYSIZE(BlendTexts));
 	ImGui::End();
+
+#endif // _DEBUG
 
 }
 
@@ -401,6 +405,8 @@ void Model::SetMesh(const std::string& objFileName) {
 
 void Model::ImGuiUpdate(const std::string& name) {
 
+#ifdef _DEBUG
+
 	ImGui::Begin(name.c_str());
 
 	if (ImGui::BeginTabBar("Model", ImGuiTabBarFlags_None)) {
@@ -420,5 +426,7 @@ void Model::ImGuiUpdate(const std::string& name) {
 	}
 
 	ImGui::End();
+
+#endif // _DEBUG
 
 }
