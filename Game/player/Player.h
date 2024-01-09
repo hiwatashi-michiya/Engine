@@ -79,7 +79,7 @@ private:
 		//ダッシュのスピード
 		float speed_ = 2.0f;
 		//ダッシュ時間
-		int32_t dashTime_ = 10;
+		int32_t dashTime_ = 5;
 	};
 
 	//攻撃用ワーク

@@ -50,7 +50,7 @@ void Player::Initialize() {
 
 	workDash_.dashParamater_ = 0;
 	workDash_.speed_ = 2.0f;
-	workDash_.dashTime_ = 10;
+	workDash_.dashTime_ = 5;
 
 	workAttack_.blockCount_ = 0;
 	workAttack_.coolTime_ = 0;
