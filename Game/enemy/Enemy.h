@@ -38,6 +38,8 @@ private:
 
 	void Attack();
 
+	void AttackInitialize();
+
 	void AddBullet();
 
 private:
@@ -46,10 +48,7 @@ private:
 
 	struct WorkAttack
 	{
-		uint32_t attackInterval; //攻撃間隔
 		uint32_t attackCount; //攻撃回数(ブロックを出す数)
-		int32_t attackTimer; //攻撃するまでのカウント
-		bool isStartAttack; //攻撃開始フラグ
 		uint32_t startAttackInterval; //攻撃中のフレーム数
 		int32_t startAttackTimer; //攻撃中のカウント
 	};
@@ -60,6 +59,12 @@ private:
 		uint32_t shotCount; //弾を発射する数
 		int32_t shotTimer; //弾の発射管理をするタイマー
 	};
+
+	uint32_t attackInterval_; //攻撃間隔
+	int32_t attackTimer_; //攻撃するまでのカウント
+	bool isStartAttack_; //攻撃開始フラグ
+
+	uint32_t attackNumber_ = 0;
 
 	std::unique_ptr<Model> model_;
 

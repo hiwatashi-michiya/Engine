@@ -28,18 +28,18 @@ void Enemy::Initialize() {
 
 	audioManager_ = AudioManager::GetInstance();
 
-	model_->position_ = { 0.0f,10.0f,50.0f };
-	model_->scale_ = { 20.0f,20.0f,20.0f };
+	model_->position_ = { 0.0f,5.0f,50.0f };
+	model_->scale_ = { 10.0f,10.0f,10.0f };
 	collision_.max = model_->position_ + model_->scale_;
 	collision_.min = model_->position_ - model_->scale_;
 
 	hp_ = kMaxHp_;
 	isDead_ = false;
 
-	workAttack_.attackInterval = 300;
+	attackInterval_ = 150;
 	workAttack_.attackCount = 3;
-	workAttack_.attackTimer = workAttack_.attackInterval;
-	workAttack_.isStartAttack = false;
+	attackTimer_ = attackInterval_;
+	isStartAttack_ = false;
 	workAttack_.startAttackInterval = 90;
 	workAttack_.startAttackTimer = 0;
 
@@ -72,37 +72,38 @@ void Enemy::Update() {
 
 	if (!isDead_) {
 
-		if (workAttack_.isStartAttack) {
+		if (isStartAttack_) {
 			Attack();
 		}
 		else {
 
 			//タイマー0で攻撃時の変数初期化、攻撃開始
-			if (--workAttack_.attackTimer <= 0) {
+			if (--attackTimer_ <= 0) {
 				
-				workAttack_.attackCount = rand() % 3 + 3;
-
-				for (uint32_t i = 0; i < workAttack_.attackCount; i++) {
-					attackSizes_[i] = { float(rand() % 5 + 1), float(rand() % 4 + 2) , float(rand() % 5 + 1) };
-					attackPositions_[i] = Vector3{ float(rand() % 60 - 30), attackSizes_[i].y, float(rand() % 60 - 30)};
-					attackModels_[i]->scale_ = attackSizes_[i];
-					attackModels_[i]->position_ = player_->GetPosition() + attackPositions_[i] - Vector3{ 0.0f, attackPositions_[i].y * 2.0f + 0.1f, 0.0f };
-					attackModels_[i]->SetTexture(attackLangeTex_);
-					attackCollisions_[i].max = attackModels_[i]->position_ + attackSizes_[i];
-					attackCollisions_[i].min = attackModels_[i]->position_ - attackSizes_[i];
+				//壁生やし以外の攻撃だったら壁生やしを行う
+				if (attackNumber_ != 0) {
+					attackNumber_ = 0;
+				}
+				else {
+					attackNumber_ = rand() % 1 + 1;
 				}
 
-				workAttack_.isStartAttack = true;
-				workAttack_.attackTimer = workAttack_.attackInterval;
-				workAttack_.startAttackTimer = workAttack_.startAttackInterval;
+				AttackInitialize();
+				attackTimer_ = attackInterval_;
+				isStartAttack_ = true;
 
 			}
 
 		}
 
-		if (--workShot_.shotTimer <= 0) {
-			AddBullet();
-			workShot_.shotTimer = workShot_.shotInterval;
+		for (auto& bullet : bullets_) {
+			bullet->Update();
+
+			if (IsCollision(bullet->GetCollision(), player_->GetCollision()) && !player_->GetIsInvincible()) {
+				player_->Damage(1);
+				bullet->SetIsDead(true);
+			}
+
 		}
 
 		if (hp_ <= 0) {
@@ -114,69 +115,108 @@ void Enemy::Update() {
 
 	}
 
-	for (auto& bullet : bullets_) {
-		bullet->Update();
-
-		if (IsCollision(bullet->GetCollision(), player_->GetCollision()) && !player_->GetIsInvincible()) {
-			player_->Damage(1);
-			bullet->SetIsDead(true);
-		}
-
-	}
-
-	for (auto& bullet : bullets_) {
-
-		if (workShot_.shotTimer % 10 == 0 && workShot_.shotTimer <= 120 && !bullet->GetIsShot()) {
-			bullet->Shot(player_->GetPosition());
-			audioManager_->Play(shotSE_, 0.2f);
-			break;
-		}
-
-	}
-
 	hpSprite_->size_.x = hpWidth_ * hp_;
 
 }
 
 void Enemy::Attack() {
 
-	//カウントが30を切ったら攻撃開始
-	if (--workAttack_.startAttackTimer < 30) {
+	switch (attackNumber_)
+	{
+	default:
+	case 0:
 
-		for (uint32_t i = 0; i < workAttack_.attackCount; i++) {
-			
-			attackModels_[i]->position_.y += attackSizes_[i].y * 2.0f / 30.0f;
+		//カウントが30を切ったら攻撃開始
+		if (--workAttack_.startAttackTimer < 30) {
 
-			if (IsCollision(attackCollisions_[i], player_->GetCollision())) {
-				player_->Damage(3);
-			}
+			for (uint32_t i = 0; i < workAttack_.attackCount; i++) {
 
-		}
+				attackModels_[i]->position_.y += attackSizes_[i].y * 2.0f / 30.0f;
 
-		if (workAttack_.startAttackTimer <= 0) {
-			
-			if (blocksPtr_ && workAttack_.isStartAttack) {
-
-				for (uint32_t i = 0; i < workAttack_.attackCount; i++) {
-					std::shared_ptr<Block> block = std::make_shared<Block>();
-					block->Initialize(attackModels_[i]->position_,
-						player_, attackSizes_[i]);
-					blocksPtr_->push_back(block);
+				if (IsCollision(attackCollisions_[i], player_->GetCollision())) {
+					player_->Damage(3);
 				}
 
 			}
 
-			workAttack_.isStartAttack = false;
+			if (workAttack_.startAttackTimer <= 0) {
+
+				if (blocksPtr_ && isStartAttack_) {
+
+					for (uint32_t i = 0; i < workAttack_.attackCount; i++) {
+						std::shared_ptr<Block> block = std::make_shared<Block>();
+						block->Initialize(attackModels_[i]->position_,
+							player_, attackSizes_[i]);
+						blocksPtr_->push_back(block);
+					}
+
+				}
+
+				isStartAttack_ = false;
+
+			}
+
+		}
+		else {
+
+			if (workAttack_.startAttackTimer == 30) {
+				audioManager_->Play(groundAttackSE_, 0.2f);
+			}
 
 		}
 
+		break;
+	case 1:
+
+		for (auto& bullet : bullets_) {
+
+			if (workShot_.shotTimer % 10 == 0 && workShot_.shotTimer <= 120 && !bullet->GetIsShot()) {
+				bullet->Shot(player_->GetPosition());
+				audioManager_->Play(shotSE_, 0.2f);
+				break;
+			}
+
+		}
+
+		if (--workShot_.shotTimer <= 0) {
+			isStartAttack_ = false;
+		}
+
+		break;
 	}
-	else {
 
-		if (workAttack_.startAttackTimer == 30) {
-			audioManager_->Play(groundAttackSE_, 0.2f);
+}
+
+void Enemy::AttackInitialize() {
+
+	switch (attackNumber_)
+	{
+	default:
+	case 0:
+
+		workAttack_.attackCount = rand() % 3 + 3;
+
+		for (uint32_t i = 0; i < workAttack_.attackCount; i++) {
+			attackSizes_[i] = { float(rand() % 5 + 1), float(rand() % 4 + 2) , float(rand() % 5 + 1) };
+			attackPositions_[i] = Vector3{ float(rand() % 60 - 30), attackSizes_[i].y, float(rand() % 60 - 30) };
+			attackModels_[i]->scale_ = attackSizes_[i];
+			attackModels_[i]->position_ = player_->GetPosition() + attackPositions_[i] - Vector3{ 0.0f, attackPositions_[i].y * 2.0f + 0.1f, 0.0f };
+			attackModels_[i]->SetTexture(attackLangeTex_);
+			attackCollisions_[i].max = attackModels_[i]->position_ + attackSizes_[i];
+			attackCollisions_[i].min = attackModels_[i]->position_ - attackSizes_[i];
 		}
 
+		isStartAttack_ = true;
+		attackTimer_ = attackInterval_;
+		workAttack_.startAttackTimer = workAttack_.startAttackInterval;
+
+		break;
+	case 1:
+
+		AddBullet();
+		workShot_.shotTimer = workShot_.shotInterval;
+
+		break;
 	}
 
 }
@@ -208,7 +248,7 @@ void Enemy::Draw(Camera* camera) {
 
 	}
 
-	if (workAttack_.isStartAttack) {
+	if (isStartAttack_ && attackNumber_ == 0) {
 
 		for (uint32_t i = 0; i < workAttack_.attackCount; i++) {
 			attackModels_[i]->Draw(camera);
