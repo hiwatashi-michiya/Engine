@@ -3,7 +3,7 @@
 #include "Engine/manager/ShaderManager.h"
 #include <filesystem>
 #include <fstream>
-#include "Externals/imgui/imgui.h"
+#include "Engine/manager/ImGuiManager.h"
 
 ID3D12Device* Material::device_ = nullptr;
 
@@ -145,6 +145,8 @@ void Material::SetCommandMaterialForParticle(ID3D12GraphicsCommandList* commandL
 
 void Material::ImGuiUpdate() {
 
+#ifdef _DEBUG
+
 	if (ImGui::TreeNode("Base Material")) {
 		ImGui::ColorEdit4("C_color", &constMap_->color.x);
 		ImGui::SliderInt("C_Lighting", &constMap_->enableLighting, 0, 1);
@@ -173,6 +175,6 @@ void Material::ImGuiUpdate() {
 		ImGui::TreePop();
 	}
 
-
+#endif // _DEBUG
 
 }

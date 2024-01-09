@@ -20,6 +20,8 @@ public:
 
 	void Draw(Camera* camera);
 
+	void DrawParticle(Camera* camera);
+
 	void LoadStage(const std::string& filename);
 
 	const std::string& kDirectoryPath_ = "./resources/Maps/";

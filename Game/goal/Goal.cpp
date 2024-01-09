@@ -64,6 +64,10 @@ void Goal::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 
+}
+
+void Goal::DrawParticle(Camera* camera) {
+
 	if (isGoal_) {
 		particle_->Draw(camera);
 	}

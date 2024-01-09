@@ -97,7 +97,7 @@ void Stage::Update() {
 
 void Stage::Draw(Camera* camera) {
 
-	player_->Draw(camera);
+	
 
 	for (auto& block : blocks_) {
 		block->Draw(camera);
@@ -106,6 +106,18 @@ void Stage::Draw(Camera* camera) {
 	for (auto& goal : goals_) {
 		goal->Draw(camera);
 	}
+
+	player_->Draw(camera);
+
+}
+
+void Stage::DrawParticle(Camera* camera) {
+
+	for (auto& goal : goals_) {
+		goal->DrawParticle(camera);
+	}
+
+	player_->DrawParticle(camera);
 
 }
 

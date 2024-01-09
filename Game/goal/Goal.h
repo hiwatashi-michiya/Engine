@@ -24,6 +24,8 @@ public:
 
 	void Draw(Camera* camera);
 
+	void DrawParticle(Camera* camera);
+
 	void SetPosition(const Vector3& position) { 
 		model_->position_ = position;
 		particle_->startPosition_ = model_->position_;

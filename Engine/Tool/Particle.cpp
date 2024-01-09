@@ -25,15 +25,15 @@ void Particle::Reset() {
 			switch (type_)
 			{
 			case Particle::kCircle:
-				particle->velocities_[i] = { float((rand() % 40 - 20) * 0.02f + 0.01f), float((rand() % 40 - 20) * 0.02f + 0.01f),
-				float((rand() % 40 - 20) * 0.02f + 0.01f) };
+				particle->velocities_[i] = { float((rand() % 20 - 10) * 0.02f + 0.01f), float((rand() % 20 - 10) * 0.02f + 0.01f),
+				float((rand() % 20 - 10) * 0.02f + 0.01f) };
 
 				if (particle->velocities_[i].x == 0.0f && particle->velocities_[i].y == 0.0f &&
 					particle->velocities_[i].z == 0.0f) {
 					particle->velocities_[i].z = 0.2f;
 				}
 
-				particle->scales_[i] = { 0.5f,0.5f,0.5f };
+				particle->scales_[i] = { 0.8f,0.8f,0.8f };
 
 				particle->positions_[i] = startPosition_;
 

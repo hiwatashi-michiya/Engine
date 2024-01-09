@@ -182,8 +182,8 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	//DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = true;
+	//Depthの機能を無効化する
+	depthStencilDesc.DepthEnable = false;
 	//書き込み
 	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	//近ければ描画
@@ -412,8 +412,12 @@ void Particle3D::ImGuiUpdate() {
 //デバッグ時に使用
 void Particle3D::StaticImGuiUpdate() {
 
+#ifdef _DEBUG
+
 	ImGui::Begin("Static particle Settings");
 	ImGui::Combo("Blend", (int*)&currentBlendMode_, BlendTexts, IM_ARRAYSIZE(BlendTexts));
 	ImGui::End();
+
+#endif // _DEBUG
 
 }

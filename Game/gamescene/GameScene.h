@@ -91,9 +91,11 @@ private:
 	Texture* stage1Tex_;
 	Texture* stage2Tex_;
 	Texture* stage3Tex_;
+	Texture* selectTileTex_;
 
 	Texture* push_A_Tex_;
 	Texture* moveTex_;
+	Texture* selectTex_;
 	Texture* stageSelectTex_;
 	Texture* stageClearTex_;
 	Texture* titleTex_;
@@ -101,9 +103,11 @@ private:
 	std::unique_ptr<Sprite> stage1Sprite_;
 	std::unique_ptr<Sprite> stage2Sprite_;
 	std::unique_ptr<Sprite> stage3Sprite_;
+	std::unique_ptr<Sprite> selectTileSprite_;
 
 	std::unique_ptr<Sprite> push_A_Sprite_;
 	std::unique_ptr<Sprite> moveSprite_;
+	std::unique_ptr<Sprite> selectSprite_;
 	std::unique_ptr<Sprite> stageSelectSprite_;
 	std::unique_ptr<Sprite> stageClearSprite_;
 	std::unique_ptr<Sprite> titleSprite_;
