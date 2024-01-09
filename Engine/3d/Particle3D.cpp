@@ -406,8 +406,12 @@ void Particle3D::ImGuiUpdate() {
 //デバッグ時に使用
 void Particle3D::StaticImGuiUpdate() {
 
+#ifdef _DEBUG
+
 	ImGui::Begin("Static particle Settings");
 	ImGui::Combo("Blend", (int*)&currentBlendMode_, BlendTexts, IM_ARRAYSIZE(BlendTexts));
 	ImGui::End();
+
+#endif // _DEBUG
 
 }

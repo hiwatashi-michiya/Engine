@@ -32,6 +32,8 @@ public:
 
 	void Damage(int32_t val) { hp_ -= val; }
 
+	const std::list<std::shared_ptr<EnemyBullet>>& GetBullets() { return bullets_; }
+
 private:
 
 	void Attack();

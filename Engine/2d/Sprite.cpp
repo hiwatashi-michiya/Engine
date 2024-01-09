@@ -371,14 +371,18 @@ void Sprite::Finalize() {
 
 void Sprite::ImGuiUpdate(const std::string name) {
 
+#ifdef _DEBUG
+
 	ImGui::Begin(name.c_str());
 
 	ImGui::DragFloat2("position", &position_.x, 0.1f);
 	ImGui::DragFloat2("size", &size_.x, 0.01f);
-	ImGui::DragFloat2("view rect", &viewRect_.x, 0.01f, 0.0f,1.0f);
+	ImGui::DragFloat2("view rect", &viewRect_.x, 0.01f, 0.0f, 1.0f);
 	ImGui::DragFloat2("uv scale", &uvScale_.x, 0.01f);
 	ImGui::DragFloat("uv rotate", &uvRotate_, 0.01f);
 	ImGui::DragFloat2("uv translate", &uvTranslate_.x, 0.01f);
 	ImGui::End();
+
+#endif // _DEBUG
 
 }

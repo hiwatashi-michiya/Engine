@@ -204,6 +204,22 @@ void GameScene::Update() {
 	for (auto& block : blocks_) {
 		block->Update();
 
+		for (auto& enemyBullet : enemy_->GetBullets()) {
+
+			if (IsCollision(block->GetCollision(), enemyBullet->GetCollision())) {
+				enemyBullet->SetIsDead(true);
+			}
+
+		}
+
+		for (auto& bullet : bullets_) {
+
+			if (IsCollision(block->GetCollision(), bullet->GetCollision())) {
+				bullet->SetIsDead(true);
+			}
+
+		}
+
 		if (IsCollision(block->GetCollision(), player_->GetCollision())) {
 
 			//前フレームのZ位置がブロックのZ判定の内側だった場合、左右どちらかから当たっているので左右の処理をする
