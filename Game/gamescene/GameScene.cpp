@@ -28,6 +28,7 @@ GameScene::GameScene()
 	stageClearTex_ = TextureManager::GetInstance()->Load("./resources/UI/stageclear.png");
 	titleTex_ = TextureManager::GetInstance()->Load("./resources/UI/title.png");
 	backTex_ = TextureManager::GetInstance()->Load("./resources/UI/back.png");
+	resetTex_ = TextureManager::GetInstance()->Load("./resources/UI/reset.png");
 
 	stage1Sprite_.reset(Sprite::Create(stage1Tex_, { 300.0f,300.0f }));
 	stage2Sprite_.reset(Sprite::Create(stage2Tex_, { 576.0f,300.0f }));
@@ -45,6 +46,7 @@ GameScene::GameScene()
 	stageClearSprite_->size_ = { 1024.0f,256.0f };
 	titleSprite_.reset(Sprite::Create(titleTex_, { 640.0f - 256.0f, 100.0f }));
 	backSprite_.reset(Sprite::Create(backTex_, { 10.0f,10.0f }));
+	resetSprite_.reset(Sprite::Create(resetTex_, { 1000.0f,10.0f }));
 
 	stage1Sprite_->size_ = { 128.0f,128.0f };
 	stage2Sprite_->size_ = { 128.0f,128.0f };
@@ -285,6 +287,10 @@ void GameScene::GameUpdate() {
 			isSceneChange_ = true;
 		}
 
+		if (input_->TriggerButton(XINPUT_GAMEPAD_Y)) {
+			GameInitialize();
+		}
+
 		if (stageNumber_ != 0 && stage_->GetAllBlockRock()) {
 			isClear_ = true;
 		}
@@ -327,6 +333,7 @@ void GameScene::GameDraw() {
 	}
 	else {
 		backSprite_->Draw();
+		resetSprite_->Draw();
 	}
 
 	moveSprite_->Draw();

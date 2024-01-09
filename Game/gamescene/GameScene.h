@@ -7,7 +7,6 @@
 #include "Engine/2d/Sprite.h"
 #include <memory>
 #include "Game/player/Player.h"
-#include "Game/enemy/Enemy.h"
 #include "Game/stage/Stage.h"
 #include "Engine/3d/Particle3D.h"
 #include "Engine/manager/AudioManager.h"
@@ -100,6 +99,7 @@ private:
 	Texture* stageClearTex_;
 	Texture* titleTex_;
 	Texture* backTex_;
+	Texture* resetTex_;
 
 	std::unique_ptr<Sprite> stage1Sprite_;
 	std::unique_ptr<Sprite> stage2Sprite_;
@@ -113,6 +113,7 @@ private:
 	std::unique_ptr<Sprite> stageClearSprite_;
 	std::unique_ptr<Sprite> titleSprite_;
 	std::unique_ptr<Sprite> backSprite_;
+	std::unique_ptr<Sprite> resetSprite_;
 
 };
 

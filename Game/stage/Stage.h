@@ -1,9 +1,7 @@
 #pragma once
 #include "Engine/3d/Model.h"
-#include "Engine/3d/WorldTransform.h"
 #include <memory>
 #include "Game/player/Player.h"
-#include "Game/enemy/Enemy.h"
 #include <string>
 #include "Game/block/Block.h"
 #include "Game/goal/Goal.h"

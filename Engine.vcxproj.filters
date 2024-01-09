@@ -49,9 +49,6 @@
     <Filter Include="Game\gameScene">
       <UniqueIdentifier>{9faf39e3-20d2-4aac-9535-c1d01738b60f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\enemy">
-      <UniqueIdentifier>{87b21323-17e1-416c-817c-1030260f5109}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\stage">
       <UniqueIdentifier>{5825f192-7d68-4fbc-9f67-046c78643a1a}</UniqueIdentifier>
     </Filter>
@@ -143,9 +140,6 @@
     </ClCompile>
     <ClCompile Include="Game\stage\Stage.cpp">
       <Filter>Game\stage</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\enemy\Enemy.cpp">
-      <Filter>Game\enemy</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Collision.cpp">
       <Filter>Engine\math</Filter>
@@ -274,9 +268,6 @@
     </ClInclude>
     <ClInclude Include="Game\stage\Stage.h">
       <Filter>Game\stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\enemy\Enemy.h">
-      <Filter>Game\enemy</Filter>
     </ClInclude>
     <ClInclude Include="Engine\manager\ImGuiManager.h">
       <Filter>Engine\manager</Filter>
