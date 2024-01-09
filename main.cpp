@@ -10,7 +10,7 @@ static D3DResourceLeakChecker leak;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	Engine::Initialize("engine", 1280, 720);
+	Engine::Initialize("カラコロ", 1280, 720);
 
 	//ゲームシーンのインスタンス生成
 	GameScene* gameScene = new GameScene();
