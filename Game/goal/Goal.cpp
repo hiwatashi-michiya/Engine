@@ -25,21 +25,25 @@ void Goal::Initialize(const Color& color) {
 	if (color_ == kRed) {
 		model_->mesh_->material_->constMap_->color = { 1.0f,0.3f,0.3f,1.0f };
 		particle_->SetColor({ 1.0f,0.3f,0.3f,1.0f });
+		particle_->SetColor({ 0.7f,0.1f,0.1f,1.0f }, 1);
 	}
 
 	if (color_ == kGreen) {
 		model_->mesh_->material_->constMap_->color = { 0.3f,1.0f,0.3f,1.0f };
 		particle_->SetColor({ 0.3f,1.0f,0.3f,1.0f });
+		particle_->SetColor({ 0.1f,0.7f,0.1f,1.0f }, 1);
 	}
 
 	if (color_ == kBlue) {
 		model_->mesh_->material_->constMap_->color = { 0.3f,0.3f,1.0f,1.0f };
 		particle_->SetColor({ 0.3f,0.3f,1.0f,1.0f });
+		particle_->SetColor({ 0.1f,0.1f,0.7f,1.0f }, 1);
 	}
 
 	if (color_ == kYellow) {
 		model_->mesh_->material_->constMap_->color = { 1.0f,1.0f,0.3f,1.0f };
 		particle_->SetColor({ 1.0f,1.0f,0.3f,1.0f });
+		particle_->SetColor({ 0.7f,0.7f,0.1f,1.0f }, 1);
 	}
 
 	particle_->Reset();

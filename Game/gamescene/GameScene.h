@@ -99,6 +99,7 @@ private:
 	Texture* stageSelectTex_;
 	Texture* stageClearTex_;
 	Texture* titleTex_;
+	Texture* backTex_;
 
 	std::unique_ptr<Sprite> stage1Sprite_;
 	std::unique_ptr<Sprite> stage2Sprite_;
@@ -111,6 +112,7 @@ private:
 	std::unique_ptr<Sprite> stageSelectSprite_;
 	std::unique_ptr<Sprite> stageClearSprite_;
 	std::unique_ptr<Sprite> titleSprite_;
+	std::unique_ptr<Sprite> backSprite_;
 
 };
 

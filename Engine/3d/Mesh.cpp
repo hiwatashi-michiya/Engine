@@ -55,7 +55,7 @@ void Mesh::LoadMaterialTemplateFile(const std::string& filename) {
 		}
 		//テクスチャ情報が空の場合、既定の画像に設定
 		else {
-			texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
+			texture_ = TextureManager::GetInstance()->Load("./resources/sample/white.png");
 		}
 
 	}

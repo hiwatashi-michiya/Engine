@@ -68,7 +68,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     8.0
                 ],
@@ -89,7 +89,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     6.0
                 ],
@@ -110,7 +110,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     4.0
                 ],
@@ -131,7 +131,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     2.0
                 ],
@@ -152,7 +152,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     0.0
                 ],
@@ -166,14 +166,14 @@
                     1.0,
                     1.0
                 ],
-                "tag": "block",
+                "tag": "None",
                 "tagNumber": 0
             },
             "block16": {
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     -2.0
                 ],
@@ -194,7 +194,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     -4.0
                 ],
@@ -215,7 +215,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     -6.0
                 ],
@@ -236,7 +236,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    -10.0,
+                    -12.0,
                     2.0,
                     -8.0
                 ],
@@ -530,7 +530,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     -8.0
                 ],
@@ -551,7 +551,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     -6.0
                 ],
@@ -572,7 +572,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     -4.0
                 ],
@@ -593,7 +593,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     -2.0
                 ],
@@ -614,7 +614,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     0.0
                 ],
@@ -635,7 +635,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     2.0
                 ],
@@ -656,7 +656,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     4.0
                 ],
@@ -677,7 +677,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     6.0
                 ],
@@ -698,7 +698,7 @@
                 "mesh": "cube",
                 "meshNumber": 0,
                 "position": [
-                    10.0,
+                    12.0,
                     2.0,
                     8.0
                 ],
@@ -736,6 +736,216 @@
                 "tag": "block",
                 "tagNumber": 2
             },
+            "block40": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    0.0,
+                    2.0,
+                    8.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block41": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    0.0,
+                    2.0,
+                    6.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block42": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    0.0,
+                    2.0,
+                    4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block43": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    -2.0,
+                    2.0,
+                    4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block44": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    2.0,
+                    2.0,
+                    4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block45": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block46": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    -2.0,
+                    2.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block47": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    2.0,
+                    2.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block48": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    0.0,
+                    2.0,
+                    -4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block49": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    -2.0,
+                    2.0,
+                    -4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
             "block5": {
                 "mesh": "cube",
                 "meshNumber": 0,
@@ -743,6 +953,69 @@
                     10.0,
                     2.0,
                     10.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block50": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    2.0,
+                    2.0,
+                    -4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block51": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    0.0,
+                    2.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block",
+                "tagNumber": 2
+            },
+            "block52": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    0.0,
+                    2.0,
+                    -8.0
                 ],
                 "rotation": [
                     0.0,
@@ -841,13 +1114,181 @@
                 "tag": "block",
                 "tagNumber": 2
             },
+            "block_blue": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    6.0,
+                    2.0,
+                    4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block_blue",
+                "tagNumber": 5
+            },
+            "block_green": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    -8.0,
+                    2.0,
+                    -4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block_green",
+                "tagNumber": 4
+            },
+            "block_red": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    -6.0,
+                    2.0,
+                    4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block_red",
+                "tagNumber": 3
+            },
+            "block_yellow": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    8.0,
+                    2.0,
+                    -4.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "block_yellow",
+                "tagNumber": 6
+            },
+            "goal_blue": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    -2.0,
+                    2.0,
+                    2.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "goal_blue",
+                "tagNumber": 8
+            },
+            "goal_green": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    2.0,
+                    2.0,
+                    -2.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "goal_green",
+                "tagNumber": 9
+            },
+            "goal_red": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    2.0,
+                    2.0,
+                    2.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "goal_red",
+                "tagNumber": 10
+            },
+            "goal_yellow": {
+                "mesh": "cube",
+                "meshNumber": 0,
+                "position": [
+                    -2.0,
+                    2.0,
+                    -2.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "goal_yellow",
+                "tagNumber": 7
+            },
             "player": {
                 "mesh": "sphere",
                 "meshNumber": 1,
                 "position": [
-                    0.0,
+                    -4.0,
                     2.0,
-                    0.0
+                    6.0
                 ],
                 "rotation": [
                     0.0,
@@ -876,7 +1317,7 @@
                     0.0
                 ],
                 "scale": [
-                    11.0,
+                    13.0,
                     1.0,
                     11.0
                 ],

@@ -69,6 +69,11 @@ void Player::Update() {
 		model_->rotation_.y = 1.57f;
 	}
 
+	if (!input_->PushButton(XINPUT_GAMEPAD_DPAD_UP) && !input_->PushButton(XINPUT_GAMEPAD_DPAD_DOWN) &&
+		!input_->PushButton(XINPUT_GAMEPAD_DPAD_RIGHT) && !input_->PushButton(XINPUT_GAMEPAD_DPAD_LEFT)) {
+		moveCoolTimer_ = 0;
+	}
+
 	collision_.max = model_->position_ + model_->scale_;
 	collision_.min = model_->position_ - model_->scale_;
 

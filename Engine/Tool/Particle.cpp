@@ -18,7 +18,7 @@ void Particle::Initialize(const Dimension& dimension, const Type& type) {
 
 void Particle::Reset() {
 
-	for (auto& particle : particles3D_) {
+	for (uint32_t num = 0; auto & particle : particles3D_) {
 
 		for (uint32_t i = 0; i < particle->instanceCount_; i++) {
 
@@ -57,7 +57,9 @@ void Particle::Reset() {
 			}
 		}
 
-		particle->mesh_->material_->constMap_->color = color_;
+		particle->mesh_->material_->constMap_->color = colors_[num];
+
+		num++;
 
 	}
 
@@ -154,5 +156,6 @@ void Particle::AddParticle(const std::string& name, Texture* texture, uint32_t i
 	newParticle.reset(Particle3D::Create(name, instanceCount));
 	newParticle->SetTexture(texture);
 	particles3D_.push_back(newParticle);
+	colors_.push_back({ 1.0f,1.0f,1.0f,1.0f });
 
 }

@@ -55,7 +55,7 @@ private:
 
 	const float moveVal_ = 2.0f;
 
-	const uint32_t kMaxCoolTime_ = 5;
+	const uint32_t kMaxCoolTime_ = 10;
 
 	uint32_t moveCoolTimer_ = 0;
 

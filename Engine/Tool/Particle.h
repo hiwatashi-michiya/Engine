@@ -30,7 +30,19 @@ public:
 
 	void Draw(Camera* camera);
 
-	void SetColor(const Vector4& color) { color_ = color; }
+	void SetColor(const Vector4& color, uint32_t num = 0) { 
+
+		for (uint32_t i = 0; auto & particle : particles3D_) {
+
+			if (i == num) {
+				colors_[i] = color;
+			}
+
+			i++;
+
+		}
+
+	}
 
 	void SetIsStart(bool flag) { isStart_ = flag; }
 
@@ -45,6 +57,7 @@ public:
 private:
 
 	std::vector<std::shared_ptr<Particle3D>> particles3D_;
+	std::vector<Vector4> colors_;
 
 	Dimension dimension_;
 
