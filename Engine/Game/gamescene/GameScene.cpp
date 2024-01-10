@@ -54,6 +54,7 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
+	mapEditor_->Edit();
 
 #endif // _DEBUG
 
@@ -73,6 +74,8 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw() {
+
+	mapEditor_->Draw(camera_.get());
 
 	/*model_->Draw(camera_.get());
 	model2_->Draw(camera_.get());*/

@@ -44,12 +44,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)..\External\nlohmann;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Externals\nlohmann;$(ProjectDir)Externals\imgui;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)..\External\nlohmann;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Externals\nlohmann;$(ProjectDir)Externals\imgui;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -86,6 +86,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,13 +127,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
     <ClCompile Include="Application\MapEditor.cpp" />
     <ClCompile Include="Application\Particle.cpp" />
-    <ClCompile Include="externals\imgui\imgui.cpp" />
-    <ClCompile Include="externals\imgui\imgui_demo.cpp" />
-    <ClCompile Include="externals\imgui\imgui_draw.cpp" />
-    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp" />
-    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="externals\imgui\imgui_tables.cpp" />
-    <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Game\gamescene\GameScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -167,22 +161,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Tool\GlobalVariables.h" />
     <ClInclude Include="Application\MapEditor.h" />
     <ClInclude Include="Application\Particle.h" />
-    <ClInclude Include="externals\imgui\imconfig.h" />
-    <ClInclude Include="externals\imgui\imgui.h" />
-    <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
-    <ClInclude Include="externals\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="externals\imgui\imgui_internal.h" />
-    <ClInclude Include="externals\imgui\imstb_rectpack.h" />
-    <ClInclude Include="externals\imgui\imstb_textedit.h" />
-    <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Game\gamescene\GameScene.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="imgui\imgui.vcxproj">
+      <Project>{8a63a36b-cda0-488d-a663-05d604fbdbb3}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

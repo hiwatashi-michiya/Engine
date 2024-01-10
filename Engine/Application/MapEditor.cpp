@@ -1,6 +1,6 @@
 #include "MapEditor.h"
-#include "Externals/imgui/imgui.h"
-#include "Externals/nlohmann/json.hpp"
+#include <imgui.h>
+#include <json.hpp>
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
