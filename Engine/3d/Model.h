@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 #include <dxcapi.h>
-#include "Engine/manager/ModelManager.h"
-#include "WorldTransform.h"
-#include "Engine/base/Camera.h"
+#include "manager/ModelManager.h"
+#include "base/Camera.h"
 #include "Mesh.h"
 #include <memory>
 #include <unordered_map>
@@ -74,6 +73,9 @@ public:
 
 	Model* parent_ = nullptr;
 
+	//メッシュ
+	Mesh* mesh_;
+
 private:
 
 	//静的メンバ変数
@@ -110,9 +112,6 @@ private:
 	TransformationMatrix* matTransformMap_ = nullptr;
 	//カメラ座標マップ
 	CameraForGPU* cameraMap_ = nullptr;
-
-	//メッシュ
-	Mesh* mesh_;
 
 	//テクスチャ
 	Texture* texture_;

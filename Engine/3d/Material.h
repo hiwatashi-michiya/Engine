@@ -1,7 +1,7 @@
 #pragma once
 #include <wrl.h>
 #include <d3d12.h>
-#include "Engine/manager/ModelManager.h"
+#include "manager/ModelManager.h"
 
 
 class Material

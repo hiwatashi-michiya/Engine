@@ -43,20 +43,14 @@
     <Filter Include="Game">
       <UniqueIdentifier>{ab1ff59b-4e59-4fc1-bb6b-0f667912d291}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\player">
-      <UniqueIdentifier>{917f4b7e-6a0d-44e4-a646-8f1b0084b8a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\gameScene">
       <UniqueIdentifier>{9faf39e3-20d2-4aac-9535-c1d01738b60f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\enemy">
-      <UniqueIdentifier>{87b21323-17e1-416c-817c-1030260f5109}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\stage">
-      <UniqueIdentifier>{5825f192-7d68-4fbc-9f67-046c78643a1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Tool">
       <UniqueIdentifier>{8e837e6d-46fc-4c8d-8c49-3bd19f5bf5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{195999bf-2b06-4818-bbf1-668bb7eeaac7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,15 +126,6 @@
     <ClCompile Include="Game\gamescene\GameScene.cpp">
       <Filter>Game\gameScene</Filter>
     </ClCompile>
-    <ClCompile Include="Game\player\Player.cpp">
-      <Filter>Game\player</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\stage\Stage.cpp">
-      <Filter>Game\stage</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\enemy\Enemy.cpp">
-      <Filter>Game\enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\math\Collision.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
@@ -162,17 +147,17 @@
     <ClCompile Include="Engine\math\Rand.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Tool\MapEditor.cpp">
-      <Filter>Engine\Tool</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp">
       <Filter>Engine\Tool</Filter>
     </ClCompile>
     <ClCompile Include="Engine\manager\ModelManager.cpp">
       <Filter>Engine\manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Tool\Particle.cpp">
-      <Filter>Engine\Tool</Filter>
+    <ClCompile Include="Application\MapEditor.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Particle.cpp">
+      <Filter>Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -257,15 +242,6 @@
     <ClInclude Include="Game\gamescene\GameScene.h">
       <Filter>Game\gameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Game\player\Player.h">
-      <Filter>Game\player</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\stage\Stage.h">
-      <Filter>Game\stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\enemy\Enemy.h">
-      <Filter>Game\enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\manager\ImGuiManager.h">
       <Filter>Engine\manager</Filter>
     </ClInclude>
@@ -290,17 +266,17 @@
     <ClInclude Include="Engine\math\Rand.h">
       <Filter>Engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Tool\MapEditor.h">
-      <Filter>Engine\Tool</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Tool\GlobalVariables.h">
       <Filter>Engine\Tool</Filter>
     </ClInclude>
     <ClInclude Include="Engine\manager\ModelManager.h">
       <Filter>Engine\manager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Tool\Particle.h">
-      <Filter>Engine\Tool</Filter>
+    <ClInclude Include="Application\MapEditor.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Particle.h">
+      <Filter>Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

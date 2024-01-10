@@ -4,13 +4,12 @@
 #include <string>
 #include <vector>
 #include <dxcapi.h>
-#include "Engine/manager/ModelManager.h"
-#include "WorldTransform.h"
+#include "manager/ModelManager.h"
 #include <vector>
 #include "Mesh.h"
 #include <memory>
 #include <unordered_map>
-#include "Engine/base/Camera.h"
+#include "base/Camera.h"
 
 class Particle3D
 {
@@ -68,6 +67,9 @@ public:
 	//インスタンシングの数
 	uint32_t instanceCount_;
 
+	//メッシュ
+	Mesh* mesh_;
+
 private:
 
 	//静的メンバ変数
@@ -100,9 +102,6 @@ private:
 	
 	//TransformMatrix
 	TransformationMatrix* matTransformMap_ = nullptr;
-	
-	//メッシュ
-	Mesh* mesh_;
 
 	//テクスチャ
 	Texture* texture_;

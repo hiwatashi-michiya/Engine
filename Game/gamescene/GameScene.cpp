@@ -25,12 +25,15 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	gv_ = GlobalVariables::GetInstance();
+	mapEditor_ = MapEditor::GetInstance();
+	mapEditor_->Initialize();
 
-	particle_.Initialize(Particle::Type::k3D);
+	particle_.Initialize(Particle::k3D, Particle::kCircle);
 	particle_.startPosition_ = { 0.0f,0.0f,0.0f };
 	particle_.AddParticle("./resources/plane/plane.obj", tex2_, 10);
 	particle_.AddParticle("./resources/plane/plane.obj", tex_, 20);
 	particle_.Reset();
+	particle_.SetIsStart(true);
 
 	model_->position_.x = 2.0f;
 
@@ -38,7 +41,7 @@ void GameScene::Initialize() {
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,10.0f, -30.0f };
 	camera_->rotation_.x = 0.3f;
-	
+
 }
 
 void GameScene::Update() {
@@ -57,7 +60,7 @@ void GameScene::Update() {
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
 
-	particle_.Update();
+	/*particle_.Update();*/
 
 	if (input_->TriggerKey(DIK_Q)) {
 		model2_->SetTexture(tex_);
@@ -71,9 +74,9 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	model_->Draw(camera_.get());
-	model2_->Draw(camera_.get());
+	/*model_->Draw(camera_.get());
+	model2_->Draw(camera_.get());*/
 
-	particle_.Draw(camera_.get());
+	/*particle_.Draw(camera_.get());*/
 
 }

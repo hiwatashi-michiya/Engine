@@ -1,12 +1,12 @@
 #pragma once
 #include <d3d12.h>
 #include <wrl.h>
-#include "Engine/math/Matrix4x4.h"
-#include "Engine/manager/TextureManager.h"
-#include "Engine/math/Vector2.h"
-#include "Engine/math/Vector4.h"
+#include "Matrix4x4.h"
+#include "manager/TextureManager.h"
+#include "Vector2.h"
+#include "Vector4.h"
 #include <dxcapi.h>
-#include "Engine/math/Vector3.h"
+#include "Vector3.h"
 
 class Sprite
 {
