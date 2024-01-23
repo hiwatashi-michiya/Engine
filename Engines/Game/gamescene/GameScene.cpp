@@ -24,9 +24,6 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	gv_ = GlobalVariables::GetInstance();
-	mapEditor_ = MapEditor::GetInstance();
-	mapEditor_->Initialize();
 
 	particle_.Initialize(Particle::k3D, Particle::kCircle);
 	particle_.startPosition_ = { 0.0f,0.0f,0.0f };
@@ -54,8 +51,6 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	mapEditor_->Edit();
-
 #endif // _DEBUG
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
@@ -75,11 +70,6 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	mapEditor_->Draw(camera_.get());
 
-	/*model_->Draw(camera_.get());
-	model2_->Draw(camera_.get());*/
-
-	/*particle_.Draw(camera_.get());*/
 
 }
