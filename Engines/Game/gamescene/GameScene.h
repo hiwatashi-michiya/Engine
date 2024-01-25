@@ -28,9 +28,10 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
-	GlobalVariables* gv_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
+
+	std::unique_ptr<Model> model_;
 
 };
 

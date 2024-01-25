@@ -112,6 +112,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\Convert.cpp" />
+    <ClCompile Include="Engine\FrameWork\MolFrameWork.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\Leak.cpp" />
     <ClCompile Include="Engine\manager\AudioManager.cpp" />
@@ -127,6 +128,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
     <ClCompile Include="Application\MapEditor.cpp" />
     <ClCompile Include="Application\Particle.cpp" />
+    <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\gamescene\GameScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -143,6 +145,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\SafeDelete.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\Convert.h" />
+    <ClInclude Include="Engine\FrameWork\MolFrameWork.h" />
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\Leak.h" />
     <ClInclude Include="Engine\manager\AudioManager.h" />
@@ -161,6 +164,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Tool\GlobalVariables.h" />
     <ClInclude Include="Application\MapEditor.h" />
     <ClInclude Include="Application\Particle.h" />
+    <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\gamescene\GameScene.h" />
   </ItemGroup>
   <ItemGroup>

@@ -48,7 +48,6 @@ void Engine::Initialize(const char* title, int width, int height) {
 	
 	TextureManager::GetInstance()->Initialize();
 	Input::GetInstance()->Initialize();
-	GlobalVariables::GetInstance()->LoadFiles();
 
 #ifdef _DEBUG
 
@@ -73,6 +72,8 @@ int Engine::ProcessMessage() {
 }
 
 void Engine::Finalize() {
+
+	TextureManager::GetInstance()->Finalize();
 
 #ifdef _DEBUG
 
@@ -111,8 +112,6 @@ void Engine::BeginFrame() {
 	Model::PreDraw(dxCommon_->GetCommandList());
 	Particle3D::PreDraw(dxCommon_->GetCommandList());
 	Sprite::PreDraw(dxCommon_->GetCommandList());
-
-	GlobalVariables::GetInstance()->Update();
 
 }
 

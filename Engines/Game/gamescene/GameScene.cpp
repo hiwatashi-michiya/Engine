@@ -19,12 +19,13 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	gv_ = GlobalVariables::GetInstance();
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,10.0f, -30.0f };
 	camera_->rotation_.x = 0.3f;
+
+	model_.reset(Model::Create("./resources/cube/cube.obj"));
 
 }
 
@@ -47,5 +48,6 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
+	model_->Draw(camera_.get());
 
 }

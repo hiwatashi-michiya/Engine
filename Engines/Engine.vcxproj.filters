@@ -49,6 +49,9 @@
     <Filter Include="Application">
       <UniqueIdentifier>{195999bf-2b06-4818-bbf1-668bb7eeaac7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\FrameWork">
+      <UniqueIdentifier>{1c02f3b4-90c7-4268-9dd8-0836fc579426}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -134,6 +137,12 @@
     </ClCompile>
     <ClCompile Include="Application\Particle.cpp">
       <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\FrameWork\MolFrameWork.cpp">
+      <Filter>Engine\FrameWork</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +238,12 @@
     </ClInclude>
     <ClInclude Include="Application\Particle.h">
       <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\FrameWork\MolFrameWork.h">
+      <Filter>Engine\FrameWork</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
