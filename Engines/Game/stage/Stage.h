@@ -1,9 +1,10 @@
 #pragma once
 #include "Engine/3d/Model.h"
-#include "Engine/3d/WorldTransform.h"
 #include <memory>
 #include "Game/player/Player.h"
-#include "Game/enemy/Enemy.h"
+#include <string>
+#include "Game/block/Block.h"
+#include "Game/goal/Goal.h"
 
 class Stage
 {
@@ -15,27 +16,50 @@ public:
 
 	void Update();
 
-	void Draw();
+	void Draw(Camera* camera);
 
-	void Collision(Player* player, Enemy* enemy);
+	void DrawParticle(Camera* camera);
 
-	void SetOBB();
+	void LoadStage(const std::string& filename);
+
+	const std::string& kDirectoryPath_ = "./resources/Maps/";
+
+	bool GetAllBlockRock();
 
 private:
 
-	std::unique_ptr<Model> modelFloor_[5];
+	void CheckRockBlock(std::shared_ptr<Block> checkBlock, uint32_t num);
 
-	std::unique_ptr<Model> modelGoal_;
+private:
 
-	WorldTransform worldTransforms_[5];
+	//マップに配置されているオブジェクトの構造体
+	struct MapObject {
 
-	WorldTransform worldTransformGoal_;
+		std::string objName;
 
-	Vector3 velocity_[2]{};
+		std::unique_ptr<Model> model;
 
-	OBB obbs_[5];
+		//メッシュ
+		std::string meshName;
 
-	OBB obbGoal_;
+		int32_t meshNumber = 0;
+
+		//オブジェクトの役割を表すタグ
+		std::string tag;
+
+		int32_t tagNumber = 0;
+
+		bool isSelect = false;
+
+	};
+
+	std::unique_ptr<Player> player_;
+
+	std::list<std::shared_ptr<MapObject>> mapObjData_;
+
+	std::list<std::shared_ptr<Block>> blocks_;
+
+	std::list<std::shared_ptr<Goal>> goals_;
 
 };
 

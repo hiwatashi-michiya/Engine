@@ -183,7 +183,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	//DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthEnable = false;
 	//書き込み
 	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	//近ければ描画
@@ -261,19 +261,22 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	assert(device_);
 
-	if (meshes_.find(filename) != meshes_.end()) {
+	mesh_ = std::make_unique<Mesh>();
+	mesh_->Create(filename);
 
-		mesh_ = meshes_[filename].get();
+	//if (meshes_.find(filename) != meshes_.end()) {
 
-	}
-	else {
+	//	mesh_ = meshes_[filename].get();
 
-		//メッシュを登録
-		meshes_[filename] = std::make_shared<Mesh>();
-		meshes_[filename]->Create(filename);
-		mesh_ = meshes_[filename].get();
+	//}
+	//else {
 
-	}
+	//	//メッシュを登録
+	//	meshes_[filename] = std::make_shared<Mesh>();
+	//	meshes_[filename]->Create(filename);
+	//	mesh_ = meshes_[filename].get();
+
+	//}
 
 	texture_ = mesh_->texture_;
 

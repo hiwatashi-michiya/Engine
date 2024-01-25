@@ -266,19 +266,22 @@ void Model::Initialize(const std::string& filename) {
 
 	assert(device_);
 
-	if (meshes_.find(filename) != meshes_.end()) {
+	mesh_ = std::make_unique<Mesh>();
+	mesh_->Create(filename);
 
-		mesh_ = meshes_[filename].get();
+	//if (meshes_.find(filename) != meshes_.end()) {
 
-	}
-	else {
+	//	mesh_ = meshes_[filename].get();
 
-		//メッシュを登録
-		meshes_[filename] = std::make_unique<Mesh>();
-		meshes_[filename]->Create(filename);
-		mesh_ = meshes_[filename].get();
+	//}
+	//else {
 
-	}
+	//	//メッシュを登録
+	//	meshes_[filename] = std::make_unique<Mesh>();
+	//	meshes_[filename]->Create(filename);
+	//	mesh_ = meshes_[filename].get();
+
+	//}
 
 	texture_ = mesh_->texture_;
 
@@ -387,19 +390,23 @@ void Model::StaticImGuiUpdate() {
 
 void Model::SetMesh(const std::string& objFileName) {
 
-	if (meshes_.find(objFileName) != meshes_.end()) {
 
-		mesh_ = meshes_[objFileName].get();
+	mesh_ = std::make_unique<Mesh>();
+	mesh_->Create(objFileName);
 
-	}
-	else {
+	//if (meshes_.find(objFileName) != meshes_.end()) {
 
-		//メッシュを登録
-		meshes_[objFileName] = std::make_unique<Mesh>();
-		meshes_[objFileName]->Create(objFileName);
-		mesh_ = meshes_[objFileName].get();
+	//	mesh_ = meshes_[objFileName].get();
 
-	}
+	//}
+	//else {
+
+	//	メッシュを登録
+	//	meshes_[objFileName] = std::make_unique<Mesh>();
+	//	meshes_[objFileName]->Create(objFileName);
+	//	mesh_ = meshes_[objFileName].get();
+
+	//}
 
 }
 

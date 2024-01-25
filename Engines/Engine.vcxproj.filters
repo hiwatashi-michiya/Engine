@@ -52,6 +52,18 @@
     <Filter Include="Engine\FrameWork">
       <UniqueIdentifier>{1c02f3b4-90c7-4268-9dd8-0836fc579426}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\stage">
+      <UniqueIdentifier>{1fff1bfe-0702-4109-b317-07bb27e2a053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\player">
+      <UniqueIdentifier>{892cee94-34b7-4a0e-814c-fbaece9ee305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\block">
+      <UniqueIdentifier>{e35197d1-4974-42ed-be59-0551dcfb0d44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\goal">
+      <UniqueIdentifier>{583e43da-b392-4259-b2f0-383d554f28aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -143,6 +155,18 @@
     </ClCompile>
     <ClCompile Include="Engine\FrameWork\MolFrameWork.cpp">
       <Filter>Engine\FrameWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\player\Player.cpp">
+      <Filter>Game\player</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\stage\Stage.cpp">
+      <Filter>Game\stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\goal\Goal.cpp">
+      <Filter>Game\goal</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\block\Block.cpp">
+      <Filter>Game\block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +268,18 @@
     </ClInclude>
     <ClInclude Include="Engine\FrameWork\MolFrameWork.h">
       <Filter>Engine\FrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\player\Player.h">
+      <Filter>Game\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\stage\Stage.h">
+      <Filter>Game\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\goal\Goal.h">
+      <Filter>Game\goal</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\block\Block.h">
+      <Filter>Game\block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

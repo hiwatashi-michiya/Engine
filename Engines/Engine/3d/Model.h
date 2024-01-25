@@ -74,7 +74,7 @@ public:
 	Model* parent_ = nullptr;
 
 	//メッシュ
-	Mesh* mesh_;
+	std::unique_ptr<Mesh> mesh_;
 
 private:
 
