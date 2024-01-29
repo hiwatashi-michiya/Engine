@@ -52,9 +52,26 @@ void Particle::Reset() {
 					float((rand() % 40 - 20) * 0.02f + 0.01f) };
 
 				break;
+			case Particle::kUpWide:
+
+				particle->scales_[i] = { 1.0f,1.0f,1.0f };
+
+				particle->velocities_[i] = { 0.0f,float((rand() % 20) * 0.02f + 0.01f),0.0f };
+
+				if (particle->velocities_[i].y == 0.0f) {
+					particle->velocities_[i].y = 1.0f;
+				}
+
+				particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 20 - 10) + 0.01f),
+							float((rand() % 100 - 100) * 0.2f + 0.01f),float((rand() % 20 - 10) + 0.01f) };
+
+				break;
 			default:
 				break;
 			}
+
+			isActives_[num][i] = false;
+
 		}
 
 		particle->mesh_->material_->constMap_->color = colors_[num];
@@ -69,29 +86,32 @@ void Particle::Update() {
 
 	if (isStart_) {
 
-		for (auto& particle : particles3D_) {
+		//パーティクルセット
+		for (uint32_t num = 0; auto& particle : particles3D_) {
 
 			for (uint32_t i = 0; i < particle->instanceCount_; i++) {
 
-				switch (type_)
-				{
-				case Particle::kCircle:
+				if (!isActives_[num][i]) {
 
-					if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
-						particle->positions_[i] += particle->velocities_[i];
-					}
+					switch (type_)
+					{
+					case Particle::kCircle:
+						particle->velocities_[i] = { float((rand() % 20 - 10) * 0.02f + 0.01f), float((rand() % 20 - 10) * 0.02f + 0.01f),
+						float((rand() % 20 - 10) * 0.02f + 0.01f) };
 
-					break;
-				case Particle::kUp:
+						if (particle->velocities_[i].x == 0.0f && particle->velocities_[i].y == 0.0f &&
+							particle->velocities_[i].z == 0.0f) {
+							particle->velocities_[i].z = 0.2f;
+						}
 
-					particle->positions_[i] += particle->velocities_[i];
+						particle->scales_[i] = { 0.8f,0.8f,0.8f };
 
-					if (particle->scales_[i].x > 0.0f || particle->scales_[i].y > 0.0f ||
-						particle->scales_[i].z > 0.0f) {
-						particle->scales_[i] -= Vector3{ 0.02f,0.02f,0.02f };
-					}
+						particle->positions_[i] = startPosition_;
 
-					if (particle->positions_[i].y >= endY_ || particle->scales_[i].x <= 0.0f) {
+						isActives_[num][i] = true;
+						continue;
+						break;
+					case Particle::kUp:
 
 						particle->scales_[i] = { 1.0f,1.0f,1.0f };
 
@@ -104,11 +124,96 @@ void Particle::Update() {
 						particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 40 - 20) * 0.02f + 0.01f), float((rand() % 20 - 10) * 0.02f + 0.01f),
 							float((rand() % 40 - 20) * 0.02f + 0.01f) };
 
+						isActives_[num][i] = true;
+
+						break;
+					case Particle::kUpWide:
+
+						particle->scales_[i] = { 1.0f,1.0f,1.0f };
+
+						particle->velocities_[i] = { 0.0f,float((rand() % 20) * 0.02f + 0.01f),0.0f };
+
+						if (particle->velocities_[i].y == 0.0f) {
+							particle->velocities_[i].y = 1.0f;
+						}
+
+						particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 20 - 10) + 0.01f),
+									float((rand() % 100 - 100) * 0.2f + 0.01f),float((rand() % 20 - 10) + 0.01f) };
+
+						isActives_[num][i] = true;
+
+						break;
+					default:
+						break;
 					}
 
 					break;
-				default:
-					break;
+
+				}
+
+			}
+
+			num++;
+
+		}
+
+		for (uint32_t num = 0; auto & particle : particles3D_) {
+
+			for (uint32_t i = 0; i < particle->instanceCount_; i++) {
+
+				if (isActives_[num][i]) {
+
+					switch (type_)
+					{
+					case Particle::kCircle:
+
+						if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
+							particle->positions_[i] += particle->velocities_[i];
+						}
+						else {
+							isActives_[num][i] = false;
+						}
+
+						break;
+					case Particle::kUp:
+
+						particle->positions_[i] += particle->velocities_[i];
+
+						if (particle->scales_[i].x > 0.0f || particle->scales_[i].y > 0.0f ||
+							particle->scales_[i].z > 0.0f) {
+							particle->scales_[i] -= Vector3{ 0.02f,0.02f,0.02f };
+						}
+
+						if (particle->positions_[i].y >= endY_ || particle->scales_[i].x <= 0.0f) {
+
+							isActives_[num][i] = false;
+
+						}
+
+						break;
+					case Particle::kUpWide:
+
+						particle->positions_[i] += particle->velocities_[i];
+
+						if (particle->scales_[i].x > 0.0f || particle->scales_[i].y > 0.0f ||
+							particle->scales_[i].z > 0.0f) {
+							particle->scales_[i] -= Vector3{ 0.02f,0.02f,0.02f };
+						}
+
+						if (particle->positions_[i].y >= endY_ || particle->scales_[i].x <= 0.0f) {
+
+							isActives_[num][i] = false;
+
+						}
+
+						break;
+					default:
+						break;
+					}
+
+				}
+				else {
+					particle->scales_[i] = { 0.0f,0.0f,0.0f };
 				}
 
 			}
@@ -118,15 +223,19 @@ void Particle::Update() {
 			case Particle::kCircle:
 
 				if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
-					particle->mesh_->material_->constMap_->color.w -= 0.01f;
+					particle->mesh_->material_->constMap_->color.w -= 0.05f;
 				}
 
 				break;
 			case Particle::kUp:
 				break;
+			case Particle::kUpWide:
+				break;
 			default:
 				break;
 			}
+
+			num++;
 
 		}
 
@@ -157,5 +266,14 @@ void Particle::AddParticle(const std::string& name, Texture* texture, uint32_t i
 	newParticle->SetTexture(texture);
 	particles3D_.push_back(newParticle);
 	colors_.push_back({ 1.0f,1.0f,1.0f,1.0f });
+	
+	//フラグ追加
+	std::vector<bool> newIsActives;
+	newIsActives.resize(instanceCount);
+	for (uint32_t i = 0; i < instanceCount; i++) {
+		newIsActives[i] = false;
+	}
+
+	isActives_.push_back(newIsActives);
 
 }

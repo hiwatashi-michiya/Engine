@@ -101,6 +101,10 @@ private:
 	Texture* backTex_;
 	Texture* resetTex_;
 
+	Texture* particleTex_;
+
+	std::unique_ptr<Particle> particle_;
+
 	std::unique_ptr<Sprite> stage1Sprite_;
 	std::unique_ptr<Sprite> stage2Sprite_;
 	std::unique_ptr<Sprite> stage3Sprite_;

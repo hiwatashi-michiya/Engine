@@ -36,11 +36,22 @@ void Player::Update() {
 		moveCoolTimer_--;
 	}
 
+	if (model_->scale_.x < 1.0f) {
+
+		model_->scale_.x += 0.1f;
+
+		if (model_->scale_.x > 1.0f) {
+			model_->scale_.x = 1.0f;
+		}
+
+	}
+
 	if (input_->PushButton(XINPUT_GAMEPAD_DPAD_UP) && moveCoolTimer_ == 0) {
 		particle_->Reset();
 		particle_->SetIsStart(true);
 		model_->position_.z += moveVal_;
 		moveCoolTimer_ = kMaxCoolTime_;
+		model_->scale_.x = 0.6f;
 		move_ = kUp;
 		model_->rotation_.y = 3.14f;
 	}
@@ -49,6 +60,7 @@ void Player::Update() {
 		particle_->SetIsStart(true);
 		model_->position_.z -= moveVal_;
 		moveCoolTimer_ = kMaxCoolTime_;
+		model_->scale_.x = 0.6f;
 		move_ = kDown;
 		model_->rotation_.y = 0.0f;
 	}
@@ -57,6 +69,7 @@ void Player::Update() {
 		particle_->SetIsStart(true);
 		model_->position_.x += moveVal_;
 		moveCoolTimer_ = kMaxCoolTime_;
+		model_->scale_.x = 0.6f;
 		move_ = kRight;
 		model_->rotation_.y = -1.57f;
 	}
@@ -65,6 +78,7 @@ void Player::Update() {
 		particle_->SetIsStart(true);
 		model_->position_.x -= moveVal_;
 		moveCoolTimer_ = kMaxCoolTime_;
+		model_->scale_.x = 0.6f;
 		move_ = kLeft;
 		model_->rotation_.y = 1.57f;
 	}

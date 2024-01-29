@@ -30,6 +30,10 @@ GameScene::GameScene()
 	backTex_ = TextureManager::GetInstance()->Load("./resources/UI/back.png");
 	resetTex_ = TextureManager::GetInstance()->Load("./resources/UI/reset.png");
 
+	particleTex_ = TextureManager::GetInstance()->Load("./resources/goal/particle_2.png");
+
+	particle_ = std::make_unique<Particle>();
+
 	stage1Sprite_.reset(Sprite::Create(stage1Tex_, { 300.0f,300.0f }));
 	stage2Sprite_.reset(Sprite::Create(stage2Tex_, { 576.0f,300.0f }));
 	stage3Sprite_.reset(Sprite::Create(stage3Tex_, { 852.0f,300.0f }));
@@ -72,6 +76,13 @@ void GameScene::Initialize() {
 	camera_->position_ = { 0.0f,44.0f, -33.0f };
 	camera_->rotation_.x = 0.9f;
 	
+	particle_->Initialize(Particle::k3D, Particle::kUpWide);
+	particle_->startPosition_ = camera_->GetWorldPosition() - Vector3{ 0.0f, -5.0f, 0.0f };
+	particle_->AddParticle("./resources/plane/plane.obj", particleTex_, 50);
+	particle_->endY_ = 50.0f;
+	particle_->SetIsStart(true);
+	particle_->Reset();
+
 	stage_ = std::make_unique<Stage>();
 
 	stage_->Initialize();
@@ -154,6 +165,8 @@ void GameScene::Draw() {
 
 void GameScene::TitleInitialize() {
 
+	particle_->Reset();
+
 	isInitialize_ = true;
 
 }
@@ -174,9 +187,13 @@ void GameScene::TitleUpdate() {
 
 	}
 
+	particle_->Update();
+
 }
 
 void GameScene::TitleDraw() {
+
+	particle_->Draw(camera_.get());
 
 	titleSprite_->Draw();
 

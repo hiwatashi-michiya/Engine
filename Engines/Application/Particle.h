@@ -18,6 +18,7 @@ public:
 	enum Type {
 		kCircle,
 		kUp,
+		kUpWide,
 	};
 
 	void Initialize(const Dimension& dimension, const Type& type);
@@ -58,6 +59,7 @@ private:
 
 	std::vector<std::shared_ptr<Particle3D>> particles3D_;
 	std::vector<Vector4> colors_;
+	std::vector<std::vector<bool>> isActives_;
 
 	Dimension dimension_;
 
