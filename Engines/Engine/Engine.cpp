@@ -14,6 +14,8 @@
 #include "manager/AudioManager.h"
 #include "math/Rand.h"
 #include "Tool/GlobalVariables.h"
+#include "Drawing/ShaderManager.h"
+#include "Drawing/PipelineManager.h"
 
 #ifdef _DEBUG
 
@@ -39,6 +41,9 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	dxCommon_->Initialize(winApp_, width, height);
+
+	ShaderManager::GetInstance()->Initialize();
+	PipelineManager::GetInstance()->Initialize(dxCommon_->GetDevice());
 
 	AudioManager::GetInstance()->Initialize();
 	Sprite::StaticInitialize(dxCommon_->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);

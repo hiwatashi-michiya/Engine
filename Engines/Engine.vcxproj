@@ -112,6 +112,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\Convert.cpp" />
+    <ClCompile Include="Engine\Drawing\PipelineManager.cpp" />
+    <ClCompile Include="Engine\Drawing\ShaderManager.cpp" />
     <ClCompile Include="Engine\FrameWork\MolFrameWork.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\Leak.cpp" />
@@ -145,6 +147,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\SafeDelete.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\Convert.h" />
+    <ClInclude Include="Engine\Drawing\PipelineManager.h" />
+    <ClInclude Include="Engine\Drawing\ShaderManager.h" />
     <ClInclude Include="Engine\FrameWork\MolFrameWork.h" />
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\Leak.h" />

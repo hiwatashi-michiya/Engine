@@ -52,6 +52,9 @@
     <Filter Include="Engine\FrameWork">
       <UniqueIdentifier>{1c02f3b4-90c7-4268-9dd8-0836fc579426}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Drawing">
+      <UniqueIdentifier>{b2742f1d-59c0-4882-be1b-f5ddfbe9a60b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -143,6 +146,12 @@
     </ClCompile>
     <ClCompile Include="Engine\FrameWork\MolFrameWork.cpp">
       <Filter>Engine\FrameWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\PipelineManager.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\ShaderManager.cpp">
+      <Filter>Engine\Drawing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +253,12 @@
     </ClInclude>
     <ClInclude Include="Engine\FrameWork\MolFrameWork.h">
       <Filter>Engine\FrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\PipelineManager.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\ShaderManager.h">
+      <Filter>Engine\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
