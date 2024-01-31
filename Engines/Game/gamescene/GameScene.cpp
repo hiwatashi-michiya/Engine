@@ -383,6 +383,8 @@ void GameScene::GameInitialize() {
 
 	isClear_ = false;
 
+	push_A_Sprite_->color_.w = 1.0f;
+
 	audioManager_->SetVolume(bgm1_, 0.5f);
 	audioManager_->SetVolume(bgm2_, 0.5f);
 	audioManager_->SetVolume(bgm3_, 0.5f);
