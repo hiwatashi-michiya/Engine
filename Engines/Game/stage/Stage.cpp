@@ -2,6 +2,7 @@
 #include "Engine/math/Collision.h"
 #include "Externals/nlohmann/json.hpp"
 #include <fstream>
+#include "manager/AudioManager.h"
 
 Stage::Stage()
 {
@@ -18,6 +19,7 @@ void Stage::Initialize() {
 	blocks_.clear();
 	goals_.clear();
 	mapObjData_.clear();
+	goalSE_ = AudioManager::GetInstance()->SoundLoadWave("./resources/SE/goal.wav");
 
 }
 
@@ -79,7 +81,7 @@ void Stage::Update() {
 
 				if (IsCollision(block->GetCollision(), goal->GetCollision()) &&
 					block->GetColor() == goal->GetColor()) {
-
+					AudioManager::GetInstance()->Play(goalSE_, 0.5f);
 					block->SetIsRock(true);
 					goal->SetIsGoal(true);
 

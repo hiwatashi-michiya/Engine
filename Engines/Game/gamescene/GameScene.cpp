@@ -15,6 +15,11 @@ GameScene::GameScene()
 	fade_->color_.w = 0.0f;
 	skydome_.reset(Model::Create("./resources/skydome/skydome.obj"));
 	skydome_->scale_ *= 500.0f;
+	skydome_->SetLight(false);
+
+	for (uint32_t i = 0; i < 10; i++) {
+		blockModels_[i].reset(Model::Create("./resources/block/block.obj"));
+	}
 
 	stage1Tex_ = TextureManager::GetInstance()->Load("./resources/UI/stage1.png");
 	stage2Tex_ = TextureManager::GetInstance()->Load("./resources/UI/stage2.png");
@@ -68,8 +73,20 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	gv_ = GlobalVariables::GetInstance();
 	mapEditor_ = MapEditor::GetInstance();
+	audioManager_ = AudioManager::GetInstance();
 
 	mapEditor_->Initialize();
+
+	blockModels_[0]->position_ = { 0.0f,0.0f,0.0f };
+	blockModels_[1]->position_ = { 5.0f,3.0f,5.0f };
+	blockModels_[2]->position_ = { -5.0f,-1.0f,3.0f };
+	blockModels_[3]->position_ = { 13.0f,6.0f,8.0f };
+	blockModels_[4]->position_ = { -18.0f,5.0f,6.0f };
+	blockModels_[5]->position_ = { -16.0f,-4.0f,2.0f };
+	blockModels_[6]->position_ = { 3.0f,2.0f,-4.0f };
+	blockModels_[7]->position_ = { 13.0f,5.0f,-8.0f };
+	blockModels_[8]->position_ = { 15.0f,1.0f,3.0f };
+	blockModels_[9]->position_ = { -12.0f,-4.0f,-8.0f };
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
@@ -86,6 +103,16 @@ void GameScene::Initialize() {
 	stage_ = std::make_unique<Stage>();
 
 	stage_->Initialize();
+
+	bgm1_ = audioManager_->SoundLoadWave("./resources/SE/bgm.wav");
+	bgm2_ = audioManager_->SoundLoadWave("./resources/SE/bgm_2.wav");
+	bgm3_ = audioManager_->SoundLoadWave("./resources/SE/bgm_3.wav");
+	select1_ = audioManager_->SoundLoadWave("./resources/SE/select.wav");
+	select2_ = audioManager_->SoundLoadWave("./resources/SE/select_2.wav");
+
+	audioManager_->Play(bgm1_, 0.5f, true);
+	audioManager_->Play(bgm2_, 0.0f, true);
+	audioManager_->Play(bgm3_, 0.0f, true);
 
 }
 
@@ -167,11 +194,33 @@ void GameScene::TitleInitialize() {
 
 	particle_->Reset();
 
+	audioManager_->SetVolume(bgm1_, 0.5f);
+	audioManager_->SetVolume(bgm2_, 0.0f);
+	audioManager_->SetVolume(bgm3_, 0.0f);
+
+	for (uint32_t i = 0; i < 10; i++) {
+		blockModels_[i]->rotation_ = { 0.0f,0.0f,0.0f };
+	}
+
+	frameCount_ = 0;
+	push_A_Sprite_->color_.w = 1.0f;
+
 	isInitialize_ = true;
 
 }
 
 void GameScene::TitleUpdate() {
+
+	if (++frameCount_ >= 120) {
+		frameCount_ = 0;
+	}
+
+	if (frameCount_ < 60) {
+		push_A_Sprite_->color_.w -= 1.0f / 60.0f;
+	}
+	else {
+		push_A_Sprite_->color_.w += 1.0f / 60.0f;
+	}
 
 	if (isSceneChange_) {
 
@@ -180,8 +229,20 @@ void GameScene::TitleUpdate() {
 	}
 	else {
 
+		for (uint32_t i = 0; i < 10; i++) {
+
+			if (i % 2 == 0) {
+				blockModels_[i]->rotation_ += {float(i / 100.0f), float(i / 100.0f), 0.0f };
+			}
+			else {
+				blockModels_[i]->rotation_ -= {float(i / 100.0f), float(i / 100.0f), 0.0f };
+			}
+			
+		}
+
 		if (input_->TriggerButton(XINPUT_GAMEPAD_A)) {
 			nextScene_ = kSelect;
+			audioManager_->Play(select2_, 0.6f);
 			isSceneChange_ = true;
 		}
 
@@ -193,6 +254,10 @@ void GameScene::TitleUpdate() {
 
 void GameScene::TitleDraw() {
 
+	for (uint32_t i = 0; i < 10; i++) {
+		blockModels_[i]->Draw(camera_.get());
+	}
+
 	particle_->Draw(camera_.get());
 
 	titleSprite_->Draw();
@@ -203,11 +268,36 @@ void GameScene::TitleDraw() {
 
 void GameScene::SelectInitialize() {
 
+	audioManager_->SetVolume(bgm1_, 0.5f);
+	audioManager_->SetVolume(bgm2_, 0.0f);
+	audioManager_->SetVolume(bgm3_, 0.5f);
+
+	frameCount_ = 0;
+	push_A_Sprite_->color_.w = 1.0f;
+
 	isInitialize_ = true;
 
 }
 
 void GameScene::SelectUpdate() {
+
+	if (++frameCount_ >= 120) {
+		frameCount_ = 0;
+	}
+
+	if (frameCount_ < 60) {
+		push_A_Sprite_->color_.w -= 1.0f / 60.0f;
+	}
+	else {
+		push_A_Sprite_->color_.w += 1.0f / 60.0f;
+	}
+
+	if (frameCount_ % 20 == 0) {
+		selectTileSprite_->color_.w = 0.0f;
+	}
+	else {
+		selectTileSprite_->color_.w = 1.0f;
+	}
 
 	if (isSceneChange_) {
 		SceneChange();
@@ -216,16 +306,19 @@ void GameScene::SelectUpdate() {
 
 		if (input_->TriggerButton(XINPUT_GAMEPAD_START)) {
 			nextScene_ = kTitle;
+			audioManager_->Play(select2_, 0.6f);
 			isSceneChange_ = true;
 		}
 
 		if (input_->TriggerButton(XINPUT_GAMEPAD_A)) {
 			nextScene_ = kGame;
+			audioManager_->Play(select2_, 0.6f);
 			isSceneChange_ = true;
 		}
 
 		if (input_->TriggerButton(XINPUT_GAMEPAD_DPAD_RIGHT) && stageNumber_ < kMaxStage_) {
 			stageNumber_++;
+			audioManager_->Play(select1_, 0.6f);
 			selectTileSprite_->position_ = { -8.0f + (276.0f * stageNumber_),268.0f };
 		}
 
@@ -233,6 +326,7 @@ void GameScene::SelectUpdate() {
 
 		if (input_->TriggerButton(XINPUT_GAMEPAD_DPAD_LEFT) && stageNumber_ > 0) {
 			stageNumber_--;
+			audioManager_->Play(select1_, 0.6f);
 			selectTileSprite_->position_ = { -8.0f + (276.0f * stageNumber_),268.0f };
 		}
 
@@ -240,6 +334,7 @@ void GameScene::SelectUpdate() {
 
 		if (input_->TriggerButton(XINPUT_GAMEPAD_DPAD_LEFT) && stageNumber_ > 1) {
 			stageNumber_--;
+			audioManager_->Play(select1_, 0.6f);
 			selectTileSprite_->position_ = { -8.0f + (276.0f * stageNumber_),268.0f };
 		}
 
@@ -288,6 +383,10 @@ void GameScene::GameInitialize() {
 
 	isClear_ = false;
 
+	audioManager_->SetVolume(bgm1_, 0.5f);
+	audioManager_->SetVolume(bgm2_, 0.5f);
+	audioManager_->SetVolume(bgm3_, 0.5f);
+
 	isInitialize_ = true;
 
 }
@@ -301,10 +400,12 @@ void GameScene::GameUpdate() {
 
 		if (input_->TriggerButton(XINPUT_GAMEPAD_START)) {
 			nextScene_ = kSelect;
+			audioManager_->Play(select2_, 0.6f);
 			isSceneChange_ = true;
 		}
 
 		if (input_->TriggerButton(XINPUT_GAMEPAD_Y)) {
+			audioManager_->Play(select2_, 0.6f);
 			GameInitialize();
 		}
 
@@ -317,6 +418,7 @@ void GameScene::GameUpdate() {
 
 		if (input_->TriggerButton(XINPUT_GAMEPAD_A)) {
 			nextScene_ = kSelect;
+			audioManager_->Play(select2_, 0.6f);
 			isSceneChange_ = true;
 		}
 

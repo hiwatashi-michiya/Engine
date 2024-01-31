@@ -62,8 +62,8 @@ void Particle::Reset() {
 					particle->velocities_[i].y = 1.0f;
 				}
 
-				particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 20 - 10) + 0.01f),
-							float((rand() % 100 - 100) * 0.2f + 0.01f),float((rand() % 20 - 10) + 0.01f) };
+				particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 40 - 20) + 0.01f),
+							float((rand() % 100 - 100) * 0.2f + 0.01f),float((rand() % 40 - 20) + 0.01f) };
 
 				break;
 			default:
@@ -137,8 +137,8 @@ void Particle::Update() {
 							particle->velocities_[i].y = 1.0f;
 						}
 
-						particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 20 - 10) + 0.01f),
-									float((rand() % 100 - 100) * 0.2f + 0.01f),float((rand() % 20 - 10) + 0.01f) };
+						particle->positions_[i] = startPosition_ + Vector3{ float((rand() % 40 - 20) + 0.01f),
+									float((rand() % 100 - 100) * 0.2f + 0.01f),float((rand() % 40 - 20) + 0.01f) };
 
 						isActives_[num][i] = true;
 
@@ -167,7 +167,12 @@ void Particle::Update() {
 					{
 					case Particle::kCircle:
 
-						if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
+						if (particle->scales_[i].x > 0.0f || particle->scales_[i].y > 0.0f ||
+							particle->scales_[i].z > 0.0f) {
+							particle->scales_[i] -= Vector3{ 0.02f,0.02f,0.02f };
+						}
+
+						if (particle->mesh_->material_->constMap_->color.w > 0.0f && particle->scales_[i].x > 0.0f) {
 							particle->positions_[i] += particle->velocities_[i];
 						}
 						else {

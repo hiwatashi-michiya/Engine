@@ -53,6 +53,8 @@ private:
 
 	};
 
+	uint32_t goalSE_;
+
 	std::unique_ptr<Player> player_;
 
 	std::list<std::shared_ptr<MapObject>> mapObjData_;

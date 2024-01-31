@@ -6,7 +6,7 @@ static D3DResourceLeakChecker leak;
 
 void MolFrameWork::Initialize() {
 
-	Engine::Initialize("engine", 1280, 720);
+	Engine::Initialize("カラコロ", 1280, 720);
 
 }
 

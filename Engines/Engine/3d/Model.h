@@ -60,6 +60,9 @@ public:
 	//メッシュ切り替え
 	void SetMesh(const std::string& objFileName);
 
+	//ライト切り替え
+	void SetLight(bool flag) { mesh_->material_->constMap_->enableLighting = flag; }
+
 	//ImGui表示
 	void ImGuiUpdate(const std::string& name);
 

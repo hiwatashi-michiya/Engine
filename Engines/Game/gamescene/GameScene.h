@@ -13,6 +13,7 @@
 #include "Engine/Tool/GlobalVariables.h"
 #include "Application/MapEditor.h"
 #include "Application/Particle.h"
+#include <array>
 
 class GameScene
 {
@@ -105,6 +106,8 @@ private:
 
 	std::unique_ptr<Particle> particle_;
 
+	std::array<std::unique_ptr<Model>, 10> blockModels_;
+
 	std::unique_ptr<Sprite> stage1Sprite_;
 	std::unique_ptr<Sprite> stage2Sprite_;
 	std::unique_ptr<Sprite> stage3Sprite_;
@@ -118,6 +121,14 @@ private:
 	std::unique_ptr<Sprite> titleSprite_;
 	std::unique_ptr<Sprite> backSprite_;
 	std::unique_ptr<Sprite> resetSprite_;
+
+	uint32_t bgm1_;
+	uint32_t bgm2_;
+	uint32_t bgm3_;
+	uint32_t select1_;
+	uint32_t select2_;
+
+	int32_t frameCount_ = 0;
 
 };
 

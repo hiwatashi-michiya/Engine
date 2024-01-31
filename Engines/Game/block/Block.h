@@ -50,4 +50,10 @@ private:
 
 	Color color_;
 
+	float pLightIntencity_ = 0.5f;
+
+	int32_t lightCount_ = 0;
+
+	int32_t setCount_;
+
 };

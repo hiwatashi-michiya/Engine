@@ -74,7 +74,7 @@ Material* Material::Create(const std::string& filename) {
 		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
 
 		constMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		constMap_->enableLighting = false;
+		constMap_->enableLighting = true;
 		constMap_->shininess = 50.0f;
 		constMap_->uvTransform = MakeIdentity4x4();
 
@@ -106,8 +106,8 @@ Material* Material::Create(const std::string& filename) {
 		pLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&pLightMap_));
 
 		pLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		pLightMap_->position = { 0.0f,0.0f,0.0f };
-		pLightMap_->intensity = 1.0f;
+		pLightMap_->position = { 0.0f,50.0f,0.0f };
+		pLightMap_->intensity = 0.5f;
 		pLightMap_->radius = 200.0f;
 		pLightMap_->decay = 1.0f;
 

@@ -61,5 +61,9 @@ private:
 
 	Texture* tex_;
 
+	int32_t animationTime_ = 0;
+
+	uint32_t moveSE_;
+
 };
 
