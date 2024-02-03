@@ -28,12 +28,11 @@ void ShaderManager::Initialize() {
 
 }
 
-Microsoft::WRL::ComPtr<IDxcBlob> ShaderManager::CompileShader(const std::wstring& filePath, ShaderType type) {
+IDxcBlob* ShaderManager::CompileShader(const std::wstring& filePath, ShaderType type, const std::string& name) {
 
-	Microsoft::WRL::ComPtr<IDxcBlob> blob;
-	blob = CompileShader(filePath, profiles[type].c_str(), dxcUtils_, dxcCompiler_, includeHandler_);
+	blobs_[name] = CompileShader(filePath, profiles[type].c_str(), dxcUtils_, dxcCompiler_, includeHandler_);
 
-	return blob;
+	return blobs_[name].Get();
 
 }
 

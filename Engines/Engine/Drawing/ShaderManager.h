@@ -3,6 +3,7 @@
 #include <wrl.h>
 #include <dxcapi.h>
 #include <format>
+#include <unordered_map>
 
 class ShaderManager
 {
@@ -21,7 +22,7 @@ public:
 
 	void Initialize();
 
-	Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(const std::wstring& filePath, ShaderType type);
+	IDxcBlob* CompileShader(const std::wstring& filePath, ShaderType type, const std::string& name);
 
 private:
 
@@ -38,6 +39,8 @@ private:
 	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_ = nullptr;
 	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_ = nullptr;
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_ = nullptr;
+
+	std::unordered_map<std::string, Microsoft::WRL::ComPtr<IDxcBlob>> blobs_;
 
 private:
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "base/DirectXCommon.h"
+#include "base/DirectXSetter.h"
 #include "manager/TextureManager.h"
 #include "Model.h"
 #include "input/Input.h"
@@ -25,7 +25,7 @@ public:
 
 private:
 
-	DirectXCommon* dxCommon_ = nullptr;
+	DirectXSetter* dxSetter_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 

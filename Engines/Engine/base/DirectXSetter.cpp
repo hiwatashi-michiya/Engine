@@ -1,4 +1,4 @@
-#include "DirectXCommon.h"
+#include "DirectXSetter.h"
 #include <cassert>
 #include "Engine/manager/TextureManager.h"
 
@@ -7,19 +7,19 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dxcompiler.lib")
 
-DirectXCommon* DirectXCommon::GetInstance() {
-	static DirectXCommon instance;
+DirectXSetter* DirectXSetter::GetInstance() {
+	static DirectXSetter instance;
 	return &instance;
 }
 
-void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight) {
+void DirectXSetter::Initialize(WindowManager* winApp, int32_t backBufferWidth, int32_t backBufferHeight) {
 
 	//nullptrチェック
 	assert(winApp);
 	assert(4 <= backBufferWidth && backBufferWidth <= 4096);
 	assert(4 <= backBufferHeight && backBufferHeight <= 4096);
 
-	winApp_ = winApp;
+	windowManager_ = winApp;
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
 
@@ -46,7 +46,7 @@ void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t 
 
 }
 
-void DirectXCommon::PreDraw() {
+void DirectXSetter::PreDraw() {
 
 	//バックバッファの番号取得
 	UINT bbIndex = swapChain_->GetCurrentBackBufferIndex();
@@ -103,7 +103,7 @@ void DirectXCommon::PreDraw() {
 
 }
 
-void DirectXCommon::PostDraw() {
+void DirectXSetter::PostDraw() {
 
 	HRESULT hr;
 
@@ -162,7 +162,7 @@ void DirectXCommon::PostDraw() {
 
 }
 
-void DirectXCommon::InitializeDXGIDevice() {
+void DirectXSetter::InitializeDXGIDevice() {
 
 #ifdef  _DEBUG
 	Microsoft::WRL::ComPtr<ID3D12Debug1> debugController = nullptr;
@@ -253,7 +253,7 @@ void DirectXCommon::InitializeDXGIDevice() {
 
 }
 
-void DirectXCommon::InitializeCommand() {
+void DirectXSetter::InitializeCommand() {
 
 	HRESULT hr = S_FALSE;
 
@@ -276,7 +276,7 @@ void DirectXCommon::InitializeCommand() {
 
 }
 
-void DirectXCommon::CreateSwapChain() {
+void DirectXSetter::CreateSwapChain() {
 
 	HRESULT hr = S_FALSE;
 
@@ -289,13 +289,13 @@ void DirectXCommon::CreateSwapChain() {
 	swapChainDesc.BufferCount = 2; //ダブルバッファ
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; //モニタにうつしたら、中身を破棄
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
-	hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_.Get(), winApp_->GetHwnd(), &swapChainDesc,
+	hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_.Get(), windowManager_->GetHwnd(), &swapChainDesc,
 		nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 
 }
 
-void DirectXCommon::CreateFinalRenderTargets() {
+void DirectXSetter::CreateFinalRenderTargets() {
 
 	HRESULT hr = S_FALSE;
 
@@ -325,11 +325,11 @@ void DirectXCommon::CreateFinalRenderTargets() {
 
 }
 
-void DirectXCommon::CreateDepthBuffer() {
+void DirectXSetter::CreateDepthBuffer() {
 
 	HRESULT hr = S_FALSE;
 
-	depthStencilResource_ = CreateDepthStencilTextureResource(device_.Get(), WinApp::kWindowWidth, WinApp::kWindowHeight);
+	depthStencilResource_ = CreateDepthStencilTextureResource(device_.Get(), WindowManager::kWindowWidth, WindowManager::kWindowHeight);
 
 	dsvHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
@@ -343,7 +343,7 @@ void DirectXCommon::CreateDepthBuffer() {
 
 }
 
-void DirectXCommon::CreateFence() {
+void DirectXSetter::CreateFence() {
 
 	HRESULT hr = S_FALSE;
 
@@ -353,7 +353,7 @@ void DirectXCommon::CreateFence() {
 }
 
 //デスクリプタヒープ作成関数
-ID3D12DescriptorHeap* DirectXCommon::CreateDescriptorHeap(
+ID3D12DescriptorHeap* DirectXSetter::CreateDescriptorHeap(
 	ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
 
 	//ディスクリプタヒープの生成
@@ -371,7 +371,7 @@ ID3D12DescriptorHeap* DirectXCommon::CreateDescriptorHeap(
 }
 
 //CPUのDescriptorHandle取得
-D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+D3D12_CPU_DESCRIPTOR_HANDLE DirectXSetter::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
 
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	handleCPU.ptr += (descriptorSize * index);
@@ -380,7 +380,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::GetCPUDescriptorHandle(ID3D12Descript
 }
 
 //DepthStencilTexture作成関数
-ID3D12Resource* DirectXCommon::CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height) {
+ID3D12Resource* DirectXSetter::CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height) {
 
 	//生成するResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
@@ -421,7 +421,7 @@ ID3D12Resource* DirectXCommon::CreateDepthStencilTextureResource(ID3D12Device* d
 }
 
 //FPS固定初期化
-void DirectXCommon::InitializeFixFPS() {
+void DirectXSetter::InitializeFixFPS() {
 
 	//現在時間を記録する
 	reference_ = std::chrono::steady_clock::now();
@@ -429,7 +429,7 @@ void DirectXCommon::InitializeFixFPS() {
 }
 
 //FPS固定更新
-void DirectXCommon::UpdateFixFPS() {
+void DirectXSetter::UpdateFixFPS() {
 
 	//1/60秒ぴったりの時間
 	const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
@@ -456,6 +456,6 @@ void DirectXCommon::UpdateFixFPS() {
 
 }
 
-void DirectXCommon::Finalize() {
+void DirectXSetter::Finalize() {
 
 }

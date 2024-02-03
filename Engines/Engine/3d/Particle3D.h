@@ -79,14 +79,14 @@ private:
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
-	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
+	static ID3D12RootSignature* rootSignature_;
 	//PSO
-	static Microsoft::WRL::ComPtr<ID3D12PipelineState> particlePipelineStates_[BlendMode::kCountBlend];
+	static ID3D12PipelineState* particlePipelineStates_[BlendMode::kCountBlend];
 
 	/*static ID3D12PipelineState* pipelineState_;*/
 
-	static Microsoft::WRL::ComPtr<IDxcBlob> vs3dParticleBlob_;
-	static Microsoft::WRL::ComPtr<IDxcBlob> ps3dParticleBlob_;
+	static IDxcBlob* vs3dParticleBlob_;
+	static IDxcBlob* ps3dParticleBlob_;
 
 	//モデル識別用変数(ImGuiで使用)
 	static int modelNumber_;

@@ -1,5 +1,5 @@
 #include "TextureManager.h"
-#include "Engine/base/DirectXCommon.h"
+#include "Engine/base/DirectXSetter.h"
 #include "externals/DirectXTex/DirectXTex.h"
 #include"Engine/Convert.h"
 #include "Engine/math/Matrix4x4.h"
@@ -127,7 +127,7 @@ TextureManager* TextureManager::GetInstance() {
 
 void TextureManager::Initialize() {
 
-	ID3D12Device* device = DirectXCommon::GetInstance()->GetDevice();
+	ID3D12Device* device = DirectXSetter::GetInstance()->GetDevice();
 	device_ = device;
 
 	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

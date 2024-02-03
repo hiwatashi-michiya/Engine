@@ -1,5 +1,5 @@
 #include "Input.h"
-#include "Engine/base/WinApp.h"
+#include "Engine/base/WindowManager.h"
 #include <cassert>
 
 #pragma comment(lib, "dinput8.lib")
@@ -13,7 +13,7 @@ Input* Input::GetInstance() {
 
 void Input::Initialize() {
 
-	WinApp* winApp = WinApp::GetInstance();
+	WindowManager* winApp = WindowManager::GetInstance();
 
 	hwnd_ = winApp->GetHwnd();
 

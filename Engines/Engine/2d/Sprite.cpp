@@ -1,17 +1,20 @@
 #include "Sprite.h"
 #include <cassert>
-#include "Engine/Convert.h"
-#include "Engine/manager/ShaderManager.h"
-#include "Engine/manager/ImGuiManager.h"
+#include "Convert.h"
+#include "Drawing/ShaderManager.h"
+#include "Drawing/PipelineManager.h"
+#include "Drawing/RootSignatureManager.h"
+#include "manager/ImGuiManager.h"
+#include "Buffer/BufferResource.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
 ID3D12Device* Sprite::device_ = nullptr;
 ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;
-Microsoft::WRL::ComPtr<ID3D12RootSignature> Sprite::rootSignature2D_ = nullptr;
-Microsoft::WRL::ComPtr<ID3D12PipelineState> Sprite::pipelineState2D_ = nullptr;
-Microsoft::WRL::ComPtr<IDxcBlob> Sprite::vs2dBlob_ = nullptr;
-Microsoft::WRL::ComPtr<IDxcBlob> Sprite::ps2dBlob_ = nullptr;
+ID3D12RootSignature* Sprite::rootSignature2D_ = nullptr;
+ID3D12PipelineState* Sprite::pipelineState2D_ = nullptr;
+IDxcBlob* Sprite::vs2dBlob_ = nullptr;
+IDxcBlob* Sprite::ps2dBlob_ = nullptr;
 
 //静的初期化
 void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
@@ -23,27 +26,10 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 
 	device_ = device;
 
-	//dxcCompilerを初期化
-	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils = nullptr;
-	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler = nullptr;
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
-	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
-	assert(SUCCEEDED(hr));
-
-	//includeに対応するための設定
-	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler = nullptr;
-	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
-	assert(SUCCEEDED(hr));
-
 	//Shaderをコンパイルする
-	vs2dBlob_ = CompileShader(L"./resources/shaders/Sprite.VS.hlsl",
-		L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
-	assert(vs2dBlob_ != nullptr);
-
-	ps2dBlob_ = CompileShader(L"./resources/shaders/Sprite.PS.hlsl",
-		L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
-	assert(ps2dBlob_ != nullptr);
+	vs2dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./resources/shaders/Sprite.VS.hlsl", ShaderManager::kVS, "VS2D");
+		
+	ps2dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./resources/shaders/Sprite.PS.hlsl", ShaderManager::kPS, "PS2D");
 
 	//頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
@@ -117,10 +103,10 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
-	//バイナリを元に生成
-	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
-		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature2D_));
-	assert(SUCCEEDED(hr));
+
+	RootSignatureManager::GetInstance()->CreateRootSignature(signatureBlob, "RootSignature2D");
+
+	rootSignature2D_ = RootSignatureManager::GetInstance()->GetRootSignature("RootSignature2D");
 
 	//Blendstateの設定
 	D3D12_BLEND_DESC blendDesc{};
@@ -143,7 +129,7 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature2D_.Get(); //RootSignature
+	graphicsPipelineStateDesc.pRootSignature = rootSignature2D_; //RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
 	graphicsPipelineStateDesc.VS = { vs2dBlob_->GetBufferPointer(),
 	vs2dBlob_->GetBufferSize() }; //VertexShader
@@ -173,10 +159,9 @@ void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
 	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&pipelineState2D_));
-	assert(SUCCEEDED(hr));
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineNormal2D");
+
+	pipelineState2D_ = PipelineManager::GetInstance()->GetPipeline("PipelineNormal2D");
 
 }
 
@@ -346,9 +331,9 @@ void Sprite::Draw() {
 	constMap_->uvTransform = matUVTransform;
 
 	//PSO設定
-	commandList_->SetPipelineState(pipelineState2D_.Get());
+	commandList_->SetPipelineState(pipelineState2D_);
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature2D_.Get());
+	commandList_->SetGraphicsRootSignature(rootSignature2D_);
 	//プリミティブ形状を設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

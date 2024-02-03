@@ -1,4 +1,4 @@
-#include "WinApp.h"
+#include "WindowManager.h"
 
 #ifdef _DEBUG
 
@@ -8,13 +8,13 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 #endif // _DEBUG
 
-WinApp* WinApp::GetInstance() {
-	static WinApp instance;
+WindowManager* WindowManager::GetInstance() {
+	static WindowManager instance;
 	return &instance;
 }
 
 //ウィンドウプロシージャ
-LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT WindowManager::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 #ifdef _DEBUG
 
@@ -40,7 +40,7 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 }
 
-void WinApp::CreateGameWindow(const wchar_t* windowName, int32_t clientWidth, int32_t clientHeight) {
+void WindowManager::CreateGameWindow(const wchar_t* windowName, int32_t clientWidth, int32_t clientHeight) {
 
 	
 
@@ -84,7 +84,7 @@ void WinApp::CreateGameWindow(const wchar_t* windowName, int32_t clientWidth, in
 
 }
 
-bool WinApp::ProcessMessage() {
+bool WindowManager::ProcessMessage() {
 
 	//メッセージ
 	MSG msg{};
@@ -104,7 +104,7 @@ bool WinApp::ProcessMessage() {
 
 }
 
-void WinApp::TerminateGameWindow() {
+void WindowManager::TerminateGameWindow() {
 
 	UnregisterClass(wc_.lpszClassName, wc_.hInstance);
 

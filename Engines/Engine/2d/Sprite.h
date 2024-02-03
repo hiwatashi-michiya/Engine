@@ -81,14 +81,14 @@ private:
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
-	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature2D_;
+	static ID3D12RootSignature* rootSignature2D_;
 	//PSO
-	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState2D_;
+	static ID3D12PipelineState* pipelineState2D_;
 
 	static Matrix4x4 matProjection_;
 
-	static Microsoft::WRL::ComPtr<IDxcBlob> vs2dBlob_;
-	static Microsoft::WRL::ComPtr<IDxcBlob> ps2dBlob_;
+	static IDxcBlob* vs2dBlob_;
+	static IDxcBlob* ps2dBlob_;
 
 private:
 

@@ -9,20 +9,20 @@
 #include <vector>
 #include <chrono>
 #include <thread>
-#include "WinApp.h"
+#include "WindowManager.h"
 
-class DirectXCommon
+class DirectXSetter
 {
 
 public:
 
-	static DirectXCommon* GetInstance();
+	static DirectXSetter* GetInstance();
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(WinApp* winApp, int32_t backBufferWidth = WinApp::kWindowWidth,
-		int32_t backBufferHeight = WinApp::kWindowHeight);
+	void Initialize(WindowManager* windowManager_, int32_t backBufferWidth = WindowManager::kWindowWidth,
+		int32_t backBufferHeight = WindowManager::kWindowHeight);
 
 	/// <summary>
 	/// 描画前処理
@@ -45,7 +45,7 @@ public:
 
 private:
 
-	WinApp* winApp_;
+	WindowManager* windowManager_;
 
 	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_;
 	Microsoft::WRL::ComPtr<ID3D12Device> device_;
@@ -83,10 +83,10 @@ private:
 
 private:
 
-	DirectXCommon() = default;
-	~DirectXCommon() = default;
-	DirectXCommon(const DirectXCommon&) = delete;
-	const DirectXCommon& operator=(const DirectXCommon&) = delete;
+	DirectXSetter() = default;
+	~DirectXSetter() = default;
+	DirectXSetter(const DirectXSetter&) = delete;
+	const DirectXSetter& operator=(const DirectXSetter&) = delete;
 
 private:
 

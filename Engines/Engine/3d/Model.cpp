@@ -1,20 +1,23 @@
 #include "Model.h"
 #include <cassert>
 #include "Engine/Convert.h"
-#include "Engine/manager/ShaderManager.h"
+#include "Engine/Drawing/ShaderManager.h"
 #include <fstream>
 #include <sstream>
 #include "Engine/manager/ImGuiManager.h"
+#include "Drawing/RootSignatureManager.h"
+#include "Buffer/BufferResource.h"
+#include "Drawing/PipelineManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
 ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
-Microsoft::WRL::ComPtr<ID3D12RootSignature> Model::rootSignature_ = nullptr;
-Microsoft::WRL::ComPtr<ID3D12PipelineState> Model::pipelineStates_[Model::BlendMode::kCountBlend] = { nullptr };
+ID3D12RootSignature* Model::rootSignature_ = nullptr;
+ID3D12PipelineState* Model::pipelineStates_[Model::BlendMode::kCountBlend] = { nullptr };
 //ID3D12PipelineState* Model::pipelineState_ = nullptr;
-Microsoft::WRL::ComPtr<IDxcBlob> Model::vs3dBlob_ = nullptr;
-Microsoft::WRL::ComPtr<IDxcBlob> Model::ps3dBlob_ = nullptr;
+IDxcBlob* Model::vs3dBlob_ = nullptr;
+IDxcBlob* Model::ps3dBlob_ = nullptr;
 int Model::modelNumber_ = 0;
 Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
 std::unordered_map<std::string, std::unique_ptr<Mesh>> Model::meshes_;
@@ -28,27 +31,10 @@ void Model::StaticInitialize(ID3D12Device* device) {
 
 	device_ = device;
 
-	//dxcCompilerを初期化
-	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils = nullptr;
-	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler = nullptr;
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
-	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
-	assert(SUCCEEDED(hr));
-
-	//includeに対応するための設定
-	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler = nullptr;
-	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
-	assert(SUCCEEDED(hr));
-
 	//Shaderをコンパイルする
-	vs3dBlob_ = CompileShader(L"./resources/shaders/Object3d.VS.hlsl",
-		L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
-	assert(vs3dBlob_ != nullptr);
+	vs3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./resources/shaders/Object3d.VS.hlsl", ShaderManager::kVS, "VS3D");
 
-	ps3dBlob_ = CompileShader(L"./resources/shaders/Object3d.PS.hlsl",
-		L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
-	assert(ps3dBlob_ != nullptr);
+	ps3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./resources/shaders/Object3d.PS.hlsl", ShaderManager::kPS, "VS3D");
 
 	//頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
@@ -141,10 +127,10 @@ void Model::StaticInitialize(ID3D12Device* device) {
 		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
-	//バイナリを元に生成
-	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
-		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
-	assert(SUCCEEDED(hr));
+
+	RootSignatureManager::GetInstance()->CreateRootSignature(signatureBlob, "RootSignature3D");
+
+	rootSignature_ = RootSignatureManager::GetInstance()->GetRootSignature("RootSignature3D");
 
 	//Blendstateの設定
 	D3D12_BLEND_DESC blendDesc{};
@@ -164,7 +150,7 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get(); //RootSignature
+	graphicsPipelineStateDesc.pRootSignature = rootSignature_; //RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
 	graphicsPipelineStateDesc.VS = { vs3dBlob_->GetBufferPointer(),
 	vs3dBlob_->GetBufferSize() }; //VertexShader
@@ -198,50 +184,50 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&pipelineStates_[BlendMode::kNormal]));
-	assert(SUCCEEDED(hr));
+
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineNormal3D");
+
+	pipelineStates_[kNormal] = PipelineManager::GetInstance()->GetPipeline("PipelineNormal3D");
 
 	//加算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&pipelineStates_[BlendMode::kAdd]));
-	assert(SUCCEEDED(hr));
+
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineAdd3D");
+
+	pipelineStates_[kAdd] = PipelineManager::GetInstance()->GetPipeline("PipelineAdd3D");
 
 	//減算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_SUBTRACT;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&pipelineStates_[BlendMode::kSubtract]));
-	assert(SUCCEEDED(hr));
+
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineSubtract3D");
+
+	pipelineStates_[kSubtract] = PipelineManager::GetInstance()->GetPipeline("PipelineSubtract3D");
 
 	//乗算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&pipelineStates_[BlendMode::kMultiply]));
-	assert(SUCCEEDED(hr));
+
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineMultiply3D");
+
+	pipelineStates_[kMultiply] = PipelineManager::GetInstance()->GetPipeline("PipelineMultiply3D");
 
 	//スクリーン
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&pipelineStates_[BlendMode::kScreen]));
-	assert(SUCCEEDED(hr));
+
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineScreen3D");
+
+	pipelineStates_[kScreen] = PipelineManager::GetInstance()->GetPipeline("PipelineScreen3D");
 
 	currentBlendMode_ = BlendMode::kNormal;
 
@@ -323,7 +309,7 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	commandList_ = commandList;
 
 	//PSO設定
-	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());
+	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
 
 }
 
@@ -351,9 +337,9 @@ void Model::Draw(Camera* camera) {
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
 	//PSO設定
-	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_].Get());
+	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	commandList_->SetGraphicsRootSignature(rootSignature_);
 	//プリミティブ形状を設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

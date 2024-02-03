@@ -9,6 +9,9 @@
 #include <unordered_map>
 #include "ShaderManager.h"
 
+/// <summary>
+/// パイプラインの管理を行うクラス
+/// </summary>
 class PipelineManager
 {
 public:
@@ -34,8 +37,9 @@ public:
 	/// <param name="type">シェーダーのタイプ</param>
 	/// <param name="blendMode">ブレンド設定</param>
 	/// <param name="pipelineName">パイプラインに付ける名前</param>
-	void CreatePipeLine(const std::string& shaderFileName, ShaderManager::ShaderType type,
-		BlendMode blendMode, const std::string& pipelineName);
+	void CreatePipeLine(const D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc, const std::string& pipelineName);
+
+	ID3D12PipelineState* GetPipeline(const std::string& pipelineName);
 
 private:
 

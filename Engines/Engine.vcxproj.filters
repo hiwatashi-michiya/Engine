@@ -55,6 +55,9 @@
     <Filter Include="Engine\Drawing">
       <UniqueIdentifier>{b2742f1d-59c0-4882-be1b-f5ddfbe9a60b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Buffer">
+      <UniqueIdentifier>{cedae2d3-4c32-4d7d-b3ea-6d976c344e6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,10 +69,10 @@
     <ClCompile Include="Engine\base\Camera.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\DirectXCommon.cpp">
+    <ClCompile Include="Engine\base\DirectXSetter.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\WinApp.cpp">
+    <ClCompile Include="Engine\base\WindowManager.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2d\Sprite.cpp">
@@ -96,13 +99,7 @@
     <ClCompile Include="Engine\Convert.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\manager\ShaderManager.cpp">
-      <Filter>Engine\manager</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3d\WorldTransform.cpp">
-      <Filter>Engine\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3d\ViewProjection.cpp">
       <Filter>Engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="Game\gamescene\GameScene.cpp">
@@ -153,6 +150,12 @@
     <ClCompile Include="Engine\Drawing\ShaderManager.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Buffer\BufferResource.cpp">
+      <Filter>Engine\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\RootSignatureManager.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -161,13 +164,13 @@
     <ClInclude Include="Engine\base\Camera.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\DirectXCommon.h">
+    <ClInclude Include="Engine\base\DirectXSetter.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\SafeDelete.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\WinApp.h">
+    <ClInclude Include="Engine\base\WindowManager.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2d\Sprite.h">
@@ -200,13 +203,7 @@
     <ClInclude Include="Engine\Convert.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\manager\ShaderManager.h">
-      <Filter>Engine\manager</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3d\WorldTransform.h">
-      <Filter>Engine\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3d\ViewProjection.h">
       <Filter>Engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Game\gamescene\GameScene.h">
@@ -258,6 +255,12 @@
       <Filter>Engine\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Drawing\ShaderManager.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Buffer\BufferResource.h">
+      <Filter>Engine\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\RootSignatureManager.h">
       <Filter>Engine\Drawing</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include <Windows.h>
-#include "base/DirectXCommon.h"
-#include "base/WinApp.h"
+#include "base/DirectXSetter.h"
+#include "base/WindowManager.h"
 #include "2d/Sprite.h"
 #include "3d/Model.h"
 #include <string>
@@ -16,6 +16,7 @@
 #include "Tool/GlobalVariables.h"
 #include "Drawing/ShaderManager.h"
 #include "Drawing/PipelineManager.h"
+#include "Drawing/RootSignatureManager.h"
 
 #ifdef _DEBUG
 
@@ -23,8 +24,8 @@
 
 #endif // _DEBUG
 
-WinApp* winApp_ = nullptr;
-DirectXCommon* dxCommon_ = nullptr;
+WindowManager* windowManager_ = nullptr;
+DirectXSetter* dxSetter_ = nullptr;
 
 void Engine::Initialize(const char* title, int width, int height) {
 
@@ -35,20 +36,21 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	//ウィンドウ作成
 	auto&& titleString = ConvertString(title);
-	winApp_ = WinApp::GetInstance();
-	winApp_->CreateGameWindow(
+	windowManager_ = WindowManager::GetInstance();
+	windowManager_->CreateGameWindow(
 		titleString.c_str(), width, height);
 
-	dxCommon_ = DirectXCommon::GetInstance();
-	dxCommon_->Initialize(winApp_, width, height);
+	dxSetter_ = DirectXSetter::GetInstance();
+	dxSetter_->Initialize(windowManager_, width, height);
 
 	ShaderManager::GetInstance()->Initialize();
-	PipelineManager::GetInstance()->Initialize(dxCommon_->GetDevice());
+	PipelineManager::GetInstance()->Initialize(dxSetter_->GetDevice());
+	RootSignatureManager::GetInstance()->Initialize(dxSetter_->GetDevice());
 
 	AudioManager::GetInstance()->Initialize();
-	Sprite::StaticInitialize(dxCommon_->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
-	Model::StaticInitialize(dxCommon_->GetDevice());
-	Particle3D::StaticInitialize(dxCommon_->GetDevice());
+	Sprite::StaticInitialize(dxSetter_->GetDevice(), WindowManager::kWindowWidth, WindowManager::kWindowHeight);
+	Model::StaticInitialize(dxSetter_->GetDevice());
+	Particle3D::StaticInitialize(dxSetter_->GetDevice());
 
 	
 	TextureManager::GetInstance()->Initialize();
@@ -60,8 +62,8 @@ void Engine::Initialize(const char* title, int width, int height) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(winApp_->GetHwnd());
-	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
+	ImGui_ImplWin32_Init(windowManager_->GetHwnd());
+	ImGui_ImplDX12_Init(dxSetter_->GetDevice(),
 		2,
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		TextureManager::GetInstance()->GetSRVDescHeap(),
@@ -73,7 +75,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 }
 
 int Engine::ProcessMessage() {
-	return winApp_->ProcessMessage();
+	return windowManager_->ProcessMessage();
 }
 
 void Engine::Finalize() {
@@ -92,11 +94,11 @@ void Engine::Finalize() {
 	AudioManager::GetInstance()->Finalize();
 	Model::Finalize();
 	Sprite::Finalize();
-	dxCommon_->Finalize();
-	dxCommon_ = nullptr;
+	dxSetter_->Finalize();
+	dxSetter_ = nullptr;
 	CoUninitialize();
 	//ウィンドウの破棄
-	winApp_->TerminateGameWindow();
+	windowManager_->TerminateGameWindow();
 }
 
 void Engine::BeginFrame() {
@@ -110,13 +112,13 @@ void Engine::BeginFrame() {
 
 #endif // _DEBUG
 
-	dxCommon_->PreDraw();
+	dxSetter_->PreDraw();
 
 	Input::GetInstance()->Update();
 
-	Model::PreDraw(dxCommon_->GetCommandList());
-	Particle3D::PreDraw(dxCommon_->GetCommandList());
-	Sprite::PreDraw(dxCommon_->GetCommandList());
+	Model::PreDraw(dxSetter_->GetCommandList());
+	Particle3D::PreDraw(dxSetter_->GetCommandList());
+	Sprite::PreDraw(dxSetter_->GetCommandList());
 
 }
 
@@ -132,10 +134,10 @@ void Engine::EndFrame() {
 	ImGui::Render();
 
 	//実際のcommandListのImGuiの描画コマンドを積む
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxSetter_->GetCommandList());
 
 #endif // _DEBUG
 
-	dxCommon_->PostDraw();
+	dxSetter_->PostDraw();
 
 }

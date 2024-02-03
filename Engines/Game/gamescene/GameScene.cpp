@@ -17,7 +17,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize() {
 
-	dxCommon_ = DirectXCommon::GetInstance();
+	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
 
 	camera_ = std::make_unique<Camera>();

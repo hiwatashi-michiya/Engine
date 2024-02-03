@@ -2,14 +2,14 @@
 #include <Windows.h>
 #include <cstdint>
 
-class WinApp
+class WindowManager
 {
 public:
 
 	static const int kWindowWidth = 1280; //横幅
 	static const int kWindowHeight = 720; //縦幅
 
-	static WinApp* GetInstance();
+	static WindowManager* GetInstance();
 
 	//ウィンドウプロシージャ
 	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
@@ -40,10 +40,10 @@ private:
 	WNDCLASS wc_{};
 
 private:
-	WinApp() = default;
-	~WinApp() = default;
-	WinApp(const WinApp&) = delete;
-	const WinApp& operator=(const WinApp&) = delete;
+	WindowManager() = default;
+	~WindowManager() = default;
+	WindowManager(const WindowManager&) = delete;
+	const WindowManager& operator=(const WindowManager&) = delete;
 
 };
 
