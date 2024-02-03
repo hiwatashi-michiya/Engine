@@ -12,11 +12,11 @@
 #include "Particle.h"
 #include "FrameWork/BaseScene.h"
 
-class GameScene : public BaseScene
+class TitleScene : public BaseScene
 {
 public:
-	GameScene();
-	~GameScene() override;
+	TitleScene();
+	~TitleScene() override;
 
 	void Initialize() override;
 
@@ -35,5 +35,3 @@ private:
 	std::unique_ptr<Model> model_;
 
 };
-
-

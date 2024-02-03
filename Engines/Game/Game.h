@@ -1,5 +1,4 @@
 #pragma once
-#include "Game/gamescene/GameScene.h"
 #include "FrameWork/MolFrameWork.h"
 
 class Game : public MolFrameWork {
@@ -16,6 +15,6 @@ public:
 
 private:
 
-	GameScene* scene_;
+	
 
 };

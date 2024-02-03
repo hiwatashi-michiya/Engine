@@ -1,4 +1,7 @@
 #pragma once
+#include "SceneManager.h"
+#include "AbsSceneFactory.h"
+#include <memory>
 
 class MolFrameWork {
 public:
@@ -18,6 +21,12 @@ public:
 
 	//終了チェック
 	virtual bool IsEndMessage() { return endMessage_; }
+
+protected:
+
+	std::unique_ptr<AbsSceneFactory> sceneFactory_ = nullptr;
+
+	SceneManager* sceneManager_ = nullptr;
 
 private:
 

@@ -8,6 +8,8 @@ void MolFrameWork::Initialize() {
 
 	Engine::Initialize("engine", 1280, 720);
 
+	sceneManager_ = SceneManager::GetInstance();
+
 }
 
 void MolFrameWork::Finalize() {
@@ -17,6 +19,8 @@ void MolFrameWork::Finalize() {
 }
 
 void MolFrameWork::Update() {
+
+	sceneManager_->Update();
 
 }
 

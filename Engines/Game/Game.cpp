@@ -1,18 +1,18 @@
 #include "Game.h"
+#include "Game/SceneFactory.h"
 
 void Game::Initialize() {
 
 	MolFrameWork::Initialize();
 
 	//ゲームシーンのインスタンス生成
-	scene_ = new GameScene();
-	scene_->Initialize();
+	sceneFactory_ = std::make_unique<SceneFactory>();
+	SceneManager::GetInstance()->SetSceneFactory(sceneFactory_.get());
+	SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 
 }
 
 void Game::Finalize() {
-
-	delete scene_;
 
 	MolFrameWork::Finalize();
 
@@ -20,13 +20,13 @@ void Game::Finalize() {
 
 void Game::Update() {
 
-	scene_->Update();
+	sceneManager_->Update();
 
 }
 
 void Game::Draw() {
 
-	scene_->Draw();
+	sceneManager_->Draw();
 
 }
 

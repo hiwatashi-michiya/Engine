@@ -1,4 +1,4 @@
-#include "GameScene.h"
+#include "TitleScene.h"
 #include "FrameWork/SceneManager.h"
 
 #ifdef _DEBUG
@@ -7,16 +7,16 @@
 
 #endif // _DEBUG
 
-GameScene::GameScene()
+TitleScene::TitleScene()
 {
 
 }
 
-GameScene::~GameScene()
+TitleScene::~TitleScene()
 {
 }
 
-void GameScene::Initialize() {
+void TitleScene::Initialize() {
 
 	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 
 }
 
-void GameScene::Update() {
+void TitleScene::Update() {
 
 #ifdef _DEBUG
 
@@ -42,8 +42,8 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	if (input_->TriggerKey(DIK_S)) {
-		SceneManager::GetInstance()->ChangeScene("TITLE");
+	if (input_->TriggerKey(DIK_D)) {
+		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	}
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
@@ -51,8 +51,8 @@ void GameScene::Update() {
 
 }
 
-void GameScene::Draw() {
+void TitleScene::Draw() {
 
-	model_->Draw(camera_.get());
+	
 
 }

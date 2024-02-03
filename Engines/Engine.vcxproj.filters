@@ -58,6 +58,9 @@
     <Filter Include="Engine\Buffer">
       <UniqueIdentifier>{cedae2d3-4c32-4d7d-b3ea-6d976c344e6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\TitleScene">
+      <UniqueIdentifier>{73e3caa1-f2c7-47fc-9740-425b46af129d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -155,6 +158,15 @@
     </ClCompile>
     <ClCompile Include="Engine\Drawing\RootSignatureManager.cpp">
       <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\FrameWork\SceneManager.cpp">
+      <Filter>Engine\FrameWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\SceneFactory.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TitleScene\TitleScene.cpp">
+      <Filter>Game\TitleScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +274,21 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\RootSignatureManager.h">
       <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\FrameWork\BaseScene.h">
+      <Filter>Engine\FrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\FrameWork\SceneManager.h">
+      <Filter>Engine\FrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\FrameWork\AbsSceneFactory.h">
+      <Filter>Engine\FrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\SceneFactory.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\TitleScene\TitleScene.h">
+      <Filter>Game\TitleScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
