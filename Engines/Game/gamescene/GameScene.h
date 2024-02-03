@@ -37,8 +37,6 @@ private:
 	std::unique_ptr<Model> model_;
 	std::unique_ptr<Model> model2_;
 
-	Particle particle_;
-
 };
 
 

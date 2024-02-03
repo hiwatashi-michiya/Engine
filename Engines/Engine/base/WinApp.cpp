@@ -8,6 +8,11 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 #endif // _DEBUG
 
+#include "externals/imgui/imgui_impl_win32.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+
 WinApp* WinApp::GetInstance() {
 	static WinApp instance;
 	return &instance;
@@ -23,6 +28,10 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	}
 
 #endif // _DEBUG
+
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
+		return true;
+	}
 
 	//メッセージに応じてゲーム固有の処理を行う
 	switch (msg)

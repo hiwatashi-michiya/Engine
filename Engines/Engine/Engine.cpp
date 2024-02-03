@@ -21,6 +21,8 @@
 
 #endif // _DEBUG
 
+#include "manager/ImGuiManager.h"
+
 WinApp* winApp_ = nullptr;
 DirectXCommon* dxCommon_ = nullptr;
 
@@ -66,6 +68,18 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 #endif // _DEBUG
 
+	//ImGuiの初期化
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(winApp_->GetHwnd());
+	ImGui_ImplDX12_Init(dxCommon_->GetDevice(),
+		2,
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+		TextureManager::GetInstance()->GetSRVDescHeap(),
+		TextureManager::GetInstance()->GetSRVDescHeap()->GetCPUDescriptorHandleForHeapStart(),
+		TextureManager::GetInstance()->GetSRVDescHeap()->GetGPUDescriptorHandleForHeapStart());
+
 }
 
 int Engine::ProcessMessage() {
@@ -81,6 +95,10 @@ void Engine::Finalize() {
 	ImGui::DestroyContext();
 
 #endif // _DEBUG
+
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	Particle3D::Finalize();
 	AudioManager::GetInstance()->Finalize();
@@ -103,6 +121,11 @@ void Engine::BeginFrame() {
 	ImGui::NewFrame();
 
 #endif // _DEBUG
+
+	//フレーム開始を伝える
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 
 	dxCommon_->PreDraw();
 
@@ -131,6 +154,12 @@ void Engine::EndFrame() {
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
 
 #endif // _DEBUG
+
+	//ImGuiの内部コマンドを生成する
+	ImGui::Render();
+
+	//実際のcommandListのImGuiの描画コマンドを積む
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
 
 	dxCommon_->PostDraw();
 

@@ -2,17 +2,19 @@
 
 #ifdef _DEBUG
 
-#include "Engine/manager/ImGuiManager.h"
+
 
 #endif // _DEBUG
+
+#include "Engine/manager/ImGuiManager.h"
 
 GameScene::GameScene()
 {
 
 	tex_ = TextureManager::GetInstance()->Load("./resources/plane/uvChecker.png");
 	tex2_ = TextureManager::GetInstance()->Load("./resources/Texture/block.png");
-	model_.reset(Model::Create("./resources/cube/cube.obj"));
-	model2_.reset(Model::Create("./resources/cube/cube.obj"));
+	model_.reset(Model::Create("./resources/sphere/sphere.obj"));
+	model2_.reset(Model::Create("./resources/plane/plane.obj"));
 
 }
 
@@ -24,13 +26,6 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-
-	particle_.Initialize(Particle::k3D, Particle::kCircle);
-	particle_.startPosition_ = { 0.0f,0.0f,0.0f };
-	particle_.AddParticle("./resources/plane/plane.obj", tex2_, 10);
-	particle_.AddParticle("./resources/plane/plane.obj", tex_, 20);
-	particle_.Reset();
-	particle_.SetIsStart(true);
 
 	model_->position_.x = 2.0f;
 
@@ -45,13 +40,18 @@ void GameScene::Update() {
 
 #ifdef _DEBUG
 
+	
+
+#endif // _DEBUG
+
 	ImGui::Begin("camera");
 	ImGui::DragFloat3("scale", &camera_->scale_.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-#endif // _DEBUG
+	model_->ImGuiUpdate("Ball");
+	model2_->ImGuiUpdate("Plane");
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
@@ -62,19 +62,11 @@ void GameScene::Update() {
 		model2_->SetTexture(tex_);
 	}
 
-	if (input_->TriggerKey(DIK_S)) {
-		particle_.Reset();
-	}
-
-	particle_.Update();
-
 }
 
 void GameScene::Draw() {
 
 	model_->Draw(camera_.get());
 	model2_->Draw(camera_.get());
-
-	/*particle_.Draw(camera_.get());*/
 
 }
