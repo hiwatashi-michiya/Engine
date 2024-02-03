@@ -113,7 +113,7 @@ Material* Material::Create(const std::string& filename) {
 
 	}
 
-	LoadMaterialTemplateFile(filename);
+	/*LoadMaterialTemplateFile(filename);*/
 
 	return this;
 

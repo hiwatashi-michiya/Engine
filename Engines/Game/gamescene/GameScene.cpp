@@ -66,10 +66,15 @@ void GameScene::Update() {
 		particle_.Reset();
 	}
 
+	particle_.Update();
+
 }
 
 void GameScene::Draw() {
 
+	model_->Draw(camera_.get());
+	model2_->Draw(camera_.get());
 
+	/*particle_.Draw(camera_.get());*/
 
 }

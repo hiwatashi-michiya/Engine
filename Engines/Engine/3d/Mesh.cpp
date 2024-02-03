@@ -95,8 +95,32 @@ void Mesh::LoadObjFile(const std::string& filename) {
 				VertexData vertex;
 
 				vertex.position = { position.x, position.y, position.z, 1.0f };
+				vertex.normal = { normal.x, normal.y, normal.z };
+				vertex.texcoord = { texcoord.x, texcoord.y };
+
+				vertex.position.x *= -1.0f;
+				vertex.normal.x *= -1.0f;
+				meshData_.vertices.push_back(vertex);
 
 			}
+
+		}
+
+	}
+
+	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+
+		aiMaterial* material = scene->mMaterials[materialIndex];
+		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+			aiString textureFilePath;
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+			//ファイルのフルパスを取得
+			std::filesystem::path fullPath(filename);
+			
+			//マテリアルを生成
+			material_ = std::make_unique<Material>();
+			material_->Create(fullPath.parent_path().string() + "/" + textureFilePath.C_Str());
+			texture_ = TextureManager::GetInstance()->Load(fullPath.parent_path().string() + "/" + textureFilePath.C_Str());
 
 		}
 
