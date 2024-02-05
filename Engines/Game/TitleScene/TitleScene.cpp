@@ -42,7 +42,7 @@ void TitleScene::Update() {
 
 #endif // _DEBUG
 
-	if (input_->TriggerKey(DIK_D)) {
+	if (input_->TriggerKey(DIK_S)) {
 		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	}
 
