@@ -53,6 +53,6 @@ void TitleScene::Update() {
 
 void TitleScene::Draw() {
 
-	
+	model_->Draw(camera_.get());
 
 }
