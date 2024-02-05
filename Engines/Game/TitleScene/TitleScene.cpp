@@ -41,6 +41,10 @@ void TitleScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
+	ImGui::Begin("Manual");
+	ImGui::Text("Key S: Change Scene");
+	ImGui::End();
+
 	model_->ImGuiUpdate("terrain");
 
 #endif // _DEBUG
