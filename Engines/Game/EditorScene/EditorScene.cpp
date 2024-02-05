@@ -1,4 +1,4 @@
-#include "TitleScene.h"
+#include "EditorScene.h"
 #include "FrameWork/SceneManager.h"
 
 #ifdef _DEBUG
@@ -7,31 +7,31 @@
 
 #endif // _DEBUG
 
-TitleScene::TitleScene()
+EditorScene::EditorScene()
 {
 
 }
 
-TitleScene::~TitleScene()
+EditorScene::~EditorScene()
 {
 }
 
-void TitleScene::Initialize() {
+void EditorScene::Initialize() {
 
 	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
+	editor_ = MapEditor::GetInstance();
+	editor_->Initialize();
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,1.0f, -0.0f };
-	camera_->rotation_.x = 0.0f;
+	camera_->position_ = { 0.0f,10.0f, -30.0f };
+	camera_->rotation_.x = 0.3f;
 
-	model_.reset(Model::Create("./resources/terrain/terrain.obj"));
-	model_->scale_ *= 10.0f;
 
 }
 
-void TitleScene::Update() {
+void EditorScene::Update() {
 
 #ifdef _DEBUG
 
@@ -41,12 +41,12 @@ void TitleScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	model_->ImGuiUpdate("terrain");
+	editor_->Edit();
 
 #endif // _DEBUG
 
 	if (input_->TriggerKey(DIK_S)) {
-		SceneManager::GetInstance()->ChangeScene("EDIT");
+		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	}
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
@@ -54,8 +54,8 @@ void TitleScene::Update() {
 
 }
 
-void TitleScene::Draw() {
+void EditorScene::Draw() {
 
-	model_->Draw(camera_.get());
+	editor_->Draw(camera_.get());
 
 }

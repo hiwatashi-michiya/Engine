@@ -61,6 +61,9 @@
     <Filter Include="Game\TitleScene">
       <UniqueIdentifier>{73e3caa1-f2c7-47fc-9740-425b46af129d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\EditorScene">
+      <UniqueIdentifier>{ef1b751a-2e62-4e7a-8312-69b172aac20f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -167,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="Game\TitleScene\TitleScene.cpp">
       <Filter>Game\TitleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\EditorScene\EditorScene.cpp">
+      <Filter>Game\EditorScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="Game\TitleScene\TitleScene.h">
       <Filter>Game\TitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\EditorScene\EditorScene.h">
+      <Filter>Game\EditorScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,12 +11,13 @@
 #include "MapEditor.h"
 #include "Particle.h"
 #include "FrameWork/BaseScene.h"
+#include "Application/MapEditor.h"
 
-class GameScene : public BaseScene
+class EditorScene : public BaseScene
 {
 public:
-	GameScene();
-	~GameScene() override;
+	EditorScene();
+	~EditorScene() override;
 
 	void Initialize() override;
 
@@ -29,15 +30,9 @@ private:
 	DirectXSetter* dxSetter_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
+	MapEditor* editor_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
 
-	std::unique_ptr<Model> model_;
-	std::unique_ptr<Model> model2_;
-	std::unique_ptr<Model> model3_;
-	std::unique_ptr<Model> model4_;
-	std::unique_ptr<Model> model5_;
 
 };
-
-
