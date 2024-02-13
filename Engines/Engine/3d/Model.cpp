@@ -415,4 +415,24 @@ void Model::ImGuiUpdate(const std::string& name) {
 
 #endif // _DEBUG
 
+	ImGui::Begin(name.c_str());
+
+	if (ImGui::BeginTabBar("Model", ImGuiTabBarFlags_None)) {
+
+		if (ImGui::BeginTabItem("translation")) {
+			ImGui::DragFloat3("position", &position_.x, 0.01f);
+			ImGui::DragFloat3("rotation", &rotation_.x, 0.01f);
+			ImGui::DragFloat3("scale", &scale_.x, 0.01f);
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("material")) {
+			mesh_->ImGuiUpdate();
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+
+	ImGui::End();
+
 }
