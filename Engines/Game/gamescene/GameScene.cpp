@@ -3,11 +3,9 @@
 
 #ifdef _DEBUG
 
-
+#include "Drawing/ImGuiManager.h"
 
 #endif // _DEBUG
-
-#include "Engine/manager/ImGuiManager.h"
 
 GameScene::GameScene()
 {

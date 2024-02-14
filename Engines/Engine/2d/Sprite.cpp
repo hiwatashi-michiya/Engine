@@ -4,7 +4,7 @@
 #include "Drawing/ShaderManager.h"
 #include "Drawing/PipelineManager.h"
 #include "Drawing/RootSignatureManager.h"
-#include "manager/ImGuiManager.h"
+#include "Drawing/ImGuiManager.h"
 #include "Buffer/BufferResource.h"
 
 #pragma comment(lib, "dxcompiler.lib")

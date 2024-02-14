@@ -6,7 +6,7 @@
 #include "Drawing/RootSignatureManager.h"
 #include "Drawing/PipelineManager.h"
 #include <sstream>
-#include "Engine/manager/ImGuiManager.h"
+#include "Drawing/ImGuiManager.h"
 #include "Model.h"
 
 #pragma comment(lib, "dxcompiler.lib")

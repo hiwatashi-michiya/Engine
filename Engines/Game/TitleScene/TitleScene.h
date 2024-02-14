@@ -1,12 +1,12 @@
 #pragma once
 #include "base/DirectXSetter.h"
-#include "manager/TextureManager.h"
+#include "Drawing/TextureManager.h"
 #include "Model.h"
 #include "input/Input.h"
 #include "Sprite.h"
 #include <memory>
 #include "Particle3D.h"
-#include "manager/AudioManager.h"
+#include "Audio/AudioManager.h"
 #include "Tool/GlobalVariables.h"
 #include "MapEditor.h"
 #include "Particle.h"

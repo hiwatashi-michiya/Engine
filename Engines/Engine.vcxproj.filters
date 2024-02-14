@@ -61,6 +61,9 @@
     <Filter Include="Game\EditorScene">
       <UniqueIdentifier>{ef1b751a-2e62-4e7a-8312-69b172aac20f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Audio">
+      <UniqueIdentifier>{902c668e-ae92-4b9f-973e-14133b58b054}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -114,14 +117,8 @@
     <ClCompile Include="Engine\Leak.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\manager\TextureManager.cpp">
-      <Filter>Engine\base\manager</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3d\Particle3D.cpp">
       <Filter>Engine\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\manager\AudioManager.cpp">
-      <Filter>Engine\base\manager</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>Engine\math</Filter>
@@ -131,9 +128,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp">
       <Filter>Engine\Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\manager\ModelManager.cpp">
-      <Filter>Engine\base\manager</Filter>
     </ClCompile>
     <ClCompile Include="Application\MapEditor.cpp">
       <Filter>Application</Filter>
@@ -170,6 +164,15 @@
     </ClCompile>
     <ClCompile Include="Game\EditorScene\EditorScene.cpp">
       <Filter>Game\EditorScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\ModelManager.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\TextureManager.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Audio\AudioManager.cpp">
+      <Filter>Engine\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,23 +227,14 @@
     <ClInclude Include="Game\gamescene\GameScene.h">
       <Filter>Game\gameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\manager\ImGuiManager.h">
-      <Filter>Engine\base\manager</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\math\Collision.h">
       <Filter>Engine\math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Leak.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\manager\TextureManager.h">
-      <Filter>Engine\base\manager</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3d\Particle3D.h">
       <Filter>Engine\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\manager\AudioManager.h">
-      <Filter>Engine\base\manager</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Quaternion.h">
       <Filter>Engine\math</Filter>
@@ -250,9 +244,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Tool\GlobalVariables.h">
       <Filter>Engine\Tool</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\manager\ModelManager.h">
-      <Filter>Engine\base\manager</Filter>
     </ClInclude>
     <ClInclude Include="Application\MapEditor.h">
       <Filter>Application</Filter>
@@ -295,6 +286,18 @@
     </ClInclude>
     <ClInclude Include="Game\EditorScene\EditorScene.h">
       <Filter>Game\EditorScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\ImGuiManager.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\ModelManager.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\TextureManager.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Audio\AudioManager.h">
+      <Filter>Engine\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

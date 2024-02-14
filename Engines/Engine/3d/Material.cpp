@@ -3,7 +3,7 @@
 #include "Buffer/BufferResource.h"
 #include <filesystem>
 #include <fstream>
-#include "Engine/manager/ImGuiManager.h"
+#include "Drawing/ImGuiManager.h"
 
 ID3D12Device* Material::device_ = nullptr;
 
@@ -176,33 +176,5 @@ void Material::ImGuiUpdate() {
 	}
 
 #endif // _DEBUG
-
-	if (ImGui::TreeNode("Base Material")) {
-		ImGui::ColorEdit4("C_color", &constMap_->color.x);
-		ImGui::SliderInt("C_Lighting", &constMap_->enableLighting, 0, 1);
-		ImGui::DragFloat("C_shininess", &constMap_->shininess, 0.05f, 0.0f, 100.0f);
-		ImGui::SliderInt("C_is_gray", &constMap_->isGrayScale, 0, 1);
-		ImGui::SliderInt("C_is_inversion", &constMap_->isInversion, 0, 1);
-		ImGui::SliderInt("C_is_retro", &constMap_->isRetro, 0, 1);
-		ImGui::SliderInt("C_is_aveblur", &constMap_->isAverageBlur, 0, 1);
-		ImGui::SliderInt("C_is_emboss", &constMap_->isEmboss, 0, 1);
-		ImGui::SliderInt("C_is_sharp", &constMap_->isSharpness, 0, 1);
-		ImGui::SliderInt("C_is_outline", &constMap_->isOutline, 0, 1);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("Directional Light")) {
-		ImGui::ColorEdit4("D_color", &dLightMap_->color.x);
-		ImGui::DragFloat3("D_direction", &dLightMap_->direction.x, 0.01f, -1.0f, 1.0f);
-		ImGui::DragFloat("D_intencity", &dLightMap_->intensity, 0.01f, 0.0f, 100.0f);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("Point Light")) {
-		ImGui::ColorEdit4("P_color", &pLightMap_->color.x);
-		ImGui::DragFloat3("P_position", &pLightMap_->position.x, 0.01f);
-		ImGui::DragFloat("P_intencity", &pLightMap_->intensity, 0.01f, 0.0f, 100.0f);
-		ImGui::DragFloat("P_radius", &pLightMap_->radius, 0.01f);
-		ImGui::DragFloat("P_decay", &pLightMap_->decay, 0.05f, 0.0f, 100.0f);
-		ImGui::TreePop();
-	}
 
 }

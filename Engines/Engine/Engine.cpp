@@ -8,10 +8,10 @@
 #include "base/SafeDelete.h"
 #include <cassert>
 #include "Convert.h"
-#include "manager/TextureManager.h"
+#include "Drawing/TextureManager.h"
 #include "input/Input.h"
 #include "3d/Particle3D.h"
-#include "manager/AudioManager.h"
+#include "Audio/AudioManager.h"
 #include "math/Rand.h"
 #include "Tool/GlobalVariables.h"
 #include "Drawing/ShaderManager.h"
@@ -20,7 +20,7 @@
 
 #ifdef _DEBUG
 
-#include "manager/ImGuiManager.h"
+#include "Drawing/ImGuiManager.h"
 
 #endif // _DEBUG
 

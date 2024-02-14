@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <dxcapi.h>
-#include "manager/ModelManager.h"
+#include "Drawing/ModelManager.h"
 #include "base/Camera.h"
 #include "Mesh.h"
 #include <memory>
