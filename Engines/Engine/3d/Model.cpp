@@ -273,6 +273,8 @@ void Model::Initialize(const std::string& filename) {
 
 		matBuff_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
 
+		matBuff_->SetName(L"matrixBuff");
+
 		matBuff_->Map(0, nullptr, reinterpret_cast<void**>(&matTransformMap_));
 
 		matTransformMap_->WVP = MakeIdentity4x4();
@@ -286,6 +288,8 @@ void Model::Initialize(const std::string& filename) {
 	{
 
 		cameraBuff_ = CreateBufferResource(device_, sizeof(CameraForGPU));
+
+		cameraBuff_->SetName(L"cameraBuff");
 
 		cameraBuff_->Map(0, nullptr, reinterpret_cast<void**>(&cameraMap_));
 

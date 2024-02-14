@@ -69,6 +69,8 @@ Material* Material::Create(const std::string& filename) {
 	{
 
 		constBuff_ = CreateBufferResource(device_, sizeof(MaterialData));
+		
+		constBuff_->SetName(L"constBuff");
 
 		//マッピングしてデータ転送
 		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
@@ -88,6 +90,8 @@ Material* Material::Create(const std::string& filename) {
 
 		dLightBuff_ = CreateBufferResource(device_, sizeof(DirectionalLight));
 
+		dLightBuff_->SetName(L"dLightBuff");
+
 		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
 
 		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -102,6 +106,8 @@ Material* Material::Create(const std::string& filename) {
 	{
 
 		pLightBuff_ = CreateBufferResource(device_, sizeof(PointLight));
+
+		pLightBuff_->SetName(L"pLightBuff");
 
 		pLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&pLightMap_));
 

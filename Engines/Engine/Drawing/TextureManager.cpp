@@ -3,6 +3,7 @@
 #include "externals/DirectXTex/DirectXTex.h"
 #include"Engine/Convert.h"
 #include "Engine/math/Matrix4x4.h"
+#include "DescriptorHeap/DescriptorHeapManager.h"
 
 //DirectXTexを使ってTextureを読み込むためのLoadTexture関数
 DirectX::ScratchImage LoadTexture(const std::string& filePath) {
@@ -100,25 +101,25 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12
 }
 
 //デスクリプタヒープ作成関数
-ID3D12DescriptorHeap* CreateDescriptorHeap(
-	ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
-
-	//ディスクリプタヒープの生成
-	ID3D12DescriptorHeap* descriptorHeap = nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-	descriptorHeapDesc.Type = heapType;
-	descriptorHeapDesc.NumDescriptors = numDescriptors;
-	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	HRESULT hr;
-
-	hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
-
-	//ディスクリプタヒープが作れなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-	return descriptorHeap;
-
-}
+//ID3D12DescriptorHeap* CreateDescriptorHeap(
+//	ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+//
+//	//ディスクリプタヒープの生成
+//	ID3D12DescriptorHeap* descriptorHeap = nullptr;
+//	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+//	descriptorHeapDesc.Type = heapType;
+//	descriptorHeapDesc.NumDescriptors = numDescriptors;
+//	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+//	HRESULT hr;
+//
+//	hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+//
+//	//ディスクリプタヒープが作れなかったので起動できない
+//	assert(SUCCEEDED(hr));
+//
+//	return descriptorHeap;
+//
+//}
 
 TextureManager* TextureManager::GetInstance() {
 	static TextureManager instance;
@@ -132,7 +133,9 @@ void TextureManager::Initialize() {
 
 	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	srvDescHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kNumDescriptors, true);
+	srvDescHeap_ = DescriptorHeapManager::GetInstance()->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kNumDescriptors, true, "SRVHeap");
+
+	srvDescHeap_->SetName(L"srvHeap");
 
 	for (size_t i = 0; i < kNumDescriptors; i++) {
 		textures_[i].resource.Reset();

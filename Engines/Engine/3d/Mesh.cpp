@@ -241,6 +241,8 @@ Mesh* Mesh::Create(const std::string& filename) {
 
 		vertBuff_ = CreateBufferResource(device_, sizeof(VertexData) * meshData_.vertices.size());
 
+		vertBuff_->SetName(L"vertBuff");
+
 		//頂点バッファビュー設定
 		vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
 		vbView_.SizeInBytes = UINT(sizeof(VertexData) * meshData_.vertices.size());

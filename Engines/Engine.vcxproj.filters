@@ -64,6 +64,9 @@
     <Filter Include="Engine\Audio">
       <UniqueIdentifier>{902c668e-ae92-4b9f-973e-14133b58b054}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\DescriptorHeap">
+      <UniqueIdentifier>{f431b1d4-8000-4680-a4b4-8c20bd428eda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -173,6 +176,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Audio\AudioManager.cpp">
       <Filter>Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DescriptorHeap\DescriptorHeapManager.cpp">
+      <Filter>Engine\DescriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\DepthStencil.cpp">
+      <Filter>Engine\Drawing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -298,6 +307,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Audio\AudioManager.h">
       <Filter>Engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DescriptorHeap\DescriptorHeapManager.h">
+      <Filter>Engine\DescriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\DepthStencil.h">
+      <Filter>Engine\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -166,6 +166,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\WindowManager.cpp" />
     <ClCompile Include="Engine\Buffer\BufferResource.cpp" />
     <ClCompile Include="Engine\Convert.cpp" />
+    <ClCompile Include="Engine\DescriptorHeap\DescriptorHeapManager.cpp" />
+    <ClCompile Include="Engine\Drawing\DepthStencil.cpp" />
     <ClCompile Include="Engine\Drawing\ModelManager.cpp" />
     <ClCompile Include="Engine\Drawing\PipelineManager.cpp" />
     <ClCompile Include="Engine\Drawing\RootSignatureManager.cpp" />
@@ -205,6 +207,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\WindowManager.h" />
     <ClInclude Include="Engine\Buffer\BufferResource.h" />
     <ClInclude Include="Engine\Convert.h" />
+    <ClInclude Include="Engine\DescriptorHeap\DescriptorHeapManager.h" />
+    <ClInclude Include="Engine\Drawing\DepthStencil.h" />
     <ClInclude Include="Engine\Drawing\ImGuiManager.h" />
     <ClInclude Include="Engine\Drawing\ModelManager.h" />
     <ClInclude Include="Engine\Drawing\PipelineManager.h" />
