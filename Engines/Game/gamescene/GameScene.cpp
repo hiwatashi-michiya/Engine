@@ -29,17 +29,17 @@ void GameScene::Initialize() {
 	model_.reset(Model::Create("./resources/cube/cube.obj"));
 	model2_.reset(Model::Create("./resources/sphere/sphere.obj"));
 	model2_->position_ = { 3.0f,0.0f,0.0f };
-	model2_->mesh_->material_->constMap_->isGrayScale = 1;
+	model2_->material_->constMap_->isGrayScale = 1;
 	model3_.reset(Model::Create("./resources/plane/plane.obj"));
 	model3_->position_ = { -3.0f,0.0f,0.0f };
 	model3_->rotation_ = { 0.0f,3.14f,0.0f };
-	model3_->mesh_->material_->constMap_->isRetro = 1;
+	model3_->material_->constMap_->isRetro = 1;
 	model4_.reset(Model::Create("./resources/cube/cube.obj"));
 	model4_->position_ = { 8.5f,3.0f,-5.0f };
-	model4_->mesh_->material_->pLightMap_->color = { 1.0f,0.5f,0.0f,1.0f };
+	model4_->material_->pLightMap_->color = { 1.0f,0.5f,0.0f,1.0f };
 	model5_.reset(Model::Create("./resources/cube/cube.obj"));
 	model5_->position_ = { -8.5f,3.0f,-5.0f };
-	model5_->mesh_->material_->constMap_->isEmboss = 1;
+	model5_->material_->constMap_->isEmboss = 1;
 
 }
 

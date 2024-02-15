@@ -76,6 +76,9 @@ public:
 	//メッシュ
 	Mesh* mesh_;
 
+	//マテリアル
+	std::unique_ptr<Material> material_;
+
 private:
 
 	//静的メンバ変数
@@ -98,8 +101,6 @@ private:
 	static int modelNumber_;
 
 	static BlendMode currentBlendMode_;
-
-	static std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes_;
 
 private:
 

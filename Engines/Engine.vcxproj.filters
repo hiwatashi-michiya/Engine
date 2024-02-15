@@ -183,6 +183,9 @@
     <ClCompile Include="Engine\Drawing\DepthStencil.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Drawing\MeshManager.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -312,6 +315,9 @@
       <Filter>Engine\DescriptorHeap</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Drawing\DepthStencil.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\MeshManager.h">
       <Filter>Engine\Drawing</Filter>
     </ClInclude>
   </ItemGroup>

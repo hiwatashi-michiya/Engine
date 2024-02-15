@@ -8,6 +8,7 @@
 #include "Drawing/RootSignatureManager.h"
 #include "Buffer/BufferResource.h"
 #include "Drawing/PipelineManager.h"
+#include "Drawing/MeshManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -20,7 +21,6 @@ IDxcBlob* Model::vs3dBlob_ = nullptr;
 IDxcBlob* Model::ps3dBlob_ = nullptr;
 int Model::modelNumber_ = 0;
 Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
-std::unordered_map<std::string, std::unique_ptr<Mesh>> Model::meshes_;
 const char* Model::BlendTexts[Model::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
 void Model::StaticInitialize(ID3D12Device* device) {
@@ -252,21 +252,23 @@ void Model::Initialize(const std::string& filename) {
 
 	assert(device_);
 
-	if (meshes_.find(filename) != meshes_.end()) {
+	if (MeshManager::GetInstance()->IsExistMesh(filename)) {
 
-		mesh_ = meshes_[filename].get();
+		mesh_ = MeshManager::GetInstance()->GetMesh(filename);
 
 	}
 	else {
 
 		//メッシュを登録
-		meshes_[filename] = std::make_unique<Mesh>();
-		meshes_[filename]->Create(filename);
-		mesh_ = meshes_[filename].get();
+		MeshManager::GetInstance()->CreateMesh(filename);
+		mesh_ = MeshManager::GetInstance()->GetMesh(filename);
 
 	}
 
-	texture_ = mesh_->texture_;
+	material_ = std::make_unique<Material>();
+	material_->Create(mesh_->textureFilePath_);
+
+	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
 
 	//transformMatrix
 	{
@@ -354,6 +356,8 @@ void Model::Draw(Camera* camera) {
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 
 	//描画
+	material_->SetCommandMaterial(commandList_);
+
 	mesh_->SetCommandMesh(commandList_);
 
 }
@@ -377,17 +381,16 @@ void Model::StaticImGuiUpdate() {
 
 void Model::SetMesh(const std::string& objFileName) {
 
-	if (meshes_.find(objFileName) != meshes_.end()) {
+	if (MeshManager::GetInstance()->IsExistMesh(objFileName)) {
 
-		mesh_ = meshes_[objFileName].get();
+		mesh_ = MeshManager::GetInstance()->GetMesh(objFileName);
 
 	}
 	else {
 
 		//メッシュを登録
-		meshes_[objFileName] = std::make_unique<Mesh>();
-		meshes_[objFileName]->Create(objFileName);
-		mesh_ = meshes_[objFileName].get();
+		MeshManager::GetInstance()->CreateMesh(objFileName);
+		mesh_ = MeshManager::GetInstance()->GetMesh(objFileName);;
 
 	}
 
@@ -408,7 +411,7 @@ void Model::ImGuiUpdate(const std::string& name) {
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("material")) {
-			mesh_->ImGuiUpdate();
+			material_->ImGuiUpdate();
 			ImGui::EndTabItem();
 		}
 

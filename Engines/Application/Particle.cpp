@@ -57,7 +57,7 @@ void Particle::Reset() {
 			}
 		}
 
-		particle->mesh_->material_->constMap_->color = colors_[num];
+		particle->material_->constMap_->color = colors_[num];
 
 		num++;
 
@@ -77,7 +77,7 @@ void Particle::Update() {
 				{
 				case Particle::kCircle:
 
-					if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
+					if (particle->material_->constMap_->color.w > 0.0f) {
 						particle->positions_[i] += particle->velocities_[i];
 					}
 
@@ -117,8 +117,8 @@ void Particle::Update() {
 			{
 			case Particle::kCircle:
 
-				if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
-					particle->mesh_->material_->constMap_->color.w -= 0.01f;
+				if (particle->material_->constMap_->color.w > 0.0f) {
+					particle->material_->constMap_->color.w -= 0.01f;
 				}
 
 				break;
@@ -140,7 +140,7 @@ void Particle::Draw(Camera* camera) {
 
 		for (auto& particle : particles3D_) {
 
-			if (particle->mesh_->material_->constMap_->color.w > 0.0f) {
+			if (particle->material_->constMap_->color.w > 0.0f) {
 				particle->Draw(camera);
 			}
 

@@ -13,9 +13,6 @@ public:
 
 	Mesh* Create(const std::string& filename);
 
-	//マテリアル
-	std::unique_ptr<Material> material_;
-
 	void LoadObjFile(const std::string& filename);
 
 	//テクスチャ読み込み
@@ -45,7 +42,7 @@ public:
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
-	Texture* texture_;
+	std::string textureFilePath_;
 
 private:
 

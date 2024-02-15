@@ -52,14 +52,14 @@ void Mesh::LoadMaterialTemplateFile(const std::string& filename) {
 	//テクスチャ設定
 	{
 
-		//テクスチャ情報が空でない場合に設定
-		if (textureData.textureFilePath != "") {
-			texture_ = TextureManager::GetInstance()->Load(textureData.textureFilePath);
-		}
-		//テクスチャ情報が空の場合、既定の画像に設定
-		else {
-			texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
-		}
+		////テクスチャ情報が空でない場合に設定
+		//if (textureData.textureFilePath != "") {
+		//	texture_ = TextureManager::GetInstance()->Load(textureData.textureFilePath);
+		//}
+		////テクスチャ情報が空の場合、既定の画像に設定
+		//else {
+		//	texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
+		//}
 
 	}
 
@@ -117,10 +117,7 @@ void Mesh::LoadObjFile(const std::string& filename) {
 			//ファイルのフルパスを取得
 			std::filesystem::path fullPath(filename);
 			
-			//マテリアルを生成
-			material_ = std::make_unique<Material>();
-			material_->Create(fullPath.parent_path().string() + "/" + textureFilePath.C_Str());
-			texture_ = TextureManager::GetInstance()->Load(fullPath.parent_path().string() + "/" + textureFilePath.C_Str());
+			textureFilePath_ = fullPath.parent_path().string() + "/" + textureFilePath.C_Str();
 
 		}
 
@@ -264,8 +261,6 @@ Mesh* Mesh::Create(const std::string& filename) {
 
 void Mesh::SetCommandMesh(ID3D12GraphicsCommandList* commandList) {
 
-	material_->SetCommandMaterial(commandList);
-
 	//頂点バッファビューの設定
 	commandList->IASetVertexBuffers(0, 1, &vbView_);
 	//描画
@@ -276,8 +271,6 @@ void Mesh::SetCommandMesh(ID3D12GraphicsCommandList* commandList) {
 
 void Mesh::SetCommandMesh(ID3D12GraphicsCommandList* commandList, uint32_t instanceCount) {
 
-	material_->SetCommandMaterialForParticle(commandList);
-
 	//頂点バッファビューの設定
 	commandList->IASetVertexBuffers(0, 1, &vbView_);
 	//描画
@@ -287,7 +280,5 @@ void Mesh::SetCommandMesh(ID3D12GraphicsCommandList* commandList, uint32_t insta
 }
 
 void Mesh::ImGuiUpdate() {
-
-	material_->ImGuiUpdate();
 
 }

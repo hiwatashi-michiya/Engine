@@ -8,6 +8,7 @@
 #include <sstream>
 #include "Drawing/ImGuiManager.h"
 #include "Model.h"
+#include "Drawing/MeshManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -247,21 +248,23 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	assert(device_);
 
-	if (meshes_.find(filename) != meshes_.end()) {
+	if (MeshManager::GetInstance()->IsExistMesh(filename)) {
 
-		mesh_ = meshes_[filename].get();
+		mesh_ = MeshManager::GetInstance()->GetMesh(filename);
 
 	}
 	else {
 
 		//メッシュを登録
-		meshes_[filename] = std::make_shared<Mesh>();
-		meshes_[filename]->Create(filename);
-		mesh_ = meshes_[filename].get();
+		MeshManager::GetInstance()->CreateMesh(filename);
+		mesh_ = MeshManager::GetInstance()->GetMesh(filename);
 
 	}
 
-	texture_ = mesh_->texture_;
+	material_ = std::make_unique<Material>();
+	material_->Create(mesh_->textureFilePath_);
+
+	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
 
 	instanceCount_ = instanceCount;
 
@@ -358,6 +361,8 @@ void Particle3D::Draw(Camera* camera) {
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 
 	//描画
+	material_->SetCommandMaterialForParticle(commandList_);
+
 	mesh_->SetCommandMesh(commandList_, instanceCount_);
 
 }

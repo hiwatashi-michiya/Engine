@@ -70,6 +70,9 @@ public:
 	//メッシュ
 	Mesh* mesh_;
 
+	//マテリアル
+	std::unique_ptr<Material> material_;
+
 private:
 
 	//静的メンバ変数
