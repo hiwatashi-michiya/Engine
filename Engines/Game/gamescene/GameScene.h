@@ -29,6 +29,7 @@ private:
 	DirectXSetter* dxSetter_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
+	MapEditor* editor_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
 

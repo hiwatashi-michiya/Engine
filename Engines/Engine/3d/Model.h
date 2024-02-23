@@ -79,6 +79,9 @@ public:
 	//マテリアル
 	std::unique_ptr<Material> material_;
 
+	//現在使用しているメッシュのパス
+	std::string meshFilePath_;
+
 private:
 
 	//静的メンバ変数

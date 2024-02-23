@@ -63,6 +63,13 @@ public:
 	//球面線形補間
 	Quaternion Slerp(const Quaternion& qr, float t);
 
+	/// <summary>
+	/// オイラー角からの変換
+	/// </summary>
+	/// <param name="euler">オイラー角回転</param>
+	/// <returns></returns>
+	Quaternion ConvertFromEuler(const Vector3& euler);
+
 	Quaternion operator*=(const Quaternion& qr) { return this->Multiply(qr); }
 
 };

@@ -28,6 +28,7 @@ void EditorScene::Initialize() {
 	camera_->position_ = { 0.0f,10.0f, -30.0f };
 	camera_->rotation_.x = 0.3f;
 
+	editor_->SetCamera(camera_.get());
 
 }
 
@@ -49,7 +50,7 @@ void EditorScene::Update() {
 
 #endif // _DEBUG
 
-	if (input_->TriggerKey(DIK_S)) {
+	if (input_->TriggerKey(DIK_S) && input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	}
 

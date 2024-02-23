@@ -20,6 +20,8 @@ void GameScene::Initialize() {
 
 	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
+	editor_ = MapEditor::GetInstance();
+	editor_->Initialize();
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
@@ -59,7 +61,7 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	if (input_->TriggerKey(DIK_S)) {
+	if (input_->TriggerKey(DIK_S) && input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 	}
 

@@ -49,7 +49,7 @@ void TitleScene::Update() {
 
 #endif // _DEBUG
 
-	if (input_->TriggerKey(DIK_S)) {
+	if (input_->TriggerKey(DIK_S) && input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("EDIT");
 	}
 

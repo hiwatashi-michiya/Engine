@@ -149,7 +149,24 @@ Quaternion Quaternion::Slerp(const Quaternion& qr, float t) {
 	float scale0 = std::sinf((1.0f - t) * theta) / std::sinf(theta);
 	float scale1 = std::sinf(t * theta) / std::sinf(theta);
 
+	*this = scale0 * q0 + scale1 * q1;
+
 	return scale0 * q0 + scale1 * q1;
+
+}
+
+Quaternion Quaternion::ConvertFromEuler(const Vector3& euler) {
+
+	return Quaternion(
+		cosf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
+		- (sinf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
+		sinf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
+		+ (cosf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
+		cosf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
+		- (sinf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
+		cosf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * sinf(euler.z / 2.0f)
+		+ (sinf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * cosf(euler.z / 2.0f))
+	);
 
 }
 

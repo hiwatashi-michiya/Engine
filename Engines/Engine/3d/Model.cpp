@@ -268,6 +268,8 @@ void Model::Initialize(const std::string& filename) {
 	material_ = std::make_unique<Material>();
 	material_->Create(mesh_->textureFilePath_);
 
+	meshFilePath_ = filename;
+
 	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
 
 	//transformMatrix
@@ -393,6 +395,8 @@ void Model::SetMesh(const std::string& objFileName) {
 		mesh_ = MeshManager::GetInstance()->GetMesh(objFileName);;
 
 	}
+
+	meshFilePath_ = objFileName;
 
 }
 

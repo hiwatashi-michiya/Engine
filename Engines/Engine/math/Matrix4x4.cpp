@@ -4,6 +4,33 @@
 #include <cmath>
 #include <cassert>
 
+Matrix4x4 Matrix4x4::Identity() {
+
+	Matrix4x4 identity;
+
+	for (int y = 0; y < 4; y++) {
+
+		for (int x = 0; x < 4; x++) {
+
+			//yとxの値が等しい場合に1を入れる
+			if (y == x) {
+
+				identity.m[y][x] = 1.0f;
+
+			}
+			else {
+
+				identity.m[y][x] = 0.0f;
+
+			}
+
+		}
+	}
+
+	return identity;
+
+}
+
 //行列の加法
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) {
 

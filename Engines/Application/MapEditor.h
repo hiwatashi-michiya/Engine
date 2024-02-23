@@ -20,34 +20,10 @@ public:
 
 	const std::string& kDirectoryPath_ = "./resources/Maps/";
 
-//関数
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
+//関数,構造体
 private:
-
-	void Create(const std::string& filename);
-
-	void Save(const std::string& filename);
-
-	void Close();
-
-	void Load(const std::string& filename);
-
-	void AddObject(char* name);
-
-	bool CheckIsEmpty(const std::string& name);
-
-	void AddTag(const std::string& tagname);
-
-	//同名オブジェクトを探す
-	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
-
-	//同名タグを探す
-	bool CheckSameTag(const std::string& name);
-
-	void ChangeMesh(Model* model, const std::string& name);
-
-//変数
-private:
-
 
 	//マップに配置されているオブジェクトの構造体
 	struct MapObject {
@@ -68,7 +44,41 @@ private:
 
 		bool isSelect = false;
 
+		//削除に使用するフラグ
+		bool isDelete = false;
+
 	};
+
+	void Create(const std::string& filename);
+
+	void Save(const std::string& filename);
+
+	void Close();
+
+	void Load(const std::string& filename);
+
+	void AddObject(char* name);
+
+	void CopyObject(std::shared_ptr<MapObject> object);
+
+	bool CheckIsEmpty(const std::string& name);
+
+	void AddTag(const std::string& tagname);
+
+	//同名オブジェクトを探す
+	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
+
+	//同名タグを探す
+	bool CheckSameTag(const std::string& name);
+
+	void ChangeMesh(Model* model, const std::string& name);
+
+	void EditTransform();
+
+//変数
+private:
+
+	Camera* camera_ = nullptr;
 
 	GlobalVariables* globalVariables_ = nullptr;
 

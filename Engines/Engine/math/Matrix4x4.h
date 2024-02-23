@@ -8,29 +8,7 @@ public:
 
 	float m[4][4];
 
-	////初期化
-	//Matrix4x4() {
-	//	
-	//	for (int y = 0; y < 4; y++) {
-
-	//		for (int x = 0; x < 4; x++) {
-
-	//			//yとxの値が等しい場合に1を入れる
-	//			if (y == x) {
-
-	//				m[y][x] = 1;
-
-	//			}
-	//			else {
-
-	//				m[y][x] = 0;
-
-	//			}
-
-	//		}
-	//	}
-
-	//}
+	static Matrix4x4 Identity();
 
 	Matrix4x4& operator+=(const Matrix4x4& matrix) {
 		

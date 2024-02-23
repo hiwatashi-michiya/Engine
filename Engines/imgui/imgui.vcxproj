@@ -124,6 +124,7 @@
   <ItemGroup>
     <ClInclude Include="..\Externals\imgui\imconfig.h" />
     <ClInclude Include="..\Externals\imgui\imgui.h" />
+    <ClInclude Include="..\Externals\imgui\ImGuizmo.h" />
     <ClInclude Include="..\Externals\imgui\imgui_impl_dx12.h" />
     <ClInclude Include="..\Externals\imgui\imgui_impl_win32.h" />
     <ClInclude Include="..\Externals\imgui\imgui_internal.h" />
@@ -133,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Externals\imgui\imgui.cpp" />
+    <ClCompile Include="..\Externals\imgui\ImGuizmo.cpp" />
     <ClCompile Include="..\Externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\Externals\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\Externals\imgui\imgui_impl_dx12.cpp" />
