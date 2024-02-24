@@ -2,74 +2,11 @@
     "test": {
         "objectData": {
             "obj1": {
-                "mesh": "sphere",
-                "meshNumber": 1,
+                "mesh": "cube",
+                "meshNumber": 0,
                 "position": [
-                    4.599999904632568,
-                    3.299999952316284,
-                    0.0
-                ],
-                "rotation": [
                     0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "None",
-                "tagNumber": 0
-            },
-            "obj11": {
-                "mesh": "sphere",
-                "meshNumber": 1,
-                "position": [
-                    -1.2999999523162842,
-                    3.299999952316284,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "None",
-                "tagNumber": 0
-            },
-            "obj111": {
-                "mesh": "plane",
-                "meshNumber": 2,
-                "position": [
-                    1.7000000476837158,
-                    -0.800000011920929,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "None",
-                "tagNumber": 0
-            },
-            "obj1111": {
-                "mesh": "plane",
-                "meshNumber": 2,
-                "position": [
-                    5.599999904632568,
-                    -0.800000011920929,
+                    -3.0,
                     0.0
                 ],
                 "rotation": [

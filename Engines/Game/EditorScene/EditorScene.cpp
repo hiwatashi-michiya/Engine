@@ -43,7 +43,7 @@ void EditorScene::Update() {
 	ImGui::End();
 
 	ImGui::Begin("Manual");
-	ImGui::Text("Key S: Change Scene");
+	ImGui::Text("Key S + L_ctrl: Change Scene");
 	ImGui::End();
 
 	editor_->Edit();

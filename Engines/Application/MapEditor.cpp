@@ -10,14 +10,14 @@
 
 void MapEditor::EditTransform()
 {
-	//static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
-	//static bool useSnap = false;
-	//static float snap[3] = { 1.f, 1.f, 1.f };
-	//static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
-	//static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
-	//static bool boundSizing = false;
-	//static bool boundSizingSnap = false;
-	//static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
+	static bool useSnap = false;
+	static float snap[3] = { 1.f, 1.f, 1.f };
+	static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
+	static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
+	static bool boundSizing = false;
+	static bool boundSizingSnap = false;
+	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
 	//if (ImGui::IsKeyPressed(ImGuiKey_T))
 	//	mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -35,81 +35,99 @@ void MapEditor::EditTransform()
 	//	mCurrentGizmoOperation = ImGuizmo::SCALE;
 	//if (ImGui::RadioButton("Universal", mCurrentGizmoOperation == ImGuizmo::UNIVERSAL))
 	//	mCurrentGizmoOperation = ImGuizmo::UNIVERSAL;
-	//float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-	//ImGuizmo::DecomposeMatrixToComponents(matrix, matrixTranslation, matrixRotation, matrixScale);
-	//ImGui::InputFloat3("Tr", matrixTranslation);
-	//ImGui::InputFloat3("Rt", matrixRotation);
-	//ImGui::InputFloat3("Sc", matrixScale);
-	//ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, matrix);
 
-	//if (mCurrentGizmoOperation != ImGuizmo::SCALE)
-	//{
-	//	if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
-	//		mCurrentGizmoMode = ImGuizmo::LOCAL;
-	//	ImGui::SameLine();
-	//	if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
-	//		mCurrentGizmoMode = ImGuizmo::WORLD;
-	//}
-	//if (ImGui::IsKeyPressed(ImGuiKey_S))
-	//	useSnap = !useSnap;
-	//ImGui::Checkbox("##UseSnap", &useSnap);
-	//ImGui::SameLine();
+	ImGui::Begin("Gizmo Transform");
 
-	//switch (mCurrentGizmoOperation)
-	//{
-	//case ImGuizmo::TRANSLATE:
-	//	ImGui::InputFloat3("Snap", &snap[0]);
-	//	break;
-	//case ImGuizmo::ROTATE:
-	//	ImGui::InputFloat("Angle Snap", &snap[0]);
-	//	break;
-	//case ImGuizmo::SCALE:
-	//	ImGui::InputFloat("Scale Snap", &snap[0]);
-	//	break;
-	//}
-	//ImGui::Checkbox("Bound Sizing", &boundSizing);
-	//if (boundSizing)
-	//{
-	//	ImGui::PushID(3);
-	//	ImGui::Checkbox("##BoundSizing", &boundSizingSnap);
-	//	ImGui::SameLine();
-	//	ImGui::InputFloat3("Snap", boundsSnap);
-	//	ImGui::PopID();
-	//}
+	for (auto& object : mapObjData_) {
 
-	//ImGuiIO& io = ImGui::GetIO();
-	//float viewManipulateRight = io.DisplaySize.x;
-	//float viewManipulateTop = 0;
-	//static ImGuiWindowFlags gizmoWindowFlags = 0;
+		std::string showObjName = object->objName.c_str();
+		showObjName += " ";
 
-	//ImGui::SetNextWindowSize(ImVec2(800, 400), ImGuiCond_Appearing);
-	//ImGui::SetNextWindowPos(ImVec2(400, 20), ImGuiCond_Appearing);
-	//ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor(0.35f, 0.3f, 0.3f));
-	//ImGui::Begin("Gizmo", 0, gizmoWindowFlags);
-	//ImGuizmo::SetDrawlist();
-	//float windowWidth = (float)ImGui::GetWindowWidth();
-	//float windowHeight = (float)ImGui::GetWindowHeight();
-	//ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-	//viewManipulateRight = ImGui::GetWindowPos().x + windowWidth;
-	//viewManipulateTop = ImGui::GetWindowPos().y;
-	//ImGuiWindow* window = ImGui::GetCurrentWindow();
-	//gizmoWindowFlags = ImGui::IsWindowHovered() && ImGui::IsMouseHoveringRect(window->InnerRect.Min, window->InnerRect.Max) ? ImGuiWindowFlags_NoMove : 0;
+		if (ImGui::TreeNode(showObjName.c_str())) {
 
-	//float* cameraView = reinterpret_cast<float*>(camera_->matView_.m);
-	//float* cameraProjection = reinterpret_cast<float*>(camera_->matProjection_.m);
+			float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+			ImGuizmo::DecomposeMatrixToComponents(reinterpret_cast<float*>(object->model->matWorld_.m), matrixTranslation, matrixRotation, matrixScale);
+			ImGui::InputFloat3("Tr", matrixTranslation);
+			ImGui::InputFloat3("Rt", matrixRotation);
+			ImGui::InputFloat3("Sc", matrixScale);
+			ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, reinterpret_cast<float*>(object->model->matWorld_.m));
+			
+			ImGui::TreePop();
 
-	//ImGuizmo::DrawGrid(cameraView, cameraProjection, reinterpret_cast<const float*>(Matrix4x4::Identity().m), 100.f);
+		}
 
-	//for (auto& object : mapObjData_) {
-	//	ImGuizmo::DrawCubes(cameraView, cameraProjection, reinterpret_cast<float*>(object->model->matWorld_.m), 1);
-	//	ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, 
-	//		reinterpret_cast<float*>(object->model->matWorld_.m), NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
-	//}
+	}
 
-	//ImGuizmo::ViewManipulate(cameraView, 30.0f, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+	ImGui::End();
 
-	//ImGui::End();
-	//ImGui::PopStyleColor(1);
+	/*if (mCurrentGizmoOperation != ImGuizmo::SCALE)
+	{
+		if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL)) {
+			mCurrentGizmoMode = ImGuizmo::LOCAL;
+		}
+		ImGui::SameLine();
+		if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD)) {
+			mCurrentGizmoMode = ImGuizmo::WORLD;
+		}
+	}
+	ImGui::Checkbox("##UseSnap", &useSnap);
+	ImGui::SameLine();
+
+	switch (mCurrentGizmoOperation)
+	{
+	case ImGuizmo::TRANSLATE:
+		ImGui::InputFloat3("Snap", &snap[0]);
+		break;
+	case ImGuizmo::ROTATE:
+		ImGui::InputFloat("Angle Snap", &snap[0]);
+		break;
+	case ImGuizmo::SCALE:
+		ImGui::InputFloat("Scale Snap", &snap[0]);
+		break;
+	}
+	ImGui::Checkbox("Bound Sizing", &boundSizing);
+	if (boundSizing)
+	{
+		ImGui::PushID(3);
+		ImGui::Checkbox("##BoundSizing", &boundSizingSnap);
+		ImGui::SameLine();
+		ImGui::InputFloat3("Snap", boundsSnap);
+		ImGui::PopID();
+	}*/
+
+	ImGuiIO& io = ImGui::GetIO();
+	float viewManipulateRight = io.DisplaySize.x;
+	float viewManipulateTop = 0;
+	static ImGuiWindowFlags gizmoWindowFlags = 0;
+
+	ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Appearing);
+	ImGui::SetNextWindowPos(ImVec2(0, 520), ImGuiCond_Appearing);
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor(0.35f, 0.3f, 0.3f));
+	ImGui::Begin("Gizmo", 0, gizmoWindowFlags);
+	ImGuizmo::SetDrawlist();
+	float windowWidth = (float)ImGui::GetWindowWidth();
+	float windowHeight = (float)ImGui::GetWindowHeight();
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+	viewManipulateRight = ImGui::GetWindowPos().x + windowWidth;
+	viewManipulateTop = ImGui::GetWindowPos().y;
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	gizmoWindowFlags = ImGui::IsWindowHovered() && ImGui::IsMouseHoveringRect(window->InnerRect.Min, window->InnerRect.Max) ? ImGuiWindowFlags_NoMove : 0;
+
+	float* cameraView = reinterpret_cast<float*>(camera_->matView_.m);
+	float* cameraProjection = reinterpret_cast<float*>(camera_->matProjection_.m);
+
+	ImGuizmo::DrawGrid(cameraView, cameraProjection, reinterpret_cast<const float*>(Matrix4x4::Identity().m), 100.f);
+
+	for (auto& object : mapObjData_) {
+		ImGuizmo::DrawCubes(cameraView, cameraProjection, reinterpret_cast<float*>(object->model->matWorld_.m), 1);
+		ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, 
+			reinterpret_cast<float*>(object->model->matWorld_.m), NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+	}
+
+	ImGuizmo::ViewManipulate(cameraView, 30.0f, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+
+	ImGui::End();
+	ImGui::PopStyleColor(1);
 
 }
 
@@ -192,42 +210,42 @@ void MapEditor::Edit() {
 
 		}
 
-		for (auto& mapObjectData : mapObjData_) {
+		for (auto& object : mapObjData_) {
 
-			std::string showObjName = mapObjectData->objName.c_str();
+			std::string showObjName = object->objName.c_str();
 			showObjName += " ";
 
 			if (ImGui::TreeNode(showObjName.c_str())) {
 
-				if (ImGui::DragFloat3("position", &mapObjectData->model->position_.x, 0.1f)) {
+				if (ImGui::DragFloat3("position", &object->model->position_.x, 0.1f)) {
 					isSave_ = false;
 				}
 
-				if (ImGui::DragFloat3("rotation", &mapObjectData->model->rotation_.x, 0.01f)) {
+				if (ImGui::DragFloat3("rotation", &object->model->rotation_.x, 0.01f)) {
 					isSave_ = false;
 				}
 
-				if (ImGui::DragFloat3("scale", &mapObjectData->model->scale_.x, 0.01f)) {
+				if (ImGui::DragFloat3("scale", &object->model->scale_.x, 0.01f)) {
 					isSave_ = false;
 				}
 
-				if (ImGui::Combo("tag", &mapObjectData->tagNumber, tags_.data(), int(tags_.size()))) {
-					mapObjectData->tag = tags_[mapObjectData->tagNumber];
+				if (ImGui::Combo("tag", &object->tagNumber, tags_.data(), int(tags_.size()))) {
+					object->tag = tags_[object->tagNumber];
 					isSave_ = false;
 				}
 
-				if (ImGui::Combo("mesh", &mapObjectData->meshNumber, meshNames_.data(), int(meshNames_.size()))) {
-					mapObjectData->meshName = meshNames_[mapObjectData->meshNumber];
-					ChangeMesh(mapObjectData->model.get(), mapObjectData->meshName);
+				if (ImGui::Combo("mesh", &object->meshNumber, meshNames_.data(), int(meshNames_.size()))) {
+					object->meshName = meshNames_[object->meshNumber];
+					ChangeMesh(object->model.get(), object->meshName);
 					isSave_ = false;
 				}
 
 				if (ImGui::Button("Copy")) {
-					CopyObject(mapObjectData);
+					CopyObject(object);
 				}
 
 				if (ImGui::Button("Delete")) {
-					mapObjectData->isDelete = true;
+					object->isDelete = true;
 				}
 
 				ImGui::TreePop();
@@ -272,9 +290,9 @@ void MapEditor::Edit() {
 
 void MapEditor::Draw(Camera* camera) {
 
-	for (auto& mapObjData : mapObjData_) {
+	for (auto& object : mapObjData_) {
 
-		mapObjData->model->Draw(camera);
+		object->model->Draw(camera);
 
 	}
 
@@ -297,20 +315,20 @@ void MapEditor::Save(const std::string& filename) {
 
 	root[filename]["tags"] = tagArray;
 
-	for (auto& mapObjectData : mapObjData_) {
+	for (auto& object : mapObjData_) {
 
-		root[filename]["objectData"][mapObjectData->objName]["position"] =
-			nlohmann::json::array({ mapObjectData->model->position_.x, mapObjectData->model->position_.y, mapObjectData->model->position_.z });
-		root[filename]["objectData"][mapObjectData->objName]["rotation"] =
-			nlohmann::json::array({ mapObjectData->model->rotation_.x, mapObjectData->model->rotation_.y, mapObjectData->model->rotation_.z });
-		root[filename]["objectData"][mapObjectData->objName]["scale"] =
-			nlohmann::json::array({ mapObjectData->model->scale_.x, mapObjectData->model->scale_.y, mapObjectData->model->scale_.z });
-		mapObjectData->tag = tags_[mapObjectData->tagNumber];
-		root[filename]["objectData"][mapObjectData->objName]["tag"] = mapObjectData->tag;
-		root[filename]["objectData"][mapObjectData->objName]["tagNumber"] = mapObjectData->tagNumber;
-		mapObjectData->meshName = meshNames_[mapObjectData->meshNumber];
-		root[filename]["objectData"][mapObjectData->objName]["mesh"] = mapObjectData->meshName;
-		root[filename]["objectData"][mapObjectData->objName]["meshNumber"] = mapObjectData->meshNumber;
+		root[filename]["objectData"][object->objName]["position"] =
+			nlohmann::json::array({ object->model->position_.x, object->model->position_.y, object->model->position_.z });
+		root[filename]["objectData"][object->objName]["rotation"] =
+			nlohmann::json::array({ object->model->rotation_.x, object->model->rotation_.y, object->model->rotation_.z });
+		root[filename]["objectData"][object->objName]["scale"] =
+			nlohmann::json::array({ object->model->scale_.x, object->model->scale_.y, object->model->scale_.z });
+		object->tag = tags_[object->tagNumber];
+		root[filename]["objectData"][object->objName]["tag"] = object->tag;
+		root[filename]["objectData"][object->objName]["tagNumber"] = object->tagNumber;
+		object->meshName = meshNames_[object->meshNumber];
+		root[filename]["objectData"][object->objName]["mesh"] = object->meshName;
+		root[filename]["objectData"][object->objName]["meshNumber"] = object->meshNumber;
 
 	}
 
@@ -450,11 +468,11 @@ void MapEditor::Load(const std::string& filename) {
 				//保険
 				assert(itData != itObject->end());
 
-				std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+				std::shared_ptr<MapObject> object = std::make_shared<MapObject>();
 
-				mapObject->isSelect = true;
-				mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
-				mapObject->objName = objectName;
+				object->isSelect = true;
+				object->model.reset(Model::Create("./resources/cube/cube.obj"));
+				object->objName = objectName;
 
 				uint32_t roopCount = 0;
 
@@ -469,17 +487,17 @@ void MapEditor::Load(const std::string& filename) {
 						//名前がpositionだった場合、positionを登録
 						if (itemNameObject == "position") {
 							//float型のjson配列登録
-							mapObject->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							object->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 						//名前がrotationだった場合、rotationを登録
 						else if (itemNameObject == "rotation") {
 							//float型のjson配列登録
-							mapObject->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							object->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 						//名前がscaleだった場合、scaleを登録
 						else if (itemNameObject == "scale") {
 							//float型のjson配列登録
-							mapObject->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							object->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 
 					}
@@ -488,18 +506,18 @@ void MapEditor::Load(const std::string& filename) {
 
 						//タグを登録
 						if (itemNameObject == "tag") {
-							mapObject->tag = itItemObject.value();
+							object->tag = itItemObject.value();
 						}
 						else if (itemNameObject == "tagNumber") {
-							mapObject->tagNumber = itItemObject->get<int32_t>();
+							object->tagNumber = itItemObject->get<int32_t>();
 						}
 						//メッシュを登録
 						else if (itemNameObject == "mesh") {
-							mapObject->meshName = itItemObject.value();
-							ChangeMesh(mapObject->model.get(), mapObject->meshName);
+							object->meshName = itItemObject.value();
+							ChangeMesh(object->model.get(), object->meshName);
 						}
 						else if (itemNameObject == "meshNumber") {
-							mapObject->meshNumber = itItemObject->get<int32_t>();
+							object->meshNumber = itItemObject->get<int32_t>();
 						}
 
 					}
@@ -508,7 +526,7 @@ void MapEditor::Load(const std::string& filename) {
 
 				}
 
-				mapObjData_.push_back(mapObject);
+				mapObjData_.push_back(object);
 
 			}
 
@@ -574,14 +592,14 @@ void MapEditor::AddObject(char* name) {
 
 	objectName = CheckSameName(objectName);
 
-	std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+	std::shared_ptr<MapObject> object = std::make_shared<MapObject>();
 
-	mapObject->isSelect = true;
-	mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
-	mapObject->objName = objectName;
-	mapObject->model->position_ = spawnPoint_;
+	object->isSelect = true;
+	object->model.reset(Model::Create("./resources/cube/cube.obj"));
+	object->objName = objectName;
+	object->model->position_ = spawnPoint_;
 
-	mapObjData_.push_back(mapObject);
+	mapObjData_.push_back(object);
 
 }
 
@@ -591,20 +609,20 @@ void MapEditor::CopyObject(std::shared_ptr<MapObject> object) {
 
 	objectName = CheckSameName(objectName);
 
-	std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+	std::shared_ptr<MapObject> tmpObject = std::make_shared<MapObject>();
 
-	mapObject->isSelect = true;
-	mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
-	mapObject->model->SetMesh(object->model->meshFilePath_);
-	mapObject->meshNumber = object->meshNumber;
-	mapObject->objName = objectName;
-	mapObject->model->position_ = object->model->position_;
-	mapObject->model->rotation_ = object->model->rotation_;
-	mapObject->model->scale_ = object->model->scale_;
-	mapObject->tag = object->tag;
-	mapObject->tagNumber = object->tagNumber;
+	tmpObject->isSelect = true;
+	tmpObject->model.reset(Model::Create("./resources/cube/cube.obj"));
+	tmpObject->model->SetMesh(object->model->meshFilePath_);
+	tmpObject->meshNumber = object->meshNumber;
+	tmpObject->objName = objectName;
+	tmpObject->model->position_ = object->model->position_;
+	tmpObject->model->rotation_ = object->model->rotation_;
+	tmpObject->model->scale_ = object->model->scale_;
+	tmpObject->tag = object->tag;
+	tmpObject->tagNumber = object->tagNumber;
 
-	mapObjData_.push_back(mapObject);
+	mapObjData_.push_back(tmpObject);
 
 }
 

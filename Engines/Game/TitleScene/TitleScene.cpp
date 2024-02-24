@@ -42,7 +42,7 @@ void TitleScene::Update() {
 	ImGui::End();
 
 	ImGui::Begin("Manual");
-	ImGui::Text("Key S: Change Scene");
+	ImGui::Text("Key S + L_ctrl: Change Scene");
 	ImGui::End();
 
 	model_->ImGuiUpdate("terrain");
