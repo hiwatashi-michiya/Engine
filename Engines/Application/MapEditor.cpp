@@ -19,23 +19,6 @@ void MapEditor::EditTransform()
 	static bool boundSizingSnap = false;
 	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
-	//if (ImGui::IsKeyPressed(ImGuiKey_T))
-	//	mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-	//if (ImGui::IsKeyPressed(ImGuiKey_E))
-	//	mCurrentGizmoOperation = ImGuizmo::ROTATE;
-	//if (ImGui::IsKeyPressed(ImGuiKey_R)) // r Key
-	//	mCurrentGizmoOperation = ImGuizmo::SCALE;
-	//if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
-	//	mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-	//ImGui::SameLine();
-	//if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
-	//	mCurrentGizmoOperation = ImGuizmo::ROTATE;
-	//ImGui::SameLine();
-	//if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
-	//	mCurrentGizmoOperation = ImGuizmo::SCALE;
-	//if (ImGui::RadioButton("Universal", mCurrentGizmoOperation == ImGuizmo::UNIVERSAL))
-	//	mCurrentGizmoOperation = ImGuizmo::UNIVERSAL;
-
 	ImGui::Begin("Gizmo Transform");
 
 	for (auto& object : mapObjData_) {
