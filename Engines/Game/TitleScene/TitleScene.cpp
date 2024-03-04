@@ -27,7 +27,8 @@ void TitleScene::Initialize() {
 	camera_->rotation_.x = 0.0f;
 
 	model_.reset(Model::Create("./resources/terrain/terrain.obj"));
-	model_->scale_ *= 10.0f;
+	transform_ = std::make_unique<Transform>();
+	transform_->scale_ = { 10.0f,10.0f,10.0f };
 
 }
 
@@ -55,6 +56,10 @@ void TitleScene::Update() {
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
+
+	transform_->UpdateMatrix();
+
+	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
 

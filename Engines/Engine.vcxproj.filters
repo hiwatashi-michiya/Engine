@@ -108,9 +108,6 @@
     <ClCompile Include="Engine\Convert.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\WorldTransform.cpp">
-      <Filter>Engine\3d</Filter>
-    </ClCompile>
     <ClCompile Include="Game\gamescene\GameScene.cpp">
       <Filter>Game\gameScene</Filter>
     </ClCompile>
@@ -186,6 +183,9 @@
     <ClCompile Include="Engine\Drawing\MeshManager.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\Transform.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -232,9 +232,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Convert.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3d\WorldTransform.h">
-      <Filter>Engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Game\gamescene\GameScene.h">
       <Filter>Game\gameScene</Filter>
@@ -319,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\MeshManager.h">
       <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Transform.h">
+      <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

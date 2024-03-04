@@ -5,6 +5,7 @@
 #include "Engine/Tool/GlobalVariables.h"
 #include <string>
 #include <vector>
+#include "Transform.h"
 
 class MapEditor
 {
@@ -31,6 +32,8 @@ private:
 		std::string objName;
 
 		std::unique_ptr<Model> model;
+
+		std::unique_ptr<Transform> transform;
 
 		//メッシュ
 		std::string meshName;

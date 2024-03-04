@@ -60,7 +60,7 @@ public:
 
 	std::vector<Vector3> scales_{};
 
-	std::vector<Matrix4x4> matWorlds_{};
+	std::vector<Matrix4x4> worldMatrices{};
 
 	std::vector<Vector3> velocities_{};
 

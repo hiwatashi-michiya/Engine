@@ -63,13 +63,9 @@ public:
 	//ImGui表示
 	void ImGuiUpdate(const std::string& name);
 
-	Vector3 position_{};
+	void SetWorldMatrix(const Matrix4x4& matrix) { worldMatrix_ = matrix; }
 
-	Vector3 rotation_{};
-
-	Vector3 scale_{};
-
-	Matrix4x4 matWorld_{};
+	Matrix4x4 worldMatrix_;
 
 	Model* parent_ = nullptr;
 

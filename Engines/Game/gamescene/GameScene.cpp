@@ -29,19 +29,24 @@ void GameScene::Initialize() {
 	camera_->rotation_.x = 0.3f;
 
 	model_.reset(Model::Create("./resources/cube/cube.obj"));
+	transform_ = std::make_unique<Transform>();
 	model2_.reset(Model::Create("./resources/sphere/sphere.obj"));
-	model2_->position_ = { 3.0f,0.0f,0.0f };
 	model2_->material_->constMap_->isGrayScale = 1;
+	transform2_ = std::make_unique<Transform>();
+	transform2_->translate_ = { 3.0f,0.0f,0.0f };
 	model3_.reset(Model::Create("./resources/plane/plane.obj"));
-	model3_->position_ = { -3.0f,0.0f,0.0f };
-	model3_->rotation_ = { 0.0f,3.14f,0.0f };
 	model3_->material_->constMap_->isRetro = 1;
+	transform3_ = std::make_unique<Transform>();
+	transform3_->translate_ = { -3.0f,0.0f,0.0f };
+	transform3_->rotate_ = { 0.0f,3.14f,0.0f };
 	model4_.reset(Model::Create("./resources/cube/cube.obj"));
-	model4_->position_ = { 8.5f,3.0f,-5.0f };
 	model4_->material_->pLightMap_->color = { 1.0f,0.5f,0.0f,1.0f };
+	transform4_ = std::make_unique<Transform>();
+	transform4_->translate_ = { 8.5f,3.0f,-5.0f };
 	model5_.reset(Model::Create("./resources/cube/cube.obj"));
-	model5_->position_ = { -8.5f,3.0f,-5.0f };
 	model5_->material_->constMap_->isEmboss = 1;
+	transform5_ = std::make_unique<Transform>();
+	transform5_->translate_ = { -8.5f,3.0f,-5.0f };
 
 }
 
@@ -67,6 +72,18 @@ void GameScene::Update() {
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
+
+	transform_->UpdateMatrix();
+	transform2_->UpdateMatrix();
+	transform3_->UpdateMatrix();
+	transform4_->UpdateMatrix();
+	transform5_->UpdateMatrix();
+
+	model_->SetWorldMatrix(transform_->worldMatrix_);
+	model2_->SetWorldMatrix(transform_->worldMatrix_);
+	model3_->SetWorldMatrix(transform_->worldMatrix_);
+	model4_->SetWorldMatrix(transform_->worldMatrix_);
+	model5_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
 

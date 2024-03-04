@@ -29,11 +29,11 @@ void MapEditor::EditTransform()
 		if (ImGui::TreeNode(showObjName.c_str())) {
 
 			float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-			ImGuizmo::DecomposeMatrixToComponents(reinterpret_cast<float*>(object->model->matWorld_.m), matrixTranslation, matrixRotation, matrixScale);
+			ImGuizmo::DecomposeMatrixToComponents(reinterpret_cast<float*>(object->model->worldMatrix_.m), matrixTranslation, matrixRotation, matrixScale);
 			ImGui::InputFloat3("Tr", matrixTranslation);
 			ImGui::InputFloat3("Rt", matrixRotation);
 			ImGui::InputFloat3("Sc", matrixScale);
-			ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, reinterpret_cast<float*>(object->model->matWorld_.m));
+			ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, reinterpret_cast<float*>(object->model->worldMatrix_.m));
 			
 			ImGui::TreePop();
 
@@ -102,9 +102,10 @@ void MapEditor::EditTransform()
 	ImGuizmo::DrawGrid(cameraView, cameraProjection, reinterpret_cast<const float*>(Matrix4x4::Identity().m), 100.f);
 
 	for (auto& object : mapObjData_) {
-		ImGuizmo::DrawCubes(cameraView, cameraProjection, reinterpret_cast<float*>(object->model->matWorld_.m), 1);
+		float* matrix = reinterpret_cast<float*>(object->model->worldMatrix_.m);
+		ImGuizmo::DrawCubes(cameraView, cameraProjection, matrix, 1);
 		ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, 
-			reinterpret_cast<float*>(object->model->matWorld_.m), NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+			matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
 	}
 
 	ImGuizmo::ViewManipulate(cameraView, 30.0f, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
@@ -200,15 +201,15 @@ void MapEditor::Edit() {
 
 			if (ImGui::TreeNode(showObjName.c_str())) {
 
-				if (ImGui::DragFloat3("position", &object->model->position_.x, 0.1f)) {
+				if (ImGui::DragFloat3("position", &object->transform->translate_.x, 0.1f)) {
 					isSave_ = false;
 				}
 
-				if (ImGui::DragFloat3("rotation", &object->model->rotation_.x, 0.01f)) {
+				if (ImGui::DragFloat3("rotation", &object->transform->rotate_.x, 0.01f)) {
 					isSave_ = false;
 				}
 
-				if (ImGui::DragFloat3("scale", &object->model->scale_.x, 0.01f)) {
+				if (ImGui::DragFloat3("scale", &object->transform->scale_.x, 0.01f)) {
 					isSave_ = false;
 				}
 
@@ -233,6 +234,9 @@ void MapEditor::Edit() {
 
 				ImGui::TreePop();
 			}
+
+			object->transform->UpdateMatrix();
+			object->model->SetWorldMatrix(object->transform->worldMatrix_);
 
 		}
 
@@ -301,11 +305,11 @@ void MapEditor::Save(const std::string& filename) {
 	for (auto& object : mapObjData_) {
 
 		root[filename]["objectData"][object->objName]["position"] =
-			nlohmann::json::array({ object->model->position_.x, object->model->position_.y, object->model->position_.z });
+			nlohmann::json::array({ object->transform->translate_.x, object->transform->translate_.y, object->transform->translate_.z });
 		root[filename]["objectData"][object->objName]["rotation"] =
-			nlohmann::json::array({ object->model->rotation_.x, object->model->rotation_.y, object->model->rotation_.z });
+			nlohmann::json::array({ object->transform->rotate_.x, object->transform->rotate_.y, object->transform->rotate_.z });
 		root[filename]["objectData"][object->objName]["scale"] =
-			nlohmann::json::array({ object->model->scale_.x, object->model->scale_.y, object->model->scale_.z });
+			nlohmann::json::array({ object->transform->scale_.x, object->transform->scale_.y, object->transform->scale_.z });
 		object->tag = tags_[object->tagNumber];
 		root[filename]["objectData"][object->objName]["tag"] = object->tag;
 		root[filename]["objectData"][object->objName]["tagNumber"] = object->tagNumber;
@@ -455,6 +459,7 @@ void MapEditor::Load(const std::string& filename) {
 
 				object->isSelect = true;
 				object->model.reset(Model::Create("./resources/cube/cube.obj"));
+				object->transform = std::make_unique<Transform>();
 				object->objName = objectName;
 
 				uint32_t roopCount = 0;
@@ -470,17 +475,17 @@ void MapEditor::Load(const std::string& filename) {
 						//名前がpositionだった場合、positionを登録
 						if (itemNameObject == "position") {
 							//float型のjson配列登録
-							object->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							object->transform->translate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 						//名前がrotationだった場合、rotationを登録
 						else if (itemNameObject == "rotation") {
 							//float型のjson配列登録
-							object->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							object->transform->rotate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 						//名前がscaleだった場合、scaleを登録
 						else if (itemNameObject == "scale") {
 							//float型のjson配列登録
-							object->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							object->transform->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 
 					}
@@ -579,8 +584,9 @@ void MapEditor::AddObject(char* name) {
 
 	object->isSelect = true;
 	object->model.reset(Model::Create("./resources/cube/cube.obj"));
+	object->transform = std::make_unique<Transform>();
 	object->objName = objectName;
-	object->model->position_ = spawnPoint_;
+	object->transform->translate_ = spawnPoint_;
 
 	mapObjData_.push_back(object);
 
@@ -599,9 +605,10 @@ void MapEditor::CopyObject(std::shared_ptr<MapObject> object) {
 	tmpObject->model->SetMesh(object->model->meshFilePath_);
 	tmpObject->meshNumber = object->meshNumber;
 	tmpObject->objName = objectName;
-	tmpObject->model->position_ = object->model->position_;
-	tmpObject->model->rotation_ = object->model->rotation_;
-	tmpObject->model->scale_ = object->model->scale_;
+	tmpObject->transform = std::make_unique<Transform>();
+	tmpObject->transform->translate_ = object->transform->translate_;
+	tmpObject->transform->rotate_ = object->transform->rotate_;
+	tmpObject->transform->scale_ = object->transform->scale_;
 	tmpObject->tag = object->tag;
 	tmpObject->tagNumber = object->tagNumber;
 

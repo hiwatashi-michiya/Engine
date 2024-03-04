@@ -11,6 +11,7 @@
 #include "MapEditor.h"
 #include "Particle.h"
 #include "FrameWork/BaseScene.h"
+#include "Transform.h"
 
 class TitleScene : public BaseScene
 {
@@ -33,5 +34,7 @@ private:
 	std::unique_ptr<Camera> camera_;
 
 	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Transform> transform_;
 
 };

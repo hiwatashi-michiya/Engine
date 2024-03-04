@@ -12,6 +12,7 @@
 #include "Particle.h"
 #include "FrameWork/BaseScene.h"
 #include "Application/MapEditor.h"
+#include "Transform.h"
 
 class EditorScene : public BaseScene
 {

@@ -303,10 +303,7 @@ void Model::Initialize(const std::string& filename) {
 
 	}
 
-	//トランスフォーム設定
-	position_ = Vector3::Zero();
-	rotation_ = Vector3::Zero();
-	scale_ = Vector3::Identity();
+	worldMatrix_ = Matrix4x4::Identity();
 
 }
 
@@ -331,16 +328,10 @@ void Model::PostDraw() {
 
 void Model::Draw(Camera* camera) {
 
-	matWorld_ = MakeAffineMatrix(scale_, rotation_, position_);
-
-	if (parent_) {
-		matWorld_ = matWorld_ * parent_->matWorld_;
-	}
-	
-	Matrix4x4 worldViewProjectionMatrix = matWorld_ * camera->matViewProjection_;
+	Matrix4x4 worldViewProjectionMatrix = worldMatrix_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
-	matTransformMap_->World = matWorld_;
-	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(matWorld_));
+	matTransformMap_->World = worldMatrix_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
@@ -408,12 +399,6 @@ void Model::ImGuiUpdate(const std::string& name) {
 
 	if (ImGui::BeginTabBar("Model", ImGuiTabBarFlags_None)) {
 
-		if (ImGui::BeginTabItem("translation")) {
-			ImGui::DragFloat3("position", &position_.x, 0.01f);
-			ImGui::DragFloat3("rotation", &rotation_.x, 0.01f);
-			ImGui::DragFloat3("scale", &scale_.x, 0.01f);
-			ImGui::EndTabItem();
-		}
 		if (ImGui::BeginTabItem("material")) {
 			material_->ImGuiUpdate();
 			ImGui::EndTabItem();

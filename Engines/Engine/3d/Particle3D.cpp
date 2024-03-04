@@ -272,14 +272,14 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 	positions_.resize(instanceCount_);
 	rotations_.resize(instanceCount_);
 	scales_.resize(instanceCount_);
-	matWorlds_.resize(instanceCount_);
+	worldMatrices.resize(instanceCount_);
 	velocities_.resize(instanceCount_);
 
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 		positions_[i] = Vector3::Zero();
 		rotations_[i] = Vector3::Zero();
 		scales_[i] = Vector3::Identity();
-		matWorlds_[i] = MakeIdentity4x4();
+		worldMatrices[i] = MakeIdentity4x4();
 	}
 
 	//transformMatrix
@@ -335,17 +335,17 @@ void Particle3D::Draw(Camera* camera) {
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 
 		if (isBillboard_) {
-			matWorlds_[i] = MakeScaleMatrix(scales_[i]) * matBillboard_ * MakeTranslateMatrix(positions_[i]);
+			worldMatrices[i] = MakeScaleMatrix(scales_[i]) * matBillboard_ * MakeTranslateMatrix(positions_[i]);
 		}
 		else {
-			matWorlds_[i] = MakeAffineMatrix(scales_[i], rotations_[i], positions_[i]);
+			worldMatrices[i] = MakeAffineMatrix(scales_[i], rotations_[i], positions_[i]);
 		}
 
 		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
-		Matrix4x4 worldViewProjectionMatrix = matWorlds_[i] * camera->matViewProjection_;
+		Matrix4x4 worldViewProjectionMatrix = worldMatrices[i] * camera->matViewProjection_;
 		matTransformMap_[i].WVP = worldViewProjectionMatrix;
-		matTransformMap_[i].World = matWorlds_[i];
-		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(matWorlds_[i]));
+		matTransformMap_[i].World = worldMatrices[i];
+		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(worldMatrices[i]));
 
 	}
 

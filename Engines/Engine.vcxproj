@@ -159,7 +159,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Mesh.cpp" />
     <ClCompile Include="Engine\3d\Model.cpp" />
     <ClCompile Include="Engine\3d\Particle3D.cpp" />
-    <ClCompile Include="Engine\3d\WorldTransform.cpp" />
     <ClCompile Include="Engine\Audio\AudioManager.cpp" />
     <ClCompile Include="Engine\base\Camera.cpp" />
     <ClCompile Include="Engine\base\DirectXSetter.cpp" />
@@ -182,6 +181,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\Quaternion.cpp" />
     <ClCompile Include="Engine\math\Rand.cpp" />
+    <ClCompile Include="Engine\math\Transform.cpp" />
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
@@ -200,7 +200,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Mesh.h" />
     <ClInclude Include="Engine\3d\Model.h" />
     <ClInclude Include="Engine\3d\Particle3D.h" />
-    <ClInclude Include="Engine\3d\WorldTransform.h" />
     <ClInclude Include="Engine\Audio\AudioManager.h" />
     <ClInclude Include="Engine\base\Camera.h" />
     <ClInclude Include="Engine\base\DirectXSetter.h" />
@@ -227,6 +226,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\math\Matrix4x4.h" />
     <ClInclude Include="Engine\math\Quaternion.h" />
     <ClInclude Include="Engine\math\Rand.h" />
+    <ClInclude Include="Engine\math\Transform.h" />
     <ClInclude Include="Engine\math\Vector2.h" />
     <ClInclude Include="Engine\math\Vector3.h" />
     <ClInclude Include="Engine\math\Vector4.h" />
