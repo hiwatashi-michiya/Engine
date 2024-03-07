@@ -31,6 +31,77 @@ Matrix4x4 Matrix4x4::Identity() {
 
 }
 
+Vector3 Matrix4x4::GetXAxis() { return Vector3(m[0][0], m[0][1], m[0][2]); }
+
+Vector3 Matrix4x4::GetYAxis() { return Vector3(m[1][0], m[1][1], m[1][2]); }
+
+Vector3 Matrix4x4::GetZAxis() { return Vector3(m[2][0], m[2][1], m[2][2]); }
+
+Vector3 Matrix4x4::GetScale() { return Vector3(Length(GetXAxis()), Length(GetYAxis()), Length(GetZAxis())); }
+
+Matrix4x4 Matrix4x4::GetRotateMatrix() {
+
+	Matrix4x4 rotateMatrix{};
+
+	Vector3 xAxis = Normalize(GetXAxis()), yAxis = Normalize(GetYAxis()), zAxis = Normalize(GetZAxis());
+
+	rotateMatrix.m[0][0] = xAxis.x;
+	rotateMatrix.m[0][1] = xAxis.y;
+	rotateMatrix.m[0][2] = xAxis.z;
+	rotateMatrix.m[1][0] = yAxis.x;
+	rotateMatrix.m[1][1] = yAxis.y;
+	rotateMatrix.m[1][2] = yAxis.z;
+	rotateMatrix.m[2][0] = zAxis.x;
+	rotateMatrix.m[2][1] = zAxis.y;
+	rotateMatrix.m[2][2] = zAxis.z;
+	rotateMatrix.m[3][3] = 1.0f;
+
+	return rotateMatrix;
+
+}
+
+Vector3 Matrix4x4::GetRotate() {
+
+	/*Matrix4x4 rotateMatrix = GetRotateMatrix();*/
+
+	Vector3 xAxis = Normalize(GetXAxis()), yAxis = Normalize(GetYAxis()), zAxis = Normalize(GetZAxis());
+
+	Vector3 xIdentity = { 1.0f,0.0f,0.0f }, yIdentity = { 0.0f,1.0f,0.0f }, zIdentity = { 0.0f,0.0f,1.0f };
+
+	Vector3 rotate{};
+
+	rotate.x = std::atan2(Length(yIdentity), Length(yAxis));
+	rotate.y = std::atan2(Length(zIdentity), Length(zAxis));
+	rotate.z = std::atan2(Length(xIdentity), Length(xAxis));
+
+	//float thetaY = std::asinf(-rotateMatrix.m[0][2]);
+
+	//float cosThetaY = std::cosf(thetaY);
+
+	//float thetaX{}, thetaZ{};
+
+	////0度に近い値は0度とする
+	//if (fabsf(cosThetaY) <= 0.0001f) {
+
+	//	thetaX = std::atanf(-rotateMatrix.m[2][1] / rotateMatrix.m[1][1]);
+	//	thetaZ = 0.0f;
+
+	//}
+	//else {
+
+	//	thetaX = std::atanf(rotateMatrix.m[1][2] / rotateMatrix.m[2][2]);
+	//	thetaZ = std::atanf(rotateMatrix.m[0][1] / rotateMatrix.m[0][0]);
+
+	//}
+
+	//rotate = { thetaX, thetaY, thetaZ };
+
+	return rotate;
+
+}
+
+Vector3 Matrix4x4::GetTranslate() { return Vector3(m[3][0], m[3][1], m[3][2]); }
+
 //行列の加法
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) {
 

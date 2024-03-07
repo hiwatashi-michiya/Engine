@@ -102,13 +102,35 @@ void MapEditor::EditTransform()
 	ImGuizmo::DrawGrid(cameraView, cameraProjection, reinterpret_cast<const float*>(Matrix4x4::Identity().m), 100.f);
 
 	for (auto& object : mapObjData_) {
-		float* matrix = reinterpret_cast<float*>(object->model->worldMatrix_.m);
+		
+		Vector3 scale = object->transform->scale_;
+		scale *= 2.0f;
+		Vector3 rotate = object->transform->rotate_;
+		Vector3 translate = object->transform->translate_;
+
+		Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
+
+		float* matrix = reinterpret_cast<float*>(tmpMatrix.m);
 		ImGuizmo::DrawCubes(cameraView, cameraProjection, matrix, 1);
 		ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, 
 			matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+
+		uint32_t count = 0;
+
+		for (uint32_t i = 0; i < 4; i++) {
+
+			for (uint32_t j = 0; j < 4; j++) {
+				tmpMatrix.m[i][j] = matrix[count];
+				count++;
+			}
+
+		}
+
+
+
 	}
 
-	ImGuizmo::ViewManipulate(cameraView, 30.0f, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+	/*ImGuizmo::ViewManipulate(cameraView, 30.0f, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);*/
 
 	ImGui::End();
 	ImGui::PopStyleColor(1);

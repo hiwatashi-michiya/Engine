@@ -1,5 +1,7 @@
 #pragma once
 
+class Vector3;
+
 /// <summary>
 /// 4x4行列
 /// </summary>
@@ -9,6 +11,20 @@ public:
 	float m[4][4];
 
 	static Matrix4x4 Identity();
+
+	Vector3 GetXAxis();
+
+	Vector3 GetYAxis();
+
+	Vector3 GetZAxis();
+
+	Vector3 GetScale();
+
+	Matrix4x4 GetRotateMatrix();
+
+	Vector3 GetRotate();
+
+	Vector3 GetTranslate();
 
 	Matrix4x4& operator+=(const Matrix4x4& matrix) {
 		
@@ -46,8 +62,6 @@ struct TransformationMatrix {
 	Matrix4x4 World;
 	Matrix4x4 WorldInverseTranspose;
 };
-
-class Vector3;
 
 class Quaternion;
 

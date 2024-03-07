@@ -42,6 +42,12 @@ void TitleScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
+	ImGui::Begin("transform");
+	ImGui::DragFloat3("scale", &transform_->scale_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &transform_->rotate_.x, 0.1f);
+	ImGui::DragFloat3("translation", &transform_->translate_.x, 0.1f);
+	ImGui::End();
+
 	ImGui::Begin("Manual");
 	ImGui::Text("Key S + L_ctrl: Change Scene");
 	ImGui::End();
@@ -58,6 +64,8 @@ void TitleScene::Update() {
 	camera_->Update();
 
 	transform_->UpdateMatrix();
+
+	transform_->worldMatrix_.GetRotate();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
