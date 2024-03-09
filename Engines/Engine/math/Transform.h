@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector3.h"
 #include "Matrix4x4.h"
+#include "Quaternion.h"
 
 class Transform
 {
@@ -18,6 +19,8 @@ public:
 	Vector3 translate_;
 
 	Vector3 rotate_;
+
+	Quaternion rotateQuaternion_;
 
 	Vector3 scale_;
 

@@ -32,9 +32,9 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	device_ = device;
 
 	//Shaderをコンパイルする
-	vs3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./resources/shaders/Object3d.VS.hlsl", ShaderManager::kVS, "VS3D");
+	vs3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Object3d.VS.hlsl", ShaderManager::kVS, "VS3D");
 
-	ps3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./resources/shaders/Object3d.PS.hlsl", ShaderManager::kPS, "VS3D");
+	ps3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Object3d.PS.hlsl", ShaderManager::kPS, "VS3D");
 
 	//頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};

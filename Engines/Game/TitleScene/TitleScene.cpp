@@ -26,7 +26,7 @@ void TitleScene::Initialize() {
 	camera_->position_ = { 0.0f,1.0f, -0.0f };
 	camera_->rotation_.x = 0.0f;
 
-	model_.reset(Model::Create("./resources/terrain/terrain.obj"));
+	model_.reset(Model::Create("./Resources/terrain/terrain.obj"));
 	transform_ = std::make_unique<Transform>();
 	transform_->scale_ = { 10.0f,10.0f,10.0f };
 
@@ -60,7 +60,11 @@ void TitleScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("EDIT");
 	}
 
-	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
+	Quaternion cameraQuaternion = IdentityQuaternion();
+
+	cameraQuaternion = cameraQuaternion.ConvertFromEuler(camera_->rotation_);
+
+	camera_->matRotate_ = MakeRotateMatrix(cameraQuaternion);
 	camera_->Update();
 
 	transform_->UpdateMatrix();

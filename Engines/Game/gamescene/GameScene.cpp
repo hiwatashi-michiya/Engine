@@ -28,22 +28,22 @@ void GameScene::Initialize() {
 	camera_->position_ = { 0.0f,10.0f, -30.0f };
 	camera_->rotation_.x = 0.3f;
 
-	model_.reset(Model::Create("./resources/cube/cube.obj"));
+	model_.reset(Model::Create("./Resources/cube/cube.obj"));
 	transform_ = std::make_unique<Transform>();
-	model2_.reset(Model::Create("./resources/sphere/sphere.obj"));
+	model2_.reset(Model::Create("./Resources/sphere/sphere.obj"));
 	model2_->material_->constMap_->isGrayScale = 1;
 	transform2_ = std::make_unique<Transform>();
 	transform2_->translate_ = { 3.0f,0.0f,0.0f };
-	model3_.reset(Model::Create("./resources/plane/plane.obj"));
+	model3_.reset(Model::Create("./Resources/plane/plane.obj"));
 	model3_->material_->constMap_->isRetro = 1;
 	transform3_ = std::make_unique<Transform>();
 	transform3_->translate_ = { -3.0f,0.0f,0.0f };
 	transform3_->rotate_ = { 0.0f,3.14f,0.0f };
-	model4_.reset(Model::Create("./resources/cube/cube.obj"));
+	model4_.reset(Model::Create("./Resources/cube/cube.obj"));
 	model4_->material_->pLightMap_->color = { 1.0f,0.5f,0.0f,1.0f };
 	transform4_ = std::make_unique<Transform>();
 	transform4_->translate_ = { 8.5f,3.0f,-5.0f };
-	model5_.reset(Model::Create("./resources/cube/cube.obj"));
+	model5_.reset(Model::Create("./Resources/cube/cube.obj"));
 	model5_->material_->constMap_->isEmboss = 1;
 	transform5_ = std::make_unique<Transform>();
 	transform5_->translate_ = { -8.5f,3.0f,-5.0f };

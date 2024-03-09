@@ -70,9 +70,30 @@ Vector3 Matrix4x4::GetRotate() {
 
 	Vector3 rotate{};
 
-	rotate.x = std::atan2(Length(yIdentity), Length(yAxis));
-	rotate.y = std::atan2(Length(zIdentity), Length(zAxis));
-	rotate.z = std::atan2(Length(xIdentity), Length(xAxis));
+	if (yAxis.x != 0.0f) {
+		rotate.x = std::atan2(yAxis.x, yAxis.y);
+	}
+	else {
+		rotate.x = std::atan2(yAxis.z, yAxis.y);
+	}
+
+	if (zAxis.y != 0.0f) {
+		rotate.y = std::atan2(zAxis.y, zAxis.z);
+	}
+	else {
+		rotate.y = std::atan2(zAxis.x, zAxis.z);
+	}
+
+	if (xAxis.z != 0.0f) {
+		rotate.z = std::atan2(xAxis.z, xAxis.x);
+	}
+	else {
+		rotate.z = std::atan2(xAxis.y, xAxis.x);
+	}
+
+	/*rotate.x = std::atan2(yAxis.y,yAxis.x);
+	rotate.y = std::atan2(zAxis.z, zAxis.y);
+	rotate.z = std::atan2(xAxis.x, xAxis.z);*/
 
 	//float thetaY = std::asinf(-rotateMatrix.m[0][2]);
 
@@ -452,6 +473,20 @@ Matrix4x4 MakeRotateMatrix(const Vector3& rotation) {
 
 //3次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+
+	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
+	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
+
+	Matrix4x4 m{};
+
+	m = Multiply(Multiply(scaleMatrix, rotateMatrix), translateMatrix);
+
+	return m;
+
+}
+
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
 
 	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);

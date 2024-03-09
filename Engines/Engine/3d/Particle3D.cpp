@@ -33,9 +33,9 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	device_ = device;
 
 	//Shaderをコンパイルする
-	vs3dParticleBlob_ = ShaderManager::GetInstance()->CompileShader(L"./resources/shaders/Particle3d.VS.hlsl", ShaderManager::kVS, "VSParticle3D");
+	vs3dParticleBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Particle3d.VS.hlsl", ShaderManager::kVS, "VSParticle3D");
 
-	ps3dParticleBlob_ = ShaderManager::GetInstance()->CompileShader(L"./resources/shaders/Particle3d.PS.hlsl", ShaderManager::kPS, "PSParticle3D");
+	ps3dParticleBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Particle3d.PS.hlsl", ShaderManager::kPS, "PSParticle3D");
 	
 	//頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};

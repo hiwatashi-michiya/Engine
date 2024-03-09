@@ -75,6 +75,12 @@ public:
 };
 
 /// <summary>
+/// 単位クォータニオンを返す
+/// </summary>
+/// <returns></returns>
+Quaternion IdentityQuaternion();
+
+/// <summary>
 /// クォータニオンの積
 /// </summary>
 /// <param name="lhs"></param>

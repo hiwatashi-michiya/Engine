@@ -19,7 +19,7 @@ public:
 
 	void Draw(Camera* camera);
 
-	const std::string& kDirectoryPath_ = "./resources/Maps/";
+	const std::string& kDirectoryPath_ = "./Resources/Maps/";
 
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
@@ -76,6 +76,8 @@ private:
 
 	void ChangeMesh(Model* model, const std::string& name);
 
+	void LoadAllObjFile();
+
 	void EditTransform();
 
 //変数
@@ -105,7 +107,11 @@ private:
 
 	std::vector<const char*> tags_;
 
-	std::vector<const char*> meshNames_ = { "cube", "sphere", "plane" };
+	std::vector<std::string> meshNames_;
+
+	std::unordered_map<std::string, std::string> meshMap_;
+
+	int32_t selectObject_ = 0;
 
 private:
 

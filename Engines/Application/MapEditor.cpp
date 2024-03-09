@@ -21,6 +21,18 @@ void MapEditor::EditTransform()
 
 	ImGui::Begin("Gizmo Transform");
 
+	if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE)) {
+		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	}
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE)) {
+		mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	}
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE)) {
+		mCurrentGizmoOperation = ImGuizmo::SCALE;
+	}
+
 	for (auto& object : mapObjData_) {
 
 		std::string showObjName = object->objName.c_str();
@@ -101,6 +113,8 @@ void MapEditor::EditTransform()
 
 	ImGuizmo::DrawGrid(cameraView, cameraProjection, reinterpret_cast<const float*>(Matrix4x4::Identity().m), 100.f);
 
+	std::vector<Matrix4x4> matrices;
+
 	for (auto& object : mapObjData_) {
 		
 		Vector3 scale = object->transform->scale_;
@@ -110,12 +124,39 @@ void MapEditor::EditTransform()
 
 		Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
 
-		float* matrix = reinterpret_cast<float*>(tmpMatrix.m);
-		ImGuizmo::DrawCubes(cameraView, cameraProjection, matrix, 1);
-		ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, 
-			matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+		matrices.push_back(tmpMatrix);
 
-		uint32_t count = 0;
+	}
+
+	//要素が空でない場合のみ表示	
+	if (!matrices.empty()) {
+
+		float* matrix = reinterpret_cast<float*>(matrices.begin()->m);
+
+		ImGuizmo::DrawCubes(cameraView, cameraProjection, matrix, mapObjData_.size());
+
+	}
+
+	//現在選択しているオブジェクトを動かすことが可能
+	if (selectObject_ < mapObjData_.size()) {
+		ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
+			reinterpret_cast<float*>(matrices[selectObject_].m), NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+	}
+
+	uint32_t count = 0;
+
+	for (auto& object : mapObjData_) {
+
+		/*if (count < matrices.size()) {
+
+			float* matrix = reinterpret_cast<float*>(matrices[count].m);
+			ImGuizmo::DrawCubes(cameraView, cameraProjection, matrix, 1);
+			ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
+				matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+
+		}*/
+
+		/*uint32_t count = 0;
 
 		for (uint32_t i = 0; i < 4; i++) {
 
@@ -124,9 +165,12 @@ void MapEditor::EditTransform()
 				count++;
 			}
 
-		}
+		}*/
 
+		object->transform->scale_ = matrices[count].GetScale() / 2.0f;
+		object->transform->translate_ = matrices[count].GetTranslate();
 
+		count++;
 
 	}
 
@@ -159,6 +203,8 @@ void MapEditor::Initialize() {
 		tags_.push_back(tag.c_str());
 
 	}
+
+	LoadAllObjFile();
 
 }
 
@@ -216,6 +262,10 @@ void MapEditor::Edit() {
 
 		}
 
+		if (!mapObjData_.empty()) {
+			ImGui::SliderInt("Select Object", &selectObject_, 0, mapObjData_.size() - 1);
+		}
+
 		for (auto& object : mapObjData_) {
 
 			std::string showObjName = object->objName.c_str();
@@ -240,7 +290,13 @@ void MapEditor::Edit() {
 					isSave_ = false;
 				}
 
-				if (ImGui::Combo("mesh", &object->meshNumber, meshNames_.data(), int(meshNames_.size()))) {
+				std::vector<const char*> meshNames;
+
+				for (uint32_t i = 0; i < meshNames_.size(); i++) {
+					meshNames.push_back(meshNames_[i].c_str());
+				}
+
+				if (ImGui::Combo("mesh", &object->meshNumber, meshNames.data(), int(meshNames_.size()))) {
 					object->meshName = meshNames_[object->meshNumber];
 					ChangeMesh(object->model.get(), object->meshName);
 					isSave_ = false;
@@ -480,7 +536,7 @@ void MapEditor::Load(const std::string& filename) {
 				std::shared_ptr<MapObject> object = std::make_shared<MapObject>();
 
 				object->isSelect = true;
-				object->model.reset(Model::Create("./resources/cube/cube.obj"));
+				object->model.reset(Model::Create("./Resources/cube/cube.obj"));
 				object->transform = std::make_unique<Transform>();
 				object->objName = objectName;
 
@@ -605,7 +661,7 @@ void MapEditor::AddObject(char* name) {
 	std::shared_ptr<MapObject> object = std::make_shared<MapObject>();
 
 	object->isSelect = true;
-	object->model.reset(Model::Create("./resources/cube/cube.obj"));
+	object->model.reset(Model::Create("./Resources/cube/cube.obj"));
 	object->transform = std::make_unique<Transform>();
 	object->objName = objectName;
 	object->transform->translate_ = spawnPoint_;
@@ -623,7 +679,7 @@ void MapEditor::CopyObject(std::shared_ptr<MapObject> object) {
 	std::shared_ptr<MapObject> tmpObject = std::make_shared<MapObject>();
 
 	tmpObject->isSelect = true;
-	tmpObject->model.reset(Model::Create("./resources/cube/cube.obj"));
+	tmpObject->model.reset(Model::Create("./Resources/cube/cube.obj"));
 	tmpObject->model->SetMesh(object->model->meshFilePath_);
 	tmpObject->meshNumber = object->meshNumber;
 	tmpObject->objName = objectName;
@@ -701,10 +757,31 @@ bool MapEditor::CheckSameTag(const std::string& name) {
 
 void MapEditor::ChangeMesh(Model* model, const std::string& name) {
 
-	std::string newMeshName = "./resources/";
-	newMeshName += name + "/" + name;
-	newMeshName += ".obj";
-	model->SetMesh(newMeshName);
+	model->SetMesh(meshMap_[name]);
+
+}
+
+void MapEditor::LoadAllObjFile() {
+
+	meshNames_.clear();
+	meshMap_.clear();
+
+	//リソース内のobjファイル全検索
+	std::filesystem::recursive_directory_iterator itr("./Resources");
+
+	//検索する拡張子
+	std::string extension = ".obj";
+
+	for (const auto& entry : itr) {
+
+		if (std::filesystem::is_regular_file(entry.path()) &&
+			entry.path().extension() == extension) {
+			std::string meshName = entry.path().stem().string();
+			meshNames_.push_back(meshName);
+			meshMap_[meshName] = entry.path().string();
+		}
+
+	}
 
 }
 
