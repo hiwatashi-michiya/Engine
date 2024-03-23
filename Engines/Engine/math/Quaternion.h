@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3.h"
+#include "Matrix4x4.h"
 
 /// <summary>
 /// 四元数。クォータニオン
@@ -70,6 +71,8 @@ public:
 	/// <returns></returns>
 	Quaternion ConvertFromEuler(const Vector3& euler);
 
+	Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
+
 	Quaternion operator*=(const Quaternion& qr) { return this->Multiply(qr); }
 
 };
@@ -123,6 +126,8 @@ Quaternion Inverse(const Quaternion& quaternion);
 /// <param name="angle">回転量</param>
 /// <returns></returns>
 Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
+
+Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
 
 //球面線形補間
 Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t);

@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "Transform.h"
+#include <unordered_map>
 
 class MapEditor
 {
@@ -34,6 +35,8 @@ private:
 		std::unique_ptr<Model> model;
 
 		std::unique_ptr<Transform> transform;
+
+		float* matrix;
 
 		//メッシュ
 		std::string meshName;
@@ -88,6 +91,9 @@ private:
 	GlobalVariables* globalVariables_ = nullptr;
 
 	std::list<std::shared_ptr<MapObject>> mapObjData_;
+
+	//オブジェクトのトランスフォームのポインタを格納するマップ
+	std::unordered_map<std::shared_ptr<MapObject>, float*> matrices_;
 
 	std::string currentObject_;
 

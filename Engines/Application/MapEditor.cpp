@@ -34,91 +34,19 @@ void MapEditor::EditTransform()
 		mCurrentGizmoOperation = ImGuizmo::SCALE;
 	}
 
-	for (auto& object : mapObjData_) {
-
-		/*std::string showObjName = object->objName.c_str();
-		showObjName += " ";
-
-		if (ImGui::TreeNode(showObjName.c_str())) {
-
-			float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-			ImGuizmo::DecomposeMatrixToComponents(reinterpret_cast<float*>(object->model->worldMatrix_.m), matrixTranslation, matrixRotation, matrixScale);
-			ImGui::InputFloat3("Tr", matrixTranslation);
-			ImGui::InputFloat3("Rt", matrixRotation);
-			ImGui::InputFloat3("Sc", matrixScale);
-			ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, reinterpret_cast<float*>(object->model->worldMatrix_.m));
-			
-			ImGui::TreePop();
-
-		}*/
-
-	}
-
 	ImGui::End();
 
-	/*if (mCurrentGizmoOperation != ImGuizmo::SCALE)
-	{
-		if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL)) {
-			mCurrentGizmoMode = ImGuizmo::LOCAL;
-		}
-		ImGui::SameLine();
-		if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD)) {
-			mCurrentGizmoMode = ImGuizmo::WORLD;
-		}
-	}
-	ImGui::Checkbox("##UseSnap", &useSnap);
-	ImGui::SameLine();
-
-	switch (mCurrentGizmoOperation)
-	{
-	case ImGuizmo::TRANSLATE:
-		ImGui::InputFloat3("Snap", &snap[0]);
-		break;
-	case ImGuizmo::ROTATE:
-		ImGui::InputFloat("Angle Snap", &snap[0]);
-		break;
-	case ImGuizmo::SCALE:
-		ImGui::InputFloat("Scale Snap", &snap[0]);
-		break;
-	}
-	ImGui::Checkbox("Bound Sizing", &boundSizing);
-	if (boundSizing)
-	{
-		ImGui::PushID(3);
-		ImGui::Checkbox("##BoundSizing", &boundSizingSnap);
-		ImGui::SameLine();
-		ImGui::InputFloat3("Snap", boundsSnap);
-		ImGui::PopID();
-	}*/
-
-	/*ImGuiIO& io = ImGui::GetIO();
-	float viewManipulateRight = io.DisplaySize.x;
-	float viewManipulateTop = 0;
-	static ImGuiWindowFlags gizmoWindowFlags = 1;*/
-
-	/*ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Appearing);
-	ImGui::SetNextWindowPos(ImVec2(0, 520), ImGuiCond_Appearing);
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor(0.35f, 0.3f, 0.3f));
-	ImGui::Begin("Gizmo", 0, gizmoWindowFlags);*/
-	/*ImGuizmo::SetDrawlist();*/
 	ImGuizmo::SetRect(0, 0, 1280, 720);
-	/*viewManipulateRight = 1280.0f;
-	viewManipulateTop = 720.0f;*/
-	/*ImGuiWindow* window = ImGui::GetCurrentWindow();
-	gizmoWindowFlags = ImGui::IsWindowHovered() && ImGui::IsMouseHoveringRect(window->InnerRect.Min, window->InnerRect.Max) ? ImGuiWindowFlags_NoMove : 0;*/
-
+	
 	float* cameraView = reinterpret_cast<float*>(camera_->matView_.m);
 	float* cameraProjection = reinterpret_cast<float*>(camera_->matProjection_.m);
-
-	/*ImGuizmo::DrawGrid(cameraView, cameraProjection, reinterpret_cast<const float*>(Matrix4x4::Identity().m), 100.f);*/
 
 	std::vector<Matrix4x4> matrices;
 
 	for (auto& object : mapObjData_) {
 		
 		Vector3 scale = object->transform->scale_;
-		scale *= 2.0f;
-		Vector3 rotate = object->transform->rotate_;
+		Quaternion rotate = object->transform->rotateQuaternion_;
 		Vector3 translate = object->transform->translate_;
 
 		Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
@@ -127,57 +55,56 @@ void MapEditor::EditTransform()
 
 	}
 
-	//要素が空でない場合のみ表示	
-	/*if (!matrices.empty()) {
-
-		float* matrix = reinterpret_cast<float*>(matrices.begin()->m);
-
-		ImGuizmo::DrawCubes(cameraView, cameraProjection, matrix, int(mapObjData_.size()));
-
-	}*/
-
 	//現在選択しているオブジェクトを動かすことが可能
-	/*if (selectObject_ < mapObjData_.size()) {
-		ImGuizmo::Enable(true);
-		ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
-			reinterpret_cast<float*>(matrices[selectObject_].m), NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
-	}*/
+	if (selectObject_ < mapObjData_.size()) {
+
+		if (ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
+			reinterpret_cast<float*>(matrices[selectObject_].m), NULL, NULL, NULL, NULL)) {
+
+		}
+
+	}
 
 	uint32_t count = 0;
 
 	for (auto& object : mapObjData_) {
 
-		if (count < matrices.size()) {
+		object->transform->UpdateMatrix();
 
-			float* matrix = reinterpret_cast<float*>(matrices[count].m);
-			ImGuizmo::Enable(true);
-			ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
-				matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+		/*object->matrix = reinterpret_cast<float*>(object->transform->worldMatrix_.m);*/
 
-		}
+		//if (count < matrices.size()) {
 
-		/*uint32_t count = 0;
+		//	/*float* matrix = reinterpret_cast<float*>(matrices[count].m);*/
+		//	if (ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
+		//		object->matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL)) {
+		//		
+		//		uint32_t count = 0;
 
-		for (uint32_t i = 0; i < 4; i++) {
+		//		for (uint32_t i = 0; i < 4; i++) {
 
-			for (uint32_t j = 0; j < 4; j++) {
-				tmpMatrix.m[i][j] = matrix[count];
-				count++;
-			}
+		//			for (uint32_t j = 0; j < 4; j++) {
+		//				object->transform->worldMatrix_.m[i][j] = object->matrix[count];
+		//				count++;
+		//			}
 
-		}*/
+		//		}
 
-		object->transform->scale_ = matrices[count].GetScale() / 2.0f;
+		//		object->transform->scale_ = object->transform->worldMatrix_.GetScale();
+		//		object->transform->rotateQuaternion_ = ConvertFromRotateMatrix(object->transform->worldMatrix_.GetRotateMatrix());
+		//		object->transform->translate_ = object->transform->worldMatrix_.GetTranslate();
+
+		//	}
+
+		//}
+
+		object->transform->scale_ = matrices[count].GetScale();
+		object->transform->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
 		object->transform->translate_ = matrices[count].GetTranslate();
 
 		count++;
 
 	}
-
-	/*ImGuizmo::ViewManipulate(cameraView, 30.0f, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);*/
-
-	/*ImGui::End();
-	ImGui::PopStyleColor(1);*/
 
 }
 
@@ -308,6 +235,7 @@ void MapEditor::Edit() {
 
 				if (ImGui::Button("Delete")) {
 					object->isDelete = true;
+					matrices_.erase(object);
 				}
 
 				ImGui::TreePop();
@@ -384,8 +312,11 @@ void MapEditor::Save(const std::string& filename) {
 
 		root[filename]["objectData"][object->objName]["position"] =
 			nlohmann::json::array({ object->transform->translate_.x, object->transform->translate_.y, object->transform->translate_.z });
-		root[filename]["objectData"][object->objName]["rotation"] =
-			nlohmann::json::array({ object->transform->rotate_.x, object->transform->rotate_.y, object->transform->rotate_.z });
+		/*root[filename]["objectData"][object->objName]["rotation"] =
+			nlohmann::json::array({ object->transform->rotate_.x, object->transform->rotate_.y, object->transform->rotate_.z });*/
+		root[filename]["objectData"][object->objName]["quaternion"] =
+			nlohmann::json::array({ object->transform->rotateQuaternion_.x,
+				object->transform->rotateQuaternion_.y, object->transform->rotateQuaternion_.z, object->transform->rotateQuaternion_.w });
 		root[filename]["objectData"][object->objName]["scale"] =
 			nlohmann::json::array({ object->transform->scale_.x, object->transform->scale_.y, object->transform->scale_.z });
 		object->tag = tags_[object->tagNumber];
@@ -559,6 +490,8 @@ void MapEditor::Load(const std::string& filename) {
 						else if (itemNameObject == "rotation") {
 							//float型のjson配列登録
 							object->transform->rotate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							//クォータニオン更新
+							object->transform->rotateQuaternion_ = object->transform->rotateQuaternion_.ConvertFromEuler(object->transform->rotate_);
 						}
 						//名前がscaleだった場合、scaleを登録
 						else if (itemNameObject == "scale") {
@@ -570,8 +503,14 @@ void MapEditor::Load(const std::string& filename) {
 					//Vector3以外の場合
 					else {
 
+						//クォータニオン追加
+						if (itemNameObject == "quaternion") {
+							//float型のjson配列登録
+							object->transform->rotateQuaternion_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2),itItemObject->at(3) };
+						}
+
 						//タグを登録
-						if (itemNameObject == "tag") {
+						else if (itemNameObject == "tag") {
 							object->tag = itItemObject.value();
 						}
 						else if (itemNameObject == "tagNumber") {

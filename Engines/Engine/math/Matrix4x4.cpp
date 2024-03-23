@@ -492,6 +492,10 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
 	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
 
+	Quaternion qr = ConvertFromRotateMatrix(rotateMatrix);
+
+	qr = qr;
+
 	Matrix4x4 m{};
 
 	m = Multiply(Multiply(scaleMatrix, rotateMatrix), translateMatrix);

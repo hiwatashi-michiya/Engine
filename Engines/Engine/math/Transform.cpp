@@ -18,7 +18,7 @@ Transform::~Transform()
 
 void Transform::UpdateMatrix() {
 
-	rotateQuaternion_ = rotateQuaternion_.ConvertFromEuler(rotate_);
+	rotateQuaternion_.Normalize();
 
 	worldMatrix_ = MakeAffineMatrix(scale_, rotateQuaternion_, translate_);
 

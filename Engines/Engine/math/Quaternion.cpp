@@ -170,6 +170,76 @@ Quaternion Quaternion::ConvertFromEuler(const Vector3& euler) {
 
 }
 
+Quaternion Quaternion::ConvertFromRotateMatrix(const Matrix4x4& matrix) {
+
+	Quaternion qr = IdentityQuaternion();
+
+	float elem[4]{}; //0:x 1:y 2:z 3:w
+
+	elem[0] = matrix.m[0][0] - matrix.m[1][1] - matrix.m[2][2] + 1.0f;
+	elem[1] = -matrix.m[0][0] + matrix.m[1][1] - matrix.m[2][2] + 1.0f;
+	elem[2] = -matrix.m[0][0] - matrix.m[1][1] + matrix.m[2][2] + 1.0f;
+	elem[3] = matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1.0f;
+
+	//最大成分のインデックス
+	uint32_t biggestIndex = 0;
+	for (uint32_t i = 0; i < 4; i++) {
+		if (elem[i] > elem[biggestIndex]) {
+			biggestIndex = i;
+		}
+	}
+
+	float tmpQr[4]{}; //仮クォータニオン
+	float v = std::sqrtf(elem[biggestIndex]) * 0.5f;
+
+	tmpQr[biggestIndex] = v;
+
+	float multi = 0.25f / v;
+
+	switch (biggestIndex)
+	{
+	default:
+	case 0:
+		tmpQr[1] = (matrix.m[0][1] + matrix.m[1][0]) * multi;
+		tmpQr[2] = (matrix.m[2][0] + matrix.m[0][2]) * multi;
+		tmpQr[3] = (matrix.m[1][2] - matrix.m[2][1]) * multi;
+		break;
+	case 1:
+		tmpQr[0] = (matrix.m[0][1] + matrix.m[1][0]) * multi;
+		tmpQr[2] = (matrix.m[1][2] + matrix.m[2][1]) * multi;
+		tmpQr[3] = (matrix.m[2][0] - matrix.m[0][2]) * multi;
+		break;
+	case 2:
+		tmpQr[0] = (matrix.m[2][0] + matrix.m[0][2]) * multi;
+		tmpQr[1] = (matrix.m[1][2] + matrix.m[2][1]) * multi;
+		tmpQr[3] = (matrix.m[0][1] - matrix.m[1][0]) * multi;
+		break;
+	case 3:
+		tmpQr[0] = (matrix.m[1][2] - matrix.m[2][1]) * multi;
+		tmpQr[1] = (matrix.m[2][0] - matrix.m[0][2]) * multi;
+		tmpQr[2] = (matrix.m[0][1] - matrix.m[1][0]) * multi;
+		break;
+	}
+
+	this->x = tmpQr[0];
+	this->y = tmpQr[1];
+	this->z = tmpQr[2];
+	this->w = tmpQr[3];
+
+	/**this = Quaternion(
+		(matrix.m[2][1] - matrix.m[1][2]) /
+		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
+		(matrix.m[0][2] - matrix.m[2][0]) /
+		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
+		(matrix.m[1][0] - matrix.m[0][1]) /
+		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
+		(std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)) / 2.0f
+	);*/
+
+	return *this;
+
+}
+
 Quaternion IdentityQuaternion() { return Quaternion(0.0f, 0.0f, 0.0f, 1.0f); }
 
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
@@ -259,6 +329,76 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 	qr.x = axis.x * std::sinf(angle / 2.0f);
 	qr.y = axis.y * std::sinf(angle / 2.0f);
 	qr.z = axis.z * std::sinf(angle / 2.0f);
+
+	return qr;
+
+}
+
+Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix) {
+
+	Quaternion qr = IdentityQuaternion();
+
+	float elem[4]{}; //0:x 1:y 2:z 3:w
+
+	elem[0] = matrix.m[0][0] - matrix.m[1][1] - matrix.m[2][2] + 1.0f;
+	elem[1] = -matrix.m[0][0] + matrix.m[1][1] - matrix.m[2][2] + 1.0f;
+	elem[2] = -matrix.m[0][0] - matrix.m[1][1] + matrix.m[2][2] + 1.0f;
+	elem[3] = matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1.0f;
+
+	//最大成分のインデックス
+	uint32_t biggestIndex = 0;
+	for (uint32_t i = 0; i < 4; i++) {
+		if (elem[i] > elem[biggestIndex]) {
+			biggestIndex = i;
+		}
+	}
+
+	float tmpQr[4]{}; //仮クォータニオン
+	float v = std::sqrtf(elem[biggestIndex]) * 0.5f;
+
+	tmpQr[biggestIndex] = v;
+
+	float multi = 0.25f / v;
+
+	switch (biggestIndex)
+	{
+	default:
+	case 0:
+		tmpQr[1] = (matrix.m[0][1] + matrix.m[1][0]) * multi;
+		tmpQr[2] = (matrix.m[2][0] + matrix.m[0][2]) * multi;
+		tmpQr[3] = (matrix.m[1][2] - matrix.m[2][1]) * multi;
+		break;
+	case 1:
+		tmpQr[0] = (matrix.m[0][1] + matrix.m[1][0]) * multi;
+		tmpQr[2] = (matrix.m[1][2] + matrix.m[2][1]) * multi;
+		tmpQr[3] = (matrix.m[2][0] - matrix.m[0][2]) * multi;
+		break;
+	case 2:
+		tmpQr[0] = (matrix.m[2][0] + matrix.m[0][2]) * multi;
+		tmpQr[1] = (matrix.m[1][2] + matrix.m[2][1]) * multi;
+		tmpQr[3] = (matrix.m[0][1] - matrix.m[1][0]) * multi;
+		break;
+	case 3:
+		tmpQr[0] = (matrix.m[1][2] - matrix.m[2][1]) * multi;
+		tmpQr[1] = (matrix.m[2][0] - matrix.m[0][2]) * multi;
+		tmpQr[2] = (matrix.m[0][1] - matrix.m[1][0]) * multi;
+		break;
+	}
+
+	qr.x = tmpQr[0];
+	qr.y = tmpQr[1];
+	qr.z = tmpQr[2];
+	qr.w = tmpQr[3];
+
+	/*qr = Quaternion(
+		(matrix.m[2][1] - matrix.m[1][2]) /
+		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
+		(matrix.m[0][2] - matrix.m[2][0]) /
+		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
+		(matrix.m[1][0] - matrix.m[0][1]) /
+		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
+		(std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)) / 2.0f
+	);*/
 
 	return qr;
 
