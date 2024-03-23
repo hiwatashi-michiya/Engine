@@ -1,7 +1,7 @@
 #pragma once
 #include <wrl.h>
 #include <d3d12.h>
-#include "manager/ModelManager.h"
+#include "Drawing/ModelManager.h"
 #include "Material.h"
 #include <memory>
 
@@ -12,9 +12,6 @@ public:
 	static void StaticInitialize(ID3D12Device* device);
 
 	Mesh* Create(const std::string& filename);
-
-	//マテリアル
-	std::unique_ptr<Material> material_;
 
 	void LoadObjFile(const std::string& filename);
 
@@ -45,7 +42,7 @@ public:
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
-	Texture* texture_;
+	std::string textureFilePath_;
 
 private:
 

@@ -39,6 +39,9 @@
     <ClInclude Include="..\Externals\imgui\imstb_truetype.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\Externals\imgui\ImGuizmo.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Externals\imgui\imgui.cpp">
@@ -60,6 +63,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="..\Externals\imgui\imgui_widgets.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Externals\imgui\ImGuizmo.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

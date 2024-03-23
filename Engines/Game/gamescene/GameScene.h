@@ -1,31 +1,32 @@
 #pragma once
-#include "Engine/base/DirectXCommon.h"
-#include "Engine/manager/TextureManager.h"
+#include "Engine/base/DirectXSetter.h"
+#include "Engine/Drawing/TextureManager.h"
 #include "Engine/3d/Model.h"
-#include "Engine/3d/WorldTransform.h"
 #include "Engine/input/Input.h"
 #include "Engine/2d/Sprite.h"
 #include <memory>
 #include "Game/player/Player.h"
 #include "Game/stage/Stage.h"
 #include "Engine/3d/Particle3D.h"
-#include "Engine/manager/AudioManager.h"
+#include "Audio/AudioManager.h"
 #include "Engine/Tool/GlobalVariables.h"
 #include "Application/MapEditor.h"
 #include "Application/Particle.h"
 #include <array>
+#include "Transform.h"
+#include "Game/DefaultScene.h"
 
-class GameScene
+class GameScene : public DefaultScene
 {
 public:
 	GameScene();
-	~GameScene();
+	~GameScene() override;
 
-	void Initialize();
+	void Initialize() override;
 
-	void Update();
+	void Update() override;
 
-	void Draw();
+	void Draw() override;
 
 	enum Scene {
 		kTitle,
@@ -57,7 +58,7 @@ private:
 
 private:
 
-	DirectXCommon* dxCommon_ = nullptr;
+	DirectXSetter* dxSetter_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 	GlobalVariables* gv_ = nullptr;
@@ -68,6 +69,8 @@ private:
 	std::unique_ptr<Stage> stage_;
 
 	std::unique_ptr<Model> skydome_;
+
+	std::unique_ptr<Transform> skydomeTransform_;
 
 	Scene currentScene_ = kTitle;
 
@@ -107,6 +110,7 @@ private:
 	std::unique_ptr<Particle> particle_;
 
 	std::array<std::unique_ptr<Model>, 10> blockModels_;
+	std::array<std::unique_ptr<Transform>, 10> blockTransforms_;
 
 	std::unique_ptr<Sprite> stage1Sprite_;
 	std::unique_ptr<Sprite> stage2Sprite_;

@@ -5,6 +5,7 @@ Goal::Goal()
 	model_.reset(Model::Create("./resources/goal/goal.obj"));
 	tex1_ = TextureManager::GetInstance()->Load("./resources/goal/particle.png");
 	tex2_ = TextureManager::GetInstance()->Load("./resources/goal/particle_2.png");
+	transform_ = std::make_unique<Transform>();
 }
 
 Goal::~Goal()
@@ -23,25 +24,25 @@ void Goal::Initialize(const Color& color) {
 	color_ = color;
 
 	if (color_ == kRed) {
-		model_->mesh_->material_->constMap_->color = { 1.0f,0.3f,0.3f,1.0f };
+		model_->material_->constMap_->color = { 1.0f,0.3f,0.3f,1.0f };
 		particle_->SetColor({ 1.0f,0.3f,0.3f,1.0f });
 		particle_->SetColor({ 0.7f,0.1f,0.1f,1.0f }, 1);
 	}
 
 	if (color_ == kGreen) {
-		model_->mesh_->material_->constMap_->color = { 0.3f,1.0f,0.3f,1.0f };
+		model_->material_->constMap_->color = { 0.3f,1.0f,0.3f,1.0f };
 		particle_->SetColor({ 0.3f,1.0f,0.3f,1.0f });
 		particle_->SetColor({ 0.1f,0.7f,0.1f,1.0f }, 1);
 	}
 
 	if (color_ == kBlue) {
-		model_->mesh_->material_->constMap_->color = { 0.3f,0.3f,1.0f,1.0f };
+		model_->material_->constMap_->color = { 0.3f,0.3f,1.0f,1.0f };
 		particle_->SetColor({ 0.3f,0.3f,1.0f,1.0f });
 		particle_->SetColor({ 0.1f,0.1f,0.7f,1.0f }, 1);
 	}
 
 	if (color_ == kYellow) {
-		model_->mesh_->material_->constMap_->color = { 1.0f,1.0f,0.3f,1.0f };
+		model_->material_->constMap_->color = { 1.0f,1.0f,0.3f,1.0f };
 		particle_->SetColor({ 1.0f,1.0f,0.3f,1.0f });
 		particle_->SetColor({ 0.7f,0.7f,0.1f,1.0f }, 1);
 	}
@@ -53,14 +54,18 @@ void Goal::Initialize(const Color& color) {
 
 void Goal::Update() {
 
-	collision_.max = model_->position_ + model_->scale_;
-	collision_.min = model_->position_ - model_->scale_;
+	collision_.max = transform_->translate_ + transform_->scale_;
+	collision_.min = transform_->translate_ - transform_->scale_;
 
-	particle_->startPosition_ = model_->position_;
+	particle_->startPosition_ = transform_->translate_;
 
 	if (isGoal_) {
 		particle_->Update();
 	}
+
+	transform_->UpdateMatrix();
+
+	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
 

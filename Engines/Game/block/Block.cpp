@@ -4,6 +4,7 @@
 Block::Block()
 {
 	model_.reset(Model::Create("./resources/block/block.obj"));
+	transform_ = std::make_unique<Transform>();
 }
 
 Block::~Block()
@@ -20,19 +21,19 @@ void Block::Initialize(const Color& color) {
 	else {
 
 		if (color_ == kRed) {
-			model_->mesh_->material_->constMap_->color = { 1.0f,0.3f,0.3f,1.0f };
+			model_->material_->constMap_->color = { 1.0f,0.3f,0.3f,1.0f };
 		}
 
 		if (color_ == kGreen) {
-			model_->mesh_->material_->constMap_->color = { 0.3f,1.0f,0.3f,1.0f };
+			model_->material_->constMap_->color = { 0.3f,1.0f,0.3f,1.0f };
 		}
 
 		if (color_ == kBlue) {
-			model_->mesh_->material_->constMap_->color = { 0.3f,0.3f,1.0f,1.0f };
+			model_->material_->constMap_->color = { 0.3f,0.3f,1.0f,1.0f };
 		}
 
 		if (color_ == kYellow) {
-			model_->mesh_->material_->constMap_->color = { 1.0f,1.0f,0.3f,1.0f };
+			model_->material_->constMap_->color = { 1.0f,1.0f,0.3f,1.0f };
 		}
 
 	}
@@ -86,15 +87,19 @@ void Block::Update() {
 
 	}
 
-	collision_.max = model_->position_ + model_->scale_ / 2.0f;
-	collision_.min = model_->position_ - model_->scale_ / 2.0f;
+	collision_.max = transform_->translate_ + transform_->scale_ / 2.0f;
+	collision_.min = transform_->translate_ - transform_->scale_ / 2.0f;
 
-	model_->mesh_->material_->pLightMap_->intensity = pLightIntencity_;
+	model_->material_->pLightMap_->intensity = pLightIntencity_;
 
 	//ゴールに入った特定の色ブロックを光らせる
 	if (color_ != kNone && isRock_) {
-		model_->mesh_->material_->pLightMap_->intensity = 2.5f;
+		model_->material_->pLightMap_->intensity = 2.5f;
 	}
+
+	transform_->UpdateMatrix();
+
+	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
 

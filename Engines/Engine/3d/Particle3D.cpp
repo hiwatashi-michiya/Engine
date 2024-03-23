@@ -1,20 +1,24 @@
 #include "Particle3D.h"
 #include <cassert>
 #include "Engine/Convert.h"
-#include "Engine/manager/ShaderManager.h"
+#include "Engine/Drawing/ShaderManager.h"
+#include "Buffer/BufferResource.h"
+#include "Drawing/RootSignatureManager.h"
+#include "Drawing/PipelineManager.h"
 #include <sstream>
-#include "Engine/manager/ImGuiManager.h"
+#include "Drawing/ImGuiManager.h"
 #include "Model.h"
+#include "Drawing/MeshManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
 ID3D12Device* Particle3D::device_ = nullptr;
 ID3D12GraphicsCommandList* Particle3D::commandList_ = nullptr;
-Microsoft::WRL::ComPtr<ID3D12RootSignature> Particle3D::rootSignature_ = nullptr;
-Microsoft::WRL::ComPtr<ID3D12PipelineState> Particle3D::particlePipelineStates_[Particle3D::BlendMode::kCountBlend] = { nullptr };
+ID3D12RootSignature* Particle3D::rootSignature_ = nullptr;
+ID3D12PipelineState* Particle3D::particlePipelineStates_[Particle3D::BlendMode::kCountBlend] = { nullptr };
 //ID3D12PipelineState* Particle3D::pipelineState_ = nullptr;
-Microsoft::WRL::ComPtr<IDxcBlob> Particle3D::vs3dParticleBlob_ = nullptr;
-Microsoft::WRL::ComPtr<IDxcBlob> Particle3D::ps3dParticleBlob_ = nullptr;
+IDxcBlob* Particle3D::vs3dParticleBlob_ = nullptr;
+IDxcBlob* Particle3D::ps3dParticleBlob_ = nullptr;
 int Particle3D::modelNumber_ = 0;
 Particle3D::BlendMode Particle3D::currentBlendMode_ = Particle3D::BlendMode::kNormal;
 std::unordered_map<std::string, std::shared_ptr<Mesh>> Particle3D::meshes_;
@@ -28,28 +32,11 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 
 	device_ = device;
 
-	//dxcCompilerを初期化
-	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils = nullptr;
-	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler = nullptr;
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
-	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
-	assert(SUCCEEDED(hr));
-
-	//includeに対応するための設定
-	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler = nullptr;
-	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
-	assert(SUCCEEDED(hr));
-
 	//Shaderをコンパイルする
-	vs3dParticleBlob_ = CompileShader(L"./resources/shaders/Particle3d.VS.hlsl",
-		L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
-	assert(vs3dParticleBlob_ != nullptr);
+	vs3dParticleBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Particle3d.VS.hlsl", ShaderManager::kVS, "VSParticle3D");
 
-	ps3dParticleBlob_ = CompileShader(L"./resources/shaders/Particle3d.PS.hlsl",
-		L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
-	assert(ps3dParticleBlob_ != nullptr);
-
+	ps3dParticleBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Particle3d.PS.hlsl", ShaderManager::kPS, "PSParticle3D");
+	
 	//頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
 	inputElementDescs[0].SemanticName = "POSITION";
@@ -138,10 +125,10 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
-	//バイナリを元に生成
-	hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
-		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
-	assert(SUCCEEDED(hr));
+
+	RootSignatureManager::GetInstance()->CreateRootSignature(signatureBlob, "RootSignatureParticle3D");
+
+	rootSignature_ = RootSignatureManager::GetInstance()->GetRootSignature("RootSignatureParticle3D");
 
 	//Blendstateの設定
 	D3D12_BLEND_DESC blendDesc{};
@@ -164,7 +151,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get(); //RootSignature
+	graphicsPipelineStateDesc.pRootSignature = rootSignature_; //RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
 	graphicsPipelineStateDesc.VS = { vs3dParticleBlob_->GetBufferPointer(),
 	vs3dParticleBlob_->GetBufferSize() }; //VertexShader
@@ -183,7 +170,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	//DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = false;
+	depthStencilDesc.DepthEnable = true;
 	//書き込み
 	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	//近ければ描画
@@ -198,50 +185,50 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&particlePipelineStates_[BlendMode::kNormal]));
-	assert(SUCCEEDED(hr));
+	
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineNormalParticle3D");
+
+	particlePipelineStates_[kNormal] = PipelineManager::GetInstance()->GetPipeline("PipelineNormalParticle3D");
 
 	//加算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&particlePipelineStates_[BlendMode::kAdd]));
-	assert(SUCCEEDED(hr));
+	
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineAddParticle3D");
+
+	particlePipelineStates_[kAdd] = PipelineManager::GetInstance()->GetPipeline("PipelineAddParticle3D");
 
 	//減算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_SUBTRACT;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&particlePipelineStates_[BlendMode::kSubtract]));
-	assert(SUCCEEDED(hr));
+	
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineSubtractParticle3D");
+
+	particlePipelineStates_[kSubtract] = PipelineManager::GetInstance()->GetPipeline("PipelineSubtractParticle3D");
 
 	//乗算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&particlePipelineStates_[BlendMode::kMultiply]));
-	assert(SUCCEEDED(hr));
+	
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineMultiplyParticle3D");
+
+	particlePipelineStates_[kMultiply] = PipelineManager::GetInstance()->GetPipeline("PipelineMultiplyParticle3D");
 
 	//スクリーン
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
-	//グラフィックスパイプラインを実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&particlePipelineStates_[BlendMode::kScreen]));
-	assert(SUCCEEDED(hr));
+	
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineScreenParticle3D");
+
+	particlePipelineStates_[kScreen] = PipelineManager::GetInstance()->GetPipeline("PipelineScreenParticle3D");
 
 	currentBlendMode_ = BlendMode::kNormal;
 
@@ -261,24 +248,23 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	assert(device_);
 
-	mesh_ = std::make_unique<Mesh>();
-	mesh_->Create(filename);
+	if (MeshManager::GetInstance()->IsExistMesh(filename)) {
 
-	//if (meshes_.find(filename) != meshes_.end()) {
+		mesh_ = MeshManager::GetInstance()->GetMesh(filename);
 
-	//	mesh_ = meshes_[filename].get();
+	}
+	else {
 
-	//}
-	//else {
+		//メッシュを登録
+		MeshManager::GetInstance()->CreateMesh(filename);
+		mesh_ = MeshManager::GetInstance()->GetMesh(filename);
 
-	//	//メッシュを登録
-	//	meshes_[filename] = std::make_shared<Mesh>();
-	//	meshes_[filename]->Create(filename);
-	//	mesh_ = meshes_[filename].get();
+	}
 
-	//}
+	material_ = std::make_unique<Material>();
+	material_->Create(mesh_->textureFilePath_);
 
-	texture_ = mesh_->texture_;
+	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
 
 	instanceCount_ = instanceCount;
 
@@ -286,14 +272,14 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 	positions_.resize(instanceCount_);
 	rotations_.resize(instanceCount_);
 	scales_.resize(instanceCount_);
-	matWorlds_.resize(instanceCount_);
+	worldMatrices.resize(instanceCount_);
 	velocities_.resize(instanceCount_);
 
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 		positions_[i] = Vector3::Zero();
 		rotations_[i] = Vector3::Zero();
 		scales_[i] = Vector3::Identity();
-		matWorlds_[i] = MakeIdentity4x4();
+		worldMatrices[i] = MakeIdentity4x4();
 	}
 
 	//transformMatrix
@@ -349,24 +335,24 @@ void Particle3D::Draw(Camera* camera) {
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 
 		if (isBillboard_) {
-			matWorlds_[i] = MakeScaleMatrix(scales_[i]) * matBillboard_ * MakeTranslateMatrix(positions_[i]);
+			worldMatrices[i] = MakeScaleMatrix(scales_[i]) * matBillboard_ * MakeTranslateMatrix(positions_[i]);
 		}
 		else {
-			matWorlds_[i] = MakeAffineMatrix(scales_[i], rotations_[i], positions_[i]);
+			worldMatrices[i] = MakeAffineMatrix(scales_[i], rotations_[i], positions_[i]);
 		}
 
 		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
-		Matrix4x4 worldViewProjectionMatrix = matWorlds_[i] * camera->matViewProjection_;
+		Matrix4x4 worldViewProjectionMatrix = worldMatrices[i] * camera->matViewProjection_;
 		matTransformMap_[i].WVP = worldViewProjectionMatrix;
-		matTransformMap_[i].World = matWorlds_[i];
-		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(matWorlds_[i]));
+		matTransformMap_[i].World = worldMatrices[i];
+		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(worldMatrices[i]));
 
 	}
 
 	//PSO設定
-	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_].Get());
+	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_]);
 	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+	commandList_->SetGraphicsRootSignature(rootSignature_);
 	//プリミティブ形状を設定
 	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -375,6 +361,8 @@ void Particle3D::Draw(Camera* camera) {
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 
 	//描画
+	material_->SetCommandMaterialForParticle(commandList_);
+
 	mesh_->SetCommandMesh(commandList_, instanceCount_);
 
 }

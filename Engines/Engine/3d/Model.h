@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <dxcapi.h>
-#include "manager/ModelManager.h"
+#include "Drawing/ModelManager.h"
 #include "base/Camera.h"
 #include "Mesh.h"
 #include <memory>
@@ -61,23 +61,25 @@ public:
 	void SetMesh(const std::string& objFileName);
 
 	//ライト切り替え
-	void SetLight(bool flag) { mesh_->material_->constMap_->enableLighting = flag; }
+	void SetLight(bool flag) { material_->constMap_->enableLighting = flag; }
 
 	//ImGui表示
 	void ImGuiUpdate(const std::string& name);
 
-	Vector3 position_{};
+	void SetWorldMatrix(const Matrix4x4& matrix) { worldMatrix_ = matrix; }
 
-	Vector3 rotation_{};
-
-	Vector3 scale_{};
-
-	Matrix4x4 matWorld_{};
+	Matrix4x4 worldMatrix_;
 
 	Model* parent_ = nullptr;
 
 	//メッシュ
-	std::unique_ptr<Mesh> mesh_;
+	Mesh* mesh_;
+
+	//マテリアル
+	std::unique_ptr<Material> material_;
+
+	//現在使用しているメッシュのパス
+	std::string meshFilePath_;
 
 private:
 
@@ -88,21 +90,19 @@ private:
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
-	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
+	static ID3D12RootSignature* rootSignature_;
 	//PSO
-	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineStates_[BlendMode::kCountBlend];
+	static ID3D12PipelineState* pipelineStates_[BlendMode::kCountBlend];
 
 	/*static ID3D12PipelineState* pipelineState_;*/
 
-	static Microsoft::WRL::ComPtr<IDxcBlob> vs3dBlob_;
-	static Microsoft::WRL::ComPtr<IDxcBlob> ps3dBlob_;
+	static IDxcBlob* vs3dBlob_;
+	static IDxcBlob* ps3dBlob_;
 
 	//モデル識別用変数(ImGuiで使用)
 	static int modelNumber_;
 
 	static BlendMode currentBlendMode_;
-
-	static std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes_;
 
 private:
 

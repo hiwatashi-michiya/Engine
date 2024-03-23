@@ -5,6 +5,7 @@
 #include "Engine/math/Quaternion.h"
 #include "Engine/math/Collision.h"
 #include "Application/Particle.h"
+#include "Transform.h"
 
 class Player
 {
@@ -20,7 +21,7 @@ public:
 
 	void DrawParticle(Camera* camera);
 
-	void SetPosition(const Vector3& position) { model_->position_ = position; }
+	void SetPosition(const Vector3& position) { transform_->translate_ = position; }
 
 	const AABB& GetCollision() { return collision_; }
 
@@ -40,6 +41,8 @@ private:
 	Input* input_ = nullptr;
 
 	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Transform> transform_;
 
 	std::unique_ptr<Particle> particle_;
 

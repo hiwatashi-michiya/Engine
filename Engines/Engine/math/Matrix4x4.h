@@ -1,5 +1,7 @@
 #pragma once
 
+class Vector3;
+
 /// <summary>
 /// 4x4行列
 /// </summary>
@@ -8,29 +10,21 @@ public:
 
 	float m[4][4];
 
-	////初期化
-	//Matrix4x4() {
-	//	
-	//	for (int y = 0; y < 4; y++) {
+	static Matrix4x4 Identity();
 
-	//		for (int x = 0; x < 4; x++) {
+	Vector3 GetXAxis();
 
-	//			//yとxの値が等しい場合に1を入れる
-	//			if (y == x) {
+	Vector3 GetYAxis();
 
-	//				m[y][x] = 1;
+	Vector3 GetZAxis();
 
-	//			}
-	//			else {
+	Vector3 GetScale();
 
-	//				m[y][x] = 0;
+	Matrix4x4 GetRotateMatrix();
 
-	//			}
+	Vector3 GetRotate();
 
-	//		}
-	//	}
-
-	//}
+	Vector3 GetTranslate();
 
 	Matrix4x4& operator+=(const Matrix4x4& matrix) {
 		
@@ -68,8 +62,6 @@ struct TransformationMatrix {
 	Matrix4x4 World;
 	Matrix4x4 WorldInverseTranspose;
 };
-
-class Vector3;
 
 class Quaternion;
 
@@ -111,6 +103,9 @@ Matrix4x4 MakeRotateMatrix(const Vector3& rotation);
 
 //3次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+
+//クォータニオンを利用したアフィン変換
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 
 //透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);

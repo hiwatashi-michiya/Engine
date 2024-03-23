@@ -39,6 +39,8 @@ private:
 
 		std::unique_ptr<Model> model;
 
+		std::unique_ptr<Transform> transform;
+
 		//メッシュ
 		std::string meshName;
 

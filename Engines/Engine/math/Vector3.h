@@ -23,10 +23,15 @@ public:
 
 };
 
-struct Transform {
+struct TransformForParticle {
 	Vector3 scale;
 	Vector3 rotate;
 	Vector3 translate;
+};
+
+struct ParticleData {
+	TransformForParticle transform;
+	Vector3 velocity;
 };
 
 // 直線

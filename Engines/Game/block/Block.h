@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/3d/Model.h"
 #include "Engine/math/Collision.h"
+#include "Transform.h"
 
 class Block
 {
@@ -23,14 +24,14 @@ public:
 	void Draw(Camera* camera);
 
 	void SetPosition(const Vector3& position) { 
-		model_->position_ = position;
-		collision_.max = model_->position_ + model_->scale_ / 2.0f;
-		collision_.min = model_->position_ - model_->scale_ / 2.0f;
+		transform_->translate_ = position;
+		collision_.max = transform_->translate_ + transform_->scale_ / 2.0f;
+		collision_.min = transform_->translate_ - transform_->scale_ / 2.0f;
 	}
 
-	void SetScale(const Vector3& scale) { model_->scale_ = scale; }
+	void SetScale(const Vector3& scale) { transform_->scale_ = scale; }
 
-	const Vector3& GetPosition() { return model_->position_; }
+	const Vector3& GetPosition() { return transform_->translate_; }
 
 	void SetIsRock(bool flag) { isRock_ = flag; }
 
@@ -43,6 +44,8 @@ public:
 private:
 
 	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Transform> transform_;
 
 	AABB collision_;
 

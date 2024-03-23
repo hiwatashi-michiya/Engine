@@ -66,7 +66,7 @@ Vector3 Normalize(const Vector3& v) {
 
 	float length = Length(v);
 
-	Vector3 newV;
+	Vector3 newV = { 0.0f,0.0f,0.0f };
 
 	newV.x = v.x;
 	newV.y = v.y;

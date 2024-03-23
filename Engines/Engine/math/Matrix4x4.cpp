@@ -4,6 +4,125 @@
 #include <cmath>
 #include <cassert>
 
+Matrix4x4 Matrix4x4::Identity() {
+
+	Matrix4x4 identity;
+
+	for (int y = 0; y < 4; y++) {
+
+		for (int x = 0; x < 4; x++) {
+
+			//yとxの値が等しい場合に1を入れる
+			if (y == x) {
+
+				identity.m[y][x] = 1.0f;
+
+			}
+			else {
+
+				identity.m[y][x] = 0.0f;
+
+			}
+
+		}
+	}
+
+	return identity;
+
+}
+
+Vector3 Matrix4x4::GetXAxis() { return Vector3(m[0][0], m[0][1], m[0][2]); }
+
+Vector3 Matrix4x4::GetYAxis() { return Vector3(m[1][0], m[1][1], m[1][2]); }
+
+Vector3 Matrix4x4::GetZAxis() { return Vector3(m[2][0], m[2][1], m[2][2]); }
+
+Vector3 Matrix4x4::GetScale() { return Vector3(Length(GetXAxis()), Length(GetYAxis()), Length(GetZAxis())); }
+
+Matrix4x4 Matrix4x4::GetRotateMatrix() {
+
+	Matrix4x4 rotateMatrix{};
+
+	Vector3 xAxis = Normalize(GetXAxis()), yAxis = Normalize(GetYAxis()), zAxis = Normalize(GetZAxis());
+
+	rotateMatrix.m[0][0] = xAxis.x;
+	rotateMatrix.m[0][1] = xAxis.y;
+	rotateMatrix.m[0][2] = xAxis.z;
+	rotateMatrix.m[1][0] = yAxis.x;
+	rotateMatrix.m[1][1] = yAxis.y;
+	rotateMatrix.m[1][2] = yAxis.z;
+	rotateMatrix.m[2][0] = zAxis.x;
+	rotateMatrix.m[2][1] = zAxis.y;
+	rotateMatrix.m[2][2] = zAxis.z;
+	rotateMatrix.m[3][3] = 1.0f;
+
+	return rotateMatrix;
+
+}
+
+Vector3 Matrix4x4::GetRotate() {
+
+	/*Matrix4x4 rotateMatrix = GetRotateMatrix();*/
+
+	Vector3 xAxis = Normalize(GetXAxis()), yAxis = Normalize(GetYAxis()), zAxis = Normalize(GetZAxis());
+
+	Vector3 xIdentity = { 1.0f,0.0f,0.0f }, yIdentity = { 0.0f,1.0f,0.0f }, zIdentity = { 0.0f,0.0f,1.0f };
+
+	Vector3 rotate{};
+
+	if (yAxis.x != 0.0f) {
+		rotate.x = std::atan2(yAxis.x, yAxis.y);
+	}
+	else {
+		rotate.x = std::atan2(yAxis.z, yAxis.y);
+	}
+
+	if (zAxis.y != 0.0f) {
+		rotate.y = std::atan2(zAxis.y, zAxis.z);
+	}
+	else {
+		rotate.y = std::atan2(zAxis.x, zAxis.z);
+	}
+
+	if (xAxis.z != 0.0f) {
+		rotate.z = std::atan2(xAxis.z, xAxis.x);
+	}
+	else {
+		rotate.z = std::atan2(xAxis.y, xAxis.x);
+	}
+
+	/*rotate.x = std::atan2(yAxis.y,yAxis.x);
+	rotate.y = std::atan2(zAxis.z, zAxis.y);
+	rotate.z = std::atan2(xAxis.x, xAxis.z);*/
+
+	//float thetaY = std::asinf(-rotateMatrix.m[0][2]);
+
+	//float cosThetaY = std::cosf(thetaY);
+
+	//float thetaX{}, thetaZ{};
+
+	////0度に近い値は0度とする
+	//if (fabsf(cosThetaY) <= 0.0001f) {
+
+	//	thetaX = std::atanf(-rotateMatrix.m[2][1] / rotateMatrix.m[1][1]);
+	//	thetaZ = 0.0f;
+
+	//}
+	//else {
+
+	//	thetaX = std::atanf(rotateMatrix.m[1][2] / rotateMatrix.m[2][2]);
+	//	thetaZ = std::atanf(rotateMatrix.m[0][1] / rotateMatrix.m[0][0]);
+
+	//}
+
+	//rotate = { thetaX, thetaY, thetaZ };
+
+	return rotate;
+
+}
+
+Vector3 Matrix4x4::GetTranslate() { return Vector3(m[3][0], m[3][1], m[3][2]); }
+
 //行列の加法
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) {
 
@@ -354,6 +473,20 @@ Matrix4x4 MakeRotateMatrix(const Vector3& rotation) {
 
 //3次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+
+	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
+	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
+
+	Matrix4x4 m{};
+
+	m = Multiply(Multiply(scaleMatrix, rotateMatrix), translateMatrix);
+
+	return m;
+
+}
+
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
 
 	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);

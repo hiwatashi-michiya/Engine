@@ -2,7 +2,7 @@
 #include "Engine/math/Collision.h"
 #include "Externals/nlohmann/json.hpp"
 #include <fstream>
-#include "manager/AudioManager.h"
+#include "Audio/AudioManager.h"
 
 Stage::Stage()
 {
@@ -242,6 +242,7 @@ void Stage::LoadStage(const std::string& filename) {
 
 				mapObject->isSelect = true;
 				mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
+				mapObject->transform = std::make_unique<Transform>();
 				mapObject->objName = objectName;
 
 				uint32_t roopCount = 0;
@@ -257,17 +258,17 @@ void Stage::LoadStage(const std::string& filename) {
 						//名前がpositionだった場合、positionを登録
 						if (itemNameObject == "position") {
 							//float型のjson配列登録
-							mapObject->model->position_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							mapObject->transform->translate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 						//名前がrotationだった場合、rotationを登録
 						else if (itemNameObject == "rotation") {
 							//float型のjson配列登録
-							mapObject->model->rotation_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							mapObject->transform->rotate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 						//名前がscaleだった場合、scaleを登録
 						else if (itemNameObject == "scale") {
 							//float型のjson配列登録
-							mapObject->model->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							mapObject->transform->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
 						}
 
 					}
@@ -306,74 +307,74 @@ void Stage::LoadStage(const std::string& filename) {
 	for (auto& object : mapObjData_) {
 
 		if (object->tag == "player") {
-			player_->SetPosition(object->model->position_);
+			player_->SetPosition(object->transform->translate_);
 		}
 
 		if (object->tag == "block") {
 			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
 			newBlock->Initialize(Block::Color::kNone);
-			newBlock->SetPosition(object->model->position_);
-			newBlock->SetScale(object->model->scale_);
+			newBlock->SetPosition(object->transform->translate_);
+			newBlock->SetScale(object->transform->scale_);
 			blocks_.push_back(newBlock);
 		}
 
 		if (object->tag == "block_red") {
 			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
 			newBlock->Initialize(Block::Color::kRed);
-			newBlock->SetPosition(object->model->position_);
-			newBlock->SetScale(object->model->scale_);
+			newBlock->SetPosition(object->transform->translate_);
+			newBlock->SetScale(object->transform->scale_);
 			blocks_.push_back(newBlock);
 		}
 
 		if (object->tag == "block_green") {
 			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
 			newBlock->Initialize(Block::Color::kGreen);
-			newBlock->SetPosition(object->model->position_);
-			newBlock->SetScale(object->model->scale_);
+			newBlock->SetPosition(object->transform->translate_);
+			newBlock->SetScale(object->transform->scale_);
 			blocks_.push_back(newBlock);
 		}
 
 		if (object->tag == "block_blue") {
 			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
 			newBlock->Initialize(Block::Color::kBlue);
-			newBlock->SetPosition(object->model->position_);
-			newBlock->SetScale(object->model->scale_);
+			newBlock->SetPosition(object->transform->translate_);
+			newBlock->SetScale(object->transform->scale_);
 			blocks_.push_back(newBlock);
 		}
 
 		if (object->tag == "block_yellow") {
 			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
 			newBlock->Initialize(Block::Color::kYellow);
-			newBlock->SetPosition(object->model->position_);
-			newBlock->SetScale(object->model->scale_);
+			newBlock->SetPosition(object->transform->translate_);
+			newBlock->SetScale(object->transform->scale_);
 			blocks_.push_back(newBlock);
 		}
 
 		if (object->tag == "goal_red") {
 			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
 			newGoal->Initialize(Goal::Color::kRed);
-			newGoal->SetPosition(object->model->position_);
+			newGoal->SetPosition(object->transform->translate_);
 			goals_.push_back(newGoal);
 		}
 
 		if (object->tag == "goal_green") {
 			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
 			newGoal->Initialize(Goal::Color::kGreen);
-			newGoal->SetPosition(object->model->position_);
+			newGoal->SetPosition(object->transform->translate_);
 			goals_.push_back(newGoal);
 		}
 
 		if (object->tag == "goal_blue") {
 			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
 			newGoal->Initialize(Goal::Color::kBlue);
-			newGoal->SetPosition(object->model->position_);
+			newGoal->SetPosition(object->transform->translate_);
 			goals_.push_back(newGoal);
 		}
 
 		if (object->tag == "goal_yellow") {
 			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
 			newGoal->Initialize(Goal::Color::kYellow);
-			newGoal->SetPosition(object->model->position_);
+			newGoal->SetPosition(object->transform->translate_);
 			goals_.push_back(newGoal);
 		}
 

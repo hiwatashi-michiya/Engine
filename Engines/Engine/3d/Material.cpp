@@ -1,9 +1,9 @@
 #include "Material.h"
 #include <cassert>
-#include "Engine/manager/ShaderManager.h"
+#include "Buffer/BufferResource.h"
 #include <filesystem>
 #include <fstream>
-#include "Engine/manager/ImGuiManager.h"
+#include "Drawing/ImGuiManager.h"
 
 ID3D12Device* Material::device_ = nullptr;
 
@@ -56,7 +56,7 @@ void Material::LoadMaterialTemplateFile(const std::string& filename) {
 		}
 		//テクスチャ情報が空の場合、既定の画像に設定
 		else {
-			texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
+			texture_ = TextureManager::GetInstance()->Load("Resources/sample/white.png");
 		}
 
 	}
@@ -69,6 +69,8 @@ Material* Material::Create(const std::string& filename) {
 	{
 
 		constBuff_ = CreateBufferResource(device_, sizeof(MaterialData));
+		
+		constBuff_->SetName(L"constBuff");
 
 		//マッピングしてデータ転送
 		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
@@ -88,6 +90,8 @@ Material* Material::Create(const std::string& filename) {
 
 		dLightBuff_ = CreateBufferResource(device_, sizeof(DirectionalLight));
 
+		dLightBuff_->SetName(L"dLightBuff");
+
 		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
 
 		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -103,17 +107,19 @@ Material* Material::Create(const std::string& filename) {
 
 		pLightBuff_ = CreateBufferResource(device_, sizeof(PointLight));
 
+		pLightBuff_->SetName(L"pLightBuff");
+
 		pLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&pLightMap_));
 
 		pLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		pLightMap_->position = { 0.0f,50.0f,0.0f };
-		pLightMap_->intensity = 0.5f;
+		pLightMap_->position = { 0.0f,10.0f,0.0f };
+		pLightMap_->intensity = 1.0f;
 		pLightMap_->radius = 200.0f;
 		pLightMap_->decay = 1.0f;
 
 	}
 
-	LoadMaterialTemplateFile(filename);
+	/*LoadMaterialTemplateFile(filename);*/
 
 	return this;
 

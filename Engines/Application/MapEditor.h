@@ -5,6 +5,7 @@
 #include "Engine/Tool/GlobalVariables.h"
 #include <string>
 #include <vector>
+#include "Transform.h"
 
 class MapEditor
 {
@@ -18,36 +19,12 @@ public:
 
 	void Draw(Camera* camera);
 
-	const std::string& kDirectoryPath_ = "./resources/Maps/";
+	const std::string& kDirectoryPath_ = "./Resources/Maps/";
 
-//関数
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
+//関数,構造体
 private:
-
-	void Create(const std::string& filename);
-
-	void Save(const std::string& filename);
-
-	void Close();
-
-	void Load(const std::string& filename);
-
-	void AddObject(char* name);
-
-	bool CheckIsEmpty(const std::string& name);
-
-	void AddTag(const std::string& tagname);
-
-	//同名オブジェクトを探す
-	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
-
-	//同名タグを探す
-	bool CheckSameTag(const std::string& name);
-
-	void ChangeMesh(Model* model, const std::string& name);
-
-//変数
-private:
-
 
 	//マップに配置されているオブジェクトの構造体
 	struct MapObject {
@@ -55,6 +32,8 @@ private:
 		std::string objName;
 
 		std::unique_ptr<Model> model;
+
+		std::unique_ptr<Transform> transform;
 
 		//メッシュ
 		std::string meshName;
@@ -68,7 +47,43 @@ private:
 
 		bool isSelect = false;
 
+		//削除に使用するフラグ
+		bool isDelete = false;
+
 	};
+
+	void Create(const std::string& filename);
+
+	void Save(const std::string& filename);
+
+	void Close();
+
+	void Load(const std::string& filename);
+
+	void AddObject(char* name);
+
+	void CopyObject(std::shared_ptr<MapObject> object);
+
+	bool CheckIsEmpty(const std::string& name);
+
+	void AddTag(const std::string& tagname);
+
+	//同名オブジェクトを探す
+	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
+
+	//同名タグを探す
+	bool CheckSameTag(const std::string& name);
+
+	void ChangeMesh(Model* model, const std::string& name);
+
+	void LoadAllObjFile();
+
+	void EditTransform();
+
+//変数
+private:
+
+	Camera* camera_ = nullptr;
 
 	GlobalVariables* globalVariables_ = nullptr;
 
@@ -92,7 +107,11 @@ private:
 
 	std::vector<const char*> tags_;
 
-	std::vector<const char*> meshNames_ = { "cube", "sphere", "plane" };
+	std::vector<std::string> meshNames_;
+
+	std::unordered_map<std::string, std::string> meshMap_;
+
+	int32_t selectObject_ = 0;
 
 private:
 

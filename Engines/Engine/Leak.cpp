@@ -1,5 +1,5 @@
 #include "Leak.h"
-#include "base/DirectXCommon.h"
+#include "base/DirectXSetter.h"
 
 D3DResourceLeakChecker::~D3DResourceLeakChecker()
 {

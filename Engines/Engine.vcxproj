@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Demo|x64">
+      <Configuration>Demo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -31,6 +35,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -40,6 +51,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -53,6 +67,11 @@
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">
+    <IncludePath>$(ProjectDir)Externals\nlohmann;$(ProjectDir)Externals\imgui;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -61,14 +80,18 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Externals\assimp\include\assimp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalLibraryDirectories>$(ProjectDir)Externals\assimp\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4049 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -85,10 +108,39 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <Optimization>MinSpace</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalLibraryDirectories>$(ProjectDir)Externals\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4049 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
     </ClCompile>
     <Link>
@@ -109,31 +161,41 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Mesh.cpp" />
     <ClCompile Include="Engine\3d\Model.cpp" />
     <ClCompile Include="Engine\3d\Particle3D.cpp" />
-    <ClCompile Include="Engine\3d\ViewProjection.cpp" />
-    <ClCompile Include="Engine\3d\WorldTransform.cpp" />
+    <ClCompile Include="Engine\Audio\AudioManager.cpp" />
     <ClCompile Include="Engine\base\Camera.cpp" />
-    <ClCompile Include="Engine\base\DirectXCommon.cpp" />
-    <ClCompile Include="Engine\base\WinApp.cpp" />
+    <ClCompile Include="Engine\base\DirectXSetter.cpp" />
+    <ClCompile Include="Engine\base\WindowManager.cpp" />
+    <ClCompile Include="Engine\Buffer\BufferResource.cpp" />
     <ClCompile Include="Engine\Convert.cpp" />
+    <ClCompile Include="Engine\DescriptorHeap\DescriptorHeapManager.cpp" />
+    <ClCompile Include="Engine\Drawing\DepthStencil.cpp" />
+    <ClCompile Include="Engine\Drawing\MeshManager.cpp" />
+    <ClCompile Include="Engine\Drawing\ModelManager.cpp" />
+    <ClCompile Include="Engine\Drawing\PipelineManager.cpp" />
+    <ClCompile Include="Engine\Drawing\RootSignatureManager.cpp" />
+    <ClCompile Include="Engine\Drawing\ShaderManager.cpp" />
+    <ClCompile Include="Engine\Drawing\TextureManager.cpp" />
     <ClCompile Include="Engine\FrameWork\MolFrameWork.cpp" />
+    <ClCompile Include="Engine\FrameWork\SceneManager.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\Leak.cpp" />
-    <ClCompile Include="Engine\manager\AudioManager.cpp" />
-    <ClCompile Include="Engine\manager\ModelManager.cpp" />
-    <ClCompile Include="Engine\manager\ShaderManager.cpp" />
-    <ClCompile Include="Engine\manager\TextureManager.cpp" />
     <ClCompile Include="Engine\math\Collision.cpp" />
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\Quaternion.cpp" />
     <ClCompile Include="Engine\math\Rand.cpp" />
+    <ClCompile Include="Engine\math\Transform.cpp" />
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
     <ClCompile Include="Application\MapEditor.cpp" />
     <ClCompile Include="Application\Particle.cpp" />
     <ClCompile Include="Game\block\Block.cpp" />
+    <ClCompile Include="Game\DefaultScene.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\gamescene\GameScene.cpp" />
+    <ClCompile Include="Game\SceneFactory.cpp" />
+    <ClCompile Include="Game\SelectScene\SelectScene.cpp" />
+    <ClCompile Include="Game\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Game\goal\Goal.cpp" />
     <ClCompile Include="Game\player\Player.cpp" />
     <ClCompile Include="Game\stage\Stage.cpp" />
@@ -145,25 +207,33 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Mesh.h" />
     <ClInclude Include="Engine\3d\Model.h" />
     <ClInclude Include="Engine\3d\Particle3D.h" />
-    <ClInclude Include="Engine\3d\ViewProjection.h" />
-    <ClInclude Include="Engine\3d\WorldTransform.h" />
+    <ClInclude Include="Engine\Audio\AudioManager.h" />
     <ClInclude Include="Engine\base\Camera.h" />
-    <ClInclude Include="Engine\base\DirectXCommon.h" />
+    <ClInclude Include="Engine\base\DirectXSetter.h" />
     <ClInclude Include="Engine\base\SafeDelete.h" />
-    <ClInclude Include="Engine\base\WinApp.h" />
+    <ClInclude Include="Engine\base\WindowManager.h" />
+    <ClInclude Include="Engine\Buffer\BufferResource.h" />
     <ClInclude Include="Engine\Convert.h" />
+    <ClInclude Include="Engine\DescriptorHeap\DescriptorHeapManager.h" />
+    <ClInclude Include="Engine\Drawing\DepthStencil.h" />
+    <ClInclude Include="Engine\Drawing\ImGuiManager.h" />
+    <ClInclude Include="Engine\Drawing\MeshManager.h" />
+    <ClInclude Include="Engine\Drawing\ModelManager.h" />
+    <ClInclude Include="Engine\Drawing\PipelineManager.h" />
+    <ClInclude Include="Engine\Drawing\RootSignatureManager.h" />
+    <ClInclude Include="Engine\Drawing\ShaderManager.h" />
+    <ClInclude Include="Engine\Drawing\TextureManager.h" />
+    <ClInclude Include="Engine\FrameWork\AbsSceneFactory.h" />
+    <ClInclude Include="Engine\FrameWork\BaseScene.h" />
     <ClInclude Include="Engine\FrameWork\MolFrameWork.h" />
+    <ClInclude Include="Engine\FrameWork\SceneManager.h" />
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\Leak.h" />
-    <ClInclude Include="Engine\manager\AudioManager.h" />
-    <ClInclude Include="Engine\manager\ImGuiManager.h" />
-    <ClInclude Include="Engine\manager\ModelManager.h" />
-    <ClInclude Include="Engine\manager\ShaderManager.h" />
-    <ClInclude Include="Engine\manager\TextureManager.h" />
     <ClInclude Include="Engine\math\Collision.h" />
     <ClInclude Include="Engine\math\Matrix4x4.h" />
     <ClInclude Include="Engine\math\Quaternion.h" />
     <ClInclude Include="Engine\math\Rand.h" />
+    <ClInclude Include="Engine\math\Transform.h" />
     <ClInclude Include="Engine\math\Vector2.h" />
     <ClInclude Include="Engine\math\Vector3.h" />
     <ClInclude Include="Engine\math\Vector4.h" />
@@ -172,8 +242,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\MapEditor.h" />
     <ClInclude Include="Application\Particle.h" />
     <ClInclude Include="Game\block\Block.h" />
+    <ClInclude Include="Game\DefaultScene.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\gamescene\GameScene.h" />
+    <ClInclude Include="Game\SceneFactory.h" />
+    <ClInclude Include="Game\SelectScene\SelectScene.h" />
+    <ClInclude Include="Game\TitleScene\TitleScene.h" />
     <ClInclude Include="Game\goal\Goal.h" />
     <ClInclude Include="Game\player\Player.h" />
     <ClInclude Include="Game\stage\Stage.h" />
@@ -195,30 +269,38 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="resources\shaders\Object3d.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="resources\shaders\Object3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="resources\shaders\Particle3d.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="resources\shaders\Particle3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="resources\shaders\Sprite.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="resources\shaders\Sprite.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

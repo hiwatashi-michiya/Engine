@@ -3,6 +3,7 @@
 #include "Engine/math/Collision.h"
 #include <memory>
 #include "Application/Particle.h"
+#include "Transform.h"
 
 class Goal
 {
@@ -27,8 +28,8 @@ public:
 	void DrawParticle(Camera* camera);
 
 	void SetPosition(const Vector3& position) { 
-		model_->position_ = position;
-		particle_->startPosition_ = model_->position_;
+		transform_->translate_ = position;
+		particle_->startPosition_ = transform_->translate_;
 		particle_->Reset();
 	}
 
@@ -41,6 +42,8 @@ public:
 private:
 
 	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Transform> transform_;
 
 	std::unique_ptr<Particle> particle_;
 

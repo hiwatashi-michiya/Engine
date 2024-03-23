@@ -1,8 +1,9 @@
 #include "GameScene.h"
+#include "FrameWork/SceneManager.h"
 
 #ifdef _DEBUG
 
-#include "Engine/manager/ImGuiManager.h"
+#include "Drawing/ImGuiManager.h"
 
 #endif // _DEBUG
 
@@ -14,11 +15,13 @@ GameScene::GameScene()
 	fade_->size_ = { 1280.0f, 720.0f };
 	fade_->color_.w = 0.0f;
 	skydome_.reset(Model::Create("./resources/skydome/skydome.obj"));
-	skydome_->scale_ *= 500.0f;
+	skydomeTransform_ = std::make_unique<Transform>();
+	skydomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
 	skydome_->SetLight(false);
 
 	for (uint32_t i = 0; i < 10; i++) {
 		blockModels_[i].reset(Model::Create("./resources/block/block.obj"));
+		blockTransforms_[i] = std::make_unique<Transform>();
 	}
 
 	stage1Tex_ = TextureManager::GetInstance()->Load("./resources/UI/stage1.png");
@@ -69,7 +72,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize() {
 
-	dxCommon_ = DirectXCommon::GetInstance();
+	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
 	gv_ = GlobalVariables::GetInstance();
 	mapEditor_ = MapEditor::GetInstance();
@@ -77,16 +80,16 @@ void GameScene::Initialize() {
 
 	mapEditor_->Initialize();
 
-	blockModels_[0]->position_ = { 0.0f,0.0f,0.0f };
-	blockModels_[1]->position_ = { 5.0f,3.0f,5.0f };
-	blockModels_[2]->position_ = { -5.0f,-1.0f,3.0f };
-	blockModels_[3]->position_ = { 13.0f,6.0f,8.0f };
-	blockModels_[4]->position_ = { -18.0f,5.0f,6.0f };
-	blockModels_[5]->position_ = { -16.0f,-4.0f,2.0f };
-	blockModels_[6]->position_ = { 3.0f,2.0f,-4.0f };
-	blockModels_[7]->position_ = { 13.0f,5.0f,-8.0f };
-	blockModels_[8]->position_ = { 15.0f,1.0f,3.0f };
-	blockModels_[9]->position_ = { -12.0f,-4.0f,-8.0f };
+	blockTransforms_[0]->translate_ = { 0.0f,0.0f,0.0f };
+	blockTransforms_[1]->translate_ = { 5.0f,3.0f,5.0f };
+	blockTransforms_[2]->translate_ = { -5.0f,-1.0f,3.0f };
+	blockTransforms_[3]->translate_ = { 13.0f,6.0f,8.0f };
+	blockTransforms_[4]->translate_ = { -18.0f,5.0f,6.0f };
+	blockTransforms_[5]->translate_ = { -16.0f,-4.0f,2.0f };
+	blockTransforms_[6]->translate_ = { 3.0f,2.0f,-4.0f };
+	blockTransforms_[7]->translate_ = { 13.0f,5.0f,-8.0f };
+	blockTransforms_[8]->translate_ = { 15.0f,1.0f,3.0f };
+	blockTransforms_[9]->translate_ = { -12.0f,-4.0f,-8.0f };
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
@@ -164,6 +167,10 @@ void GameScene::Update() {
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
 
+	skydomeTransform_->UpdateMatrix();
+
+	skydome_->SetWorldMatrix(skydomeTransform_->worldMatrix_);
+
 }
 
 void GameScene::Draw() {
@@ -199,7 +206,7 @@ void GameScene::TitleInitialize() {
 	audioManager_->SetVolume(bgm3_, 0.0f);
 
 	for (uint32_t i = 0; i < 10; i++) {
-		blockModels_[i]->rotation_ = { 0.0f,0.0f,0.0f };
+		blockTransforms_[i]->rotate_ = { 0.0f,0.0f,0.0f };
 	}
 
 	frameCount_ = 0;
@@ -232,10 +239,10 @@ void GameScene::TitleUpdate() {
 		for (uint32_t i = 0; i < 10; i++) {
 
 			if (i % 2 == 0) {
-				blockModels_[i]->rotation_ += {float(i / 100.0f), float(i / 100.0f), 0.0f };
+				blockTransforms_[i]->rotate_ += {float(i / 100.0f), float(i / 100.0f), 0.0f };
 			}
 			else {
-				blockModels_[i]->rotation_ -= {float(i / 100.0f), float(i / 100.0f), 0.0f };
+				blockTransforms_[i]->rotate_ -= {float(i / 100.0f), float(i / 100.0f), 0.0f };
 			}
 			
 		}
@@ -246,6 +253,11 @@ void GameScene::TitleUpdate() {
 			isSceneChange_ = true;
 		}
 
+	}
+
+	for (uint32_t i = 0; i < 10; i++) {
+		blockTransforms_[i]->UpdateMatrix();
+		blockModels_[i]->SetWorldMatrix(blockTransforms_[i]->worldMatrix_);
 	}
 
 	particle_->Update();

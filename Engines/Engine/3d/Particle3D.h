@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <dxcapi.h>
-#include "manager/ModelManager.h"
+#include "Drawing/ModelManager.h"
 #include <vector>
 #include "Mesh.h"
 #include <memory>
@@ -60,7 +60,7 @@ public:
 
 	std::vector<Vector3> scales_{};
 
-	std::vector<Matrix4x4> matWorlds_{};
+	std::vector<Matrix4x4> worldMatrices{};
 
 	std::vector<Vector3> velocities_{};
 
@@ -68,7 +68,10 @@ public:
 	uint32_t instanceCount_;
 
 	//メッシュ
-	std::unique_ptr<Mesh> mesh_;
+	Mesh* mesh_;
+
+	//マテリアル
+	std::unique_ptr<Material> material_;
 
 private:
 
@@ -79,14 +82,14 @@ private:
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
-	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
+	static ID3D12RootSignature* rootSignature_;
 	//PSO
-	static Microsoft::WRL::ComPtr<ID3D12PipelineState> particlePipelineStates_[BlendMode::kCountBlend];
+	static ID3D12PipelineState* particlePipelineStates_[BlendMode::kCountBlend];
 
 	/*static ID3D12PipelineState* pipelineState_;*/
 
-	static Microsoft::WRL::ComPtr<IDxcBlob> vs3dParticleBlob_;
-	static Microsoft::WRL::ComPtr<IDxcBlob> ps3dParticleBlob_;
+	static IDxcBlob* vs3dParticleBlob_;
+	static IDxcBlob* ps3dParticleBlob_;
 
 	//モデル識別用変数(ImGuiで使用)
 	static int modelNumber_;
