@@ -334,6 +334,21 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 
 }
 
+Quaternion ConvertFromEuler(const Vector3& euler) {
+
+	return Quaternion(
+		sinf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
+		+ (cosf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
+		cosf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
+		- (sinf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
+		cosf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * sinf(euler.z / 2.0f)
+		+ (sinf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * cosf(euler.z / 2.0f)),
+		cosf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
+		- (sinf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * sinf(euler.z / 2.0f))
+	);
+
+}
+
 Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix) {
 
 	Quaternion qr = IdentityQuaternion();

@@ -127,6 +127,8 @@ Quaternion Inverse(const Quaternion& quaternion);
 /// <returns></returns>
 Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
 
+Quaternion ConvertFromEuler(const Vector3& euler);
+
 Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
 
 //球面線形補間

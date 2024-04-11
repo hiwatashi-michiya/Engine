@@ -239,10 +239,10 @@ void GameScene::TitleUpdate() {
 		for (uint32_t i = 0; i < 10; i++) {
 
 			if (i % 2 == 0) {
-				blockTransforms_[i]->rotate_ += {float(i / 100.0f), float(i / 100.0f), 0.0f };
+				blockTransforms_[i]->rotateQuaternion_ = ConvertFromEuler(Vector3{ 0.01f * i,0.01f * i,0.01f * i }) * blockTransforms_[i]->rotateQuaternion_;
 			}
 			else {
-				blockTransforms_[i]->rotate_ -= {float(i / 100.0f), float(i / 100.0f), 0.0f };
+				blockTransforms_[i]->rotateQuaternion_ = ConvertFromEuler(Vector3{ -0.01f * i,-0.01f * i,-0.01f * i }) * blockTransforms_[i]->rotateQuaternion_;
 			}
 			
 		}
