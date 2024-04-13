@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cassert>
 #include <filesystem>
+#include <windows.h>
 
 void MapEditor::EditTransform()
 {

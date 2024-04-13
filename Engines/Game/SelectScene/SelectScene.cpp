@@ -1,5 +1,6 @@
 #include "SelectScene.h"
 #include "FrameWork/SceneManager.h"
+#include <cmath>
 
 #ifdef _DEBUG
 
@@ -28,6 +29,10 @@ void SelectScene::Initialize() {
 
 	editor_->SetCamera(camera_.get());
 
+	model_.reset(Model::Create("./Resources/AnimatedCube/AnimatedCube.gltf"));
+	animation_ = std::make_unique<Animation>();
+	*animation_ = LoadAnimationFile("./Resources/AnimatedCube/AnimatedCube.gltf");
+
 }
 
 void SelectScene::Update() {
@@ -43,6 +48,14 @@ void SelectScene::Update() {
 
 #endif // _DEBUG
 
+	animationTime_ += 1.0f / 60.0f;
+	animationTime_ = std::fmod(animationTime_, animation_->duration);
+	NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[model_->mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
+	Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+	Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+	Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+	localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+
 	editor_->Edit();
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
@@ -53,5 +66,7 @@ void SelectScene::Update() {
 void SelectScene::Draw() {
 
 	editor_->Draw(camera_.get());
+
+	model_->Draw(localMatrix_, camera_.get());
 
 }

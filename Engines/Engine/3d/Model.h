@@ -55,6 +55,8 @@ public:
 
 	void Draw(Camera* camera);
 
+	void Draw(const Matrix4x4& localMatrix, Camera* camera);
+
 	void SetTexture(Texture* texture) { texture_ = texture; }
 
 	//メッシュ切り替え

@@ -13,6 +13,7 @@
 #include "Game/DefaultScene.h"
 #include "Transform.h"
 #include "Application/MapEditor.h"
+#include "Animation/Animation.h"
 
 class SelectScene : public DefaultScene
 {
@@ -31,5 +32,12 @@ private:
 	MapEditor* editor_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
+
+	float animationTime_ = 0.0f;
+
+	Matrix4x4 localMatrix_{};
+
+	std::unique_ptr<Model> model_;
+	std::unique_ptr<Animation> animation_;
 
 };

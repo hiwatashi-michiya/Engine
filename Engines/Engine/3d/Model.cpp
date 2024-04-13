@@ -328,10 +328,39 @@ void Model::PostDraw() {
 
 void Model::Draw(Camera* camera) {
 
-	Matrix4x4 worldViewProjectionMatrix = worldMatrix_ * camera->matViewProjection_;
+	Matrix4x4 worldViewProjectionMatrix = mesh_->modelData_.rootNode.localMatrix * worldMatrix_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
-	matTransformMap_->World = worldMatrix_;
-	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
+	matTransformMap_->World = mesh_->modelData_.rootNode.localMatrix * worldMatrix_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(mesh_->modelData_.rootNode.localMatrix * worldMatrix_));
+
+	cameraMap_->worldPosition = camera->GetWorldPosition();
+
+	//PSO設定
+	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature_);
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//カメラ設定
+	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
+	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
+
+	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+
+	//描画
+	material_->SetCommandMaterial(commandList_);
+
+	mesh_->SetCommandMesh(commandList_);
+
+}
+
+void Model::Draw(const Matrix4x4& localMatrix, Camera* camera) {
+
+	Matrix4x4 worldViewProjectionMatrix = localMatrix * worldMatrix_* camera->matViewProjection_;
+	matTransformMap_->WVP = worldViewProjectionMatrix;
+	matTransformMap_->World = localMatrix * worldMatrix_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(localMatrix * worldMatrix_));
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 

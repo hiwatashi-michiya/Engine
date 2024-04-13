@@ -4,9 +4,6 @@
 #include <filesystem>
 #include <fstream>
 #include "Externals/imgui/imgui.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
 ID3D12Device* Mesh::device_ = nullptr;
 
@@ -49,23 +46,9 @@ void Mesh::LoadMaterialTemplateFile(const std::string& filename) {
 
 	}
 
-	//テクスチャ設定
-	{
-
-		////テクスチャ情報が空でない場合に設定
-		//if (textureData.textureFilePath != "") {
-		//	texture_ = TextureManager::GetInstance()->Load(textureData.textureFilePath);
-		//}
-		////テクスチャ情報が空の場合、既定の画像に設定
-		//else {
-		//	texture_ = TextureManager::GetInstance()->Load("resources/sample/white.png");
-		//}
-
-	}
-
 }
 
-void Mesh::LoadObjFile(const std::string& filename) {
+void Mesh::LoadModelFile(const std::string& filename) {
 
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(filename.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
@@ -94,12 +77,10 @@ void Mesh::LoadObjFile(const std::string& filename) {
 				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
 				VertexData vertex;
 
-				vertex.position = { position.x, position.y, position.z, 1.0f };
-				vertex.normal = { normal.x, normal.y, normal.z };
+				vertex.position = { -position.x, position.y, position.z, 1.0f };
+				vertex.normal = { -normal.x, normal.y, normal.z };
 				vertex.texcoord = { texcoord.x, texcoord.y };
 
-				vertex.position.x *= -1.0f;
-				vertex.normal.x *= -1.0f;
 				meshData_.vertices.push_back(vertex);
 
 			}
@@ -123,115 +104,44 @@ void Mesh::LoadObjFile(const std::string& filename) {
 
 	}
 
+	//sceneのrootNodeを読んでシーン全体の階層構造を作り上げる
+	modelData_.rootNode = ReadNode(scene->mRootNode);
+
 }
 
-//void Mesh::LoadObjFile(const std::string& filename) {
-//
-//	//1.必要となる変数の宣言
-//	std::vector<Vector4> positions; //位置
-//	std::vector<Vector3> normals; //法線
-//	std::vector<Vector2> texcoords; //テクスチャ座標
-//	std::string line; //ファイルから読んだ1行を格納するもの
-//
-//	//2.ファイルを開く
-//	std::ifstream file(filename); //ファイルを開く
-//	assert(file.is_open()); //開けなかったら止める
-//
-//	//3.実際にファイルを読み、ModelDataを構築していく
-//	while (std::getline(file, line)) {
-//		std::string identifier;
-//		std::istringstream s(line);
-//		s >> identifier; //先頭の識別子を読む
-//
-//		//identifierに応じた処理
-//		if (identifier == "v") {
-//			Vector4 position;
-//			s >> position.x >> position.y >> position.z;
-//			//座標系の変換のため、zを反転
-//			position.z *= -1.0f;
-//			position.w = 1.0f;
-//			positions.push_back(position);
-//		}
-//		else if (identifier == "vt") {
-//			Vector2 texcoord;
-//			s >> texcoord.x >> texcoord.y;
-//			texcoord.y = 1.0f - texcoord.y;
-//			texcoords.push_back(texcoord);
-//		}
-//		else if (identifier == "vn") {
-//			Vector3 normal;
-//			s >> normal.x >> normal.y >> normal.z;
-//			//座標系の変換のため、zを反転
-//			normal.z *= -1.0f;
-//			normals.push_back(normal);
-//		}
-//		else if (identifier == "f") {
-//			VertexData triangle[3];
-//			//面は三角形限定。その他は未対応
-//			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
-//				std::string vertexDefinition;
-//				s >> vertexDefinition;
-//				//頂点の要素へのIndexは「位置/UV/法線」で格納されているので、分解してIndexを取得する
-//				std::istringstream v(vertexDefinition);
-//				uint32_t elementIndices[3];
-//				for (int32_t element = 0; element < 3; ++element) {
-//					std::string index;
-//					std::getline(v, index, '/'); //区切りでインデックスを読んでいく
-//
-//					if (index == "") {
-//						//情報が無い場合、1を代入
-//						elementIndices[element] = 1;
-//					}
-//					else {
-//						elementIndices[element] = std::stoi(index);
-//					}
-//
-//				}
-//
-//				//要素へのIndexから、実際の要素の値を取得して、頂点を構築する
-//				Vector4 position = positions[elementIndices[0] - 1];
-//
-//				Vector2 texcoord;
-//				if (!texcoords.empty()) {
-//					texcoord = texcoords[elementIndices[1] - 1];
-//				}
-//				else {
-//					texcoord = { 0.0f,0.0f };
-//				}
-//				Vector3 normal = normals[elementIndices[2] - 1];
-//				/*VertexData vertex = { position, texcoord, normal };
-//				modelData.vertices.push_back(vertex);*/
-//				triangle[faceVertex] = { position, texcoord, normal };
-//
-//			}
-//			//頂点を逆順で登録することで、回り順を逆にする
-//			meshData_.vertices.push_back(triangle[2]);
-//			meshData_.vertices.push_back(triangle[1]);
-//			meshData_.vertices.push_back(triangle[0]);
-//
-//		}
-//		else if (identifier == "mtllib") {
-//			//ファイルのフルパスを取得
-//			std::filesystem::path fullPath(filename);
-//			//materialTemplateLibraryファイルの名前を取得する
-//			std::string materialFilename;
-//			s >> materialFilename;
-//			//マテリアルを生成
-//			material_ = std::make_unique<Material>();
-//			material_->Create(fullPath.parent_path().string() + "/" + materialFilename);
-//			LoadMaterialTemplateFile(fullPath.parent_path().string() + "/" + materialFilename);
-//
-//		}
-//
-//	}
-//
-//}
+Node Mesh::ReadNode(aiNode* node) {
+
+	Node result;
+	aiMatrix4x4 aiLocalMatrix = node->mTransformation; //nodeのlocalMatrixを取得
+	aiLocalMatrix.Transpose(); //列ベクトル形式を行ベクトル形式に転置
+
+	for (uint32_t y = 0; y < 4; y++) {
+
+		for (uint32_t x = 0; x < 4; x++) {
+			result.localMatrix.m[y][x] = aiLocalMatrix[y][x];
+		}
+
+	}
+
+	result.name = node->mName.C_Str(); //node名を格納
+	result.children.resize(node->mNumChildren); //子供の数だけ確保
+
+	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {
+
+		//再帰的に読んで階層構造を作っていく
+		result.children[childIndex] = ReadNode(node->mChildren[childIndex]);
+
+	}
+
+	return result;
+
+}
 
 Mesh* Mesh::Create(const std::string& filename) {
 
 	assert(device_);
 
-	LoadObjFile(filename);
+	LoadModelFile(filename);
 
 	//頂点バッファ
 	{

@@ -4,6 +4,9 @@
 #include "Drawing/ModelManager.h"
 #include "Material.h"
 #include <memory>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 class Mesh
 {
@@ -13,7 +16,7 @@ public:
 
 	Mesh* Create(const std::string& filename);
 
-	void LoadObjFile(const std::string& filename);
+	void LoadModelFile(const std::string& filename);
 
 	//テクスチャ読み込み
 	void LoadMaterialTemplateFile(const std::string& filename);
@@ -44,9 +47,14 @@ public:
 
 	std::string textureFilePath_;
 
+	//モデルデータ
+	ModelData modelData_;
+
 private:
 
 	static ID3D12Device* device_;
+
+	Node ReadNode(aiNode* node);
 
 private:
 

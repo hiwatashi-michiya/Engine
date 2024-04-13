@@ -73,6 +73,18 @@ struct ObjectData
 
 };
 
+struct Node {
+	Matrix4x4 localMatrix; //ノードのトランスフォーム
+	std::string name; //ノードの名前
+	std::vector<Node> children; //子供のノード
+};
+
+struct ModelData {
+	std::vector<VertexData> vertices;
+	MaterialData material;
+	Node rootNode;
+};
+
 //TextureData LoadMaterialTemplateFile(const std::string& filename);
 
-//MeshData LoadObjFile(const std::string& filename);
+//MeshData LoadModelFile(const std::string& filename);

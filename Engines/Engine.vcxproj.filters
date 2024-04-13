@@ -79,6 +79,12 @@
     <Filter Include="Game\SelectScene">
       <UniqueIdentifier>{7a774741-8c21-4b88-b6a4-61d3f37619ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\3d\Animation">
+      <UniqueIdentifier>{8eee8b8c-b3cc-448f-8ac7-b3f11a9efacd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3d\Animation\Keyframe">
+      <UniqueIdentifier>{4098cefd-5aa2-44e0-b7fa-8b2badd1aaf2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -212,6 +218,12 @@
     </ClCompile>
     <ClCompile Include="Game\DefaultScene.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\Animation\Keyframe\Keyframe.cpp">
+      <Filter>Engine\3d\Animation\Keyframe</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\Animation\Animation.cpp">
+      <Filter>Engine\3d\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,6 +373,12 @@
     </ClInclude>
     <ClInclude Include="Game\DefaultScene.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Animation\Keyframe\Keyframe.h">
+      <Filter>Engine\3d\Animation\Keyframe</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Animation\Animation.h">
+      <Filter>Engine\3d\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
