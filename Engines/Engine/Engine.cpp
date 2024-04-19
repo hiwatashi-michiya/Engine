@@ -51,9 +51,9 @@ void Engine::Initialize(const char* title, int width, int height) {
 	Sprite::StaticInitialize(dxSetter_->GetDevice(), WindowManager::kWindowWidth, WindowManager::kWindowHeight);
 	Model::StaticInitialize(dxSetter_->GetDevice());
 	Particle3D::StaticInitialize(dxSetter_->GetDevice());
-
+	RenderTextureSetup::GetInstance()->Initialize();
 	
-	TextureManager::GetInstance()->Initialize();
+	TextureManager::GetInstance()->Initialize(dxSetter_->GetSrvHeap());
 	Input::GetInstance()->Initialize();
 
 #ifdef _DEBUG
@@ -63,7 +63,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(windowManager_->GetHwnd());
-	ImGui_ImplDX12_Init(dxSetter_->GetDevice(),
+	ImGui_ImplDX12_Init(dxSetter_->GetDevice().Get(),
 		2,
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		TextureManager::GetInstance()->GetSRVDescHeap(),
@@ -113,7 +113,7 @@ void Engine::BeginFrame() {
 
 #endif // _DEBUG
 
-	dxSetter_->PreDraw();
+	dxSetter_->RenderTexturePreDraw();
 
 	Input::GetInstance()->Update();
 
@@ -128,6 +128,10 @@ void Engine::EndFrame() {
 	Model::PostDraw();
 	Particle3D::PostDraw();
 	Sprite::PostDraw();
+
+	dxSetter_->RenderTexturePostDraw();
+
+	dxSetter_->PreDraw();
 
 #ifdef _DEBUG
 

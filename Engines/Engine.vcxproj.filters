@@ -225,6 +225,9 @@
     <ClCompile Include="Engine\3d\Animation\Animation.cpp">
       <Filter>Engine\3d\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Drawing\RenderTexture.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -380,6 +383,9 @@
     <ClInclude Include="Engine\3d\Animation\Animation.h">
       <Filter>Engine\3d\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Drawing\RenderTexture.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\Object3d.hlsli">
@@ -389,6 +395,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="resources\shaders\Particle3d.hlsli">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Resources\shaders\CopyImage.hlsli">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
@@ -409,6 +418,12 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="resources\shaders\Particle3d.VS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\CopyImage.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\CopyImage.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

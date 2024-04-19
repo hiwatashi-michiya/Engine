@@ -18,7 +18,7 @@ class Model
 public:
 
 	//モデル全体の初期化
-	static void StaticInitialize(ID3D12Device* device);
+	static void StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device);
 
 	enum BlendMode {
 		kNormal,//通常
@@ -88,15 +88,13 @@ private:
 	//静的メンバ変数
 
 	//デバイス
-	static ID3D12Device* device_;
+	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
 	static ID3D12RootSignature* rootSignature_;
 	//PSO
 	static ID3D12PipelineState* pipelineStates_[BlendMode::kCountBlend];
-
-	/*static ID3D12PipelineState* pipelineState_;*/
 
 	static IDxcBlob* vs3dBlob_;
 	static IDxcBlob* ps3dBlob_;

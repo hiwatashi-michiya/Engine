@@ -12,7 +12,7 @@
 
 #pragma comment(lib, "dxcompiler.lib")
 
-ID3D12Device* Particle3D::device_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12Device> Particle3D::device_ = nullptr;
 ID3D12GraphicsCommandList* Particle3D::commandList_ = nullptr;
 ID3D12RootSignature* Particle3D::rootSignature_ = nullptr;
 ID3D12PipelineState* Particle3D::particlePipelineStates_[Particle3D::BlendMode::kCountBlend] = { nullptr };
@@ -24,7 +24,7 @@ Particle3D::BlendMode Particle3D::currentBlendMode_ = Particle3D::BlendMode::kNo
 std::unordered_map<std::string, std::shared_ptr<Mesh>> Particle3D::meshes_;
 const char* Particle3D::BlendTexts[Particle3D::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
-void Particle3D::StaticInitialize(ID3D12Device* device) {
+void Particle3D::StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device) {
 
 	assert(device);
 

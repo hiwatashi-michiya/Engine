@@ -5,10 +5,10 @@
 #include <fstream>
 #include "Drawing/ImGuiManager.h"
 
-ID3D12Device* Material::device_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12Device> Material::device_ = nullptr;
 
 
-void Material::StaticInitialize(ID3D12Device* device) {
+void Material::StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device) {
 
 	assert(device);
 

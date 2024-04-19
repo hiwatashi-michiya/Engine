@@ -9,7 +9,7 @@
 
 #pragma comment(lib, "dxcompiler.lib")
 
-ID3D12Device* Sprite::device_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12Device> Sprite::device_ = nullptr;
 ID3D12GraphicsCommandList* Sprite::commandList_ = nullptr;
 ID3D12RootSignature* Sprite::rootSignature2D_ = nullptr;
 ID3D12PipelineState* Sprite::pipelineState2D_ = nullptr;
@@ -17,8 +17,8 @@ IDxcBlob* Sprite::vs2dBlob_ = nullptr;
 IDxcBlob* Sprite::ps2dBlob_ = nullptr;
 
 //静的初期化
-void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
-	int window_hwight) {
+void Sprite::StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device, int window_width,
+	int window_height) {
 
 	assert(device);
 

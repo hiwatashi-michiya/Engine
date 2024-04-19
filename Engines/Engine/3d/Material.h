@@ -8,7 +8,7 @@ class Material
 {
 public:
 
-	static void StaticInitialize(ID3D12Device* device);
+	static void StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device);
 
 	Material* Create(const std::string& filename);
 	
@@ -46,7 +46,7 @@ public:
 
 private:
 
-	static ID3D12Device* device_;
+	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
 
 };
 

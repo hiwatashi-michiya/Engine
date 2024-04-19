@@ -40,7 +40,7 @@ public:
 
 	static TextureManager* GetInstance();
 
-	void Initialize();
+	void Initialize(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap);
 
 	Texture* Load(const std::string& filePath);
 
@@ -61,7 +61,7 @@ private:
 
 	uint32_t descriptorSizeSRV_;
 
-	ID3D12Device* device_;
+	Microsoft::WRL::ComPtr<ID3D12Device> device_;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescHeap_;
 	std::array<Texture, kNumDescriptors> textures_;
 	std::unordered_map<std::string, std::unique_ptr<Texture>> textureMap_;

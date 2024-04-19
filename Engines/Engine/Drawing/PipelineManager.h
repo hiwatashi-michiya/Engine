@@ -28,7 +28,7 @@ public:
 
 	static PipelineManager* GetInstance();
 
-	void Initialize(ID3D12Device* device);
+	void Initialize(Microsoft::WRL::ComPtr<ID3D12Device> device);
 
 	/// <summary>
 	/// パイプライン作成
@@ -43,7 +43,7 @@ public:
 
 private:
 
-	ID3D12Device* device_ = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Device> device_ = nullptr;
 
 	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> pipelineStates_;
 

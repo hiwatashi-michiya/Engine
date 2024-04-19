@@ -11,6 +11,7 @@
 #include <thread>
 #include "WindowManager.h"
 #include "Drawing/DepthStencil.h"
+#include "Drawing/RenderTexture.h"
 
 class DirectXSetter
 {
@@ -35,14 +36,26 @@ public:
 	/// </summary>
 	void PostDraw();
 
-	ID3D12Device* GetDevice() { return device_.Get(); }
+	/// <summary>
+	/// RenderTextureに対しての描画前処理
+	/// </summary>
+	void RenderTexturePreDraw();
 
-	ID3D12GraphicsCommandList* GetCommandList() { return commandList_.Get(); }
+	/// <summary>
+	/// RenderTextureに対しての描画後処理
+	/// </summary>
+	void RenderTexturePostDraw();
 
 	/// <summary>
 	/// 終了処理
 	/// </summary>
 	void Finalize();
+
+	Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() { return device_; }
+
+	ID3D12GraphicsCommandList* GetCommandList() { return commandList_.Get(); }
+
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeap() { return srvHeap_; }
 
 private:
 
@@ -57,19 +70,19 @@ private:
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
 	DepthStencil depthStencil_;
+	RenderTexture renderTexture_;
 	ID3D12DescriptorHeap* rtvHeap_;
 	ID3D12DescriptorHeap* dsvHeap_;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 	UINT64 fenceVal_ = 0;
 	int32_t backBufferWidth_ = 0;
 	int32_t backBufferHeight_ = 0;
 
-	//デスクリプタヒープ作成関数
-	/*ID3D12DescriptorHeap* CreateDescriptorHeap(
-		ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);*/
-
 	//CPUのDescriptorHandle取得
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	//CPUのDescriptorHandle取得
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	//DescriptorSizeを取得しておく
 	uint32_t descriptorSizeSRV;
@@ -98,10 +111,13 @@ private:
 	void CreateSwapChain();
 
 	//レンダーターゲット生成
-	void CreateFinalRenderTargets();
+	void CreateRenderTargets();
 
 	//深度バッファ生成
 	void CreateDepthBuffer();
+
+	//シェーダーリソースビューのヒープ生成
+	void CreateSrvHeap();
 
 	//フェンス生成
 	void CreateFence();

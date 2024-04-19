@@ -15,7 +15,7 @@ public:
 	Sprite(Texture* texture, Vector2 position, Vector2 size, Vector4 color);
 	~Sprite() = default;
 
-	static void StaticInitialize(ID3D12Device* device, int window_width,
+	static void StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device, int window_width,
 		int window_hwight);
 
 	/// <summary>
@@ -77,7 +77,7 @@ private:
 	//静的メンバ変数
 
 	//デバイス
-	static ID3D12Device* device_;
+	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ
