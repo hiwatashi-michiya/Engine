@@ -4,6 +4,9 @@
 #include <unordered_map>
 #include <string>
 #include <array>
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfreadwrite.h>
 
 class AudioManager
 {
@@ -44,7 +47,7 @@ public:
 	struct SoundData
 	{
 		//波形フォーマット
-		WAVEFORMATEX wfex;
+		WAVEFORMATEX* wfex;
 		//バッファの先頭アドレス
 		BYTE* pBuffer;
 		//バッファのサイズ
@@ -55,13 +58,19 @@ public:
 	//サウンドデータとソースボイスを纏めた構造体
 	struct Audio
 	{
-		SoundData soundData;
+		WAVEFORMATEX* wfex;
 		bool isPause = false;
 		IXAudio2SourceVoice* pSourceVoice = nullptr;
+		IMFSourceReader* pMFSourceReader{ nullptr };
+		IMFMediaType* pMFMediaType{ nullptr };
+		std::vector<BYTE> mediaData;
 	};
 
 	//音声データ読み込み
-	uint32_t SoundLoadWave(const char* filename);
+	/*uint32_t SoundLoadWave(const char* filename);*/
+
+	//Media Foundationで読み込み
+	uint32_t LoadInMF(const std::string& filename);
 
 	/// <summary>
 	/// 音声再生

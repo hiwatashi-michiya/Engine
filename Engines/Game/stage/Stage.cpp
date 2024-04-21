@@ -19,7 +19,7 @@ void Stage::Initialize() {
 	blocks_.clear();
 	goals_.clear();
 	mapObjData_.clear();
-	goalSE_ = AudioManager::GetInstance()->SoundLoadWave("./resources/SE/goal.wav");
+	goalSE_ = AudioManager::GetInstance()->LoadInMF("./resources/SE/goal.mp3");
 
 }
 

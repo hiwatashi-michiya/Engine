@@ -30,7 +30,7 @@ void Player::Initialize() {
 	particle_->AddParticle("./resources/plane/plane.obj", tex_, 10);
 	particle_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
-	moveSE_ = AudioManager::GetInstance()->SoundLoadWave("./resources/SE/move.wav");
+	moveSE_ = AudioManager::GetInstance()->LoadInMF("./resources/SE/move.mp3");
 
 }
 

@@ -107,11 +107,11 @@ void GameScene::Initialize() {
 
 	stage_->Initialize();
 
-	bgm1_ = audioManager_->SoundLoadWave("./resources/SE/bgm.wav");
-	bgm2_ = audioManager_->SoundLoadWave("./resources/SE/bgm_2.wav");
-	bgm3_ = audioManager_->SoundLoadWave("./resources/SE/bgm_3.wav");
-	select1_ = audioManager_->SoundLoadWave("./resources/SE/select.wav");
-	select2_ = audioManager_->SoundLoadWave("./resources/SE/select_2.wav");
+	bgm1_ = audioManager_->LoadInMF("./resources/SE/bgm.mp3");
+	bgm2_ = audioManager_->LoadInMF("./resources/SE/bgm_2.mp3");
+	bgm3_ = audioManager_->LoadInMF("./resources/SE/bgm_3.mp3");
+	select1_ = audioManager_->LoadInMF("./resources/SE/select.mp3");
+	select2_ = audioManager_->LoadInMF("./resources/SE/select_2.mp3");
 
 	audioManager_->Play(bgm1_, 0.5f, true);
 	audioManager_->Play(bgm2_, 0.0f, true);

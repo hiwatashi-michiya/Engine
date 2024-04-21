@@ -19,6 +19,10 @@ SelectScene::~SelectScene()
 
 void SelectScene::Initialize() {
 
+	dxSetter_ = DirectXSetter::GetInstance();
+	input_ = Input::GetInstance();
+	audioManager_ = AudioManager::GetInstance();
+
 	editor_ = MapEditor::GetInstance();
 	editor_->Initialize();
 
@@ -32,6 +36,8 @@ void SelectScene::Initialize() {
 	model_.reset(Model::Create("./Resources/AnimatedCube/AnimatedCube.gltf"));
 	animation_ = std::make_unique<Animation>();
 	*animation_ = LoadAnimationFile("./Resources/AnimatedCube/AnimatedCube.gltf");
+
+	test_ = audioManager_->LoadInMF("./Resources/SE/test.mp3");
 
 }
 
@@ -60,6 +66,10 @@ void SelectScene::Update() {
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
+
+	if (input_->TriggerKey(DIK_1)) {
+		audioManager_->Play(test_, 0.5f);
+	}
 
 }
 

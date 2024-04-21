@@ -40,4 +40,6 @@ private:
 	std::unique_ptr<Model> model_;
 	std::unique_ptr<Animation> animation_;
 
+	uint32_t test_;
+
 };
