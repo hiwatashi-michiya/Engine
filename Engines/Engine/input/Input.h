@@ -10,6 +10,23 @@ class Input
 {
 public:
 
+	enum Button {
+		A = XINPUT_GAMEPAD_A,
+		B = XINPUT_GAMEPAD_B,
+		X = XINPUT_GAMEPAD_X,
+		Y = XINPUT_GAMEPAD_Y,
+		UP = XINPUT_GAMEPAD_DPAD_UP,
+		DOWN = XINPUT_GAMEPAD_DPAD_DOWN,
+		RIGHT = XINPUT_GAMEPAD_DPAD_RIGHT,
+		LEFT = XINPUT_GAMEPAD_DPAD_LEFT,
+		RB = XINPUT_GAMEPAD_RIGHT_SHOULDER,
+		LB = XINPUT_GAMEPAD_LEFT_SHOULDER,
+		RThumb = XINPUT_GAMEPAD_RIGHT_THUMB,
+		LThumb = XINPUT_GAMEPAD_LEFT_THUMB,
+		START = XINPUT_GAMEPAD_START,
+		BACK = XINPUT_GAMEPAD_BACK,
+	};
+
 	static Input* GetInstance();
 
 	//初期化
@@ -31,11 +48,11 @@ public:
 
 	bool GetJoyState(int32_t No, XINPUT_STATE& joyState);
 
-	bool PushButton(UINT button);
+	bool PushButton(Button button);
 
-	bool TriggerButton(UINT button);
+	bool TriggerButton(Button button);
 
-	bool ReleaseButton(UINT button);
+	bool ReleaseButton(Button button);
 
 	XINPUT_GAMEPAD GetGamepad() { return joyState_.Gamepad; }
 

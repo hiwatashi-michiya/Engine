@@ -45,7 +45,12 @@ private:
 
 	std::unique_ptr<Camera> camera_;
 
-	std::shared_ptr<Player> player_;
+	std::unique_ptr<Model> skyDome_;
+	std::unique_ptr<Transform> skyDomeTransform_;
+
+	std::unique_ptr<Stage> stage_;
+
+	uint32_t testSE_;
 
 };
 

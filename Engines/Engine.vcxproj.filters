@@ -222,6 +222,9 @@
     <ClCompile Include="Engine\3d\Animation\Animation.cpp">
       <Filter>Engine\3d\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Item\Ring.cpp">
+      <Filter>Game\Item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -373,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\Animation\Animation.h">
       <Filter>Engine\3d\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Item\Ring.h">
+      <Filter>Game\Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

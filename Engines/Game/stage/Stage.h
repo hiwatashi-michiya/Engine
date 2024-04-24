@@ -4,6 +4,7 @@
 #include "Game/Player/Player.h"
 #include <string>
 #include "Game/Block/Block.h"
+#include "Game/Item/Ring.h"
 
 class Stage
 {
@@ -19,11 +20,9 @@ public:
 
 	void DrawParticle(Camera* camera);
 
-	void LoadStage(const std::string& filename);
+	void LoadStage(uint32_t stageNumber);
 
 	const std::string& kDirectoryPath_ = "./resources/Maps/";
-
-	bool GetAllBlockRock();
 
 private:
 
@@ -59,6 +58,8 @@ private:
 	std::list<std::shared_ptr<MapObject>> mapObjData_;
 
 	std::list<std::shared_ptr<Block>> blocks_;
+
+	std::list<std::shared_ptr<Ring>> rings_;
 
 };
 

@@ -112,7 +112,7 @@ bool Input::GetJoyState(int32_t No, XINPUT_STATE& joyState) {
 
 }
 
-bool Input::PushButton(UINT button) {
+bool Input::PushButton(Button button) {
 
 	if (isGetController_) {
 
@@ -126,7 +126,7 @@ bool Input::PushButton(UINT button) {
 
 }
 
-bool Input::TriggerButton(UINT button) {
+bool Input::TriggerButton(Button button) {
 
 	if (isGetController_) {
 
@@ -140,7 +140,7 @@ bool Input::TriggerButton(UINT button) {
 
 }
 
-bool Input::ReleaseButton(UINT button) {
+bool Input::ReleaseButton(Button button) {
 
 	if (isGetController_) {
 

@@ -195,6 +195,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\DefaultScene.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameScene\GameScene.cpp" />
+    <ClCompile Include="Game\Item\Ring.cpp" />
     <ClCompile Include="Game\SceneFactory.cpp" />
     <ClCompile Include="Game\SelectScene\SelectScene.cpp" />
     <ClCompile Include="Game\TitleScene\TitleScene.cpp" />
@@ -248,6 +249,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\DefaultScene.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameScene\GameScene.h" />
+    <ClInclude Include="Game\Item\Ring.h" />
     <ClInclude Include="Game\SceneFactory.h" />
     <ClInclude Include="Game\SelectScene\SelectScene.h" />
     <ClInclude Include="Game\TitleScene\TitleScene.h" />

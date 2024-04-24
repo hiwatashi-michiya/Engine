@@ -10,7 +10,7 @@
 GameScene::GameScene()
 {
 
-	
+	skyDome_.reset(Model::Create("./Resources/skydome/skydome.obj"));
 
 }
 
@@ -34,8 +34,12 @@ void GameScene::Initialize() {
 	camera_->rotation_.x = 0.9f;
 	mapEditor_->SetCamera(camera_.get());
 
-	player_ = std::make_shared<Player>();
-	player_->Initialize();
+	skyDomeTransform_ = std::make_unique<Transform>();
+	skyDomeTransform_->scale_ = { 100.0f,100.0f,100.0f };
+
+	stage_ = std::make_unique<Stage>();
+	stage_->Initialize();
+	stage_->LoadStage(1);
 
 }
 
@@ -53,18 +57,23 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	player_->Update();
+	stage_->Update();
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
+
+	skyDomeTransform_->UpdateMatrix();
+	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 
 }
 
 void GameScene::DrawModel() {
 
+	skyDome_->Draw(camera_.get());
+
 	mapEditor_->Draw(camera_.get());
 
-	player_->Draw(camera_.get());
+	stage_->Draw(camera_.get());
 
 }
 

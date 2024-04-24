@@ -23,11 +23,18 @@ void Player::Initialize() {
 	transform_->translate_ = { 0.0f,0.0f,0.0f };
 	model_->material_->pLightMap_->intensity = 2.0f;
 
+	collision_.max = transform_->translate_ + transform_->scale_;
+	collision_.min = transform_->translate_ - transform_->scale_;
+
 }
 
 void Player::Update() {
 
+	if (input_->PushButton(Input::UP)) {
 
+		transform_->translate_.z += 1.0f;
+
+	}
 
 	collision_.max = transform_->translate_ + transform_->scale_;
 	collision_.min = transform_->translate_ - transform_->scale_;

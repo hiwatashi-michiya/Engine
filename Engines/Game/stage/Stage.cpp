@@ -6,6 +6,7 @@
 
 Stage::Stage()
 {
+	player_ = std::make_unique<Player>();
 }
 
 Stage::~Stage()
@@ -14,18 +15,28 @@ Stage::~Stage()
 
 void Stage::Initialize() {
 
-	player_ = std::make_unique<Player>();
 	player_->Initialize();
 	blocks_.clear();
+	rings_.clear();
 	mapObjData_.clear();
 
 }
 
 void Stage::Update() {
 
+	rings_.remove_if([](std::shared_ptr<Ring> ring) {
+
+		if (ring->GetIsVanish()) {
+			return true;
+		}
+
+		return false;
+
+	});
+
 	player_->Update();
 
-	for (uint32_t i = 0; auto & block : blocks_) {
+	for (uint32_t i = 0; auto& block : blocks_) {
 
 		block->Update();
 
@@ -34,13 +45,19 @@ void Stage::Update() {
 
 		}
 
-		if (IsCollision(block->GetCollision(), player_->GetCollision())) {
+		i++;
 
+	}
 
+	for (auto& ring : rings_) {
+
+		ring->Update();
+
+		if (IsCollision(ring->GetCollision(), player_->GetCollision())) {
+
+			ring->Obtained();
 
 		}
-
-		i++;
 
 	}
 
@@ -48,7 +65,9 @@ void Stage::Update() {
 
 void Stage::Draw(Camera* camera) {
 
-	
+	for (auto& ring : rings_) {
+		ring->Draw(camera);
+	}
 
 	for (auto& block : blocks_) {
 		block->Draw(camera);
@@ -64,16 +83,14 @@ void Stage::DrawParticle(Camera* camera) {
 
 }
 
-bool Stage::GetAllBlockRock() {
+void Stage::LoadStage(uint32_t stageNumber) {
 
-	return true;
+	std::string stageName = "stage";
 
-}
-
-void Stage::LoadStage(const std::string& filename) {
+	stageName += std::to_string(stageNumber);
 
 	//読み込むJSONファイルのフルパスを合成する
-	std::string filePath = kDirectoryPath_ + filename + ".json";
+	std::string filePath = kDirectoryPath_ + stageName + ".json";
 	//読み込み用ファイルストリーム
 	std::ifstream ifs;
 	//ファイルを読み込み用に開く
@@ -92,10 +109,11 @@ void Stage::LoadStage(const std::string& filename) {
 	//ファイルを閉じる
 	ifs.close();
 	//グループを検索
-	nlohmann::json::iterator itGroup = root.find(filename);
+	nlohmann::json::iterator itGroup = root.find(stageName);
 	//未登録チェック
 	if (itGroup == root.end()) {
 		MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
+		return;
 	}
 
 	//保険
@@ -222,6 +240,12 @@ void Stage::LoadStage(const std::string& filename) {
 			newBlock->SetPosition(object->transform->translate_);
 			newBlock->SetScale(object->transform->scale_);
 			blocks_.push_back(newBlock);
+		}
+
+		if (object->tag == "item") {
+			std::shared_ptr<Ring> newRing = std::make_shared<Ring>();
+			newRing->Initialize(object->transform->translate_);
+			rings_.push_back(newRing);
 		}
 
 	}
