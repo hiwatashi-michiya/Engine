@@ -63,7 +63,7 @@ void Material::LoadMaterialTemplateFile(const std::string& filename) {
 
 }
 
-Material* Material::Create(const std::string& filename) {
+Material* Material::Create() {
 
 	//定数バッファ
 	{

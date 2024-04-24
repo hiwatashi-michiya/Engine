@@ -22,6 +22,8 @@ Animation LoadAnimationFile(const std::string& fileName) {
 
 		MessageBox(NULL, ConvertString(text).c_str(), L"Animation - LoadAnimationFile", MB_OK);
 
+		return animation;
+
 		assert(false);
 
 	}

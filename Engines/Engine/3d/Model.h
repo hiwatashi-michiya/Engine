@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include <memory>
 #include <unordered_map>
+#include "Animation/Animation.h"
 
 //ディレクトリパス
 const std::string modelDirectoryPath = "resources";
@@ -70,6 +71,17 @@ public:
 
 	void SetWorldMatrix(const Matrix4x4& matrix) { worldMatrix_ = matrix; }
 
+	void LoadAnimation(const std::string& filename);
+
+	//アニメーション開始
+	void StartAnimation() { isStartAnimation_ = true; }
+	//アニメーション一時停止
+	void StopAnimation() { isStartAnimation_ = false; }
+	//アニメーションのリセット
+	void ResetAnimation();
+	//アニメーション速度変更
+	void SetAnimationSpeed(float speed) { animationSpeed_ = speed; }
+
 	Matrix4x4 worldMatrix_;
 
 	Model* parent_ = nullptr;
@@ -113,6 +125,21 @@ private:
 	//画面上のワールド座標バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> matBuff_;
 	
+	//アニメーション
+	std::unique_ptr<Animation> animation_;
+
+	//アニメーションタイム
+	float animationTime_ = 0.0f;
+
+	//アニメーション速度
+	float animationSpeed_ = 1.0f;
+
+	//アニメーション管理フラグ
+	bool isStartAnimation_ = false;
+
+	//アニメーションのマトリックス
+	Matrix4x4 localMatrix_;
+
 	//TransformMatrix
 	TransformationMatrix* matTransformMap_ = nullptr;
 	//カメラ座標マップ

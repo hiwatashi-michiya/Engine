@@ -11,32 +11,7 @@ Block::~Block()
 {
 }
 
-void Block::Initialize(const Color& color) {
-
-	color_ = color;
-
-	if (color_ == kNone) {
-		isRock_ = true;
-	}
-	else {
-
-		if (color_ == kRed) {
-			model_->material_->constMap_->color = { 1.0f,0.3f,0.3f,1.0f };
-		}
-
-		if (color_ == kGreen) {
-			model_->material_->constMap_->color = { 0.3f,1.0f,0.3f,1.0f };
-		}
-
-		if (color_ == kBlue) {
-			model_->material_->constMap_->color = { 0.3f,0.3f,1.0f,1.0f };
-		}
-
-		if (color_ == kYellow) {
-			model_->material_->constMap_->color = { 1.0f,1.0f,0.3f,1.0f };
-		}
-
-	}
+void Block::Initialize() {
 
 	setCount_ = (rand() % 10) * 5 + 10;
 
@@ -91,11 +66,6 @@ void Block::Update() {
 	collision_.min = transform_->translate_ - transform_->scale_ / 2.0f;
 
 	model_->material_->pLightMap_->intensity = pLightIntencity_;
-
-	//ゴールに入った特定の色ブロックを光らせる
-	if (color_ != kNone && isRock_) {
-		model_->material_->pLightMap_->intensity = 2.5f;
-	}
 
 	transform_->UpdateMatrix();
 

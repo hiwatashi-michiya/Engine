@@ -17,9 +17,7 @@ void Stage::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize();
 	blocks_.clear();
-	goals_.clear();
 	mapObjData_.clear();
-	goalSE_ = AudioManager::GetInstance()->LoadInMF("./resources/SE/goal.mp3");
 
 }
 
@@ -27,67 +25,18 @@ void Stage::Update() {
 
 	player_->Update();
 
-	for (auto& goal : goals_) {
-		goal->Update();
-	}
-
 	for (uint32_t i = 0; auto & block : blocks_) {
 
 		block->Update();
 
-		if (IsCollision(block->GetCollision(), player_->GetCollision()) && 
-			!block->GetIsRock()) {
+		if (IsCollision(block->GetCollision(), player_->GetCollision())) {
 
-			if (player_->move_ == Player::kUp) {
-				block->SetPosition(block->GetPosition() + Vector3{ 0.0f,0.0f,2.0f });
-				CheckRockBlock(block, i);
-			}
-			if (player_->move_ == Player::kDown) {
-				block->SetPosition(block->GetPosition() + Vector3{ 0.0f,0.0f,-2.0f });
-				CheckRockBlock(block, i);
-			}
-			if (player_->move_ == Player::kRight) {
-				block->SetPosition(block->GetPosition() + Vector3{ 2.0f,0.0f,0.0f });
-				CheckRockBlock(block, i);
-			}
-			if (player_->move_ == Player::kLeft) {
-				block->SetPosition(block->GetPosition() + Vector3{ -2.0f,0.0f,0.0f });
-				CheckRockBlock(block, i);
-			}
 
 		}
 
-		if (IsCollision(block->GetCollision(), player_->GetCollision()) &&
-			block->GetIsRock()) {
+		if (IsCollision(block->GetCollision(), player_->GetCollision())) {
 
-			if (player_->move_ == Player::kUp) {
-				player_->SetPosition(block->GetPosition() + Vector3{ 0.0f,0.0f,-2.0f });
-			}
-			if (player_->move_ == Player::kDown) {
-				player_->SetPosition(block->GetPosition() + Vector3{ 0.0f,0.0f,2.0f });
-			}
-			if (player_->move_ == Player::kRight) {
-				player_->SetPosition(block->GetPosition() + Vector3{ -2.0f,0.0f,0.0f });
-			}
-			if (player_->move_ == Player::kLeft) {
-				player_->SetPosition(block->GetPosition() + Vector3{ 2.0f,0.0f,0.0f });
-			}
 
-		}
-
-		for (auto& goal : goals_) {
-			
-			if (!block->GetIsRock()) {
-
-				if (IsCollision(block->GetCollision(), goal->GetCollision()) &&
-					block->GetColor() == goal->GetColor()) {
-					AudioManager::GetInstance()->Play(goalSE_, 0.5f);
-					block->SetIsRock(true);
-					goal->SetIsGoal(true);
-
-				}
-
-			}
 
 		}
 
@@ -105,19 +54,11 @@ void Stage::Draw(Camera* camera) {
 		block->Draw(camera);
 	}
 
-	for (auto& goal : goals_) {
-		goal->Draw(camera);
-	}
-
 	player_->Draw(camera);
 
 }
 
 void Stage::DrawParticle(Camera* camera) {
-
-	for (auto& goal : goals_) {
-		goal->DrawParticle(camera);
-	}
 
 	player_->DrawParticle(camera);
 
@@ -125,48 +66,7 @@ void Stage::DrawParticle(Camera* camera) {
 
 bool Stage::GetAllBlockRock() {
 
-	for (auto& block : blocks_) {
-
-		if (!block->GetIsRock()) {
-			return false;
-		}
-
-	}
-
 	return true;
-
-}
-
-void Stage::CheckRockBlock(std::shared_ptr<Block> checkBlock, uint32_t num) {
-
-	for (uint32_t i = 0; auto & block : blocks_) {
-
-		if (IsCollision(block->GetCollision(), checkBlock->GetCollision()) &&
-			i != num) {
-
-			//押し戻し
-			if (player_->move_ == Player::kUp) {
-				checkBlock->SetPosition(checkBlock->GetPosition() + Vector3{ 0.0f,0.0f,-2.0f });
-				player_->SetPosition(checkBlock->GetPosition() + Vector3{ 0.0f,0.0f,-2.0f });
-			}
-			if (player_->move_ == Player::kDown) {
-				checkBlock->SetPosition(checkBlock->GetPosition() + Vector3{ 0.0f,0.0f,2.0f });
-				player_->SetPosition(checkBlock->GetPosition() + Vector3{ 0.0f,0.0f,2.0f });
-			}
-			if (player_->move_ == Player::kRight) {
-				checkBlock->SetPosition(checkBlock->GetPosition() + Vector3{ -2.0f,0.0f,0.0f });
-				player_->SetPosition(checkBlock->GetPosition() + Vector3{ -2.0f,0.0f,0.0f });
-			}
-			if (player_->move_ == Player::kLeft) {
-				checkBlock->SetPosition(checkBlock->GetPosition() + Vector3{ 2.0f,0.0f,0.0f });
-				player_->SetPosition(checkBlock->GetPosition() + Vector3{ 2.0f,0.0f,0.0f });
-			}
-
-		}
-
-		i++;
-
-	}
 
 }
 
@@ -275,6 +175,12 @@ void Stage::LoadStage(const std::string& filename) {
 					//Vector3以外の場合
 					else {
 
+						//クォータニオン追加
+						if (itemNameObject == "quaternion") {
+							//float型のjson配列登録
+							mapObject->transform->rotateQuaternion_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2),itItemObject->at(3) };
+						}
+
 						//タグを登録
 						if (itemNameObject == "tag") {
 							mapObject->tag = itItemObject.value();
@@ -312,70 +218,10 @@ void Stage::LoadStage(const std::string& filename) {
 
 		if (object->tag == "block") {
 			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
-			newBlock->Initialize(Block::Color::kNone);
+			newBlock->Initialize();
 			newBlock->SetPosition(object->transform->translate_);
 			newBlock->SetScale(object->transform->scale_);
 			blocks_.push_back(newBlock);
-		}
-
-		if (object->tag == "block_red") {
-			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
-			newBlock->Initialize(Block::Color::kRed);
-			newBlock->SetPosition(object->transform->translate_);
-			newBlock->SetScale(object->transform->scale_);
-			blocks_.push_back(newBlock);
-		}
-
-		if (object->tag == "block_green") {
-			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
-			newBlock->Initialize(Block::Color::kGreen);
-			newBlock->SetPosition(object->transform->translate_);
-			newBlock->SetScale(object->transform->scale_);
-			blocks_.push_back(newBlock);
-		}
-
-		if (object->tag == "block_blue") {
-			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
-			newBlock->Initialize(Block::Color::kBlue);
-			newBlock->SetPosition(object->transform->translate_);
-			newBlock->SetScale(object->transform->scale_);
-			blocks_.push_back(newBlock);
-		}
-
-		if (object->tag == "block_yellow") {
-			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
-			newBlock->Initialize(Block::Color::kYellow);
-			newBlock->SetPosition(object->transform->translate_);
-			newBlock->SetScale(object->transform->scale_);
-			blocks_.push_back(newBlock);
-		}
-
-		if (object->tag == "goal_red") {
-			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
-			newGoal->Initialize(Goal::Color::kRed);
-			newGoal->SetPosition(object->transform->translate_);
-			goals_.push_back(newGoal);
-		}
-
-		if (object->tag == "goal_green") {
-			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
-			newGoal->Initialize(Goal::Color::kGreen);
-			newGoal->SetPosition(object->transform->translate_);
-			goals_.push_back(newGoal);
-		}
-
-		if (object->tag == "goal_blue") {
-			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
-			newGoal->Initialize(Goal::Color::kBlue);
-			newGoal->SetPosition(object->transform->translate_);
-			goals_.push_back(newGoal);
-		}
-
-		if (object->tag == "goal_yellow") {
-			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
-			newGoal->Initialize(Goal::Color::kYellow);
-			newGoal->SetPosition(object->transform->translate_);
-			goals_.push_back(newGoal);
 		}
 
 	}

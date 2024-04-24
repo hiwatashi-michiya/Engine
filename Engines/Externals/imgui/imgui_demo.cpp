@@ -981,7 +981,7 @@ static void ShowDemoWindowWidgets()
                 else
                     ImGui::Text("aaaaaaaa bbbbbbbb, c cccccccc,dddddddd. d eeeeeeee   ffffffff. gggggggg!hhhhhhhh");
 
-                // Draw actual text bounding box, following by marker of our expected limit (should not overlap!)
+                // DrawModel actual text bounding box, following by marker of our expected limit (should not overlap!)
                 draw_list->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255, 255, 0, 255));
                 draw_list->AddRectFilled(marker_min, marker_max, IM_COL32(255, 0, 255, 255));
                 ImGui::PopTextWrapPos();
@@ -4891,7 +4891,7 @@ static void ShowDemoWindowTables()
                     ImGui::PushItemWidth(-FLT_MIN); // Right-aligned
                 }
 
-                // Draw our contents
+                // DrawModel our contents
                 static float dummy_f = 0.0f;
                 ImGui::PushID(row);
                 ImGui::TableSetColumnIndex(0);
@@ -5320,7 +5320,7 @@ static void ShowDemoWindowTables()
 
                 ImGui::DragInt("items_count", &items_count, 0.1f, 0, 9999);
                 ImGui::Combo("items_type (first column)", &contents_type, contents_type_names, IM_ARRAYSIZE(contents_type_names));
-                //filter.Draw("filter");
+                //filter.DrawModel("filter");
                 ImGui::TreePop();
             }
 
@@ -5901,7 +5901,7 @@ static void ShowDemoWindowInputs()
 
             ImGui::Button("Drag Me");
             if (ImGui::IsItemActive())
-                ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
+                ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_Button), 4.0f); // DrawModel a line between the button and the mouse cursor
 
             // Drag operations gets "unlocked" when the mouse has moved past a certain threshold
             // (the default threshold is stored in io.MouseDragThreshold). You can request a lower or higher
@@ -6898,7 +6898,7 @@ static void ShowExampleAppConsole(bool* p_open)
 // Usage:
 //  static ExampleAppLog my_log;
 //  my_log.AddLog("Hello %d world\n", 123);
-//  my_log.Draw("title");
+//  my_log.DrawModel("title");
 struct ExampleAppLog
 {
     ImGuiTextBuffer     Buf;
@@ -7029,7 +7029,7 @@ static void ShowExampleAppLog(bool* p_open)
 
     // For the demo: add a debug button _BEFORE_ the normal log window contents
     // We take advantage of a rarely used feature: multiple calls to Begin()/End() are appending to the _same_ window.
-    // Most of the contents of the window will be added by the log.Draw() call.
+    // Most of the contents of the window will be added by the log.DrawModel() call.
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
     ImGui::Begin("Example: Log", p_open);
     IMGUI_DEMO_MARKER("Examples/Log");
@@ -7530,7 +7530,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
             ImGui::PushItemWidth(-ImGui::GetFontSize() * 15);
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
-            // Draw gradients
+            // DrawModel gradients
             // (note that those are currently exacerbating our sRGB/Linear issues)
             // Calling ImGui::GetColorU32() multiplies the given colors by the current Style Alpha, but you may pass the IM_COL32() directly as well..
             ImGui::Text("Gradients");
@@ -7552,7 +7552,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
                 ImGui::InvisibleButton("##gradient2", gradient_size);
             }
 
-            // Draw a bunch of primitives
+            // DrawModel a bunch of primitives
             ImGui::Text("All primitives");
             static float sz = 36.0f;
             static float thickness = 3.0f;
@@ -7655,7 +7655,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
             if (canvas_sz.y < 50.0f) canvas_sz.y = 50.0f;
             ImVec2 canvas_p1 = ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y);
 
-            // Draw border and background color
+            // DrawModel border and background color
             ImGuiIO& io = ImGui::GetIO();
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
             draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));
@@ -7705,7 +7705,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
                 ImGui::EndPopup();
             }
 
-            // Draw grid + all lines in the canvas
+            // DrawModel grid + all lines in the canvas
             draw_list->PushClipRect(canvas_p0, canvas_p1, true);
             if (opt_enable_grid)
             {

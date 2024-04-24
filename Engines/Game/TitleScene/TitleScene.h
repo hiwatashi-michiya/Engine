@@ -23,7 +23,11 @@ public:
 
 	void Update() override;
 
-	void Draw() override;
+	void DrawModel() override;
+
+	void DrawParticle() override;
+
+	void DrawSprite() override;
 
 private:
 

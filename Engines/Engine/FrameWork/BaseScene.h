@@ -10,7 +10,11 @@ public:
 
 	virtual void Update() = 0;
 
-	virtual void Draw() = 0;
+	virtual void DrawModel() = 0;
+
+	virtual void DrawParticle() = 0;
+
+	virtual void DrawSprite() = 0;
 
 	virtual ~BaseScene() = default;
 

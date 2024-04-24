@@ -12,6 +12,11 @@
 void MapEditor::EditTransform()
 {
 
+	//カメラが無い場合、処理をしない
+	if (!camera_) {
+		return;
+	}
+
 	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
 	static bool useSnap = false;
 	static float snap[3] = { 1.f, 1.f, 1.f };
@@ -132,7 +137,7 @@ void MapEditor::Initialize() {
 
 	}
 
-	LoadAllObjFile();
+	LoadAllModelFile();
 
 }
 
@@ -701,7 +706,7 @@ void MapEditor::ChangeMesh(Model* model, const std::string& name) {
 
 }
 
-void MapEditor::LoadAllObjFile() {
+void MapEditor::LoadAllModelFile() {
 
 	meshNames_.clear();
 	meshMap_.clear();
@@ -712,6 +717,25 @@ void MapEditor::LoadAllObjFile() {
 	//検索する拡張子
 	std::string extension = ".obj";
 
+	//ファイル内の.objのファイルを全検索
+	for (const auto& entry : itr) {
+
+		if (std::filesystem::is_regular_file(entry.path()) &&
+			entry.path().extension() == extension) {
+			std::string meshName = entry.path().stem().string();
+			meshNames_.push_back(meshName);
+			meshMap_[meshName] = entry.path().string();
+		}
+
+	}
+
+	//イテレータリセット
+	itr = std::filesystem::recursive_directory_iterator("./Resources");
+
+	//検索する拡張子を.gltfに変更
+	extension = ".gltf";
+
+	//ファイル内の.gltfのファイルを全検索
 	for (const auto& entry : itr) {
 
 		if (std::filesystem::is_regular_file(entry.path()) &&

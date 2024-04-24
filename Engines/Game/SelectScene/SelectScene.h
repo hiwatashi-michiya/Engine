@@ -25,7 +25,11 @@ public:
 
 	void Update() override;
 
-	void Draw() override;
+	void DrawModel() override;
+
+	void DrawParticle() override;
+
+	void DrawSprite() override;
 
 private:
 
@@ -38,7 +42,10 @@ private:
 	Matrix4x4 localMatrix_{};
 
 	std::unique_ptr<Model> model_;
-	std::unique_ptr<Animation> animation_;
+
+	std::unique_ptr<Transform> transform_;
+
+	float speed_ = 1.0f;
 
 	uint32_t test_;
 

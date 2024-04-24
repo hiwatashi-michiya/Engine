@@ -75,8 +75,20 @@ void TitleScene::Update() {
 
 }
 
-void TitleScene::Draw() {
+void TitleScene::DrawModel() {
 
 	model_->Draw(camera_.get());
+
+}
+
+void TitleScene::DrawParticle() {
+
+
+
+}
+
+void TitleScene::DrawSprite() {
+
+
 
 }

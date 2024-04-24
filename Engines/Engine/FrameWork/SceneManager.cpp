@@ -1,5 +1,9 @@
 #include "SceneManager.h"
 #include <cassert>
+#include "base/DirectXSetter.h"
+#include "Model.h"
+#include "Particle3D.h"
+#include "Sprite.h"
 
 SceneManager* SceneManager::GetInstance() {
 	static SceneManager instance;
@@ -30,7 +34,23 @@ void SceneManager::Update() {
 
 void SceneManager::Draw() {
 
-	scene_->Draw();
+	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
+
+	scene_->DrawModel();
+
+	Model::PostDraw();
+
+	Particle3D::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
+
+	scene_->DrawParticle();
+
+	Particle3D::PostDraw();
+
+	Sprite::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
+
+	scene_->DrawSprite();
+
+	Sprite::PostDraw();
 
 }
 

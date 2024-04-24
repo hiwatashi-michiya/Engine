@@ -33,9 +33,11 @@ void SelectScene::Initialize() {
 
 	editor_->SetCamera(camera_.get());
 
-	model_.reset(Model::Create("./Resources/AnimatedCube/AnimatedCube.gltf"));
-	animation_ = std::make_unique<Animation>();
-	*animation_ = LoadAnimationFile("./Resources/AnimatedCube/AnimatedCube.gltf");
+	model_.reset(Model::Create("./Resources/item/item.gltf"));
+	
+	model_->LoadAnimation("./Resources/item/item.gltf");
+
+	transform_ = std::make_unique<Transform>();
 
 	test_ = audioManager_->LoadInMF("./Resources/SE/test.mp3");
 
@@ -51,16 +53,35 @@ void SelectScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
+	ImGui::Begin("Animation");
+	ImGui::DragFloat("animation - Speed", &speed_, 0.01f);
+	ImGui::End();
+
+	ImGui::Begin("transform");
+	ImGui::DragFloat3("scale", &transform_->scale_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &transform_->rotateQuaternion_.x, 0.1f);
+	ImGui::DragFloat3("translation", &transform_->translate_.x, 0.1f);
+	ImGui::End();
 
 #endif // _DEBUG
 
-	animationTime_ += 1.0f / 60.0f;
-	animationTime_ = std::fmod(animationTime_, animation_->duration);
-	NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[model_->mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
-	Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-	Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-	Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-	localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+	if (input_->TriggerKey(DIK_1)) {
+		model_->StartAnimation();
+	}
+
+	if (input_->TriggerKey(DIK_2)) {
+		model_->StopAnimation();
+	}
+
+	if (input_->TriggerKey(DIK_3)) {
+		model_->ResetAnimation();
+	}
+
+	model_->SetAnimationSpeed(speed_);
+
+	transform_->UpdateMatrix();
+
+	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 	editor_->Edit();
 
@@ -73,10 +94,22 @@ void SelectScene::Update() {
 
 }
 
-void SelectScene::Draw() {
+void SelectScene::DrawModel() {
 
 	editor_->Draw(camera_.get());
 
-	model_->Draw(localMatrix_, camera_.get());
+	model_->Draw(camera_.get());
+
+}
+
+void SelectScene::DrawParticle() {
+
+
+
+}
+
+void SelectScene::DrawSprite() {
+
+
 
 }

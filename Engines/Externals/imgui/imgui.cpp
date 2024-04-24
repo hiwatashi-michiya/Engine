@@ -4653,7 +4653,7 @@ static void AddDrawListToDrawData(ImVector<ImDrawList*>* out_list, ImDrawList* d
     if (draw_list->CmdBuffer.Size == 1 && draw_list->CmdBuffer[0].ElemCount == 0 && draw_list->CmdBuffer[0].UserCallback == NULL)
         return;
 
-    // Draw list sanity check. Detect mismatch between PrimReserve() calls and incrementing _VtxCurrentIdx, _VtxWritePtr etc.
+    // DrawModel list sanity check. Detect mismatch between PrimReserve() calls and incrementing _VtxCurrentIdx, _VtxWritePtr etc.
     // May trigger for you if you are using PrimXXX functions incorrectly.
     IM_ASSERT(draw_list->VtxBuffer.Size == 0 || draw_list->_VtxWritePtr == draw_list->VtxBuffer.Data + draw_list->VtxBuffer.Size);
     IM_ASSERT(draw_list->IdxBuffer.Size == 0 || draw_list->_IdxWritePtr == draw_list->IdxBuffer.Data + draw_list->IdxBuffer.Size);
@@ -4772,7 +4772,7 @@ static void ImGui::RenderDimmedBackgroundBehindWindow(ImGuiWindow* window, ImU32
     ImGuiViewportP* viewport = (ImGuiViewportP*)GetMainViewport();
     ImRect viewport_rect = viewport->GetMainRect();
 
-    // Draw behind window by moving the draw command at the FRONT of the draw list
+    // DrawModel behind window by moving the draw command at the FRONT of the draw list
     {
         // We've already called AddWindowToDrawData() which called DrawList->ChannelsMerge() on DockNodeHost windows,
         // and draw list have been trimmed already, hence the explicit recreation of a draw command if missing.
@@ -4821,16 +4821,16 @@ static void ImGui::RenderDimmedBackgrounds()
 
     if (dim_bg_for_modal)
     {
-        // Draw dimming behind modal or a begin stack child, whichever comes first in draw order.
+        // DrawModel dimming behind modal or a begin stack child, whichever comes first in draw order.
         ImGuiWindow* dim_behind_window = FindBottomMostVisibleWindowWithinBeginStack(modal_window);
         RenderDimmedBackgroundBehindWindow(dim_behind_window, GetColorU32(ImGuiCol_ModalWindowDimBg, g.DimBgRatio));
     }
     else if (dim_bg_for_window_list)
     {
-        // Draw dimming behind CTRL+Tab target window
+        // DrawModel dimming behind CTRL+Tab target window
         RenderDimmedBackgroundBehindWindow(g.NavWindowingTargetAnim, GetColorU32(ImGuiCol_NavWindowingDimBg, g.DimBgRatio));
 
-        // Draw border around CTRL+Tab target window
+        // DrawModel border around CTRL+Tab target window
         ImGuiWindow* window = g.NavWindowingTargetAnim;
         ImGuiViewport* viewport = GetMainViewport();
         float distance = g.FontSize;
@@ -4967,7 +4967,7 @@ void ImGui::Render()
             AddDrawListToDrawData(&viewport->DrawDataBuilder.Layers[0], GetBackgroundDrawList(viewport));
     }
 
-    // Draw modal/window whitening backgrounds
+    // DrawModel modal/window whitening backgrounds
     if (first_render_of_frame)
         RenderDimmedBackgrounds();
 
@@ -4986,7 +4986,7 @@ void ImGui::Render()
         if (windows_to_render_top_most[n] && IsWindowActiveAndVisible(windows_to_render_top_most[n])) // NavWindowingTarget is always temporarily displayed as the top-most window
             AddRootWindowToDrawData(windows_to_render_top_most[n]);
 
-    // Draw software mouse cursor if requested by io.MouseDrawCursor flag
+    // DrawModel software mouse cursor if requested by io.MouseDrawCursor flag
     if (g.IO.MouseDrawCursor && first_render_of_frame && g.MouseCursor != ImGuiMouseCursor_None)
         RenderMouseCursor(g.IO.MousePos, g.Style.MouseCursorScale, g.MouseCursor, IM_COL32_WHITE, IM_COL32_BLACK, IM_COL32(0, 0, 0, 48));
 
@@ -5827,8 +5827,8 @@ static void ImGui::RenderWindowOuterBorders(ImGuiWindow* window)
     }
 }
 
-// Draw background and borders
-// Draw and handle scrollbars
+// DrawModel background and borders
+// DrawModel and handle scrollbars
 void ImGui::RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar_rect, bool title_bar_is_highlight, bool handle_borders_and_resize_grips, int resize_grip_count, const ImU32 resize_grip_col[4], float resize_grip_draw_size)
 {
     ImGuiContext& g = *GImGui;
@@ -5839,7 +5839,7 @@ void ImGui::RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar
     IM_ASSERT(window->BeginCount == 0);
     window->SkipItems = false;
 
-    // Draw window + handle manual resize
+    // DrawModel window + handle manual resize
     // As we highlight the title bar when want_focus is set, multiple reappearing windows will have their title bar highlighted on their reappearing frame.
     const float window_rounding = window->WindowRounding;
     const float window_border_size = window->WindowBorderSize;
@@ -13199,7 +13199,7 @@ static void RenderViewportsThumbnails()
     ImGui::Dummy(bb_full.GetSize() * SCALE);
 }
 
-// Draw an arbitrary US keyboard layout to visualize translated keys
+// DrawModel an arbitrary US keyboard layout to visualize translated keys
 void ImGui::DebugRenderKeyboardPreview(ImDrawList* draw_list)
 {
     const ImVec2 key_size = ImVec2(35.0f, 35.0f);
@@ -13955,7 +13955,7 @@ void ImGui::DebugNodeDrawCmdShowMeshAndBoundingBox(ImDrawList* out_draw_list, co
 {
     IM_ASSERT(show_mesh || show_aabb);
 
-    // Draw wire-frame version of all triangles
+    // DrawModel wire-frame version of all triangles
     ImRect clip_rect = draw_cmd->ClipRect;
     ImRect vtxs_rect(FLT_MAX, FLT_MAX, -FLT_MAX, -FLT_MAX);
     ImDrawListFlags backup_flags = out_draw_list->Flags;
@@ -13971,7 +13971,7 @@ void ImGui::DebugNodeDrawCmdShowMeshAndBoundingBox(ImDrawList* out_draw_list, co
         if (show_mesh)
             out_draw_list->AddPolyline(triangle, 3, IM_COL32(255, 255, 0, 255), ImDrawFlags_Closed, 1.0f); // In yellow: mesh triangles
     }
-    // Draw bounding boxes
+    // DrawModel bounding boxes
     if (show_aabb)
     {
         out_draw_list->AddRect(ImFloor(clip_rect.Min), ImFloor(clip_rect.Max), IM_COL32(255, 0, 255, 255)); // In pink: clipping rectangle submitted to GPU
@@ -14044,7 +14044,7 @@ void ImGui::DebugNodeFont(ImFont* font)
             if (!TreeNode((void*)(intptr_t)base, "U+%04X..U+%04X (%d %s)", base, base + 255, count, count > 1 ? "glyphs" : "glyph"))
                 continue;
 
-            // Draw a 16x16 grid of glyphs
+            // DrawModel a 16x16 grid of glyphs
             ImVec2 base_pos = GetCursorScreenPos();
             for (unsigned int n = 0; n < 256; n++)
             {

@@ -859,7 +859,7 @@ namespace ImGui
     // - In the future we will extend this concept further to also represent Platform Monitor and support a "no main platform window" operation mode.
     IMGUI_API ImGuiViewport* GetMainViewport();                                                 // return primary/default viewport. This can never be NULL.
 
-    // Background/Foreground Draw Lists
+    // Background/Foreground DrawModel Lists
     IMGUI_API ImDrawList*   GetBackgroundDrawList();                                            // this draw list will be the first rendered one. Useful to quickly draw shapes/text behind dear imgui contents.
     IMGUI_API ImDrawList*   GetForegroundDrawList();                                            // this draw list will be the last rendered one. Useful to quickly draw shapes/text over dear imgui contents.
 
@@ -1023,8 +1023,8 @@ enum ImGuiInputTextFlags_
 enum ImGuiTreeNodeFlags_
 {
     ImGuiTreeNodeFlags_None                 = 0,
-    ImGuiTreeNodeFlags_Selected             = 1 << 0,   // Draw as selected
-    ImGuiTreeNodeFlags_Framed               = 1 << 1,   // Draw frame with background (e.g. for CollapsingHeader)
+    ImGuiTreeNodeFlags_Selected             = 1 << 0,   // DrawModel as selected
+    ImGuiTreeNodeFlags_Framed               = 1 << 1,   // DrawModel frame with background (e.g. for CollapsingHeader)
     ImGuiTreeNodeFlags_AllowItemOverlap     = 1 << 2,   // Hit testing to allow subsequent widgets to overlap this one
     ImGuiTreeNodeFlags_NoTreePushOnOpen     = 1 << 3,   // Don't do a TreePush() when open (e.g. for CollapsingHeader) = no extra indent nor pushing on ID stack
     ImGuiTreeNodeFlags_NoAutoOpenOnLog      = 1 << 4,   // Don't automatically and temporarily open node when Logging is active (by default logging will automatically open tree nodes)
@@ -1153,15 +1153,15 @@ enum ImGuiTableFlags_
     ImGuiTableFlags_ContextMenuInBody          = 1 << 5,   // Right-click on columns body/contents will display table context menu. By default it is available in TableHeadersRow().
     // Decorations
     ImGuiTableFlags_RowBg                      = 1 << 6,   // Set each RowBg color with ImGuiCol_TableRowBg or ImGuiCol_TableRowBgAlt (equivalent of calling TableSetBgColor with ImGuiTableBgFlags_RowBg0 on each row manually)
-    ImGuiTableFlags_BordersInnerH              = 1 << 7,   // Draw horizontal borders between rows.
-    ImGuiTableFlags_BordersOuterH              = 1 << 8,   // Draw horizontal borders at the top and bottom.
-    ImGuiTableFlags_BordersInnerV              = 1 << 9,   // Draw vertical borders between columns.
-    ImGuiTableFlags_BordersOuterV              = 1 << 10,  // Draw vertical borders on the left and right sides.
-    ImGuiTableFlags_BordersH                   = ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_BordersOuterH, // Draw horizontal borders.
-    ImGuiTableFlags_BordersV                   = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuterV, // Draw vertical borders.
-    ImGuiTableFlags_BordersInner               = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersInnerH, // Draw inner borders.
-    ImGuiTableFlags_BordersOuter               = ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersOuterH, // Draw outer borders.
-    ImGuiTableFlags_Borders                    = ImGuiTableFlags_BordersInner | ImGuiTableFlags_BordersOuter,   // Draw all borders.
+    ImGuiTableFlags_BordersInnerH              = 1 << 7,   // DrawModel horizontal borders between rows.
+    ImGuiTableFlags_BordersOuterH              = 1 << 8,   // DrawModel horizontal borders at the top and bottom.
+    ImGuiTableFlags_BordersInnerV              = 1 << 9,   // DrawModel vertical borders between columns.
+    ImGuiTableFlags_BordersOuterV              = 1 << 10,  // DrawModel vertical borders on the left and right sides.
+    ImGuiTableFlags_BordersH                   = ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_BordersOuterH, // DrawModel horizontal borders.
+    ImGuiTableFlags_BordersV                   = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuterV, // DrawModel vertical borders.
+    ImGuiTableFlags_BordersInner               = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersInnerH, // DrawModel inner borders.
+    ImGuiTableFlags_BordersOuter               = ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersOuterH, // DrawModel outer borders.
+    ImGuiTableFlags_Borders                    = ImGuiTableFlags_BordersInner | ImGuiTableFlags_BordersOuter,   // DrawModel all borders.
     ImGuiTableFlags_NoBordersInBody            = 1 << 11,  // [ALPHA] Disable vertical borders in columns Body (borders will always appear in Headers). -> May move to style
     ImGuiTableFlags_NoBordersInBodyUntilResize = 1 << 12,  // [ALPHA] Disable vertical borders in columns Body until hovered for resize (borders will always appear in Headers). -> May move to style
     // Sizing Policy (read above for defaults)
@@ -2411,9 +2411,9 @@ struct ImColor
 #define IM_DRAWLIST_TEX_LINES_WIDTH_MAX     (63)
 #endif
 
-// ImDrawCallback: Draw callbacks for advanced uses [configurable type: override in imconfig.h]
+// ImDrawCallback: DrawModel callbacks for advanced uses [configurable type: override in imconfig.h]
 // NB: You most likely do NOT need to use draw callbacks just to create your own widget or customized UI rendering,
-// you can poke into the draw list for that! Draw callback may be useful for example to:
+// you can poke into the draw list for that! DrawModel callback may be useful for example to:
 //  A) Change your GPU render state,
 //  B) render a complex 3D scene inside a UI element without an intermediate texture/render target, etc.
 // The expected behavior from your rendering function is 'if (cmd.UserCallback != NULL) { cmd.UserCallback(parent_list, cmd); } else { RenderTriangles() }'
@@ -2422,7 +2422,7 @@ struct ImColor
 typedef void (*ImDrawCallback)(const ImDrawList* parent_list, const ImDrawCmd* cmd);
 #endif
 
-// Special Draw callback value to request renderer backend to reset the graphics/render state.
+// Special DrawModel callback value to request renderer backend to reset the graphics/render state.
 // The renderer backend needs to handle this special value, otherwise it will crash trying to call a function at this address.
 // This is useful for example if you submitted callbacks which you know have altered the render state and you want it to be restored.
 // It is not done by default because they are many perfectly useful way of altering render state for imgui contents (e.g. changing shader/blending settings before an Image call).
@@ -2487,7 +2487,7 @@ struct ImDrawListSplitter
 {
     int                         _Current;    // Current channel number (0)
     int                         _Count;      // Number of active channels (1+)
-    ImVector<ImDrawChannel>     _Channels;   // Draw channels (not resized down so _Count might be < Channels.Size)
+    ImVector<ImDrawChannel>     _Channels;   // DrawModel channels (not resized down so _Count might be < Channels.Size)
 
     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
     inline ~ImDrawListSplitter() { ClearFreeMemory(); }
@@ -2529,7 +2529,7 @@ enum ImDrawListFlags_
     ImDrawListFlags_AllowVtxOffset          = 1 << 3,  // Can emit 'VtxOffset > 0' to allow large meshes. Set when 'ImGuiBackendFlags_RendererHasVtxOffset' is enabled.
 };
 
-// Draw command list
+// DrawModel command list
 // This is the low-level list of polygons that ImGui:: functions are filling. At the end of the frame,
 // all command lists are passed to your ImGuiIO::RenderDrawListFn function for rendering.
 // Each dear imgui window contains its own ImDrawList. You can use ImGui::GetWindowDrawList() to
@@ -2541,7 +2541,7 @@ enum ImDrawListFlags_
 struct ImDrawList
 {
     // This is what you have to render
-    ImVector<ImDrawCmd>     CmdBuffer;          // Draw commands. Typically 1 command = 1 GPU draw call, unless the command is a callback.
+    ImVector<ImDrawCmd>     CmdBuffer;          // DrawModel commands. Typically 1 command = 1 GPU draw call, unless the command is a callback.
     ImVector<ImDrawIdx>     IdxBuffer;          // Index buffer. Each command consume ImDrawCmd::ElemCount of those
     ImVector<ImDrawVert>    VtxBuffer;          // Vertex buffer.
     ImDrawListFlags         Flags;              // Flags, you may poke into these to adjust anti-aliasing settings per-primitive.

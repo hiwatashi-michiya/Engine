@@ -26,35 +26,14 @@ public:
 
 	void Update() override;
 
-	void Draw() override;
+	void DrawModel() override;
 
-	enum Scene {
-		kTitle,
-		kSelect,
-		kGame
-	};
+	void DrawParticle() override;
+
+	void DrawSprite() override;
 
 private:
 
-	void TitleUpdate();
-
-	void SelectUpdate();
-
-	void GameUpdate();
-
-	void TitleInitialize();
-
-	void SelectInitialize();
-
-	void GameInitialize();
-
-	void TitleDraw();
-
-	void SelectDraw();
-
-	void GameDraw();
-
-	void SceneChange();
 
 private:
 
@@ -64,75 +43,9 @@ private:
 	GlobalVariables* gv_ = nullptr;
 	MapEditor* mapEditor_ = nullptr;
 
-	std::unique_ptr<Camera> camera_;	
+	std::unique_ptr<Camera> camera_;
 
-	std::unique_ptr<Stage> stage_;
-
-	std::unique_ptr<Model> skydome_;
-
-	std::unique_ptr<Transform> skydomeTransform_;
-
-	Scene currentScene_ = kTitle;
-
-	Scene nextScene_ = kTitle;
-
-	bool isInitialize_ = false;
-
-	bool isSceneChange_ = false;
-
-	//ゲーム中クリアしたかどうか
-	bool isClear_ = false;
-
-	const uint32_t kMaxStage_ = 3;
-
-	uint32_t stageNumber_ = 1;
-
-	Texture* blackTex_ = nullptr;
-
-	std::unique_ptr<Sprite> fade_;
-
-	Texture* stage1Tex_;
-	Texture* stage2Tex_;
-	Texture* stage3Tex_;
-	Texture* selectTileTex_;
-
-	Texture* push_A_Tex_;
-	Texture* moveTex_;
-	Texture* selectTex_;
-	Texture* stageSelectTex_;
-	Texture* stageClearTex_;
-	Texture* titleTex_;
-	Texture* backTex_;
-	Texture* resetTex_;
-
-	Texture* particleTex_;
-
-	std::unique_ptr<Particle> particle_;
-
-	std::array<std::unique_ptr<Model>, 10> blockModels_;
-	std::array<std::unique_ptr<Transform>, 10> blockTransforms_;
-
-	std::unique_ptr<Sprite> stage1Sprite_;
-	std::unique_ptr<Sprite> stage2Sprite_;
-	std::unique_ptr<Sprite> stage3Sprite_;
-	std::unique_ptr<Sprite> selectTileSprite_;
-
-	std::unique_ptr<Sprite> push_A_Sprite_;
-	std::unique_ptr<Sprite> moveSprite_;
-	std::unique_ptr<Sprite> selectSprite_;
-	std::unique_ptr<Sprite> stageSelectSprite_;
-	std::unique_ptr<Sprite> stageClearSprite_;
-	std::unique_ptr<Sprite> titleSprite_;
-	std::unique_ptr<Sprite> backSprite_;
-	std::unique_ptr<Sprite> resetSprite_;
-
-	uint32_t bgm1_;
-	uint32_t bgm2_;
-	uint32_t bgm3_;
-	uint32_t select1_;
-	uint32_t select2_;
-
-	int32_t frameCount_ = 0;
+	std::shared_ptr<Player> player_;
 
 };
 

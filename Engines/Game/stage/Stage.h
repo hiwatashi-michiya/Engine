@@ -1,10 +1,9 @@
 #pragma once
 #include "Engine/3d/Model.h"
 #include <memory>
-#include "Game/player/Player.h"
+#include "Game/Player/Player.h"
 #include <string>
-#include "Game/block/Block.h"
-#include "Game/goal/Goal.h"
+#include "Game/Block/Block.h"
 
 class Stage
 {
@@ -28,7 +27,7 @@ public:
 
 private:
 
-	void CheckRockBlock(std::shared_ptr<Block> checkBlock, uint32_t num);
+
 
 private:
 
@@ -55,15 +54,11 @@ private:
 
 	};
 
-	uint32_t goalSE_;
-
 	std::unique_ptr<Player> player_;
 
 	std::list<std::shared_ptr<MapObject>> mapObjData_;
 
 	std::list<std::shared_ptr<Block>> blocks_;
-
-	std::list<std::shared_ptr<Goal>> goals_;
 
 };
 
