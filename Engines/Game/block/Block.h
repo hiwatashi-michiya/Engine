@@ -35,7 +35,7 @@ private:
 
 	AABB collision_;
 
-	float pLightIntencity_ = 0.5f;
+	float pLightIntensity_ = 0.5f;
 
 	int32_t lightCount_ = 0;
 

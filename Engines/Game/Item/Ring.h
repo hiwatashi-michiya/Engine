@@ -18,10 +18,12 @@ public:
 
 	bool GetIsVanish() const { return isVanish_; }
 
+	bool GetIsObtained() const { return isObtained_; }
+
 	const AABB& GetCollision() { return collision_; }
 
 	//ゲットされた時に呼び出される関数
-	void Obtained() { isGet_ = true; }
+	void Obtained();
 
 private:
 
@@ -32,7 +34,7 @@ private:
 	std::unique_ptr<Transform> transform_;
 
 	//取得されたフラグ
-	bool isGet_ = false;
+	bool isObtained_ = false;
 
 	//リングが消えるフラグ
 	bool isVanish_ = false;

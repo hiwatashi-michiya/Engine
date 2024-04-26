@@ -30,10 +30,43 @@ void Player::Initialize() {
 
 void Player::Update() {
 
-	if (input_->PushButton(Input::UP)) {
+#ifdef _DEBUG
 
-		transform_->translate_.z += 1.0f;
+	ImGui::Begin("Player");
+	ImGui::Text("velocity \nx : %1.3f \ny : %1.3f \nz : %1.3f", velocity_.x, velocity_.y, velocity_.z);
+	ImGui::End();
 
+#endif // _DEBUG
+
+
+	if (fabsf(input_->GetStickValue(Input::LX)) > 0) {
+
+		velocity_.x = input_->GetStickValue(Input::LX);
+
+	}
+	else {
+		velocity_.x = 0.0f;
+	}
+
+	if (fabsf(input_->GetStickValue(Input::LY)) > 0) {
+
+		velocity_.z = input_->GetStickValue(Input::LY);
+
+	}
+	else {
+		velocity_.z = 0.0f;
+	}
+
+	//一旦正規化
+	velocity_ = Normalize(velocity_) * speed_;
+
+	
+
+	//速度加算
+	transform_->translate_ += velocity_;
+
+	if (transform_->translate_.y < -30.0f) {
+		transform_->translate_ = { 0.0f,10.0f,0.0f };
 	}
 
 	collision_.max = transform_->translate_ + transform_->scale_;

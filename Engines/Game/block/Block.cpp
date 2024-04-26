@@ -22,12 +22,12 @@ void Block::Update() {
 	//光源の点滅
 	if (lightCount_ <= 0) {
 
-		if (pLightIntencity_ > 0.5f) {
+		if (pLightIntensity_ > 0.5f) {
 
-			pLightIntencity_ -= 0.01f;
+			pLightIntensity_ -= 0.01f;
 
-			if (pLightIntencity_ < 0.5f) {
-				pLightIntencity_ = 0.5f;
+			if (pLightIntensity_ < 0.5f) {
+				pLightIntensity_ = 0.5f;
 			}
 
 		}
@@ -35,12 +35,12 @@ void Block::Update() {
 	}
 	else if (lightCount_ > 0) {
 
-		if (pLightIntencity_ < 1.0f) {
+		if (pLightIntensity_ < 1.0f) {
 
-			pLightIntencity_ += 0.01f;
+			pLightIntensity_ += 0.01f;
 
-			if (pLightIntencity_ > 1.0f) {
-				pLightIntencity_ = 1.0f;
+			if (pLightIntensity_ > 1.0f) {
+				pLightIntensity_ = 1.0f;
 			}
 
 		}
@@ -65,7 +65,7 @@ void Block::Update() {
 	collision_.max = transform_->translate_ + transform_->scale_ / 2.0f;
 	collision_.min = transform_->translate_ - transform_->scale_ / 2.0f;
 
-	model_->material_->pLightMap_->intensity = pLightIntencity_;
+	model_->material_->pLightMap_->intensity = pLightIntensity_;
 
 	transform_->UpdateMatrix();
 

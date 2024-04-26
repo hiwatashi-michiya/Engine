@@ -10,6 +10,7 @@ class Input
 {
 public:
 
+	//押し込みボタン
 	enum Button {
 		A = XINPUT_GAMEPAD_A,
 		B = XINPUT_GAMEPAD_B,
@@ -25,6 +26,13 @@ public:
 		LThumb = XINPUT_GAMEPAD_LEFT_THUMB,
 		START = XINPUT_GAMEPAD_START,
 		BACK = XINPUT_GAMEPAD_BACK,
+	};
+
+	enum Stick {
+		LX,
+		LY,
+		RX,
+		RY,
 	};
 
 	static Input* GetInstance();
@@ -58,6 +66,9 @@ public:
 
 	//コントローラーが繋がれているか
 	bool GetIsGamepad() { return isGetController_; }
+
+	//スティックのそれぞれの値を取得
+	SHORT GetStickValue(Stick stick);
 
 private:
 

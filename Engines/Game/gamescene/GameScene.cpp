@@ -10,7 +10,7 @@
 GameScene::GameScene()
 {
 
-	skyDome_.reset(Model::Create("./Resources/skydome/skydome.obj"));
+	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
 
 }
 
@@ -30,12 +30,15 @@ void GameScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,44.0f, -33.0f };
+	camera_->position_ = { 0.0f,90.0f, -60.0f };
 	camera_->rotation_.x = 0.9f;
 	mapEditor_->SetCamera(camera_.get());
 
 	skyDomeTransform_ = std::make_unique<Transform>();
-	skyDomeTransform_->scale_ = { 100.0f,100.0f,100.0f };
+	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
+	skyDome_->material_->pLightMap_->radius = 650.0f;
+	skyDome_->material_->pLightMap_->intensity = 1.50f;
+	skyDome_->material_->pLightMap_->decay = 0.5f;
 
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
@@ -52,6 +55,8 @@ void GameScene::Update() {
 	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
+
+	skyDome_->ImGuiUpdate("skyDome");
 
 	mapEditor_->Edit();
 

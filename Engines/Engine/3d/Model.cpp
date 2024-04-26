@@ -337,6 +337,41 @@ void Model::ResetAnimation() {
 
 }
 
+void Model::UpdateAnimation() {
+
+	isEndAnimation_ = false;
+
+	//アニメーションが存在していて、再生フラグが立っている時
+	if (animation_ && isStartAnimation_ && animation_->nodeAnimations.size() != 0) {
+
+		//現在のアニメーションタイムをアニメーション速度分加算
+		animationTime_ += animationSpeed_ / 60.0f;
+
+		//アニメーションタイムが全体の尺を超えていたら終点とみなす
+		if (animationTime_ >= animation_->duration) {
+			
+			animationTime_ = animation_->duration;
+
+			//ループしなければフラグを降ろす
+			if (!isLoop_) {
+				isStartAnimation_ = false;
+			}
+
+			isEndAnimation_ = true;
+		}
+
+		//アニメーションの時間調整
+		animationTime_ = std::fmod(animationTime_, animation_->duration);
+		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
+		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+
+	}
+
+}
+
 void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	assert(commandList_ == nullptr);
@@ -359,19 +394,6 @@ void Model::PostDraw() {
 void Model::Draw(Camera* camera) {
 
 	Matrix4x4 worldViewProjectionMatrix;
-
-	//アニメーションが存在していて、再生フラグが立っている時
-	if (animation_ && isStartAnimation_ && animation_->nodeAnimations.size() != 0) {
-
-		animationTime_ += animationSpeed_ / 60.0f;
-		animationTime_ = std::fmod(animationTime_, animation_->duration);
-		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
-		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
-
-	}
 
 	worldViewProjectionMatrix = localMatrix_ * worldMatrix_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;

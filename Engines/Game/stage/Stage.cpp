@@ -53,7 +53,7 @@ void Stage::Update() {
 
 		ring->Update();
 
-		if (IsCollision(ring->GetCollision(), player_->GetCollision())) {
+		if (!ring->GetIsObtained() && IsCollision(ring->GetCollision(), player_->GetCollision())) {
 
 			ring->Obtained();
 

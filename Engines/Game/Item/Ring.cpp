@@ -18,26 +18,30 @@ void Ring::Initialize(const Vector3& position) {
 	collision_.max = transform_->translate_ + transform_->scale_;
 	collision_.min = transform_->translate_ - transform_->scale_;
 
-	model_->StartAnimation();
+	model_->StartAnimation(true);
+
+}
+
+void Ring::Obtained() {
+
+	isObtained_ = true;
+	model_->LoadAnimation("./Resources/item/item_2.gltf");
+	model_->ResetAnimation();
+	model_->SetIsLoop(false);
+	model_->SetAnimationSpeed(5.0f);
 
 }
 
 void Ring::Update() {
 
-	//ゲットした時の演出処理
-	if (isGet_ && transform_->scale_.x > 0.0f) {
+	model_->UpdateAnimation();
 
-		model_->SetAnimationSpeed(20.0f);
+	//ゲットした演出アニメーションを終えたら破壊
+	if (isObtained_ && model_->IsEndAnimation()) {
 
-		transform_->scale_ -= {0.03f, 0.03f, 0.03f};
+		transform_->scale_ = Vector3::Zero();
 
-		if (transform_->scale_.x < 0.0f) {
-			transform_->scale_ = Vector3::Zero();
-		}
-
-		if (transform_->scale_.x <= 0.0f) {
-			isVanish_ = true;
-		}
+		isVanish_ = true;
 
 	}
 

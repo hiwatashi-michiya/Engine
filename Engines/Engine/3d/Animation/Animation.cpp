@@ -74,6 +74,8 @@ Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time
 
 		MessageBox(NULL, L"keyframe is empty", L"Animation - CalculateValue(Vector3)", MB_OK);
 
+		return Vector3::Identity();
+
 		assert(false);
 
 	}
@@ -107,6 +109,8 @@ Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, floa
 	if (keyframes.empty()) {
 
 		MessageBox(NULL, L"keyframe is empty", L"Animation - CalculateValue(Quaternion)", MB_OK);
+
+		return IdentityQuaternion();
 
 		assert(false);
 

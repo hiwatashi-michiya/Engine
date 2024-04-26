@@ -73,14 +73,26 @@ public:
 
 	void LoadAnimation(const std::string& filename);
 
-	//アニメーション開始
-	void StartAnimation() { isStartAnimation_ = true; }
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	/// <param name="isLoop">ループするかどうか</param>
+	void StartAnimation(bool isLoop = false) { 
+		isStartAnimation_ = true;
+		isLoop_ = isLoop;
+	}
 	//アニメーション一時停止
 	void StopAnimation() { isStartAnimation_ = false; }
 	//アニメーションのリセット
 	void ResetAnimation();
 	//アニメーション速度変更
 	void SetAnimationSpeed(float speed) { animationSpeed_ = speed; }
+	//アニメーション更新処理
+	void UpdateAnimation();
+	//アニメーションの終わりかどうか
+	bool IsEndAnimation() const { return isEndAnimation_; }
+	//アニメーションのループフラグを設定
+	void SetIsLoop(bool flag) { isLoop_ = flag; }
 
 	Matrix4x4 worldMatrix_;
 
@@ -136,6 +148,12 @@ private:
 
 	//アニメーション管理フラグ
 	bool isStartAnimation_ = false;
+
+	//ループ管理フラグ
+	bool isLoop_ = false;
+
+	//アニメーションの終点に到達したかどうか
+	bool isEndAnimation_ = false;
 
 	//アニメーションのマトリックス
 	Matrix4x4 localMatrix_;

@@ -41,5 +41,9 @@ private:
 
 	AABB collision_{};
 
+	Vector3 velocity_{};
+
+	float speed_ = 0.2f;
+
 };
 
