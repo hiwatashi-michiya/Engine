@@ -25,6 +25,8 @@ public:
 
 	const Vector3& GetPosition() { return transform_->translate_; }
 
+	const Vector3& GetScale() { return transform_->scale_; }
+
 	const AABB& GetCollision() { return collision_; }
 
 private:

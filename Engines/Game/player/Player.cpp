@@ -57,10 +57,27 @@ void Player::Update() {
 		velocity_.z = 0.0f;
 	}
 
-	//一旦正規化
-	velocity_ = Normalize(velocity_) * speed_;
+	velocity_ = Normalize(velocity_);
 
-	
+	velocity_.y -= 0.5f;
+
+	velocity_ *= speed_;
+
+	Vector3 moveXZ = { velocity_.x, 0.0f, velocity_.z };
+
+	//回転処理
+	if (fabsf(Length(moveXZ)) > 0.00001f) {
+
+		//一旦正規化
+		moveXZ = Normalize(moveXZ);
+
+		Vector3 tmp = ConjuGate(transform_->rotateQuaternion_) * moveXZ;
+
+		Quaternion diff = MakeRotateAxisAngleQuaternion(Normalize(Cross({0.0f,0.0f,1.0f}, Normalize(tmp))), std::acos(Dot({0.0f,0.0f,1.0f}, Normalize(tmp))));
+
+		transform_->rotateQuaternion_ = Slerp(IdentityQuaternion(), diff, 0.5f) * transform_->rotateQuaternion_;
+
+	}
 
 	//速度加算
 	transform_->translate_ += velocity_;

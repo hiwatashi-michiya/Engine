@@ -25,6 +25,8 @@ public:
 	//ゲットされた時に呼び出される関数
 	void Obtained();
 
+	void PlaySE();
+
 private:
 
 	AABB collision_{};
@@ -38,6 +40,8 @@ private:
 
 	//リングが消えるフラグ
 	bool isVanish_ = false;
+
+	uint32_t getSE_;
 
 };
 

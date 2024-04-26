@@ -42,6 +42,11 @@ void Stage::Update() {
 
 		if (IsCollision(block->GetCollision(), player_->GetCollision())) {
 
+			if (block->GetPosition().y < player_->GetPosition().y) {
+				player_->SetPosition({ player_->GetPosition().x, block->GetPosition().y +
+					block->GetScale().y + player_->GetScale().y, player_->GetPosition().z});
+				player_->SetVelocityY(0.0f);
+			}
 
 		}
 
@@ -56,6 +61,7 @@ void Stage::Update() {
 		if (!ring->GetIsObtained() && IsCollision(ring->GetCollision(), player_->GetCollision())) {
 
 			ring->Obtained();
+			ring->PlaySE();
 
 		}
 

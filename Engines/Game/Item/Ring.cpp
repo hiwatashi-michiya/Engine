@@ -1,4 +1,5 @@
 #include "Ring.h"
+#include "Audio/AudioManager.h"
 
 Ring::Ring()
 {
@@ -20,6 +21,8 @@ void Ring::Initialize(const Vector3& position) {
 
 	model_->StartAnimation(true);
 
+	getSE_ = AudioManager::GetInstance()->LoadInMF("./Resources/SE/ring_get.mp3");
+
 }
 
 void Ring::Obtained() {
@@ -29,6 +32,12 @@ void Ring::Obtained() {
 	model_->ResetAnimation();
 	model_->SetIsLoop(false);
 	model_->SetAnimationSpeed(5.0f);
+
+}
+
+void Ring::PlaySE() {
+
+	AudioManager::GetInstance()->Play(getSE_, 0.8f);
 
 }
 

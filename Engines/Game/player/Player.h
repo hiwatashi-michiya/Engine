@@ -25,6 +25,12 @@ public:
 
 	const AABB& GetCollision() { return collision_; }
 
+	const Vector3& GetPosition() { return transform_->translate_; }
+
+	const Vector3& GetScale() { return transform_->scale_; }
+
+	void SetVelocityY(float speed) { velocity_.y = speed; }
+
 private:
 
 private:
@@ -43,7 +49,7 @@ private:
 
 	Vector3 velocity_{};
 
-	float speed_ = 0.2f;
+	float speed_ = 0.4f;
 
 };
 

@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,90.0f, -60.0f };
+	camera_->position_ = { 0.0f,50.0f, -40.0f };
 	camera_->rotation_.x = 0.9f;
 	mapEditor_->SetCamera(camera_.get());
 
@@ -56,9 +56,19 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	skyDome_->ImGuiUpdate("skyDome");
+	/*skyDome_->ImGuiUpdate("skyDome");*/
 
-	mapEditor_->Edit();
+	ImGui::Begin("manual");
+	ImGui::Text("Move : Left Stick");
+	ImGui::Text("Reset : R key");
+	ImGui::End();
+
+	if (input_->TriggerKey(DIK_R)) {
+		stage_->Initialize();
+		stage_->LoadStage(1);
+	}
+
+	/*mapEditor_->Edit();*/
 
 #endif // _DEBUG
 
@@ -76,7 +86,7 @@ void GameScene::DrawModel() {
 
 	skyDome_->Draw(camera_.get());
 
-	mapEditor_->Draw(camera_.get());
+	/*mapEditor_->Draw(camera_.get());*/
 
 	stage_->Draw(camera_.get());
 
