@@ -458,9 +458,9 @@ Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t) {
 
 Vector3 operator*(const Quaternion& q, const Vector3& v) {
 
-	Quaternion vector = { v.x, v.y, v.z, 0.0f };
+	Quaternion tmpQ = { v.x, v.y, v.z, 0.0f };
 
-	Quaternion newQuaternion = q * vector * Inverse(q);
+	Quaternion newQuaternion = q * tmpQ * Inverse(q);
 
 	return { newQuaternion.x ,newQuaternion.y, newQuaternion.z };
 
