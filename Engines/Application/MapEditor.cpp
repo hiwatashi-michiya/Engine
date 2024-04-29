@@ -12,6 +12,11 @@
 void MapEditor::EditTransform()
 {
 
+#ifdef _DEBUG
+
+
+
+
 	//カメラが無い場合、処理をしない
 	if (!camera_) {
 		return;
@@ -112,6 +117,8 @@ void MapEditor::EditTransform()
 
 	}
 
+#endif // _DEBUG
+
 }
 
 MapEditor* MapEditor::GetInstance() {
@@ -142,6 +149,8 @@ void MapEditor::Initialize() {
 }
 
 void MapEditor::Edit() {
+
+#ifdef _DEBUG
 
 	mapObjData_.remove_if([](auto& object) {
 
@@ -284,6 +293,8 @@ void MapEditor::Edit() {
 	}
 
 	ImGui::End();
+
+#endif // _DEBUG
 
 }
 
