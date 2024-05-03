@@ -79,7 +79,7 @@ private:
 
 	void ChangeMesh(Model* model, const std::string& name);
 
-	void LoadAllObjFile();
+	void LoadAllModelFile();
 
 	void EditTransform();
 

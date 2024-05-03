@@ -9,15 +9,7 @@ public:
 	Block();
 	~Block();
 
-	enum Color {
-		kNone,
-		kRed,
-		kGreen,
-		kBlue,
-		kYellow
-	};
-
-	void Initialize(const Color& color);
+	void Initialize();
 
 	void Update();
 
@@ -33,13 +25,9 @@ public:
 
 	const Vector3& GetPosition() { return transform_->translate_; }
 
-	void SetIsRock(bool flag) { isRock_ = flag; }
-
-	bool GetIsRock() { return isRock_; }
+	const Vector3& GetScale() { return transform_->scale_; }
 
 	const AABB& GetCollision() { return collision_; }
-
-	const Color& GetColor() { return color_; }
 
 private:
 
@@ -49,11 +37,7 @@ private:
 
 	AABB collision_;
 
-	bool isRock_ = false;
-
-	Color color_;
-
-	float pLightIntencity_ = 0.5f;
+	float pLightIntensity_ = 0.5f;
 
 	int32_t lightCount_ = 0;
 

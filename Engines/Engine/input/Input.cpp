@@ -112,7 +112,7 @@ bool Input::GetJoyState(int32_t No, XINPUT_STATE& joyState) {
 
 }
 
-bool Input::PushButton(UINT button) {
+bool Input::PushButton(Button button) {
 
 	if (isGetController_) {
 
@@ -126,7 +126,7 @@ bool Input::PushButton(UINT button) {
 
 }
 
-bool Input::TriggerButton(UINT button) {
+bool Input::TriggerButton(Button button) {
 
 	if (isGetController_) {
 
@@ -140,7 +140,7 @@ bool Input::TriggerButton(UINT button) {
 
 }
 
-bool Input::ReleaseButton(UINT button) {
+bool Input::ReleaseButton(Button button) {
 
 	if (isGetController_) {
 
@@ -168,5 +168,31 @@ void Input::CalcDeadZone() {
 	if (fabsf(joyState_.Gamepad.sThumbRY) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
 		joyState_.Gamepad.sThumbRY = 0;
 	}
+
+}
+
+SHORT Input::GetStickValue(Stick stick) {
+
+	//いずれかのスティックの値を返す
+	switch (stick)
+	{
+	case Input::LX:
+		return joyState_.Gamepad.sThumbLX;
+		break;
+	case Input::LY:
+		return joyState_.Gamepad.sThumbLY;
+		break;
+	case Input::RX:
+		return joyState_.Gamepad.sThumbRX;
+		break;
+	case Input::RY:
+		return joyState_.Gamepad.sThumbRY;
+		break;
+	default:
+		return 0;
+		break;
+	}
+
+	return 0;
 
 }

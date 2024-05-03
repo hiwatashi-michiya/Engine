@@ -10,7 +10,7 @@ public:
 
 	static void StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device);
 
-	Material* Create(const std::string& filename);
+	Material* Create();
 	
 	//マテリアルファイル読み込み
 	void LoadMaterialTemplateFile(const std::string& filename);

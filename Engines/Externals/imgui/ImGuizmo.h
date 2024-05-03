@@ -29,7 +29,7 @@
 // 2016/09/11 Behind camera culling. Scaling Delta matrix not multiplied by source matrix scales. local/world rotation and translation fixed. Display message is incorrect (X: ... Y:...) in local mode.
 // 2016/09/09 Hatched negative axis. Snapping. Documentation update.
 // 2016/09/04 Axis switch and translation plan autohiding. Scale transform stability improved
-// 2016/09/01 Mogwai changed to Manipulate. Draw debug cube. Fixed inverted scale. Mixing scale and translation/rotation gives bad results.
+// 2016/09/01 Mogwai changed to Manipulate. DrawModel debug cube. Fixed inverted scale. Mixing scale and translation/rotation gives bad results.
 // 2016/08/31 First version
 //
 // -------------------------------------------------------------------------------------------

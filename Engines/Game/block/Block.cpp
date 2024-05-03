@@ -11,32 +11,7 @@ Block::~Block()
 {
 }
 
-void Block::Initialize(const Color& color) {
-
-	color_ = color;
-
-	if (color_ == kNone) {
-		isRock_ = true;
-	}
-	else {
-
-		if (color_ == kRed) {
-			model_->material_->constMap_->color = { 1.0f,0.3f,0.3f,1.0f };
-		}
-
-		if (color_ == kGreen) {
-			model_->material_->constMap_->color = { 0.3f,1.0f,0.3f,1.0f };
-		}
-
-		if (color_ == kBlue) {
-			model_->material_->constMap_->color = { 0.3f,0.3f,1.0f,1.0f };
-		}
-
-		if (color_ == kYellow) {
-			model_->material_->constMap_->color = { 1.0f,1.0f,0.3f,1.0f };
-		}
-
-	}
+void Block::Initialize() {
 
 	setCount_ = (rand() % 10) * 5 + 10;
 
@@ -47,12 +22,12 @@ void Block::Update() {
 	//光源の点滅
 	if (lightCount_ <= 0) {
 
-		if (pLightIntencity_ > 0.5f) {
+		if (pLightIntensity_ > 0.5f) {
 
-			pLightIntencity_ -= 0.01f;
+			pLightIntensity_ -= 0.01f;
 
-			if (pLightIntencity_ < 0.5f) {
-				pLightIntencity_ = 0.5f;
+			if (pLightIntensity_ < 0.5f) {
+				pLightIntensity_ = 0.5f;
 			}
 
 		}
@@ -60,12 +35,12 @@ void Block::Update() {
 	}
 	else if (lightCount_ > 0) {
 
-		if (pLightIntencity_ < 1.0f) {
+		if (pLightIntensity_ < 1.0f) {
 
-			pLightIntencity_ += 0.01f;
+			pLightIntensity_ += 0.01f;
 
-			if (pLightIntencity_ > 1.0f) {
-				pLightIntencity_ = 1.0f;
+			if (pLightIntensity_ > 1.0f) {
+				pLightIntensity_ = 1.0f;
 			}
 
 		}
@@ -87,15 +62,10 @@ void Block::Update() {
 
 	}
 
-	collision_.max = transform_->translate_ + transform_->scale_ / 2.0f;
-	collision_.min = transform_->translate_ - transform_->scale_ / 2.0f;
+	collision_.max = transform_->translate_ + transform_->scale_;
+	collision_.min = transform_->translate_ - transform_->scale_;
 
-	model_->material_->pLightMap_->intensity = pLightIntencity_;
-
-	//ゴールに入った特定の色ブロックを光らせる
-	if (color_ != kNone && isRock_) {
-		model_->material_->pLightMap_->intensity = 2.5f;
-	}
+	model_->material_->pLightMap_->intensity = pLightIntensity_;
 
 	transform_->UpdateMatrix();
 

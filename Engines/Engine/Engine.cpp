@@ -117,17 +117,9 @@ void Engine::BeginFrame() {
 
 	Input::GetInstance()->Update();
 
-	Model::PreDraw(dxSetter_->GetCommandList());
-	Particle3D::PreDraw(dxSetter_->GetCommandList());
-	Sprite::PreDraw(dxSetter_->GetCommandList());
-
 }
 
 void Engine::EndFrame() {
-
-	Model::PostDraw();
-	Particle3D::PostDraw();
-	Sprite::PostDraw();
 
 	dxSetter_->RenderTexturePostDraw();
 

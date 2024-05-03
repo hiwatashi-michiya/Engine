@@ -262,7 +262,7 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 	}
 
 	material_ = std::make_unique<Material>();
-	material_->Create(mesh_->textureFilePath_);
+	material_->Create();
 
 	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
 

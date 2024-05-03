@@ -37,9 +37,6 @@
     <Filter Include="Game">
       <UniqueIdentifier>{ab1ff59b-4e59-4fc1-bb6b-0f667912d291}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\gameScene">
-      <UniqueIdentifier>{9faf39e3-20d2-4aac-9535-c1d01738b60f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Tool">
       <UniqueIdentifier>{8e837e6d-46fc-4c8d-8c49-3bd19f5bf5cd}</UniqueIdentifier>
     </Filter>
@@ -64,18 +61,6 @@
     <Filter Include="Engine\DescriptorHeap">
       <UniqueIdentifier>{f431b1d4-8000-4680-a4b4-8c20bd428eda}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\stage">
-      <UniqueIdentifier>{1fff1bfe-0702-4109-b317-07bb27e2a053}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\player">
-      <UniqueIdentifier>{892cee94-34b7-4a0e-814c-fbaece9ee305}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\block">
-      <UniqueIdentifier>{e35197d1-4974-42ed-be59-0551dcfb0d44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\goal">
-      <UniqueIdentifier>{583e43da-b392-4259-b2f0-383d554f28aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\SelectScene">
       <UniqueIdentifier>{7a774741-8c21-4b88-b6a4-61d3f37619ad}</UniqueIdentifier>
     </Filter>
@@ -84,6 +69,21 @@
     </Filter>
     <Filter Include="Engine\3d\Animation\Keyframe">
       <UniqueIdentifier>{4098cefd-5aa2-44e0-b7fa-8b2badd1aaf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Item">
+      <UniqueIdentifier>{1f19433d-ba64-4076-a172-3e7cf492ae44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Block">
+      <UniqueIdentifier>{e35197d1-4974-42ed-be59-0551dcfb0d44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Player">
+      <UniqueIdentifier>{892cee94-34b7-4a0e-814c-fbaece9ee305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Stage">
+      <UniqueIdentifier>{1fff1bfe-0702-4109-b317-07bb27e2a053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameScene">
+      <UniqueIdentifier>{9faf39e3-20d2-4aac-9535-c1d01738b60f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -126,8 +126,8 @@
     <ClCompile Include="Engine\Convert.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Game\gamescene\GameScene.cpp">
-      <Filter>Game\gameScene</Filter>
+    <ClCompile Include="Game\GameScene\GameScene.cpp">
+      <Filter>Game\GameScene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\math\Collision.cpp">
       <Filter>Engine\math</Filter>
@@ -201,17 +201,14 @@
     <ClCompile Include="Engine\math\Transform.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Game\player\Player.cpp">
-      <Filter>Game\player</Filter>
+    <ClCompile Include="Game\Player\Player.cpp">
+      <Filter>Game\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Game\stage\Stage.cpp">
-      <Filter>Game\stage</Filter>
+    <ClCompile Include="Game\Stage\Stage.cpp">
+      <Filter>Game\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Game\goal\Goal.cpp">
-      <Filter>Game\goal</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\block\Block.cpp">
-      <Filter>Game\block</Filter>
+    <ClCompile Include="Game\Block\Block.cpp">
+      <Filter>Game\Block</Filter>
     </ClCompile>
     <ClCompile Include="Game\SelectScene\SelectScene.cpp">
       <Filter>Game\SelectScene</Filter>
@@ -224,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="Engine\3d\Animation\Animation.cpp">
       <Filter>Engine\3d\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Item\Ring.cpp">
+      <Filter>Game\Item</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Drawing\RenderTexture.cpp">
       <Filter>Engine\Drawing</Filter>
@@ -275,8 +275,8 @@
     <ClInclude Include="Engine\Convert.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Game\gamescene\GameScene.h">
-      <Filter>Game\gameScene</Filter>
+    <ClInclude Include="Game\GameScene\GameScene.h">
+      <Filter>Game\GameScene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\math\Collision.h">
       <Filter>Engine\math</Filter>
@@ -359,17 +359,14 @@
     <ClInclude Include="Engine\math\Transform.h">
       <Filter>Engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Game\player\Player.h">
-      <Filter>Game\player</Filter>
+    <ClInclude Include="Game\Player\Player.h">
+      <Filter>Game\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Game\stage\Stage.h">
-      <Filter>Game\stage</Filter>
+    <ClInclude Include="Game\Stage\Stage.h">
+      <Filter>Game\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Game\goal\Goal.h">
-      <Filter>Game\goal</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\block\Block.h">
-      <Filter>Game\block</Filter>
+    <ClInclude Include="Game\Block\Block.h">
+      <Filter>Game\Block</Filter>
     </ClInclude>
     <ClInclude Include="Game\SelectScene\SelectScene.h">
       <Filter>Game\SelectScene</Filter>
@@ -382,6 +379,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\Animation\Animation.h">
       <Filter>Engine\3d\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Item\Ring.h">
+      <Filter>Game\Item</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Drawing\RenderTexture.h">
       <Filter>Engine\Drawing</Filter>

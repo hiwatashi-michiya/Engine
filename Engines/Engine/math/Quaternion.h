@@ -134,6 +134,8 @@ Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
 //球面線形補間
 Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t);
 
+Vector3 operator*(const Quaternion& q, const Vector3& v);
+
 Quaternion operator*(const Quaternion& qr1, const Quaternion& qr2);
 Quaternion operator*(float val, const Quaternion& qr);
 Quaternion operator*(const Quaternion& qr, float val);

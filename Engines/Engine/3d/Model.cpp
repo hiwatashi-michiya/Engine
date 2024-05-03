@@ -266,7 +266,7 @@ void Model::Initialize(const std::string& filename) {
 	}
 
 	material_ = std::make_unique<Material>();
-	material_->Create(mesh_->textureFilePath_);
+	material_->Create();
 
 	meshFilePath_ = filename;
 
@@ -303,7 +303,72 @@ void Model::Initialize(const std::string& filename) {
 
 	}
 
+	localMatrix_ = MakeIdentity4x4();
 	worldMatrix_ = Matrix4x4::Identity();
+
+}
+
+void Model::LoadAnimation(const std::string& filename) {
+
+	//インスタンス生成
+	if (!animation_) {
+
+		animation_ = std::make_unique<Animation>();
+
+	}
+
+	*animation_ = LoadAnimationFile(filename);
+
+}
+
+void Model::ResetAnimation() {
+
+	//アニメーションが存在している時のみリセットを行う
+	if (animation_ && animation_->nodeAnimations.size() != 0) {
+
+		animationTime_ = 0.0f;
+		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
+		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+
+	}
+
+}
+
+void Model::UpdateAnimation() {
+
+	isEndAnimation_ = false;
+
+	//アニメーションが存在していて、再生フラグが立っている時
+	if (animation_ && isStartAnimation_ && animation_->nodeAnimations.size() != 0) {
+
+		//現在のアニメーションタイムをアニメーション速度分加算
+		animationTime_ += animationSpeed_ / 60.0f;
+
+		//アニメーションタイムが全体の尺を超えていたら終点とみなす
+		if (animationTime_ >= animation_->duration) {
+			
+			animationTime_ = animation_->duration;
+
+			//ループしなければフラグを降ろす
+			if (!isLoop_) {
+				isStartAnimation_ = false;
+			}
+
+			isEndAnimation_ = true;
+		}
+
+		//アニメーションの時間調整
+		animationTime_ = std::fmod(animationTime_, animation_->duration);
+		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
+		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+
+	}
 
 }
 
@@ -328,10 +393,12 @@ void Model::PostDraw() {
 
 void Model::Draw(Camera* camera) {
 
-	Matrix4x4 worldViewProjectionMatrix = mesh_->modelData_.rootNode.localMatrix * worldMatrix_ * camera->matViewProjection_;
+	Matrix4x4 worldViewProjectionMatrix;
+
+	worldViewProjectionMatrix = localMatrix_ * worldMatrix_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
-	matTransformMap_->World = mesh_->modelData_.rootNode.localMatrix * worldMatrix_;
-	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(mesh_->modelData_.rootNode.localMatrix * worldMatrix_));
+	matTransformMap_->World = localMatrix_ * worldMatrix_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(localMatrix_ * worldMatrix_));
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
@@ -417,6 +484,8 @@ void Model::SetMesh(const std::string& objFileName) {
 	}
 
 	meshFilePath_ = objFileName;
+
+	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
 
 }
 

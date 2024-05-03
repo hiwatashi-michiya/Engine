@@ -25,14 +25,11 @@ public:
 
 	const AABB& GetCollision() { return collision_; }
 
-	enum Move {
-		kUp,
-		kDown,
-		kRight,
-		kLeft
-	};
+	const Vector3& GetPosition() { return transform_->translate_; }
 
-	Move move_ = kDown;
+	const Vector3& GetScale() { return transform_->scale_; }
+
+	void SetVelocityY(float speed) { velocity_.y = speed; }
 
 private:
 
@@ -44,29 +41,15 @@ private:
 
 	std::unique_ptr<Transform> transform_;
 
-	std::unique_ptr<Particle> particle_;
-
-	Vector3 velocity_{};
-
 	bool canJump_ = true;
 
 	Quaternion rotation_;
 
 	AABB collision_{};
 
-	bool isMove_ = false;
+	Vector3 velocity_{};
 
-	const float moveVal_ = 2.0f;
-
-	const uint32_t kMaxCoolTime_ = 10;
-
-	uint32_t moveCoolTimer_ = 0;
-
-	Texture* tex_;
-
-	int32_t animationTime_ = 0;
-
-	uint32_t moveSE_;
+	float speed_ = 0.4f;
 
 };
 

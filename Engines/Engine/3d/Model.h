@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include <memory>
 #include <unordered_map>
+#include "Animation/Animation.h"
 
 //ディレクトリパス
 const std::string modelDirectoryPath = "resources";
@@ -70,6 +71,29 @@ public:
 
 	void SetWorldMatrix(const Matrix4x4& matrix) { worldMatrix_ = matrix; }
 
+	void LoadAnimation(const std::string& filename);
+
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	/// <param name="isLoop">ループするかどうか</param>
+	void StartAnimation(bool isLoop = false) { 
+		isStartAnimation_ = true;
+		isLoop_ = isLoop;
+	}
+	//アニメーション一時停止
+	void StopAnimation() { isStartAnimation_ = false; }
+	//アニメーションのリセット
+	void ResetAnimation();
+	//アニメーション速度変更
+	void SetAnimationSpeed(float speed) { animationSpeed_ = speed; }
+	//アニメーション更新処理
+	void UpdateAnimation();
+	//アニメーションの終わりかどうか
+	bool IsEndAnimation() const { return isEndAnimation_; }
+	//アニメーションのループフラグを設定
+	void SetIsLoop(bool flag) { isLoop_ = flag; }
+
 	Matrix4x4 worldMatrix_;
 
 	Model* parent_ = nullptr;
@@ -111,6 +135,27 @@ private:
 	//画面上のワールド座標バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> matBuff_;
 	
+	//アニメーション
+	std::unique_ptr<Animation> animation_;
+
+	//アニメーションタイム
+	float animationTime_ = 0.0f;
+
+	//アニメーション速度
+	float animationSpeed_ = 1.0f;
+
+	//アニメーション管理フラグ
+	bool isStartAnimation_ = false;
+
+	//ループ管理フラグ
+	bool isLoop_ = false;
+
+	//アニメーションの終点に到達したかどうか
+	bool isEndAnimation_ = false;
+
+	//アニメーションのマトリックス
+	Matrix4x4 localMatrix_;
+
 	//TransformMatrix
 	TransformationMatrix* matTransformMap_ = nullptr;
 	//カメラ座標マップ
