@@ -15,7 +15,7 @@ class Particle3D
 {
 public:
 
-	static void StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device);
+	static void StaticInitialize(ID3D12Device* device);
 
 	enum BlendMode {
 		kNormal,//通常
@@ -78,7 +78,7 @@ private:
 	//静的メンバ変数
 
 	//デバイス
-	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	static ID3D12Device* device_;
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* commandList_;
 	//ルートシグネチャ

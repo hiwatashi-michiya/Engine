@@ -8,7 +8,7 @@ class Material
 {
 public:
 
-	static void StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device);
+	static void StaticInitialize(ID3D12Device* device);
 
 	Material* Create();
 	
@@ -46,7 +46,7 @@ public:
 
 private:
 
-	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	static ID3D12Device* device_;
 
 };
 

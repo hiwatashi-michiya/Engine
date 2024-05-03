@@ -6,7 +6,7 @@ RootSignatureManager* RootSignatureManager::GetInstance() {
 	return &instance;
 }
 
-void RootSignatureManager::Initialize(Microsoft::WRL::ComPtr<ID3D12Device> device) {
+void RootSignatureManager::Initialize(ID3D12Device* device) {
 
 	assert(device);
 
