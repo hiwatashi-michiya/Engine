@@ -7,7 +7,7 @@ PipelineManager* PipelineManager::GetInstance() {
 	return &instance;
 }
 
-void PipelineManager::Initialize(Microsoft::WRL::ComPtr<ID3D12Device> device) {
+void PipelineManager::Initialize(ID3D12Device* device) {
 
 	assert(device);
 

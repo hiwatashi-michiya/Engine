@@ -5,9 +5,9 @@
 #include <fstream>
 #include "Externals/imgui/imgui.h"
 
-Microsoft::WRL::ComPtr<ID3D12Device> Mesh::device_ = nullptr;
+ID3D12Device* Mesh::device_ = nullptr;
 
-void Mesh::StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device) {
+void Mesh::StaticInitialize(ID3D12Device* device) {
 
 	assert(device);
 

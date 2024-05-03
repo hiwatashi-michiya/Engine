@@ -65,7 +65,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(windowManager_->GetHwnd());
-	ImGui_ImplDX12_Init(dxSetter_->GetDevice().Get(),
+	ImGui_ImplDX12_Init(dxSetter_->GetDevice(),
 		2,
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		TextureManager::GetInstance()->GetSRVDescHeap(),

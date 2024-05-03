@@ -11,7 +11,7 @@ void PostEffectDrawer::Initialize() {
 
 	dxSetter_ = DirectXSetter::GetInstance();
 
-	device_ = dxSetter_->GetDevice().Get();
+	device_ = dxSetter_->GetDevice();
 
 	//DescriptorSizeを取得しておく
 	uint32_t descriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

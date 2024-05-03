@@ -12,7 +12,7 @@
 
 #pragma comment(lib, "dxcompiler.lib")
 
-Microsoft::WRL::ComPtr<ID3D12Device> Model::device_ = nullptr;
+ID3D12Device* Model::device_ = nullptr;
 ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
 ID3D12RootSignature* Model::rootSignature_ = nullptr;
 ID3D12PipelineState* Model::pipelineStates_[Model::BlendMode::kCountBlend] = { nullptr };
@@ -23,7 +23,7 @@ int Model::modelNumber_ = 0;
 Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
 const char* Model::BlendTexts[Model::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
-void Model::StaticInitialize(Microsoft::WRL::ComPtr<ID3D12Device> device) {
+void Model::StaticInitialize(ID3D12Device* device) {
 
 	assert(device);
 

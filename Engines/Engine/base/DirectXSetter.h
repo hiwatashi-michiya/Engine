@@ -51,7 +51,7 @@ public:
 	/// </summary>
 	void Finalize();
 
-	Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() { return device_; }
+	ID3D12Device* GetDevice() { return device_.Get(); }
 
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList_.Get(); }
 
