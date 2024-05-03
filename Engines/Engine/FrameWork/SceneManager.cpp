@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Particle3D.h"
 #include "Sprite.h"
+#include "Drawing/PostEffectDrawer.h"
 
 SceneManager* SceneManager::GetInstance() {
 	static SceneManager instance;

@@ -17,6 +17,7 @@
 #include "Drawing/ShaderManager.h"
 #include "Drawing/PipelineManager.h"
 #include "Drawing/RootSignatureManager.h"
+#include "Drawing/PostEffectDrawer.h"
 
 #ifdef _DEBUG
 
@@ -42,6 +43,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	dxSetter_ = DirectXSetter::GetInstance();
 	dxSetter_->Initialize(windowManager_, width, height);
+	PostEffectDrawer::GetInstance()->Initialize();
 
 	ShaderManager::GetInstance()->Initialize();
 	PipelineManager::GetInstance()->Initialize(dxSetter_->GetDevice());
@@ -124,6 +126,8 @@ void Engine::EndFrame() {
 	dxSetter_->RenderTexturePostDraw();
 
 	dxSetter_->PreDraw();
+
+	PostEffectDrawer::GetInstance()->Draw();
 
 #ifdef _DEBUG
 

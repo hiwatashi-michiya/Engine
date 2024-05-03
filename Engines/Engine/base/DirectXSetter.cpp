@@ -2,6 +2,7 @@
 #include <cassert>
 #include "Drawing/TextureManager.h"
 #include "DescriptorHeap/DescriptorHeapManager.h"
+#include "base/DescriptorHandle.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -56,9 +57,9 @@ void DirectXSetter::Initialize(WindowManager* winApp, int32_t backBufferWidth, i
 void DirectXSetter::RenderTexturePreDraw() {
 
 	//レンダーターゲットビュー用ディスクリプタヒープハンドル取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV, 2);
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = GetCPUDescriptorHandle(rtvHeap_.Get(), descriptorSizeRTV, 2);
 	//深度ステンシルビュー用ディスクリプタヒープハンドル取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvH = GetCPUDescriptorHandle(dsvHeap_, descriptorSizeDSV, 0);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvH = GetCPUDescriptorHandle(dsvHeap_.Get(), descriptorSizeDSV, 0);
 	//レンダーターゲットをセット
 	commandList_->OMSetRenderTargets(1, &rtvH, false, &dsvH);
 	//指定した色で画面全体をクリアする
@@ -119,7 +120,7 @@ void DirectXSetter::PreDraw() {
 	commandList_->ResourceBarrier(1, &barrier);
 
 	//レンダーターゲットビュー用ディスクリプタヒープハンドル取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV, bbIndex);
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = GetCPUDescriptorHandle(rtvHeap_.Get(), descriptorSizeRTV, bbIndex);
 	//深度ステンシルビュー用ディスクリプタヒープハンドル取得
 	/*D3D12_CPU_DESCRIPTOR_HANDLE dsvH = GetCPUDescriptorHandle(dsvHeap_, descriptorSizeDSV, 0);*/
 	//レンダーターゲットをセット
@@ -152,38 +153,6 @@ void DirectXSetter::PreDraw() {
 	scissorRect.top = 0;
 	scissorRect.bottom = backBufferHeight_;
 	commandList_->RSSetScissorRects(1, &scissorRect);
-
-	//TransitionBarrierの設定
-	/*D3D12_RESOURCE_BARRIER barrier{};*/
-	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = renderTexture_.Get();
-	//遷移前(現在)のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	//TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier);
-
-	renderTexture_.Draw();
-
-	//TransitionBarrierの設定
-	/*D3D12_RESOURCE_BARRIER barrier{};*/
-	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = renderTexture_.Get();
-	//遷移前(現在)のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	//遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier);
 
 }
 
@@ -413,39 +382,13 @@ void DirectXSetter::CreateRenderTargets() {
 		assert(SUCCEEDED(hr));
 
 		//ディスクリプタヒープのハンドルを取得
-		D3D12_CPU_DESCRIPTOR_HANDLE handle = GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV, i);
+		D3D12_CPU_DESCRIPTOR_HANDLE handle = GetCPUDescriptorHandle(rtvHeap_.Get(), descriptorSizeRTV, i);
 		//レンダーターゲットビューの生成
 		device_->CreateRenderTargetView(backBuffers_[i].Get(), &renderTargetViewDesc, handle);
 
 	}
 
-	//RenderTexture用のRTVを作成
-	const Vector4 kRenderTargetClearValue{ 1.0f,0.0f,0.0f,1.0f }; //分かりやすい様に赤
-	//ディスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV, 2);
-	renderTexture_.Create(device_, WindowManager::kWindowWidth, WindowManager::kWindowHeight,
-		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
-	device_->CreateRenderTargetView(renderTexture_.Get(), &renderTargetViewDesc, rtvHandle);
-
-	//SRVの設定。FormatはResourceと同じ
-	D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
-	renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
-	renderTextureSrvDesc.Texture2D.MipLevels = 1;
 	
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU =
-		GetCPUDescriptorHandle(srvHeap_.Get(), descriptorSizeSRV, 1);
-
-	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU =
-		GetGPUDescriptorHandle(srvHeap_.Get(), descriptorSizeSRV, 1);
-
-	renderTexture_.SetCPUHandle(srvHandleCPU);
-	renderTexture_.SetGPUHandle(srvHandleGPU);
-
-	device_->CreateShaderResourceView(renderTexture_.Get(), &renderTextureSrvDesc, srvHandleCPU);
-
-
 }
 
 void DirectXSetter::CreateDepthBuffer() {
@@ -474,24 +417,6 @@ void DirectXSetter::CreateFence() {
 
 	hr = device_->CreateFence(fenceVal_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
 	assert(SUCCEEDED(hr));
-
-}
-
-//CPUのDescriptorHandle取得
-D3D12_CPU_DESCRIPTOR_HANDLE DirectXSetter::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * index);
-	return handleCPU;
-
-}
-
-//GPUのDescriptorHandle取得
-D3D12_GPU_DESCRIPTOR_HANDLE DirectXSetter::GetGPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * index);
-	return handleGPU;
 
 }
 

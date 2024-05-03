@@ -166,6 +166,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Animation\Keyframe\Keyframe.cpp" />
     <ClCompile Include="Engine\Audio\AudioManager.cpp" />
     <ClCompile Include="Engine\base\Camera.cpp" />
+    <ClCompile Include="Engine\base\DescriptorHandle.cpp" />
     <ClCompile Include="Engine\base\DirectXSetter.cpp" />
     <ClCompile Include="Engine\base\WindowManager.cpp" />
     <ClCompile Include="Engine\Buffer\BufferResource.cpp" />
@@ -175,6 +176,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Drawing\MeshManager.cpp" />
     <ClCompile Include="Engine\Drawing\ModelManager.cpp" />
     <ClCompile Include="Engine\Drawing\PipelineManager.cpp" />
+    <ClCompile Include="Engine\Drawing\PostEffectDrawer.cpp" />
     <ClCompile Include="Engine\Drawing\RenderTexture.cpp" />
     <ClCompile Include="Engine\Drawing\RootSignatureManager.cpp" />
     <ClCompile Include="Engine\Drawing\ShaderManager.cpp" />
@@ -215,6 +217,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Animation\Keyframe\Keyframe.h" />
     <ClInclude Include="Engine\Audio\AudioManager.h" />
     <ClInclude Include="Engine\base\Camera.h" />
+    <ClInclude Include="Engine\base\DescriptorHandle.h" />
     <ClInclude Include="Engine\base\DirectXSetter.h" />
     <ClInclude Include="Engine\base\SafeDelete.h" />
     <ClInclude Include="Engine\base\WindowManager.h" />
@@ -226,6 +229,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Drawing\MeshManager.h" />
     <ClInclude Include="Engine\Drawing\ModelManager.h" />
     <ClInclude Include="Engine\Drawing\PipelineManager.h" />
+    <ClInclude Include="Engine\Drawing\PostEffectDrawer.h" />
     <ClInclude Include="Engine\Drawing\RenderTexture.h" />
     <ClInclude Include="Engine\Drawing\RootSignatureManager.h" />
     <ClInclude Include="Engine\Drawing\ShaderManager.h" />

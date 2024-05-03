@@ -228,6 +228,12 @@
     <ClCompile Include="Engine\Drawing\RenderTexture.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Drawing\PostEffectDrawer.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\DescriptorHandle.cpp">
+      <Filter>Engine\base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -385,6 +391,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\RenderTexture.h">
       <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\PostEffectDrawer.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\DescriptorHandle.h">
+      <Filter>Engine\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
