@@ -397,7 +397,7 @@
     <None Include="resources\shaders\Particle3d.hlsli">
       <Filter>shader</Filter>
     </None>
-    <None Include="Resources\shaders\CopyImage.hlsli">
+    <None Include="Resources\shaders\FullScreen.hlsli">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
@@ -423,7 +423,10 @@
     <FxCompile Include="Resources\shaders\CopyImage.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\CopyImage.VS.hlsl">
+    <FxCompile Include="Resources\shaders\FullScreen.VS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Grayscale.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

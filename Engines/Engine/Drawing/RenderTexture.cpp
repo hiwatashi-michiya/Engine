@@ -15,8 +15,8 @@ void RenderTextureSetup::Initialize() {
 
 	HRESULT hr;
 
-	vsBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/CopyImage.VS.hlsl", ShaderManager::kVS, "VSRenderTexture");
-	psBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/CopyImage.PS.hlsl", ShaderManager::kPS, "PSRenderTexture");
+	vsBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/FullScreen.VS.hlsl", ShaderManager::kVS, "VSRenderTexture");
+	psBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Grayscale.PS.hlsl", ShaderManager::kPS, "PSRenderTexture");
 
 	//RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
