@@ -138,3 +138,78 @@ Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, floa
 	return (*keyframes.rbegin()).value;
 
 }
+
+int32_t CreateJoint(const Node& node,
+	const std::optional<int32_t>& parent,
+	std::vector<Joint>& joints) {
+
+	Joint joint;
+	joint.name = node.name;
+	joint.localMatrix = node.localMatrix;
+	joint.skeletonSpaceMatrix = MakeIdentity4x4();
+	joint.transform = node.transform;
+	joint.index = int32_t(joints.size()); //現在登録されている数をIndexに
+	joint.parent = parent;
+	joints.push_back(joint); //SkeletonのJoint列に追加
+	for (const Node& child : node.children) {
+		//子Jointを作成し、そのIndexを登録
+		int32_t childIndex = CreateJoint(child, joint.index, joints);
+		joints[joint.index].children.push_back(childIndex);
+	}
+	//自身のIndexを返す
+	return joint.index;
+
+}
+
+Skeleton CreateSkeleton(const Node& rootNode) {
+	
+	Skeleton skeleton;
+	skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
+
+	//名前とindexのマッピングを行いアクセスしやすくする
+	for (const Joint& joint : skeleton.joints) {
+		skeleton.jointMap.emplace(joint.name, joint.index);
+	}
+
+	return skeleton;
+
+}
+
+void UpdateSkeleton(Skeleton& skeleton) {
+
+	//全てのJointを更新。親が若いので通常ループで処理可能になっている
+	for (Joint& joint : skeleton.joints) {
+		
+		joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+
+		//親がいれば親の行列を掛ける
+		if (joint.parent) {
+			joint.skeletonSpaceMatrix = joint.localMatrix * skeleton.joints[*joint.parent].skeletonSpaceMatrix;
+		}
+		//親がいないのでlocalMatrixとskeletonSpaceMatrixは一致する
+		else {
+			joint.skeletonSpaceMatrix = joint.localMatrix;
+		}
+
+	}
+
+}
+
+void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime) {
+
+	for (Joint& joint : skeleton.joints) {
+
+		//対象のJointのAnimationがあれば、値の適用を行う。(初期化付きif文)
+		if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
+
+			const NodeAnimation& rootNodeAnimation = (*it).second;
+
+			joint.transform.translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime);
+			joint.transform.rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime);
+			joint.transform.scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime);
+
+		}
+
+	}
+
+}

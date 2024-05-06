@@ -319,6 +319,14 @@ void Model::LoadAnimation(const std::string& filename) {
 
 	*animation_ = LoadAnimationFile(filename);
 
+	if (!skeleton_) {
+
+		skeleton_ = std::make_unique<Skeleton>();
+
+	}
+
+	*skeleton_ = CreateSkeleton(mesh_->modelData_.rootNode);
+
 }
 
 void Model::ResetAnimation() {
@@ -362,11 +370,19 @@ void Model::UpdateAnimation() {
 
 		//アニメーションの時間調整
 		animationTime_ = std::fmod(animationTime_, animation_->duration);
-		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
-		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+		
+		if (skeleton_) {
+
+			ApplyAnimation(*skeleton_, *animation_, animationTime_);
+			UpdateSkeleton(*skeleton_);
+
+		}
+
+		//NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
+		//Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+		//Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+		//Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+		//localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
 
 	}
 
@@ -395,10 +411,10 @@ void Model::Draw(Camera* camera) {
 
 	Matrix4x4 worldViewProjectionMatrix;
 
-	worldViewProjectionMatrix = localMatrix_ * worldMatrix_ * camera->matViewProjection_;
+	worldViewProjectionMatrix = /*localMatrix_ * */worldMatrix_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
-	matTransformMap_->World = localMatrix_ * worldMatrix_;
-	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(localMatrix_ * worldMatrix_));
+	matTransformMap_->World = /*localMatrix_ * */worldMatrix_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(/*localMatrix_ * */worldMatrix_));
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 

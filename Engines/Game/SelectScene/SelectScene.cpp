@@ -33,9 +33,9 @@ void SelectScene::Initialize() {
 
 	editor_->SetCamera(camera_.get());
 
-	model_.reset(Model::Create("./Resources/item/item.gltf"));
+	model_.reset(Model::Create("./Resources/human/walk.gltf"));
 	
-	model_->LoadAnimation("./Resources/item/item.gltf");
+	model_->LoadAnimation("./Resources/human/walk.gltf");
 
 	transform_ = std::make_unique<Transform>();
 
@@ -82,6 +82,8 @@ void SelectScene::Update() {
 	transform_->UpdateMatrix();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+	model_->UpdateAnimation();
 
 	editor_->Edit();
 

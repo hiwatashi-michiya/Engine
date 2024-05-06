@@ -1,8 +1,9 @@
 #pragma once
-#include "Engine/math/Matrix4x4.h"
-#include "Engine/math/Vector4.h"
-#include "Engine/math/Vector3.h"
-#include "Engine/math/Vector2.h"
+#include "Matrix4x4.h"
+#include "Vector4.h"
+#include "Vector3.h"
+#include "Vector2.h"
+#include "Quaternion.h"
 #include "TextureManager.h"
 #include <string>
 #include <vector>
@@ -73,7 +74,20 @@ struct ObjectData
 
 };
 
+struct EulerTransform {
+	Vector3 scale;
+	Vector3 rotate;
+	Vector3 translate;
+};
+
+struct QuaternionTransform {
+	Vector3 scale;
+	Quaternion rotate;
+	Vector3 translate;
+};
+
 struct Node {
+	QuaternionTransform transform;
 	Matrix4x4 localMatrix; //ノードのトランスフォーム
 	std::string name; //ノードの名前
 	std::vector<Node> children; //子供のノード
@@ -81,6 +95,7 @@ struct Node {
 
 struct ModelData {
 	std::vector<VertexData> vertices;
+	std::vector<uint32_t> indices;
 	MaterialData material;
 	Node rootNode;
 };

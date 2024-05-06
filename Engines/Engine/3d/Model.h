@@ -138,6 +138,9 @@ private:
 	//アニメーション
 	std::unique_ptr<Animation> animation_;
 
+	//スケルトン
+	std::unique_ptr<Skeleton> skeleton_;
+
 	//アニメーションタイム
 	float animationTime_ = 0.0f;
 

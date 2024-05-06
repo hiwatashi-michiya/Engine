@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <optional>
+#include "Drawing/ModelManager.h"
 
 template<typename tValue>
 struct AnimationCurve {
@@ -23,8 +25,35 @@ struct Animation {
 	std::map<std::string, NodeAnimation> nodeAnimations;
 };
 
+struct Joint {
+	QuaternionTransform transform; //transform情報
+	Matrix4x4 localMatrix; //localMatrix
+	Matrix4x4 skeletonSpaceMatrix; //skeletonSpaceでの変換行列
+	std::string name; //名前
+	std::vector<int32_t> children; //子JointのIndexのリスト。いなければ空
+	int32_t index; //自身のIndex
+	std::optional<int32_t> parent; //親JointのIndex。いなければnull
+};
+
+struct Skeleton {
+	int32_t root; //RootJointのIndex
+	std::map<std::string, int32_t> jointMap; //Joint名とIndexとの辞書
+	std::vector<Joint> joints; //所属しているジョイント
+};
+
 Animation LoadAnimationFile(const std::string& fileName);
 
 Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
 
 Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
+
+int32_t CreateJoint(const Node& node,
+	const std::optional<int32_t>& parent,
+	std::vector<Joint>& joints);
+
+Skeleton CreateSkeleton(const Node& rootNode);
+
+void UpdateSkeleton(Skeleton& skeleton);
+
+//アニメーションの適用
+void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);

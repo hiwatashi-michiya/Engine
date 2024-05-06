@@ -62,30 +62,53 @@ void Mesh::LoadModelFile(const std::string& filename) {
 		assert(mesh->HasNormals()); //法線が無いメッシュは非対応
 		assert(mesh->HasTextureCoords(0)); //TexCoordがないメッシュは非対応
 
-		//面の解析
+		modelData_.vertices.resize(mesh->mNumVertices); //最初に頂点数分のメモリ確保
+
+		//頂点の解析
+		for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {
+
+			aiVector3D& position = mesh->mVertices[vertexIndex];
+			aiVector3D& normal = mesh->mNormals[vertexIndex];
+			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+
+			//右手系->左手系への変換
+			modelData_.vertices[vertexIndex].position = { -position.x, position.y, position.z, 1.0f };
+			modelData_.vertices[vertexIndex].normal = { -normal.x, normal.y, normal.z };
+			modelData_.vertices[vertexIndex].texcoord = { texcoord.x, texcoord.y };
+
+		}
+
+		//Indexの解析
 		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
 
 			aiFace& face = mesh->mFaces[faceIndex];
-			assert(face.mNumIndices == 3); //三角形のみサポート
+			//三角形の面のみ
+			assert(face.mNumIndices == 3);
 
-			//頂点の解析
 			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
-
 				uint32_t vertexIndex = face.mIndices[element];
-				aiVector3D& position = mesh->mVertices[vertexIndex];
-				aiVector3D& normal = mesh->mNormals[vertexIndex];
-				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
-				VertexData vertex;
-
-				vertex.position = { -position.x, position.y, position.z, 1.0f };
-				vertex.normal = { -normal.x, normal.y, normal.z };
-				vertex.texcoord = { texcoord.x, texcoord.y };
-
-				meshData_.vertices.push_back(vertex);
-
+				modelData_.indices.push_back(vertexIndex);
 			}
 
 		}
+
+		//面の解析
+		//for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+		//	aiFace& face = mesh->mFaces[faceIndex];
+		//	assert(face.mNumIndices == 3); //三角形のみサポート
+		//	//頂点の解析
+		//	for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+		//		uint32_t vertexIndex = face.mIndices[element];
+		//		aiVector3D& position = mesh->mVertices[vertexIndex];
+		//		aiVector3D& normal = mesh->mNormals[vertexIndex];
+		//		aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+		//		VertexData vertex;
+		//		vertex.position = { -position.x, position.y, position.z, 1.0f };
+		//		vertex.normal = { -normal.x, normal.y, normal.z };
+		//		vertex.texcoord = { texcoord.x, texcoord.y };
+		//		meshData_.vertices.push_back(vertex);
+		//	}
+		//}
 
 	}
 
@@ -112,16 +135,14 @@ void Mesh::LoadModelFile(const std::string& filename) {
 Node Mesh::ReadNode(aiNode* node) {
 
 	Node result;
-	aiMatrix4x4 aiLocalMatrix = node->mTransformation; //nodeのlocalMatrixを取得
-	aiLocalMatrix.Transpose(); //列ベクトル形式を行ベクトル形式に転置
+	aiVector3D scale, translate;
+	aiQuaternion rotate;
 
-	for (uint32_t y = 0; y < 4; y++) {
-
-		for (uint32_t x = 0; x < 4; x++) {
-			result.localMatrix.m[y][x] = aiLocalMatrix[y][x];
-		}
-
-	}
+	node->mTransformation.Decompose(scale, rotate, translate);
+	result.transform.scale = { scale.x, scale.y, scale.z }; //Scaleはそのまま
+	result.transform.rotate = { rotate.x, -rotate.y, -rotate.z, rotate.w }; //x軸を反転、さらに回転方向が逆なので軸を反転させる
+	result.transform.translate = { -translate.x, translate.y, translate.z }; //x軸を反転
+	result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
 
 	result.name = node->mName.C_Str(); //node名を格納
 	result.children.resize(node->mNumChildren); //子供の数だけ確保
@@ -146,22 +167,36 @@ Mesh* Mesh::Create(const std::string& filename) {
 	//頂点バッファ
 	{
 
-		vertBuff_ = CreateBufferResource(device_, sizeof(VertexData) * meshData_.vertices.size());
+		vertBuff_ = CreateBufferResource(device_, sizeof(VertexData) * modelData_.vertices.size());
 
 		vertBuff_->SetName(L"vertBuff");
 
 		//頂点バッファビュー設定
 		vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
-		vbView_.SizeInBytes = UINT(sizeof(VertexData) * meshData_.vertices.size());
+		vbView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
 		vbView_.StrideInBytes = sizeof(VertexData);
 
 		//マッピングしてデータ転送
 		vertBuff_->Map(0, nullptr, reinterpret_cast<void**>(&vertMap_));
 
-		std::memcpy(vertMap_, meshData_.vertices.data(), sizeof(VertexData) * meshData_.vertices.size());
+		std::memcpy(vertMap_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 
 		//アンマップ
 		vertBuff_->Unmap(0, nullptr);
+
+	}
+
+	//インデックスバッファ
+	{
+
+		indexBuff_ = CreateBufferResource(device_, sizeof(uint32_t) * modelData_.indices.size());
+
+		ibView_.BufferLocation = indexBuff_->GetGPUVirtualAddress();
+		ibView_.SizeInBytes = sizeof(uint32_t) * UINT(modelData_.indices.size());
+		ibView_.Format = DXGI_FORMAT_R32_UINT;
+
+		indexBuff_->Map(0, nullptr, reinterpret_cast<void**>(&indexMap_));
+		std::memcpy(indexMap_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 
 	}
 
@@ -173,9 +208,12 @@ void Mesh::SetCommandMesh(ID3D12GraphicsCommandList* commandList) {
 
 	//頂点バッファビューの設定
 	commandList->IASetVertexBuffers(0, 1, &vbView_);
-	//描画
-	commandList->DrawInstanced(UINT(meshData_.vertices.size()), 1, 0, 0);
+	//インデックスバッファビューの設定
+	commandList->IASetIndexBuffer(&ibView_);
 
+	//描画
+	/*commandList->DrawInstanced(UINT(meshData_.vertices.size()), 1, 0, 0);*/
+	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 
 }
 
@@ -183,9 +221,12 @@ void Mesh::SetCommandMesh(ID3D12GraphicsCommandList* commandList, uint32_t insta
 
 	//頂点バッファビューの設定
 	commandList->IASetVertexBuffers(0, 1, &vbView_);
-	//描画
-	commandList->DrawInstanced(UINT(meshData_.vertices.size()), instanceCount, 0, 0);
+	//インデックスバッファビューの設定
+	commandList->IASetIndexBuffer(&ibView_);
 
+	//描画
+	/*commandList->DrawInstanced(UINT(meshData_.vertices.size()), instanceCount, 0, 0);*/
+	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), instanceCount, 0, 0, 0);
 
 }
 
