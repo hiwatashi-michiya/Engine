@@ -85,6 +85,9 @@
     <Filter Include="Game\GameScene">
       <UniqueIdentifier>{9faf39e3-20d2-4aac-9535-c1d01738b60f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\3d\Animation\Skinning">
+      <UniqueIdentifier>{ef5b1056-4872-4352-81be-6fb3287756cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -233,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="Engine\base\DescriptorHandle.cpp">
       <Filter>Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\Skinning\SkinCluster.cpp">
+      <Filter>Engine\3d\Animation\Skinning</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -398,6 +404,9 @@
     <ClInclude Include="Engine\base\DescriptorHandle.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\3d\Skinning\SkinCluster.h">
+      <Filter>Engine\3d\Animation\Skinning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\Object3d.hlsli">
@@ -439,6 +448,9 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Grayscale.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SkinningObject3d.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

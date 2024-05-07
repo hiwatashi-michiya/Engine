@@ -7,6 +7,7 @@
 #include "TextureManager.h"
 #include <string>
 #include <vector>
+#include <map>
 
 //モデルに必要な構造体などを纏めたヘッダー
 
@@ -93,7 +94,22 @@ struct Node {
 	std::vector<Node> children; //子供のノード
 };
 
+struct VertexWeightData {
+	
+	float weight;
+	uint32_t vertexIndex;
+
+};
+
+struct JointWeightData {
+
+	Matrix4x4 inverseBindPoseMatrix;
+	std::vector<VertexWeightData> vertexWeights;
+
+};
+
 struct ModelData {
+	std::map <std::string, JointWeightData> skinClusterData;
 	std::vector<VertexData> vertices;
 	std::vector<uint32_t> indices;
 	MaterialData material;

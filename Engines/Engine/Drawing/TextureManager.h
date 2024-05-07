@@ -50,6 +50,10 @@ public:
 
 	ID3D12DescriptorHeap* GetSRVDescHeap() { return srvDescHeap_.Get(); }
 
+	const uint32_t& GetTextureIndex() { return textureIndex_; }
+
+	void AddIndex() { textureIndex_++; }
+
 private:
 
 	TextureManager() = default;

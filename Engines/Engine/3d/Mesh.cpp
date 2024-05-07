@@ -92,6 +92,31 @@ void Mesh::LoadModelFile(const std::string& filename) {
 
 		}
 
+		//SkinCluster
+		for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
+
+			//meshに関連付けられたJointから情報を取得する
+			aiBone* bone = mesh->mBones[boneIndex];
+			std::string jointName = bone->mName.C_Str();
+			JointWeightData& jointWeightData = modelData_.skinClusterData[jointName];
+
+			//InverseBindPoseMatrixの抽出
+			aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
+			aiVector3D scale, translate;
+			aiQuaternion rotate;
+
+			bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
+			Matrix4x4 bindPoseMatrix = MakeAffineMatrix({ scale.x, scale.y, scale.z },
+				{ rotate.x, -rotate.y, -rotate.z, rotate.w }, { -translate.x, translate.y, translate.z });
+			jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrix);
+
+			//Weight情報を取り出す
+			for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
+				jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
+			}
+
+		}
+
 		//面の解析
 		//for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
 		//	aiFace& face = mesh->mFaces[faceIndex];
@@ -197,6 +222,8 @@ Mesh* Mesh::Create(const std::string& filename) {
 
 		indexBuff_->Map(0, nullptr, reinterpret_cast<void**>(&indexMap_));
 		std::memcpy(indexMap_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+
+		indexBuff_->Unmap(0, nullptr);
 
 	}
 
