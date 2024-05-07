@@ -50,6 +50,8 @@ private:
 
 	std::unique_ptr<Stage> stage_;
 
+	int32_t resetCount_ = 60;
+
 	uint32_t testSE_;
 
 };

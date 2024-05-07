@@ -20,11 +20,13 @@ void Player::Initialize() {
 
 	input_ = Input::GetInstance();
 
-	transform_->translate_ = { 0.0f,0.0f,0.0f };
+	transform_->translate_ = { 0.0f,5.0f,0.0f };
 	model_->material_->pLightMap_->intensity = 2.0f;
 
 	collision_.max = transform_->translate_ + transform_->scale_;
 	collision_.min = transform_->translate_ - transform_->scale_;
+
+	isDead_ = false;
 
 }
 
@@ -38,65 +40,71 @@ void Player::Update() {
 
 #endif // _DEBUG
 
+	//死んでいない時の処理
+	if (!isDead_) {
 
-	if (fabsf(input_->GetStickValue(Input::LX)) > 0) {
+		if (fabsf(input_->GetStickValue(Input::LX)) > 0) {
 
-		velocity_.x = input_->GetStickValue(Input::LX);
+			velocity_.x = input_->GetStickValue(Input::LX);
+
+		}
+		else {
+			velocity_.x = 0.0f;
+		}
+
+		if (fabsf(input_->GetStickValue(Input::LY)) > 0) {
+
+			velocity_.z = input_->GetStickValue(Input::LY);
+
+		}
+		else {
+			velocity_.z = 0.0f;
+		}
+
+		velocity_ = Normalize(velocity_);
+
+		velocity_.y -= 0.5f;
+
+		velocity_ *= speed_;
+
+		Vector3 moveXZ = { velocity_.x, 0.0f, velocity_.z };
+
+		//回転処理
+		if (fabsf(Length(moveXZ)) > 0.00001f) {
+
+			//一旦正規化
+			moveXZ = Normalize(moveXZ);
+
+			Vector3 tmp = ConjuGate(transform_->rotateQuaternion_) * moveXZ;
+
+			Quaternion diff = MakeRotateAxisAngleQuaternion(Normalize(Cross({ 0.0f,0.0f,1.0f }, Normalize(tmp))), std::acos(Dot({ 0.0f,0.0f,1.0f }, Normalize(tmp))));
+
+			transform_->rotateQuaternion_ = Slerp(IdentityQuaternion(), diff, 0.5f) * transform_->rotateQuaternion_;
+
+		}
+
+		//速度加算
+		transform_->translate_ += velocity_;
+
+		if (transform_->translate_.y < -20.0f) {
+			isDead_ = true;
+		}
+
+		collision_.max = transform_->translate_ + transform_->scale_;
+		collision_.min = transform_->translate_ - transform_->scale_;
+
+		transform_->UpdateMatrix();
+		model_->SetWorldMatrix(transform_->worldMatrix_);
 
 	}
-	else {
-		velocity_.x = 0.0f;
-	}
-
-	if (fabsf(input_->GetStickValue(Input::LY)) > 0) {
-
-		velocity_.z = input_->GetStickValue(Input::LY);
-
-	}
-	else {
-		velocity_.z = 0.0f;
-	}
-
-	velocity_ = Normalize(velocity_);
-
-	velocity_.y -= 0.5f;
-
-	velocity_ *= speed_;
-
-	Vector3 moveXZ = { velocity_.x, 0.0f, velocity_.z };
-
-	//回転処理
-	if (fabsf(Length(moveXZ)) > 0.00001f) {
-
-		//一旦正規化
-		moveXZ = Normalize(moveXZ);
-
-		Vector3 tmp = ConjuGate(transform_->rotateQuaternion_) * moveXZ;
-
-		Quaternion diff = MakeRotateAxisAngleQuaternion(Normalize(Cross({0.0f,0.0f,1.0f}, Normalize(tmp))), std::acos(Dot({0.0f,0.0f,1.0f}, Normalize(tmp))));
-
-		transform_->rotateQuaternion_ = Slerp(IdentityQuaternion(), diff, 0.5f) * transform_->rotateQuaternion_;
-
-	}
-
-	//速度加算
-	transform_->translate_ += velocity_;
-
-	if (transform_->translate_.y < -30.0f) {
-		transform_->translate_ = { 0.0f,10.0f,0.0f };
-	}
-
-	collision_.max = transform_->translate_ + transform_->scale_;
-	collision_.min = transform_->translate_ - transform_->scale_;
-
-	transform_->UpdateMatrix();
-	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
 
 void Player::Draw(Camera* camera) {
 
-	model_->Draw(camera);
+	if (!isDead_) {
+		model_->Draw(camera);
+	}
 
 }
 

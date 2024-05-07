@@ -6,7 +6,7 @@ static D3DResourceLeakChecker leak;
 
 void MolFrameWork::Initialize() {
 
-	Engine::Initialize("カラコロ", 1280, 720);
+	Engine::Initialize("RingGet", 1280, 720);
 
 	sceneManager_ = SceneManager::GetInstance();
 

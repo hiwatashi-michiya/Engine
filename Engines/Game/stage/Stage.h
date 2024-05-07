@@ -24,6 +24,8 @@ public:
 
 	const std::string& kDirectoryPath_ = "./resources/Maps/";
 
+	Player* GetPlayer() const { return player_.get(); }
+
 private:
 
 
