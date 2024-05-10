@@ -210,12 +210,12 @@ void UpdateSkeleton(Skeleton& skeleton) {
 
 }
 
-void DrawSkeletonLine(Skeleton& skeleton, Camera* camera) {
+void DrawSkeletonLine(Skeleton& skeleton, Camera* camera, const Matrix4x4& matrix) {
 
 	//全てのJointのライン描画
 	for (Joint& joint : skeleton.joints) {
 
-		joint.line->Draw(camera);
+		joint.line->Draw(camera, matrix);
 
 	}
 

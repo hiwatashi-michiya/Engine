@@ -36,6 +36,8 @@ public:
 
 	void SetIsDead(bool flag) { isDead_ = flag; }
 
+	void DrawSkeleton(Camera* camera);
+
 private:
 
 private:

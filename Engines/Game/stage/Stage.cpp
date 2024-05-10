@@ -93,6 +93,12 @@ void Stage::DrawParticle(Camera* camera) {
 
 }
 
+void Stage::DrawLine(Camera* camera) {
+
+	player_->DrawSkeleton(camera);
+
+}
+
 void Stage::LoadStage(uint32_t stageNumber) {
 
 	std::string stageName = "stage";

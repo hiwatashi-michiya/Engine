@@ -532,7 +532,7 @@ void SkinningModel::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 void SkinningModel::DrawSkeleton(Camera* camera) {
 
 	if (skeleton_) {
-		DrawSkeletonLine(*skeleton_, camera);
+		DrawSkeletonLine(*skeleton_, camera, worldMatrix_);
 	}
 
 }

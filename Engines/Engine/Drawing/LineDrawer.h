@@ -21,7 +21,7 @@ public:
 
 	static void PostDraw();
 
-	void Draw(Camera* camera);
+	void Draw(Camera* camera, const Matrix4x4& matrix);
 
 	Vector3 start_;
 

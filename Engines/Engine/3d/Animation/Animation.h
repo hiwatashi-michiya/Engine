@@ -59,7 +59,7 @@ Skeleton CreateSkeleton(const Node& rootNode);
 
 void UpdateSkeleton(Skeleton& skeleton);
 
-void DrawSkeletonLine(Skeleton& skeleton, Camera* camera);
+void DrawSkeletonLine(Skeleton& skeleton, Camera* camera, const Matrix4x4& matrix);
 
 //アニメーションの適用
 void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);

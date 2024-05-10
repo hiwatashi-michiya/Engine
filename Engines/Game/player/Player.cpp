@@ -126,3 +126,9 @@ void Player::Draw(Camera* camera) {
 void Player::DrawParticle(Camera* camera) {
 
 }
+
+void Player::DrawSkeleton(Camera* camera) {
+
+	model_->DrawSkeleton(camera);
+
+}

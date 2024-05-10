@@ -133,6 +133,6 @@ void GameScene::DrawSprite() {
 
 void GameScene::DrawLine() {
 
-
+	stage_->DrawLine(camera_.get());
 
 }

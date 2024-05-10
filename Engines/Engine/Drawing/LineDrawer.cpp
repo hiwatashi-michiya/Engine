@@ -190,7 +190,7 @@ Line::~Line()
 {
 }
 
-void Line::Draw(Camera* camera) {
+void Line::Draw(Camera* camera, const Matrix4x4& matrix) {
 
 	vertexMap_[0].position = Vector4(start_.x, start_.y, start_.z, 1.0f);
 	vertexMap_[0].color = color_;
@@ -198,7 +198,7 @@ void Line::Draw(Camera* camera) {
 	vertexMap_[1].position = Vector4(end_.x, end_.y, end_.z, 1.0f);
 	vertexMap_[1].color = color_;
 
-	*wvpMatrix_ = camera->matViewProjection_;
+	*wvpMatrix_ = matrix * camera->matViewProjection_;
 
 	commandList_->SetPipelineState(pipelineState_);
 
