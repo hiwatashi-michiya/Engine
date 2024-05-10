@@ -14,6 +14,8 @@
 #include "Transform.h"
 #include "Application/MapEditor.h"
 #include "Animation/Animation.h"
+#include "Skinning/SkinningModel.h"
+#include "Drawing/LineDrawer.h"
 
 class SelectScene : public DefaultScene
 {
@@ -27,9 +29,13 @@ public:
 
 	void DrawModel() override;
 
+	void DrawSkinningModel() override;
+
 	void DrawParticle() override;
 
 	void DrawSprite() override;
+
+	void DrawLine() override;
 
 private:
 
@@ -41,12 +47,14 @@ private:
 
 	Matrix4x4 localMatrix_{};
 
-	std::unique_ptr<Model> model_;
+	std::unique_ptr<SkinningModel> model_;
 
 	std::unique_ptr<Transform> transform_;
 
 	float speed_ = 1.0f;
 
 	uint32_t test_;
+
+	std::unique_ptr<Line> line_;
 
 };

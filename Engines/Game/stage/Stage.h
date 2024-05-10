@@ -18,6 +18,8 @@ public:
 
 	void Draw(Camera* camera);
 
+	void DrawSkinningModel(Camera* camera);
+
 	void DrawParticle(Camera* camera);
 
 	void LoadStage(uint32_t stageNumber);

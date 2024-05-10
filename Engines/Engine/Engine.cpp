@@ -18,6 +18,8 @@
 #include "Drawing/PipelineManager.h"
 #include "Drawing/RootSignatureManager.h"
 #include "Drawing/PostEffectDrawer.h"
+#include "Skinning/SkinningModel.h"
+#include "Drawing/LineDrawer.h"
 
 #ifdef _DEBUG
 
@@ -52,7 +54,9 @@ void Engine::Initialize(const char* title, int width, int height) {
 	AudioManager::GetInstance()->Initialize();
 	Sprite::StaticInitialize(dxSetter_->GetDevice(), WindowManager::kWindowWidth, WindowManager::kWindowHeight);
 	Model::StaticInitialize(dxSetter_->GetDevice());
+	SkinningModel::StaticInitialize(dxSetter_->GetDevice());
 	Particle3D::StaticInitialize(dxSetter_->GetDevice());
+	Line::Initialize(dxSetter_->GetDevice());
 	RenderTextureSetup::GetInstance()->Initialize();
 	
 	TextureManager::GetInstance()->Initialize(dxSetter_->GetSrvHeap());
@@ -95,6 +99,7 @@ void Engine::Finalize() {
 	Particle3D::Finalize();
 	AudioManager::GetInstance()->Finalize();
 	Model::Finalize();
+	SkinningModel::Finalize();
 	Sprite::Finalize();
 	dxSetter_->Finalize();
 	dxSetter_ = nullptr;

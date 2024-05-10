@@ -34,7 +34,7 @@ public:
 
 private:
 
-	std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes_;
+	std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes_;
 
 private:
 

@@ -257,6 +257,17 @@ void Mesh::SetCommandMesh(ID3D12GraphicsCommandList* commandList, uint32_t insta
 
 }
 
+void Mesh::SetCommandMeshForSkinning(ID3D12GraphicsCommandList* commandList) {
+
+	//インデックスバッファビューの設定
+	commandList->IASetIndexBuffer(&ibView_);
+
+	//描画
+	/*commandList->DrawInstanced(UINT(meshData_.vertices.size()), 1, 0, 0);*/
+	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+
+}
+
 void Mesh::ImGuiUpdate() {
 
 }

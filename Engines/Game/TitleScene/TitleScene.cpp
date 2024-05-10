@@ -81,6 +81,10 @@ void TitleScene::DrawModel() {
 
 }
 
+void TitleScene::DrawSkinningModel() {
+
+}
+
 void TitleScene::DrawParticle() {
 
 
@@ -88,6 +92,12 @@ void TitleScene::DrawParticle() {
 }
 
 void TitleScene::DrawSprite() {
+
+
+
+}
+
+void TitleScene::DrawLine() {
 
 
 

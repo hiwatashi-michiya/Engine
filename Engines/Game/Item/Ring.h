@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "Animation/Animation.h"
 #include <memory>
+#include "Skinning/SkinningModel.h"
 
 class Ring
 {

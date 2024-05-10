@@ -35,7 +35,7 @@ struct ParticleData {
 };
 
 // 直線
-struct Line {
+struct StraightLine {
 	Vector3 origin; // 始点
 	Vector3 diff;   // 終点への差分ベクトル
 };

@@ -3,6 +3,7 @@
 #include "Drawing/TextureManager.h"
 #include "base/DescriptorHandle.h"
 #include <cassert>
+#include "base/DirectXSetter.h"
 
 SkinCluster::SkinCluster()
 {
@@ -13,16 +14,19 @@ SkinCluster::~SkinCluster()
 }
 
 void SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton,
-	const ModelData& modelData, const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap,
-	uint32_t descriptorSize) {
+	const ModelData& modelData) {
+
+	uint32_t descriptorSizeSRV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	
 
 	//palette用のResourceを確保
 	paletteResource_ = CreateBufferResource(device, sizeof(WellForGPU) * skeleton.joints.size());
 	WellForGPU* mappedPalette = nullptr;
 	paletteResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
 	mappedPalette_ = { mappedPalette, skeleton.joints.size() }; //spanを使ってアクセスするようにする
-	paletteSrvHandle_.first = GetCPUDescriptorHandle(descriptorHeap, descriptorSize, 2 + TextureManager::GetInstance()->GetTextureIndex());
-	paletteSrvHandle_.second = GetGPUDescriptorHandle(descriptorHeap, descriptorSize, 2 + TextureManager::GetInstance()->GetTextureIndex());
+	paletteSrvHandle_.first = GetCPUDescriptorHandle(DirectXSetter::GetInstance()->GetSrvHeap(), descriptorSizeSRV, 2 + TextureManager::GetInstance()->GetTextureIndex());
+	paletteSrvHandle_.second = GetGPUDescriptorHandle(DirectXSetter::GetInstance()->GetSrvHeap(), descriptorSizeSRV, 2 + TextureManager::GetInstance()->GetTextureIndex());
 	paletteResource_->Unmap(0, nullptr);
 
 	//palette用のsrvを作成。StructuredBufferでアクセスできるようにする
@@ -65,7 +69,7 @@ void SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, con
 			continue;
 		}
 
-		//外套のindexのinverseBindPoseMatrixを代入
+		//該当のindexのinverseBindPoseMatrixを代入
 		inverseBindPoseMatrices_[(*it).second] = jointWeight.second.inverseBindPoseMatrix;
 
 		for (const auto& vertexWeight : jointWeight.second.vertexWeights) {
@@ -79,6 +83,7 @@ void SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, con
 				if (currentInfluence.weights[index] == 0.0f) {
 					currentInfluence.weights[index] = vertexWeight.weight;
 					currentInfluence.jointIndices[index] = (*it).second;
+					break;
 				}
 
 			}
@@ -87,6 +92,9 @@ void SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, con
 
 
 	}
+
+	//テクスチャ使用カウント上昇
+	TextureManager::GetInstance()->AddIndex();
 
 }
 

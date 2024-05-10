@@ -170,6 +170,8 @@ void RenderTexture::Draw() {
 
 	ID3D12GraphicsCommandList* commandList = DirectXSetter::GetInstance()->GetCommandList();
 
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	commandList->SetGraphicsRootSignature(RenderTextureSetup::GetInstance()->GetRootSignature());
 	commandList->SetPipelineState(RenderTextureSetup::GetInstance()->GetPipelineState());
 	commandList->SetGraphicsRootDescriptorTable(0, srvHandleGPU_);

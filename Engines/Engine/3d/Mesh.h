@@ -27,6 +27,9 @@ public:
 	//描画コマンドセット(パーティクル)
 	void SetCommandMesh(ID3D12GraphicsCommandList* commandList, uint32_t instanceCount);
 
+	//描画コマンドセット(スキニング)
+	void SetCommandMeshForSkinning(ID3D12GraphicsCommandList* commandList);
+
 	//ImGui表示
 	void ImGuiUpdate();
 

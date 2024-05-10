@@ -29,8 +29,7 @@ public:
 	~SkinCluster();
 
 	void Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton,
-		const ModelData& modelData, const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap,
-		uint32_t descriptorSize);
+		const ModelData& modelData);
 
 	void Update(const Skeleton& skeleton);
 

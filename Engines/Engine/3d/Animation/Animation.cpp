@@ -150,7 +150,9 @@ int32_t CreateJoint(const Node& node,
 	joint.transform = node.transform;
 	joint.index = int32_t(joints.size()); //現在登録されている数をIndexに
 	joint.parent = parent;
+	joint.line = std::make_shared<Line>();
 	joints.push_back(joint); //SkeletonのJoint列に追加
+
 	for (const Node& child : node.children) {
 		//子Jointを作成し、そのIndexを登録
 		int32_t childIndex = CreateJoint(child, joint.index, joints);
@@ -184,12 +186,36 @@ void UpdateSkeleton(Skeleton& skeleton) {
 
 		//親がいれば親の行列を掛ける
 		if (joint.parent) {
+			
 			joint.skeletonSpaceMatrix = joint.localMatrix * skeleton.joints[*joint.parent].skeletonSpaceMatrix;
+
+			//終点は子の位置
+			joint.line->end_ = joint.skeletonSpaceMatrix.GetTranslate();
+
+			//始点は親の位置
+			joint.line->start_ = skeleton.joints[*joint.parent].skeletonSpaceMatrix.GetTranslate();
+
 		}
 		//親がいないのでlocalMatrixとskeletonSpaceMatrixは一致する
 		else {
 			joint.skeletonSpaceMatrix = joint.localMatrix;
+
+			//始点、終点は子の位置
+			joint.line->start_ = joint.skeletonSpaceMatrix.GetTranslate();
+			joint.line->end_ = joint.skeletonSpaceMatrix.GetTranslate();
+
 		}
+
+	}
+
+}
+
+void DrawSkeletonLine(Skeleton& skeleton, Camera* camera) {
+
+	//全てのJointのライン描画
+	for (Joint& joint : skeleton.joints) {
+
+		joint.line->Draw(camera);
 
 	}
 

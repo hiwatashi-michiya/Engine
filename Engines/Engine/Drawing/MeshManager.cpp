@@ -8,7 +8,7 @@ MeshManager* MeshManager::GetInstance() {
 void MeshManager::CreateMesh(const std::string& fileName) {
 
 	//メッシュを登録
-	meshes_[fileName] = std::make_unique<Mesh>();
+	meshes_[fileName] = std::make_shared<Mesh>();
 	meshes_[fileName]->Create(fileName);
 
 }

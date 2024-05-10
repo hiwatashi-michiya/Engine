@@ -7,6 +7,9 @@
 #include <string>
 #include <optional>
 #include "Drawing/ModelManager.h"
+#include "Drawing/LineDrawer.h"
+#include <memory>
+#include "base/Camera.h"
 
 template<typename tValue>
 struct AnimationCurve {
@@ -33,6 +36,7 @@ struct Joint {
 	std::vector<int32_t> children; //子JointのIndexのリスト。いなければ空
 	int32_t index; //自身のIndex
 	std::optional<int32_t> parent; //親JointのIndex。いなければnull
+	std::shared_ptr<Line> line; //描画用ライン
 };
 
 struct Skeleton {
@@ -54,6 +58,8 @@ int32_t CreateJoint(const Node& node,
 Skeleton CreateSkeleton(const Node& rootNode);
 
 void UpdateSkeleton(Skeleton& skeleton);
+
+void DrawSkeletonLine(Skeleton& skeleton, Camera* camera);
 
 //アニメーションの適用
 void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);

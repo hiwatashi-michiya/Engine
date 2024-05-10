@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "SkinningModel.h"
 #include <cassert>
 #include "Engine/Convert.h"
 #include "Engine/Drawing/ShaderManager.h"
@@ -9,21 +9,22 @@
 #include "Buffer/BufferResource.h"
 #include "Drawing/PipelineManager.h"
 #include "Drawing/MeshManager.h"
+#include "base/DirectXSetter.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
-ID3D12Device* Model::device_ = nullptr;
-ID3D12GraphicsCommandList* Model::commandList_ = nullptr;
-ID3D12RootSignature* Model::rootSignature_ = nullptr;
-ID3D12PipelineState* Model::pipelineStates_[Model::BlendMode::kCountBlend] = { nullptr };
+ID3D12Device* SkinningModel::device_ = nullptr;
+ID3D12GraphicsCommandList* SkinningModel::commandList_ = nullptr;
+ID3D12RootSignature* SkinningModel::rootSignature_ = nullptr;
+ID3D12PipelineState* SkinningModel::pipelineStates_[SkinningModel::BlendMode::kCountBlend] = { nullptr };
 //ID3D12PipelineState* Model::pipelineState_ = nullptr;
-IDxcBlob* Model::vs3dBlob_ = nullptr;
-IDxcBlob* Model::ps3dBlob_ = nullptr;
-int Model::modelNumber_ = 0;
-Model::BlendMode Model::currentBlendMode_ = Model::BlendMode::kNormal;
-const char* Model::BlendTexts[Model::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
+IDxcBlob* SkinningModel::vs3dBlob_ = nullptr;
+IDxcBlob* SkinningModel::ps3dBlob_ = nullptr;
+int SkinningModel::modelNumber_ = 0;
+SkinningModel::BlendMode SkinningModel::currentBlendMode_ = SkinningModel::BlendMode::kNormal;
+const char* SkinningModel::BlendTexts[SkinningModel::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
 
-void Model::StaticInitialize(ID3D12Device* device) {
+void SkinningModel::StaticInitialize(ID3D12Device* device) {
 
 	assert(device);
 
@@ -32,12 +33,12 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	device_ = device;
 
 	//Shaderをコンパイルする
-	vs3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Object3d.VS.hlsl", ShaderManager::kVS, "VS3D");
+	vs3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/SkinningObject3d.VS.hlsl", ShaderManager::kVS, "VSSkinning3D");
 
 	ps3dBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Object3d.PS.hlsl", ShaderManager::kPS, "PS3D");
 
 	//頂点レイアウト
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
+	std::array<D3D12_INPUT_ELEMENT_DESC, 5> inputElementDescs = {};
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -50,9 +51,20 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	inputElementDescs[2].SemanticIndex = 0;
 	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[3].SemanticName = "WEIGHT";
+	inputElementDescs[3].SemanticIndex = 0;
+	inputElementDescs[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDescs[3].InputSlot = 1; //一番目のslotのVBVを使用
+	inputElementDescs[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[4].SemanticName = "INDEX";
+	inputElementDescs[4].SemanticIndex = 0;
+	inputElementDescs[4].Format = DXGI_FORMAT_R32G32B32A32_SINT;
+	inputElementDescs[4].InputSlot = 1; //一番目のslotのVBVを使用
+	inputElementDescs[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs;
-	inputLayoutDesc.NumElements = _countof(inputElementDescs);
+	inputLayoutDesc.pInputElementDescs = inputElementDescs.data();
+	inputLayoutDesc.NumElements = UINT(inputElementDescs.size());
 
 	//RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
@@ -72,8 +84,14 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForMatrixPalette[1] = {};
+	descriptorRangeForMatrixPalette[0].BaseShaderRegister = 0;
+	descriptorRangeForMatrixPalette[0].NumDescriptors = 1;
+	descriptorRangeForMatrixPalette[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRangeForMatrixPalette[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
 	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[6]{};
+	D3D12_ROOT_PARAMETER rootParameters[7]{};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
@@ -102,6 +120,12 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[5].Descriptor.ShaderRegister = 3;
 
+	//MatrixPalette
+	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
+	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[6].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette; //Tableの中身の配列を指定
+	rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette); //Tableで利用する数
+
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
 
@@ -128,9 +152,9 @@ void Model::StaticInitialize(ID3D12Device* device) {
 		assert(false);
 	}
 
-	RootSignatureManager::GetInstance()->CreateRootSignature(signatureBlob, "RootSignature3D");
+	RootSignatureManager::GetInstance()->CreateRootSignature(signatureBlob, "RootSignature3DSkinning");
 
-	rootSignature_ = RootSignatureManager::GetInstance()->GetRootSignature("RootSignature3D");
+	rootSignature_ = RootSignatureManager::GetInstance()->GetRootSignature("RootSignature3DSkinning");
 
 	//Blendstateの設定
 	D3D12_BLEND_DESC blendDesc{};
@@ -185,9 +209,9 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
 
-	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineNormal3D");
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineNormal3DSkinning");
 
-	pipelineStates_[kNormal] = PipelineManager::GetInstance()->GetPipeline("PipelineNormal3D");
+	pipelineStates_[kNormal] = PipelineManager::GetInstance()->GetPipeline("PipelineNormal3DSkinning");
 
 	//加算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -195,9 +219,9 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
 
-	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineAdd3D");
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineAdd3DSkinning");
 
-	pipelineStates_[kAdd] = PipelineManager::GetInstance()->GetPipeline("PipelineAdd3D");
+	pipelineStates_[kAdd] = PipelineManager::GetInstance()->GetPipeline("PipelineAdd3DSkinning");
 
 	//減算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -205,9 +229,9 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
 
-	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineSubtract3D");
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineSubtract3DSkinning");
 
-	pipelineStates_[kSubtract] = PipelineManager::GetInstance()->GetPipeline("PipelineSubtract3D");
+	pipelineStates_[kSubtract] = PipelineManager::GetInstance()->GetPipeline("PipelineSubtract3DSkinning");
 
 	//乗算
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
@@ -215,9 +239,9 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
 
-	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineMultiply3D");
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineMultiply3DSkinning");
 
-	pipelineStates_[kMultiply] = PipelineManager::GetInstance()->GetPipeline("PipelineMultiply3D");
+	pipelineStates_[kMultiply] = PipelineManager::GetInstance()->GetPipeline("PipelineMultiply3DSkinning");
 
 	//スクリーン
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
@@ -225,9 +249,9 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	graphicsPipelineStateDesc.BlendState = blendDesc; //BlendState
 
-	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineScreen3D");
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "PipelineScreen3DSkinning");
 
-	pipelineStates_[kScreen] = PipelineManager::GetInstance()->GetPipeline("PipelineScreen3D");
+	pipelineStates_[kScreen] = PipelineManager::GetInstance()->GetPipeline("PipelineScreen3DSkinning");
 
 	currentBlendMode_ = BlendMode::kNormal;
 
@@ -238,17 +262,17 @@ void Model::StaticInitialize(ID3D12Device* device) {
 
 }
 
-Model* Model::Create(const std::string& filename) {
+SkinningModel* SkinningModel::Create(const std::string& filename, int32_t number) {
 
-	Model* model = new Model();
+	SkinningModel* model = new SkinningModel();
 
-	model->Initialize(filename);
+	model->Initialize(filename, number);
 
 	return model;
 
 }
 
-void Model::Initialize(const std::string& filename) {
+void SkinningModel::Initialize(const std::string& filename, int32_t number) {
 
 	assert(device_);
 
@@ -271,6 +295,28 @@ void Model::Initialize(const std::string& filename) {
 	meshFilePath_ = filename;
 
 	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
+
+	//skeleton,skinCluster設定
+	{
+
+		LoadAnimation(filename, number);
+
+		skeleton_ = std::make_unique<Skeleton>();
+
+		*skeleton_ = CreateSkeleton(mesh_->modelData_.rootNode);
+
+		skinCluster_ = std::make_unique<SkinCluster>();
+
+		skinCluster_->Create(device_, *skeleton_, mesh_->modelData_);
+
+		currentFileName_ = stringMap_[number];
+
+		//最初に表示するように初期化
+		ApplyAnimation(*skeleton_, *animations_[currentFileName_], animationTime_);
+		UpdateSkeleton(*skeleton_);
+		skinCluster_->Update(*skeleton_);
+
+	}
 
 	//transformMatrix
 	{
@@ -308,57 +354,65 @@ void Model::Initialize(const std::string& filename) {
 
 }
 
-void Model::LoadAnimation(const std::string& filename) {
+void SkinningModel::LoadAnimation(const std::string& filename, int32_t number) {
 
-	//インスタンス生成
-	if (!animation_) {
-
-		animation_ = std::make_unique<Animation>();
-
+	//ナンバーが無かったら新規生成
+	if (stringMap_.find(number) == stringMap_.end()) {
+		stringMap_[number] = filename;
 	}
 
-	*animation_ = LoadAnimationFile(filename);
-
-	if (!skeleton_) {
-
-		skeleton_ = std::make_unique<Skeleton>();
-
+	//既に生成されていたら処理中断
+	if (animations_.find(stringMap_[number]) != animations_.end()) {
+		return;
 	}
 
-	*skeleton_ = CreateSkeleton(mesh_->modelData_.rootNode);
+	animations_[stringMap_[number]] = std::make_unique<Animation>();
+
+	*animations_[stringMap_[number]] = LoadAnimationFile(stringMap_[number]);
 
 }
 
-void Model::ResetAnimation() {
 
-	//アニメーションが存在している時のみリセットを行う
-	if (animation_ && animation_->nodeAnimations.size() != 0) {
+void SkinningModel::SetAnimation(int32_t number, bool isReset) {
 
-		animationTime_ = 0.0f;
-		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
-		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+	if (stringMap_.find(number) == stringMap_.end()) {
 
+		MessageBox(NULL, L"指定した'number'に対応したファイル名は存在しません。", L"SkinningModel::SetAnimation", MB_OK);
+
+		return;
+
+	}
+
+	currentFileName_ = stringMap_[number];
+
+	if (isReset) {
+		ResetAnimation();
 	}
 
 }
 
-void Model::UpdateAnimation() {
+void SkinningModel::ResetAnimation() {
+
+	//値をリセットして再適用
+	animationTime_ = 0.0f;
+	ApplyAnimation(*skeleton_, *animations_[currentFileName_], animationTime_);
+
+}
+
+void SkinningModel::UpdateAnimation() {
 
 	isEndAnimation_ = false;
 
 	//アニメーションが存在していて、再生フラグが立っている時
-	if (animation_ && isStartAnimation_ && animation_->nodeAnimations.size() != 0) {
+	if (animations_[currentFileName_] && isStartAnimation_ && animations_[currentFileName_]->nodeAnimations.size() != 0) {
 
 		//現在のアニメーションタイムをアニメーション速度分加算
 		animationTime_ += animationSpeed_ / 60.0f;
 
 		//アニメーションタイムが全体の尺を超えていたら終点とみなす
-		if (animationTime_ >= animation_->duration) {
-			
-			animationTime_ = animation_->duration;
+		if (animationTime_ >= animations_[currentFileName_]->duration) {
+
+			animationTime_ = animations_[currentFileName_]->duration;
 
 			//ループしなければフラグを降ろす
 			if (!isLoop_) {
@@ -369,26 +423,24 @@ void Model::UpdateAnimation() {
 		}
 
 		//アニメーションの時間調整
-		animationTime_ = std::fmod(animationTime_, animation_->duration);
-		
-		if (skeleton_) {
+		animationTime_ = std::fmod(animationTime_, animations_[currentFileName_]->duration);
 
-			ApplyAnimation(*skeleton_, *animation_, animationTime_);
-			UpdateSkeleton(*skeleton_);
+		ApplyAnimation(*skeleton_, *animations_[currentFileName_], animationTime_);
+		UpdateSkeleton(*skeleton_);
 
-		}
+		skinCluster_->Update(*skeleton_);
 
-		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
-		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+		//NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
+		//Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+		//Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+		//Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+		//localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
 
 	}
 
 }
 
-void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
+void SkinningModel::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	assert(commandList_ == nullptr);
 
@@ -399,7 +451,7 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 }
 
-void Model::PostDraw() {
+void SkinningModel::PostDraw() {
 
 	commandList_ = nullptr;
 
@@ -407,16 +459,21 @@ void Model::PostDraw() {
 
 }
 
-void Model::Draw(Camera* camera) {
+void SkinningModel::Draw(Camera* camera) {
 
 	Matrix4x4 worldViewProjectionMatrix;
 
-	worldViewProjectionMatrix = localMatrix_ * worldMatrix_ * camera->matViewProjection_;
+	worldViewProjectionMatrix = /*localMatrix_ * */worldMatrix_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
-	matTransformMap_->World = localMatrix_ * worldMatrix_;
-	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(localMatrix_ * worldMatrix_));
+	matTransformMap_->World = /*localMatrix_ * */worldMatrix_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(/*localMatrix_ * */worldMatrix_));
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
+
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		mesh_->vbView_,
+		skinCluster_->influenceBufferView_
+	};
 
 	//PSO設定
 	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
@@ -427,20 +484,25 @@ void Model::Draw(Camera* camera) {
 
 	//カメラ設定
 	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
+	
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 
+	commandList_->SetGraphicsRootDescriptorTable(6, skinCluster_->paletteSrvHandle_.second);
+
 	//描画
 	material_->SetCommandMaterial(commandList_);
 
-	mesh_->SetCommandMesh(commandList_);
+	commandList_->IASetVertexBuffers(0, 2, vbvs);
+
+	mesh_->SetCommandMeshForSkinning(commandList_);
 
 }
 
-void Model::Draw(const Matrix4x4& localMatrix, Camera* camera) {
+void SkinningModel::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 
-	Matrix4x4 worldViewProjectionMatrix = localMatrix * worldMatrix_* camera->matViewProjection_;
+	Matrix4x4 worldViewProjectionMatrix = localMatrix * worldMatrix_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
 	matTransformMap_->World = localMatrix * worldMatrix_;
 	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(localMatrix * worldMatrix_));
@@ -463,16 +525,24 @@ void Model::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 	//描画
 	material_->SetCommandMaterial(commandList_);
 
-	mesh_->SetCommandMesh(commandList_);
+	mesh_->SetCommandMeshForSkinning(commandList_);
 
 }
 
-void Model::Finalize() {
+void SkinningModel::DrawSkeleton(Camera* camera) {
+
+	if (skeleton_) {
+		DrawSkeletonLine(*skeleton_, camera);
+	}
+
+}
+
+void SkinningModel::Finalize() {
 
 }
 
 //デバッグ時に使用
-void Model::StaticImGuiUpdate() {
+void SkinningModel::StaticImGuiUpdate() {
 
 #ifdef _DEBUG
 
@@ -484,7 +554,7 @@ void Model::StaticImGuiUpdate() {
 
 }
 
-void Model::SetMesh(const std::string& objFileName) {
+void SkinningModel::SetMesh(const std::string& objFileName) {
 
 	if (MeshManager::GetInstance()->IsExistMesh(objFileName)) {
 
@@ -505,7 +575,7 @@ void Model::SetMesh(const std::string& objFileName) {
 
 }
 
-void Model::ImGuiUpdate(const std::string& name) {
+void SkinningModel::ImGuiUpdate(const std::string& name) {
 
 #ifdef _DEBUG
 

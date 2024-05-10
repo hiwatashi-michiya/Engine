@@ -5,6 +5,8 @@
 #include "Particle3D.h"
 #include "Sprite.h"
 #include "Drawing/PostEffectDrawer.h"
+#include "Skinning/SkinningModel.h"
+#include "Drawing/LineDrawer.h"
 
 SceneManager* SceneManager::GetInstance() {
 	static SceneManager instance;
@@ -35,11 +37,17 @@ void SceneManager::Update() {
 
 void SceneManager::Draw() {
 
+	SkinningModel::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
+
 	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	scene_->DrawModel();
 
+	scene_->DrawSkinningModel();
+
 	Model::PostDraw();
+
+	SkinningModel::PostDraw();
 
 	Particle3D::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
@@ -52,6 +60,12 @@ void SceneManager::Draw() {
 	scene_->DrawSprite();
 
 	Sprite::PostDraw();
+
+	Line::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
+
+	scene_->DrawLine();
+
+	Line::PostDraw();
 
 }
 

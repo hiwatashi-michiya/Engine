@@ -10,8 +10,12 @@
 #include <memory>
 #include <unordered_map>
 #include "Animation/Animation.h"
+#include "SkinCluster.h"
+#include <array>
+#include <unordered_map>
 
-class Model
+
+class SkinningModel
 {
 public:
 
@@ -31,7 +35,7 @@ public:
 	static const char* BlendTexts[BlendMode::kCountBlend];
 
 	//モデル生成
-	static Model* Create(const std::string& filename);
+	static SkinningModel* Create(const std::string& filename, int32_t number);
 
 	//描画前処理
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
@@ -49,9 +53,11 @@ public:
 
 public:
 
-	void Initialize(const std::string& filename);
+	void Initialize(const std::string& filename, int32_t number);
 
 	void Draw(Camera* camera);
+
+	void DrawSkeleton(Camera* camera);
 
 	void Draw(const Matrix4x4& localMatrix, Camera* camera);
 
@@ -68,13 +74,17 @@ public:
 
 	void SetWorldMatrix(const Matrix4x4& matrix) { worldMatrix_ = matrix; }
 
-	void LoadAnimation(const std::string& filename);
+	//アニメーションのロード、切り替え時に数字を使う
+	void LoadAnimation(const std::string& filename, int32_t number);
+
+	//アニメーションを指定した数字のものに切り替え
+	void SetAnimation(int32_t number, bool isReset = true);
 
 	/// <summary>
 	/// アニメーション開始
 	/// </summary>
 	/// <param name="isLoop">ループするかどうか</param>
-	void StartAnimation(bool isLoop = false) { 
+	void StartAnimation(bool isLoop = false) {
 		isStartAnimation_ = true;
 		isLoop_ = isLoop;
 	}
@@ -93,7 +103,7 @@ public:
 
 	Matrix4x4 worldMatrix_;
 
-	Model* parent_ = nullptr;
+	SkinningModel* parent_ = nullptr;
 
 	//メッシュ
 	Mesh* mesh_;
@@ -131,12 +141,21 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> cameraBuff_;
 	//画面上のワールド座標バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> matBuff_;
-	
+
+	//数字に対応したファイル名を返すマップ
+	std::unordered_map<int32_t, std::string> stringMap_;
+
 	//アニメーション
-	std::unique_ptr<Animation> animation_;
+	std::unordered_map<std::string, std::unique_ptr<Animation>> animations_;
 
 	//スケルトン
 	std::unique_ptr<Skeleton> skeleton_;
+
+	//スキンクラスター
+	std::unique_ptr<SkinCluster> skinCluster_;
+
+	//現在再生しているアニメーションのファイル名
+	std::string currentFileName_;
 
 	//アニメーションタイム
 	float animationTime_ = 0.0f;

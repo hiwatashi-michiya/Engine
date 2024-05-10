@@ -28,18 +28,22 @@ void SelectScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,44.0f, -33.0f };
-	camera_->rotation_.x = 0.9f;
+	camera_->position_ = { 0.0f,2.0f, -20.0f };
+	camera_->rotation_.y = 0.0f;
 
 	editor_->SetCamera(camera_.get());
 
-	model_.reset(Model::Create("./Resources/human/walk.gltf"));
+	model_.reset(SkinningModel::Create("./Resources/human/walking.gltf", 0));
 	
-	model_->LoadAnimation("./Resources/human/walk.gltf");
+	model_->LoadAnimation("./Resources/human/stay.gltf", 1);
 
 	transform_ = std::make_unique<Transform>();
 
 	test_ = audioManager_->LoadInMF("./Resources/SE/test.mp3");
+
+	line_ = std::make_unique<Line>();
+	line_->start_ = { 0.0f,0.0f,0.0f };
+	line_->end_ = { 0.0f,0.0f,0.0f };
 
 }
 
@@ -63,6 +67,11 @@ void SelectScene::Update() {
 	ImGui::DragFloat3("translation", &transform_->translate_.x, 0.1f);
 	ImGui::End();
 
+	ImGui::Begin("Line");
+	ImGui::DragFloat3("start", &line_->start_.x, 0.1f);
+	ImGui::DragFloat3("end", &line_->end_.x, 0.1f);
+	ImGui::End();
+
 #endif // _DEBUG
 
 	if (input_->TriggerKey(DIK_1)) {
@@ -75,6 +84,14 @@ void SelectScene::Update() {
 
 	if (input_->TriggerKey(DIK_3)) {
 		model_->ResetAnimation();
+	}
+
+	if (input_->TriggerKey(DIK_4)) {
+		model_->SetAnimation(1);
+	}
+
+	if (input_->TriggerKey(DIK_5)) {
+		model_->SetAnimation(0);
 	}
 
 	model_->SetAnimationSpeed(speed_);
@@ -100,6 +117,10 @@ void SelectScene::DrawModel() {
 
 	editor_->Draw(camera_.get());
 
+}
+
+void SelectScene::DrawSkinningModel() {
+
 	model_->Draw(camera_.get());
 
 }
@@ -113,5 +134,11 @@ void SelectScene::DrawParticle() {
 void SelectScene::DrawSprite() {
 
 
+
+}
+
+void SelectScene::DrawLine() {
+
+	model_->DrawSkeleton(camera_.get());
 
 }

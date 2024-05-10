@@ -79,6 +79,10 @@ void Stage::Draw(Camera* camera) {
 		block->Draw(camera);
 	}
 
+}
+
+void Stage::DrawSkinningModel(Camera* camera) {
+
 	player_->Draw(camera);
 
 }

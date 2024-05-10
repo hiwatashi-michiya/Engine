@@ -6,6 +6,7 @@
 #include "Engine/math/Collision.h"
 #include "Application/Particle.h"
 #include "Transform.h"
+#include "Skinning/SkinningModel.h"
 
 class Player
 {
@@ -37,7 +38,7 @@ private:
 
 	Input* input_ = nullptr;
 
-	std::unique_ptr<Model> model_;
+	std::unique_ptr<SkinningModel> model_;
 
 	std::unique_ptr<Transform> transform_;
 

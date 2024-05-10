@@ -240,6 +240,12 @@
     <ClCompile Include="Engine\3d\Skinning\SkinCluster.cpp">
       <Filter>Engine\3d\Animation\Skinning</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3d\Skinning\SkinningModel.cpp">
+      <Filter>Engine\3d\Animation\Skinning</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\LineDrawer.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -407,6 +413,12 @@
     <ClInclude Include="Engine\3d\Skinning\SkinCluster.h">
       <Filter>Engine\3d\Animation\Skinning</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\3d\Skinning\SkinningModel.h">
+      <Filter>Engine\3d\Animation\Skinning</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\LineDrawer.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\Object3d.hlsli">
@@ -419,6 +431,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="Resources\shaders\FullScreen.hlsli">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Resources\shaders\Line.hlsli">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
@@ -451,6 +466,12 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\SkinningObject3d.VS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Line.VS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Line.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

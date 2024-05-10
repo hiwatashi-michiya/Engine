@@ -92,6 +92,12 @@ void GameScene::DrawModel() {
 
 }
 
+void GameScene::DrawSkinningModel() {
+
+	stage_->DrawSkinningModel(camera_.get());
+
+}
+
 void GameScene::DrawParticle() {
 
 
@@ -104,3 +110,8 @@ void GameScene::DrawSprite() {
 
 }
 
+void GameScene::DrawLine() {
+
+
+
+}
