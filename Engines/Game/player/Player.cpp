@@ -7,7 +7,7 @@
 Player::Player()
 {
 
-	model_.reset(SkinningModel::Create("./resources/human/walking.gltf", 0));
+	model_.reset(SkinningModel::Create("./resources/human/stay.gltf", 0));
 	model_->LoadAnimation("./resources/human/walking.gltf", 1);
 	transform_ = std::make_unique<Transform>();
 
@@ -20,6 +20,11 @@ Player::~Player()
 void Player::Initialize() {
 
 	input_ = Input::GetInstance();
+
+	model_->ResetAnimation();
+	model_->SetAnimation(0);
+	model_->StartAnimation(true);
+	model_->SetAnimationSpeed(1.5f);
 
 	transform_->translate_ = { 0.0f,5.0f,0.0f };
 	model_->material_->pLightMap_->intensity = 2.0f;
@@ -62,6 +67,13 @@ void Player::Update() {
 			velocity_.z = 0.0f;
 		}
 
+		if (fabsf(velocity_.x) + fabsf(velocity_.z) > 0.001f) {
+			model_->SetAnimation(1, false);
+		}
+		else {
+			model_->SetAnimation(0, false);
+		}
+
 		velocity_ = Normalize(velocity_);
 
 		velocity_.y -= 0.5f;
@@ -96,6 +108,8 @@ void Player::Update() {
 
 		transform_->UpdateMatrix();
 		model_->SetWorldMatrix(transform_->worldMatrix_);
+
+		model_->UpdateAnimation();
 
 	}
 

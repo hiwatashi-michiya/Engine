@@ -31,7 +31,7 @@ void GameScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,50.0f, -40.0f };
+	camera_->position_ = { 0.0f,35.0f, -30.0f };
 	camera_->rotation_.x = 0.9f;
 	mapEditor_->SetCamera(camera_.get());
 

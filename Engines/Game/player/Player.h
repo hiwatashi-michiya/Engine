@@ -54,7 +54,7 @@ private:
 
 	Vector3 velocity_{};
 
-	float speed_ = 0.4f;
+	float speed_ = 0.1f;
 
 	bool isDead_ = false;
 
