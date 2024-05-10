@@ -15,6 +15,8 @@ public:
 
 	void Draw();
 
+	void SetType(PostEffectType type) { renderTexture_.type_ = type; }
+
 private:
 
 	DirectXSetter* dxSetter_ = nullptr;

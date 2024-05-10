@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "FrameWork/SceneManager.h"
+#include "Drawing/PostEffectDrawer.h"
 
 #ifdef _DEBUG
 
@@ -36,8 +37,10 @@ void GameScene::Initialize() {
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
+	skyDome_->material_->dLightMap_->direction = { 0.0f,0.0f,1.0f };
+	skyDome_->material_->dLightMap_->intensity = 5.0f;
 	skyDome_->material_->pLightMap_->radius = 650.0f;
-	skyDome_->material_->pLightMap_->intensity = 1.50f;
+	skyDome_->material_->pLightMap_->intensity = 0.0f;
 	skyDome_->material_->pLightMap_->decay = 0.5f;
 
 	stage_ = std::make_unique<Stage>();
@@ -56,7 +59,7 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	/*skyDome_->ImGuiUpdate("skyDome");*/
+	skyDome_->ImGuiUpdate("skyDome");
 
 	ImGui::Begin("manual");
 	ImGui::Text("Move : Left Stick");
@@ -66,11 +69,29 @@ void GameScene::Update() {
 	if (input_->TriggerKey(DIK_R)) {
 		stage_->Initialize();
 		stage_->LoadStage(1);
+		resetCount_ = 60;
 	}
 
 	/*mapEditor_->Edit();*/
 
 #endif // _DEBUG
+
+	if (stage_->GetPlayer()->GetIsDead()) {
+
+		resetCount_--;
+
+		if (resetCount_ <= 0) {
+			stage_->Initialize();
+			stage_->LoadStage(1);
+			resetCount_ = 60;
+		}
+
+		PostEffectDrawer::GetInstance()->SetType(kGrayscale);
+
+	}
+	else {
+		PostEffectDrawer::GetInstance()->SetType(kNone);
+	}
 
 	stage_->Update();
 

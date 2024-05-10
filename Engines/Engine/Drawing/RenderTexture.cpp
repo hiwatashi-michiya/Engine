@@ -16,7 +16,7 @@ void RenderTextureSetup::Initialize() {
 	HRESULT hr;
 
 	vsBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/FullScreen.VS.hlsl", ShaderManager::kVS, "VSRenderTexture");
-	psBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Grayscale.PS.hlsl", ShaderManager::kPS, "PSRenderTexture");
+	psBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/CopyImage.PS.hlsl", ShaderManager::kPS, "PSRenderTexture");
 
 	//RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
@@ -114,7 +114,16 @@ void RenderTextureSetup::Initialize() {
 
 	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "RenderTexture");
 
-	pipelineState_ = PipelineManager::GetInstance()->GetPipeline("RenderTexture");
+	pipelineStates_[kNone] = PipelineManager::GetInstance()->GetPipeline("RenderTexture");
+
+	//グレースケール用に変更
+	psBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Grayscale.PS.hlsl", ShaderManager::kPS, "PSGrayscale");
+	graphicsPipelineStateDesc.PS = { psBlob_->GetBufferPointer(),
+	psBlob_->GetBufferSize() }; //PixelShader
+
+	PipelineManager::GetInstance()->CreatePipeLine(graphicsPipelineStateDesc, "Grayscale");
+
+	pipelineStates_[kGrayscale] = PipelineManager::GetInstance()->GetPipeline("Grayscale");
 
 }
 
@@ -173,7 +182,7 @@ void RenderTexture::Draw() {
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	commandList->SetGraphicsRootSignature(RenderTextureSetup::GetInstance()->GetRootSignature());
-	commandList->SetPipelineState(RenderTextureSetup::GetInstance()->GetPipelineState());
+	commandList->SetPipelineState(RenderTextureSetup::GetInstance()->GetPipelineState(type_));
 	commandList->SetGraphicsRootDescriptorTable(0, srvHandleGPU_);
 
 	commandList->DrawInstanced(3, 1, 0, 0);

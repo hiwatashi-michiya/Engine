@@ -5,6 +5,16 @@
 #include <dxcapi.h>
 #include "Vector4.h"
 #include "TextureManager.h"
+#include <array>
+
+enum PostEffectType {
+
+	kNone, //エフェクト無し
+	kGrayscale, //グレースケール
+
+	kMaxEffects, //エフェクト最大数
+
+};
 
 class RenderTextureSetup 
 {
@@ -16,14 +26,14 @@ public:
 
 	ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
 
-	ID3D12PipelineState* GetPipelineState() { return pipelineState_.Get(); }
+	ID3D12PipelineState* GetPipelineState(PostEffectType type) { return pipelineStates_[type].Get(); }
 
 private:
 
 	//ルートシグネチャ
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 	//PSO
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
+	std::array<Microsoft::WRL::ComPtr<ID3D12PipelineState>, kMaxEffects> pipelineStates_;
 
 	Microsoft::WRL::ComPtr<IDxcBlob> vsBlob_;
 	Microsoft::WRL::ComPtr<IDxcBlob> psBlob_;
@@ -57,6 +67,8 @@ public:
 	void SetGPUHandle(D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
 		srvHandleGPU_ = handle;
 	}
+	
+	PostEffectType type_ = kNone;
 
 private:
 

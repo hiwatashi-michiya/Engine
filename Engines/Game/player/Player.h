@@ -32,6 +32,10 @@ public:
 
 	void SetVelocityY(float speed) { velocity_.y = speed; }
 
+	bool GetIsDead() const { return isDead_; }
+
+	void SetIsDead(bool flag) { isDead_ = flag; }
+
 private:
 
 private:
@@ -51,6 +55,8 @@ private:
 	Vector3 velocity_{};
 
 	float speed_ = 0.4f;
+
+	bool isDead_ = false;
 
 };
 
