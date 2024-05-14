@@ -5,6 +5,7 @@
 #include <string>
 #include "Game/Block/Block.h"
 #include "Game/Item/Ring.h"
+#include "Drawing/LineDrawer.h"
 
 class Stage
 {
@@ -66,6 +67,10 @@ private:
 	std::list<std::shared_ptr<Block>> blocks_;
 
 	std::list<std::shared_ptr<Ring>> rings_;
+
+	Segment line_{};
+
+	std::unique_ptr<Line> drawLine_;
 
 };
 

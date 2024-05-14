@@ -21,7 +21,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     //n乗する
     vignette = saturate(pow(vignette, 0.8f));
     //係数として乗算
-    output.color.rgb *= vignette;
+    output.color.r *= vignette + (1.0f - vignette) * 0.2f;
+    output.color.gb *= vignette;
     
     return output;
 }

@@ -3,6 +3,8 @@
 #include "Externals/nlohmann/json.hpp"
 #include <fstream>
 #include "Audio/AudioManager.h"
+#include "Drawing/ImGuiManager.h"
+#include "Drawing/PostEffectDrawer.h"
 
 Stage::Stage()
 {
@@ -20,9 +22,20 @@ void Stage::Initialize() {
 	rings_.clear();
 	mapObjData_.clear();
 
+	drawLine_ = std::make_unique<Line>();
+
 }
 
 void Stage::Update() {
+
+#ifdef _DEBUG
+
+	/*ImGui::Begin("origin");
+	ImGui::DragFloat3("translate", &line_.origin.x, 0.1f);
+	ImGui::End();*/
+
+#endif // _DEBUG
+
 
 	rings_.remove_if([](std::shared_ptr<Ring> ring) {
 
@@ -71,12 +84,26 @@ void Stage::Update() {
 
 void Stage::Draw(Camera* camera) {
 
+	line_.origin = camera->GetWorldPosition();
+	line_.diff = player_->GetPosition() - camera->GetWorldPosition();
+
+	drawLine_->start_ = line_.origin;
+	drawLine_->end_ = line_.origin + line_.diff;
+
 	for (auto& ring : rings_) {
 		ring->Draw(camera);
 	}
 
 	for (auto& block : blocks_) {
-		block->Draw(camera);
+
+		if (!IsCollision(block->GetCollision(), line_)) {
+
+			block->Draw(camera);
+
+		}
+		else {
+			PostEffectDrawer::GetInstance()->SetType(kVignette);
+		}
 	}
 
 }
@@ -96,6 +123,8 @@ void Stage::DrawParticle(Camera* camera) {
 void Stage::DrawLine(Camera* camera) {
 
 	player_->DrawSkeleton(camera);
+
+	drawLine_->Draw(camera);
 
 }
 

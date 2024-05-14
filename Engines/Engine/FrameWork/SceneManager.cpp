@@ -37,15 +37,15 @@ void SceneManager::Update() {
 
 void SceneManager::Draw() {
 
-	SkinningModel::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
-
 	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	scene_->DrawModel();
 
-	scene_->DrawSkinningModel();
-
 	Model::PostDraw();
+
+	SkinningModel::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
+
+	scene_->DrawSkinningModel();
 
 	SkinningModel::PostDraw();
 

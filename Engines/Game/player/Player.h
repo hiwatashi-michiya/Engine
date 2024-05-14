@@ -26,7 +26,7 @@ public:
 
 	const AABB& GetCollision() { return collision_; }
 
-	const Vector3& GetPosition() { return transform_->translate_; }
+	Vector3 GetPosition() const { return transform_->worldMatrix_.GetTranslate(); }
 
 	const Vector3& GetScale() { return transform_->scale_; }
 

@@ -11,6 +11,7 @@ enum PostEffectType {
 
 	kNone, //エフェクト無し
 	kGrayscale, //グレースケール
+	kVignette, //ビネット
 
 	kMaxEffects, //エフェクト最大数
 
