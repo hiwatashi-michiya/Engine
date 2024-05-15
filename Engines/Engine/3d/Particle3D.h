@@ -1,15 +1,15 @@
 #pragma once
-#include <wrl.h>
-#include <d3d12.h>
-#include <string>
-#include <vector>
-#include <dxcapi.h>
-#include "Drawing/ModelManager.h"
-#include <vector>
-#include "Mesh.h"
-#include <memory>
-#include <unordered_map>
 #include "base/Camera.h"
+#include "Drawing/ModelManager.h"
+#include "Mesh.h"
+#include <d3d12.h>
+#include <dxcapi.h>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <vector>
+#include <wrl.h>
 
 class Particle3D
 {

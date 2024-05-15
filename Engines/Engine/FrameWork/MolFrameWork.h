@@ -1,6 +1,6 @@
 #pragma once
-#include "SceneManager.h"
 #include "AbsSceneFactory.h"
+#include "SceneManager.h"
 #include <memory>
 
 class MolFrameWork {

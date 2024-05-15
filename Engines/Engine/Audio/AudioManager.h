@@ -1,12 +1,12 @@
 #pragma once
-#include <xaudio2.h>
-#include <wrl.h>
-#include <unordered_map>
-#include <string>
 #include <array>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
+#include <string>
+#include <unordered_map>
+#include <wrl.h>
+#include <xaudio2.h>
 
 class AudioManager
 {

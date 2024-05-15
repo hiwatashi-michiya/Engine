@@ -1,15 +1,15 @@
 #pragma once
-#include "Vector3.h"
-#include "Quaternion.h"
-#include "Keyframe/Keyframe.h"
-#include <vector>
-#include <map>
-#include <string>
-#include <optional>
-#include "Drawing/ModelManager.h"
-#include "Drawing/LineDrawer.h"
-#include <memory>
 #include "base/Camera.h"
+#include "Drawing/LineDrawer.h"
+#include "Drawing/ModelManager.h"
+#include "Keyframe/Keyframe.h"
+#include "Quaternion.h"
+#include "Vector3.h"
+#include <map>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
 
 template<typename tValue>
 struct AnimationCurve {

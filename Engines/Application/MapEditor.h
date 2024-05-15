@@ -1,12 +1,12 @@
 #pragma once
-#include <list>
-#include <memory>
 #include "Engine/3d/Model.h"
 #include "Engine/Tool/GlobalVariables.h"
-#include <string>
-#include <vector>
 #include "Transform.h"
+#include <list>
+#include <memory>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 class MapEditor
 {

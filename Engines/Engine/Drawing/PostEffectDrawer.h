@@ -1,6 +1,6 @@
 #pragma once
-#include "RenderTexture.h"
 #include "base/DirectXSetter.h"
+#include "RenderTexture.h"
 
 /// <summary>
 /// フルスクリーンポストエフェクト描画クラス

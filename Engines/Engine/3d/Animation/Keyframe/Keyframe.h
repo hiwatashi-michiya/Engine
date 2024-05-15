@@ -1,6 +1,6 @@
 #pragma once
-#include "Vector3.h"
 #include "Quaternion.h"
+#include "Vector3.h"
 
 template <typename tValue>
 struct Keyframe {

@@ -126,7 +126,7 @@ void RenderTextureSetup::Initialize() {
 	pipelineStates_[kGrayscale] = PipelineManager::GetInstance()->GetPipeline("Grayscale");
 
 	//Vignette用に変更
-	psBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Vignette.PS.hlsl", ShaderManager::kPS, "PSVignette");
+	psBlob_ = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/BoxFilter.PS.hlsl", ShaderManager::kPS, "PSVignette");
 	graphicsPipelineStateDesc.PS = { psBlob_->GetBufferPointer(),
 	psBlob_->GetBufferSize() }; //PixelShader
 

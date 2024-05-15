@@ -1,17 +1,17 @@
 #pragma once
 
-#include <Windows.h>
-#include <d3d12.h>
-#include <dxgi1_6.h>
-#include <dxgidebug.h>
-#include <dxcapi.h>
-#include <wrl.h>
-#include <vector>
-#include <chrono>
-#include <thread>
-#include "WindowManager.h"
 #include "Drawing/DepthStencil.h"
 #include "Drawing/RenderTexture.h"
+#include "WindowManager.h"
+#include <chrono>
+#include <d3d12.h>
+#include <dxcapi.h>
+#include <dxgi1_6.h>
+#include <dxgidebug.h>
+#include <thread>
+#include <vector>
+#include <Windows.h>
+#include <wrl.h>
 
 class DirectXSetter
 {

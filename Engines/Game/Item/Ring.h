@@ -1,9 +1,9 @@
 #pragma once
-#include "Model.h"
-#include "Transform.h"
 #include "Animation/Animation.h"
-#include <memory>
+#include "Model.h"
 #include "Skinning/SkinningModel.h"
+#include "Transform.h"
+#include <memory>
 
 class Ring
 {

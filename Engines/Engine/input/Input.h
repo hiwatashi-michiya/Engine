@@ -1,9 +1,9 @@
 #pragma once
 #define DIRECTINPUT_VERSION 0x0800
 
-#include <wrl.h>
-#include <dinput.h>
 #include <array>
+#include <dinput.h>
+#include <wrl.h>
 #include <Xinput.h>
 
 class Input

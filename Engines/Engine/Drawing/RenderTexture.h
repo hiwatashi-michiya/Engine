@@ -1,11 +1,11 @@
 #pragma once
-#include <d3d12.h>
-#include <wrl.h>
-#include <cmath>
-#include <dxcapi.h>
-#include "Vector4.h"
 #include "TextureManager.h"
+#include "Vector4.h"
 #include <array>
+#include <cmath>
+#include <d3d12.h>
+#include <dxcapi.h>
+#include <wrl.h>
 
 enum PostEffectType {
 

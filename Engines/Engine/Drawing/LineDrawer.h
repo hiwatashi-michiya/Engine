@@ -1,11 +1,11 @@
 #pragma once
-#include <d3d12.h>
+#include "base/Camera.h"
 #include "Vector3.h"
 #include "Vector4.h"
-#include <wrl.h>
-#include "base/Camera.h"
+#include <d3d12.h>
 #include <dxcapi.h>
 #include <stdint.h>
+#include <wrl.h>
 
 class Line
 {

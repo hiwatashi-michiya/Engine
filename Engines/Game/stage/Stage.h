@@ -1,11 +1,11 @@
 #pragma once
+#include "Drawing/LineDrawer.h"
 #include "Engine/3d/Model.h"
-#include <memory>
-#include "Game/Player/Player.h"
-#include <string>
 #include "Game/Block/Block.h"
 #include "Game/Item/Ring.h"
-#include "Drawing/LineDrawer.h"
+#include "Game/Player/Player.h"
+#include <memory>
+#include <string>
 
 class Stage
 {

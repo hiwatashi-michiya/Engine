@@ -1,12 +1,12 @@
 #pragma once
-#include <wrl.h>
-#include <d3d12.h>
 #include "Drawing/ModelManager.h"
 #include "Material.h"
-#include <memory>
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <d3d12.h>
+#include <memory>
+#include <wrl.h>
 
 class Mesh
 {

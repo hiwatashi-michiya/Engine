@@ -477,5 +477,8 @@
     <FxCompile Include="Resources\shaders\Vignette.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\BoxFilter.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
