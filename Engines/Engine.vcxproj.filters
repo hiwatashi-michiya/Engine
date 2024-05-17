@@ -88,6 +88,9 @@
     <Filter Include="Engine\3d\Animation\Skinning">
       <UniqueIdentifier>{ef5b1056-4872-4352-81be-6fb3287756cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Drawing\PostEffect">
+      <UniqueIdentifier>{c6695b30-b1ca-4839-9ed1-56b320c60a22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -228,12 +231,6 @@
     <ClCompile Include="Game\Item\Ring.cpp">
       <Filter>Game\Item</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Drawing\RenderTexture.cpp">
-      <Filter>Engine\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Drawing\PostEffectDrawer.cpp">
-      <Filter>Engine\Drawing</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\DescriptorHandle.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
@@ -245,6 +242,15 @@
     </ClCompile>
     <ClCompile Include="Engine\Drawing\LineDrawer.cpp">
       <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\PostEffect\PostEffectDrawer.cpp">
+      <Filter>Engine\Drawing\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\PostEffect\RenderTexture.cpp">
+      <Filter>Engine\Drawing\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\PostEffect\PostEffects.cpp">
+      <Filter>Engine\Drawing\PostEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -401,12 +407,6 @@
     <ClInclude Include="Game\Item\Ring.h">
       <Filter>Game\Item</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Drawing\RenderTexture.h">
-      <Filter>Engine\Drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Drawing\PostEffectDrawer.h">
-      <Filter>Engine\Drawing</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\base\DescriptorHandle.h">
       <Filter>Engine\base</Filter>
     </ClInclude>
@@ -418,6 +418,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\LineDrawer.h">
       <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\PostEffect\PostEffectDrawer.h">
+      <Filter>Engine\Drawing\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\PostEffect\RenderTexture.h">
+      <Filter>Engine\Drawing\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\PostEffect\PostEffects.h">
+      <Filter>Engine\Drawing\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

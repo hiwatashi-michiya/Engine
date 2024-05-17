@@ -1,20 +1,20 @@
-#include "2d/Sprite.h"
-#include "3d/Model.h"
-#include "3d/Particle3D.h"
-#include "Audio/AudioManager.h"
-#include "base/DirectXSetter.h"
-#include "base/SafeDelete.h"
-#include "base/WindowManager.h"
+#include "Sprite.h"
+#include "Model.h"
+#include "Particle3D.h"
+#include "AudioManager.h"
+#include "DirectXSetter.h"
+#include "SafeDelete.h"
+#include "WindowManager.h"
 #include "Convert.h"
-#include "Drawing/LineDrawer.h"
-#include "Drawing/PipelineManager.h"
-#include "Drawing/PostEffectDrawer.h"
-#include "Drawing/RootSignatureManager.h"
-#include "Drawing/ShaderManager.h"
-#include "Drawing/TextureManager.h"
+#include "LineDrawer.h"
+#include "PipelineManager.h"
+#include "PostEffectDrawer.h"
+#include "RootSignatureManager.h"
+#include "ShaderManager.h"
+#include "TextureManager.h"
 #include "Engine.h"
-#include "input/Input.h"
-#include "math/Rand.h"
+#include "Input.h"
+#include "Rand.h"
 #include "Skinning/SkinningModel.h"
 #include "Tool/GlobalVariables.h"
 #include <cassert>
@@ -45,7 +45,6 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	dxSetter_ = DirectXSetter::GetInstance();
 	dxSetter_->Initialize(windowManager_, width, height);
-	PostEffectDrawer::GetInstance()->Initialize();
 
 	ShaderManager::GetInstance()->Initialize();
 	PipelineManager::GetInstance()->Initialize(dxSetter_->GetDevice());
@@ -57,8 +56,8 @@ void Engine::Initialize(const char* title, int width, int height) {
 	SkinningModel::StaticInitialize(dxSetter_->GetDevice());
 	Particle3D::StaticInitialize(dxSetter_->GetDevice());
 	Line::Initialize(dxSetter_->GetDevice());
-	RenderTextureSetup::GetInstance()->Initialize();
-	
+	PostEffectDrawer::GetInstance()->Initialize();
+
 	TextureManager::GetInstance()->Initialize(dxSetter_->GetSrvHeap());
 	Input::GetInstance()->Initialize();
 

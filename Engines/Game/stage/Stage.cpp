@@ -3,8 +3,8 @@
 #include "Externals/nlohmann/json.hpp"
 #include <fstream>
 #include "Audio/AudioManager.h"
-#include "Drawing/ImGuiManager.h"
-#include "Drawing/PostEffectDrawer.h"
+#include "ImGuiManager.h"
+#include "PostEffectDrawer.h"
 
 Stage::Stage()
 {
@@ -102,7 +102,7 @@ void Stage::Draw(Camera* camera) {
 
 		}
 		else {
-			PostEffectDrawer::GetInstance()->SetType(kVignette);
+			
 		}
 	}
 

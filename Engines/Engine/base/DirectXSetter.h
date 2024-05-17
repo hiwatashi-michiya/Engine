@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Drawing/DepthStencil.h"
-#include "Drawing/RenderTexture.h"
+#include "DepthStencil.h"
+#include "RenderTexture.h"
 #include "WindowManager.h"
 #include <chrono>
 #include <d3d12.h>

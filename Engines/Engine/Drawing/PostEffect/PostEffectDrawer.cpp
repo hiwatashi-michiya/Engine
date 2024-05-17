@@ -16,7 +16,6 @@ void PostEffectDrawer::Initialize() {
 	//DescriptorSizeを取得しておく
 	uint32_t descriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	uint32_t descriptorSizeRTV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	uint32_t descriptorSizeDSV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	//レンダーターゲットビューの設定
 	D3D12_RENDER_TARGET_VIEW_DESC renderTargetViewDesc{};
@@ -24,7 +23,7 @@ void PostEffectDrawer::Initialize() {
 	renderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 	//RenderTexture用のRTVを作成
-	const Vector4 kRenderTargetClearValue{ 1.0f,0.0f,0.0f,1.0f }; //分かりやすい様に赤
+	const Vector4 kRenderTargetClearValue{ 0.05f,0.1f,0.5f,1.0f }; //青
 	//ディスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = GetCPUDescriptorHandle(dxSetter_->GetRtvHeap().Get(), descriptorSizeRTV, 2);
 	renderTexture_.Create(device_, WindowManager::kWindowWidth, WindowManager::kWindowHeight,
@@ -49,6 +48,25 @@ void PostEffectDrawer::Initialize() {
 
 	device_->CreateShaderResourceView(renderTexture_.Get(), &renderTextureSrvDesc, srvHandleCPU);
 
+	CopyImageRender copyImage;
+	copyImage.Create();
+
+	postEffects_.push_back(copyImage);
+
+	Grayscale grayScale;
+	grayScale.Create();
+
+	postEffects_.push_back(grayScale);
+
+	Vignette vignette;
+	vignette.Create();
+
+	postEffects_.push_back(vignette);
+
+	BoxFilter boxFilter;
+	boxFilter.Create();
+
+	postEffects_.push_back(boxFilter);
 
 }
 
@@ -70,6 +88,8 @@ void PostEffectDrawer::Draw() {
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	//TransitionBarrierを張る
 	commandList->ResourceBarrier(1, &barrier);
+
+	postEffects_[0].Render();
 
 	renderTexture_.Draw();
 

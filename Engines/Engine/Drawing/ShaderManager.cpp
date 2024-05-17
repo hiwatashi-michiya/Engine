@@ -30,6 +30,11 @@ void ShaderManager::Initialize() {
 
 IDxcBlob* ShaderManager::CompileShader(const std::wstring& filePath, ShaderType type, const std::string& name) {
 
+	//既に作成していたら対応したものを返す
+	if (blobs_.find(name) != blobs_.end()) {
+		return blobs_[name].Get();
+	}
+
 	blobs_[name] = CompileShader(filePath, profiles[type].c_str(), dxcUtils_, dxcCompiler_, includeHandler_);
 
 	return blobs_[name].Get();

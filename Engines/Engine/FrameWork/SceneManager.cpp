@@ -1,12 +1,12 @@
 #include "SceneManager.h"
 #include <cassert>
-#include "base/DirectXSetter.h"
+#include "DirectXSetter.h"
 #include "Model.h"
 #include "Particle3D.h"
 #include "Sprite.h"
-#include "Drawing/PostEffectDrawer.h"
+#include "PostEffectDrawer.h"
 #include "Skinning/SkinningModel.h"
-#include "Drawing/LineDrawer.h"
+#include "LineDrawer.h"
 
 SceneManager* SceneManager::GetInstance() {
 	static SceneManager instance;

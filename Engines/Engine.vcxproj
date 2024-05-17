@@ -80,7 +80,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
@@ -139,7 +139,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
@@ -179,8 +179,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Drawing\MeshManager.cpp" />
     <ClCompile Include="Engine\Drawing\ModelManager.cpp" />
     <ClCompile Include="Engine\Drawing\PipelineManager.cpp" />
-    <ClCompile Include="Engine\Drawing\PostEffectDrawer.cpp" />
-    <ClCompile Include="Engine\Drawing\RenderTexture.cpp" />
+    <ClCompile Include="Engine\Drawing\PostEffect\PostEffectDrawer.cpp" />
+    <ClCompile Include="Engine\Drawing\PostEffect\PostEffects.cpp" />
+    <ClCompile Include="Engine\Drawing\PostEffect\RenderTexture.cpp" />
     <ClCompile Include="Engine\Drawing\RootSignatureManager.cpp" />
     <ClCompile Include="Engine\Drawing\ShaderManager.cpp" />
     <ClCompile Include="Engine\Drawing\TextureManager.cpp" />
@@ -235,8 +236,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Drawing\MeshManager.h" />
     <ClInclude Include="Engine\Drawing\ModelManager.h" />
     <ClInclude Include="Engine\Drawing\PipelineManager.h" />
-    <ClInclude Include="Engine\Drawing\PostEffectDrawer.h" />
-    <ClInclude Include="Engine\Drawing\RenderTexture.h" />
+    <ClInclude Include="Engine\Drawing\PostEffect\PostEffectDrawer.h" />
+    <ClInclude Include="Engine\Drawing\PostEffect\PostEffects.h" />
+    <ClInclude Include="Engine\Drawing\PostEffect\RenderTexture.h" />
     <ClInclude Include="Engine\Drawing\RootSignatureManager.h" />
     <ClInclude Include="Engine\Drawing\ShaderManager.h" />
     <ClInclude Include="Engine\Drawing\TextureManager.h" />

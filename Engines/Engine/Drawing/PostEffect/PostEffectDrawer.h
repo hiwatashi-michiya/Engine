@@ -1,6 +1,8 @@
 #pragma once
-#include "base/DirectXSetter.h"
+#include "DirectXSetter.h"
 #include "RenderTexture.h"
+#include <vector>
+#include "PostEffects.h"
 
 /// <summary>
 /// フルスクリーンポストエフェクト描画クラス
@@ -15,13 +17,13 @@ public:
 
 	void Draw();
 
-	void SetType(PostEffectType type) { renderTexture_.type_ = type; }
-
 private:
 
 	DirectXSetter* dxSetter_ = nullptr;
 
 	ID3D12Device* device_ = nullptr;
+
+	std::vector<PostEffects> postEffects_;
 
 	RenderTexture renderTexture_;
 

@@ -1,6 +1,6 @@
 #include "GameScene.h"
-#include "FrameWork/SceneManager.h"
-#include "Drawing/PostEffectDrawer.h"
+#include "SceneManager.h"
+#include "PostEffectDrawer.h"
 
 #ifdef _DEBUG
 
@@ -86,11 +86,9 @@ void GameScene::Update() {
 			resetCount_ = 60;
 		}
 
-		PostEffectDrawer::GetInstance()->SetType(kGrayscale);
-
 	}
 	else {
-		PostEffectDrawer::GetInstance()->SetType(kNone);
+		
 	}
 
 	stage_->Update();
