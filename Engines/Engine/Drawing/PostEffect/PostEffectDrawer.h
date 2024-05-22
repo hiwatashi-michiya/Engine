@@ -3,6 +3,7 @@
 #include "RenderTexture.h"
 #include <vector>
 #include "PostEffects.h"
+#include <memory>
 
 /// <summary>
 /// フルスクリーンポストエフェクト描画クラス
@@ -17,13 +18,15 @@ public:
 
 	void Draw();
 
+	void Debug();
+
 private:
 
 	DirectXSetter* dxSetter_ = nullptr;
 
 	ID3D12Device* device_ = nullptr;
 
-	std::vector<PostEffects> postEffects_;
+	std::vector<std::shared_ptr<PostEffects>> postEffects_;
 
 	RenderTexture renderTexture_;
 

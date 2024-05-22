@@ -1,5 +1,11 @@
 #include "FullScreen.hlsli"
 
+struct Parameter
+{
+    int32_t size;
+};
+
+ConstantBuffer<Parameter> gParameter : register(b0);
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
 
@@ -33,16 +39,21 @@ PixelShaderOutput main(VertexShaderOutput input)
     output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
     output.color.a = 1.0f;
     
-    for (int32_t x = 0; x < 3; ++x){
+    for (int32_t x = -gParameter.size; x <= gParameter.size; ++x){
         
-        for (int32_t y = 0; y < 3; ++y){
+        for (int32_t y = -gParameter.size; y <= gParameter.size; ++y)
+        {
             
             //現在のtexcoordを算出
-            float32_t2 texcoord = input.texcoord + kIndex3x3[x][y] * uvStepSize;
+            float32_t2 texcoord =
+            {
+                clamp(input.texcoord.x + x * uvStepSize.x, 0.0f, width),
+                clamp(input.texcoord.y + y * uvStepSize.y, 0.0f, height)
+            };
             
             //色に1/9を掛けて足す
             float32_t3 fetchColor = gTexture.Sample(gSampler, texcoord).rgb;
-            output.color.rgb += fetchColor * kKernel3x3[x][y];
+            output.color.rgb += fetchColor * rcp(pow(gParameter.size * 2 + 1, 2));
             
         }
         

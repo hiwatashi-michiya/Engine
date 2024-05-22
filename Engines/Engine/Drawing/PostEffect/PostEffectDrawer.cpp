@@ -1,6 +1,7 @@
 #include "PostEffectDrawer.h"
 #include <cassert>
 #include "base/DescriptorHandle.h"
+#include "ImGuiManager.h"
 
 PostEffectDrawer* PostEffectDrawer::GetInstance() {
 	static PostEffectDrawer instance;
@@ -48,25 +49,20 @@ void PostEffectDrawer::Initialize() {
 
 	device_->CreateShaderResourceView(renderTexture_.Get(), &renderTextureSrvDesc, srvHandleCPU);
 
-	CopyImageRender copyImage;
-	copyImage.Create();
+	
+	postEffects_.push_back(std::make_shared<CopyImageRender>());
 
-	postEffects_.push_back(copyImage);
+	postEffects_.push_back(std::make_shared<Grayscale>());
 
-	Grayscale grayScale;
-	grayScale.Create();
+	postEffects_.push_back(std::make_shared<Vignette>());
 
-	postEffects_.push_back(grayScale);
+	postEffects_.push_back(std::make_shared<BoxFilter>());
 
-	Vignette vignette;
-	vignette.Create();
+	for (int32_t i = 0; i < PostEffectType::kMaxEffects; i++) {
 
-	postEffects_.push_back(vignette);
+		postEffects_[i]->Create();
 
-	BoxFilter boxFilter;
-	boxFilter.Create();
-
-	postEffects_.push_back(boxFilter);
+	}
 
 }
 
@@ -89,7 +85,7 @@ void PostEffectDrawer::Draw() {
 	//TransitionBarrierを張る
 	commandList->ResourceBarrier(1, &barrier);
 
-	postEffects_[0].Render();
+	postEffects_[2]->Render();
 
 	renderTexture_.Draw();
 
@@ -105,5 +101,31 @@ void PostEffectDrawer::Draw() {
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//TransitionBarrierを張る
 	commandList->ResourceBarrier(1, &barrier);
+
+}
+
+void PostEffectDrawer::Debug() {
+
+	ImGui::Begin("PostEffects", nullptr, ImGuiWindowFlags_MenuBar);
+
+	if (ImGui::BeginMenuBar()) {
+
+		for (int32_t i = 0; i < postEffects_.size(); i++) {
+
+			if (ImGui::BeginMenu(postEffects_[i]->name_.c_str())) {
+
+				postEffects_[i]->Debug();
+
+				ImGui::EndMenu();
+
+			}
+
+		}
+
+		ImGui::EndMenuBar();
+
+	}
+
+	ImGui::End();
 
 }

@@ -66,6 +66,8 @@ void GameScene::Update() {
 	ImGui::Text("Reset : R key");
 	ImGui::End();
 
+	PostEffectDrawer::GetInstance()->Debug();
+
 	if (input_->TriggerKey(DIK_R)) {
 		stage_->Initialize();
 		stage_->LoadStage(1);

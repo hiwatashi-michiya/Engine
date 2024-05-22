@@ -5,6 +5,13 @@
 #include "Convert.h"
 #include <cassert>
 #include "DirectXSetter.h"
+#include "BufferResource.h"
+
+#ifdef _DEBUG
+
+#include "ImGuiManager.h"
+
+#endif // _DEBUG
 
 void PostEffects::Create() {
 
@@ -111,6 +118,8 @@ void PostEffects::Create() {
 
 	pipelineState_ = PipelineManager::GetInstance()->GetPipeline("CopyImage");
 
+	name_ = "CopyImage";
+
 }
 
 void PostEffects::Render() {
@@ -119,6 +128,16 @@ void PostEffects::Render() {
 
 	commandList->SetGraphicsRootSignature(rootSignature_);
 	commandList->SetPipelineState(pipelineState_);
+
+}
+
+void PostEffects::Debug() {
+
+#ifdef _DEBUG
+
+
+
+#endif // _DEBUG
 
 }
 
@@ -147,6 +166,9 @@ void Grayscale::Create() {
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange; //Tableの中身の配列を指定
 	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); //Tableで利用する数
+
+
+
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
 
@@ -227,6 +249,23 @@ void Grayscale::Create() {
 
 	pipelineState_ = PipelineManager::GetInstance()->GetPipeline("Grayscale");
 
+	//parameter
+	{
+
+		buffer_ = CreateBufferResource(DirectXSetter::GetInstance()->GetDevice(), sizeof(Parameter));
+
+		buffer_->SetName(L"VignetteParam");
+
+		buffer_->Map(0, nullptr, reinterpret_cast<void**>(&parameter_));
+
+
+
+		buffer_->Unmap(0, nullptr);
+
+	}
+
+	name_ = "Grayscale";
+
 }
 
 void Grayscale::Render() {
@@ -235,6 +274,17 @@ void Grayscale::Render() {
 
 	commandList->SetGraphicsRootSignature(rootSignature_);
 	commandList->SetPipelineState(pipelineState_);
+
+}
+
+void Grayscale::Debug() {
+
+#ifdef _DEBUG
+
+
+
+#endif // _DEBUG
+
 
 }
 
@@ -257,12 +307,18 @@ void Vignette::Create() {
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[1]{};
+	D3D12_ROOT_PARAMETER rootParameters[2]{};
 
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange; //Tableの中身の配列を指定
 	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); //Tableで利用する数
+
+	//パラメータ用
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //CBVを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+	rootParameters[1].Descriptor.ShaderRegister = 0;
+
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
 
@@ -343,6 +399,26 @@ void Vignette::Create() {
 
 	pipelineState_ = PipelineManager::GetInstance()->GetPipeline("Vignette");
 
+	//parameter
+	{
+
+		buffer_ = CreateBufferResource(DirectXSetter::GetInstance()->GetDevice(), sizeof(Parameter));
+
+		buffer_->SetName(L"VignetteParam");
+
+		buffer_->Map(0, nullptr, reinterpret_cast<void**>(&parameter_));
+
+		parameter_->color = { 1.0f,1.0f,1.0f };
+		parameter_->colorPower = 0.2f;
+		parameter_->scale = 16.0f;
+		parameter_->power = 0.8f;
+
+		buffer_->Unmap(0, nullptr);
+
+	}
+	
+	name_ = "Vignette";
+
 }
 
 void Vignette::Render() {
@@ -351,6 +427,20 @@ void Vignette::Render() {
 
 	commandList->SetGraphicsRootSignature(rootSignature_);
 	commandList->SetPipelineState(pipelineState_);
+	commandList->SetGraphicsRootConstantBufferView(1, buffer_->GetGPUVirtualAddress());
+
+}
+
+void Vignette::Debug() {
+
+#ifdef _DEBUG
+
+	ImGui::DragFloat3("color", &parameter_->color.x, 0.01f, 0.0f, 1.0f);
+	ImGui::DragFloat("colorPower", &parameter_->colorPower, 0.01f, 0.0f, 1.0f);
+	ImGui::DragFloat("scale", &parameter_->scale, 0.1f);
+	ImGui::DragFloat("power", &parameter_->power, 0.01f);
+
+#endif // _DEBUG
 
 }
 
@@ -373,12 +463,18 @@ void BoxFilter::Create() {
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[1]{};
+	D3D12_ROOT_PARAMETER rootParameters[2]{};
 
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange; //Tableの中身の配列を指定
 	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); //Tableで利用する数
+
+	//パラメータ用
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //CBVを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+	rootParameters[1].Descriptor.ShaderRegister = 0;
+
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
 
@@ -459,6 +555,23 @@ void BoxFilter::Create() {
 
 	pipelineState_ = PipelineManager::GetInstance()->GetPipeline("BoxFilter");
 
+	//parameter
+	{
+
+		buffer_ = CreateBufferResource(DirectXSetter::GetInstance()->GetDevice(), sizeof(Parameter));
+
+		buffer_->SetName(L"BoxFilterParam");
+
+		buffer_->Map(0, nullptr, reinterpret_cast<void**>(&parameter_));
+
+		parameter_->size = 2;
+
+		buffer_->Unmap(0, nullptr);
+
+	}
+
+	name_ = "BoxFilter";
+
 }
 
 void BoxFilter::Render() {
@@ -467,5 +580,16 @@ void BoxFilter::Render() {
 
 	commandList->SetGraphicsRootSignature(rootSignature_);
 	commandList->SetPipelineState(pipelineState_);
+	commandList->SetGraphicsRootConstantBufferView(1, buffer_->GetGPUVirtualAddress());
+
+}
+
+void BoxFilter::Debug() {
+
+#ifdef _DEBUG
+
+	ImGui::InputInt("size", &parameter_->size, 1);
+
+#endif // _DEBUG
 
 }

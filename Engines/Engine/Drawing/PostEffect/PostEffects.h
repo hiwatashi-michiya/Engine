@@ -1,11 +1,15 @@
 #pragma once
 #include "RenderTexture.h"
+#include <string>
+#include "Vector3.h"
+#include "Vector4.h"
 
 enum PostEffectType {
 
 	kNone, //エフェクト無し
 	kGrayscale, //グレースケール
 	kVignette, //ビネット
+	kBoxFilter, //ぼかし
 
 	kMaxEffects, //エフェクト最大数
 
@@ -21,6 +25,10 @@ public:
 	virtual void Create();
 
 	virtual void Render();
+
+	virtual void Debug();
+
+	std::string name_;
 
 protected:
 
@@ -60,7 +68,9 @@ public:
 
 	void Render() override;
 
-	Parameter* parameter_;
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
 
 private:
 
@@ -74,7 +84,11 @@ class Vignette : public PostEffects
 private:
 
 	struct Parameter {
-
+		Vector3 color = { 1.0f,1.0f,1.0f };
+		float colorPower = 0.2f;
+		float scale = 16.0f;
+		float power = 0.8f;
+		float padding[2];
 	};
 
 public:
@@ -86,7 +100,9 @@ public:
 
 	void Render() override;
 
-	Parameter* parameter_;
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
 
 private:
 
@@ -100,7 +116,8 @@ class BoxFilter : public PostEffects
 private:
 
 	struct Parameter {
-
+		int32_t size = 2;
+		float padding[3];
 	};
 
 public:
@@ -112,7 +129,9 @@ public:
 
 	void Render() override;
 
-	Parameter* parameter_;
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
 
 private:
 
