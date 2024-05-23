@@ -199,6 +199,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
     <ClCompile Include="Application\MapEditor.cpp" />
     <ClCompile Include="Application\Particle.cpp" />
+    <ClCompile Include="Engine\Tool\LevelDataLoader.cpp" />
     <ClCompile Include="Game\Block\Block.cpp" />
     <ClCompile Include="Game\DefaultScene.cpp" />
     <ClCompile Include="Game\Game.cpp" />
@@ -260,6 +261,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Tool\GlobalVariables.h" />
     <ClInclude Include="Application\MapEditor.h" />
     <ClInclude Include="Application\Particle.h" />
+    <ClInclude Include="Engine\Tool\LevelDataLoader.h" />
     <ClInclude Include="Game\Block\Block.h" />
     <ClInclude Include="Game\DefaultScene.h" />
     <ClInclude Include="Game\Game.h" />

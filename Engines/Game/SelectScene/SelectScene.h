@@ -16,6 +16,7 @@
 #include "Tool/GlobalVariables.h"
 #include "Transform.h"
 #include <memory>
+#include "Tool/LevelDataLoader.h"
 
 class SelectScene : public DefaultScene
 {
@@ -41,6 +42,8 @@ private:
 
 	MapEditor* editor_ = nullptr;
 
+	LevelDataLoader* loader_ = nullptr;
+
 	std::unique_ptr<Camera> camera_;
 
 	float animationTime_ = 0.0f;
@@ -50,6 +53,9 @@ private:
 	std::unique_ptr<SkinningModel> model_;
 
 	std::unique_ptr<Transform> transform_;
+
+	std::vector<std::shared_ptr<Model>> models_;
+	std::vector<std::shared_ptr<Transform>> transforms_;
 
 	float speed_ = 1.0f;
 

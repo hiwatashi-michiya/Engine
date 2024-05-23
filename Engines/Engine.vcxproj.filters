@@ -252,6 +252,9 @@
     <ClCompile Include="Engine\Drawing\PostEffect\PostEffects.cpp">
       <Filter>Engine\Drawing\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Tool\LevelDataLoader.cpp">
+      <Filter>Engine\Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -427,6 +430,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\PostEffect\PostEffects.h">
       <Filter>Engine\Drawing\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\LevelDataLoader.h">
+      <Filter>Engine\Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

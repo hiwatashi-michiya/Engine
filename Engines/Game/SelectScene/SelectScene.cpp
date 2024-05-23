@@ -26,6 +26,26 @@ void SelectScene::Initialize() {
 	editor_ = MapEditor::GetInstance();
 	editor_->Initialize();
 
+	loader_ = LevelDataLoader::GetInstance();
+	loader_->Load("./Resources/Levels/parent.json");
+
+	for (auto& object : loader_->levelData_->objects_) {
+
+		std::shared_ptr<Model> newModel;
+
+		newModel.reset(Model::Create("./Resources/cube/cube.obj"));
+		
+		models_.push_back(newModel);
+
+		std::shared_ptr<Transform> newTransform = std::make_shared<Transform>();
+		newTransform->translate_ = object.translation;
+		newTransform->rotateQuaternion_ = ConvertFromEuler(object.rotation);
+		newTransform->scale_ = object.scaling;
+
+		transforms_.push_back(newTransform);
+
+	}
+
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,2.0f, -20.0f };
@@ -94,6 +114,14 @@ void SelectScene::Update() {
 		model_->SetAnimation(0);
 	}
 
+	for (int32_t i = 0; i < transforms_.size(); i++) {
+		transforms_[i]->UpdateMatrix();
+	}
+
+	for (int32_t i = 0; i < models_.size(); i++) {
+		models_[i]->SetWorldMatrix(transforms_[i]->worldMatrix_);
+	}
+
 	model_->SetAnimationSpeed(speed_);
 
 	transform_->UpdateMatrix();
@@ -116,6 +144,10 @@ void SelectScene::Update() {
 void SelectScene::DrawModel() {
 
 	editor_->Draw(camera_.get());
+
+	for (int32_t i = 0; i < models_.size(); i++) {
+		models_[i]->Draw(camera_.get());
+	}
 
 }
 
