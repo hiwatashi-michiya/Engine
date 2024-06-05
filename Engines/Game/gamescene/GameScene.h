@@ -58,6 +58,8 @@ private:
 
 	uint32_t testSE_;
 
+	Texture* tex_;
+
 };
 
 

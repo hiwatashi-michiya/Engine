@@ -47,6 +47,8 @@ void GameScene::Initialize() {
 	stage_->Initialize();
 	stage_->LoadStage(1);
 
+	tex_ = TextureManager::GetInstance()->Load("./Resources/textures/rostock_laage_airport_4k.dds");
+
 }
 
 void GameScene::Update() {
