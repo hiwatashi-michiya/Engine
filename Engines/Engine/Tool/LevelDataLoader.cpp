@@ -1,6 +1,7 @@
 #include "LevelDataLoader.h"
 #include <fstream>
 #include <Windows.h>
+#include "UsefulFunc.h"
 
 LevelData::LevelData()
 {
@@ -76,8 +77,23 @@ void LevelDataLoader::ScanObject(nlohmann::json objects, const std::string& name
 			LevelData::ObjectData& objectData = levelData_->objects_.back();
 
 			if (object.contains("file_name")) {
+				
 				//ファイル名
-				objectData.fileName = object["file_name"];
+				objectData.fileName = SearchResourceFile(object["file_name"], ".obj");
+				//.objファイルが無かったら.gltfもサーチ
+				if (objectData.fileName.empty()) {
+					objectData.fileName = SearchResourceFile(object["file_name"], ".gltf");
+				}
+				//それでも無かったらリソースがないのでメッセージ出す
+				if (objectData.fileName.empty()) {
+					MessageBox(nullptr, L"リソースファイル内にシーンに必要なリソースが存在しません。", L"LevelDataLoader - ScanObject", MB_OK);
+					assert(false);
+				}
+
+			}
+			//ファイルネームがそもそも無い場合はCubeをデフォルトで設定
+			else {
+				objectData.fileName = "./Resources/cube/cube.obj";
 			}
 
 			//トランスフォームのパラメータ読み込み

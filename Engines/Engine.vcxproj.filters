@@ -91,6 +91,9 @@
     <Filter Include="Engine\Drawing\PostEffect">
       <UniqueIdentifier>{c6695b30-b1ca-4839-9ed1-56b320c60a22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Useful">
+      <UniqueIdentifier>{61055ec7-62f4-42f8-b708-2fbabce33069}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -254,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Tool\LevelDataLoader.cpp">
       <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Useful\UsefulFunc.cpp">
+      <Filter>Engine\Useful</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Tool\LevelDataLoader.h">
       <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Useful\UsefulFunc.h">
+      <Filter>Engine\Useful</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

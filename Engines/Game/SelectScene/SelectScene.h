@@ -50,10 +50,6 @@ private:
 
 	Matrix4x4 localMatrix_{};
 
-	std::unique_ptr<SkinningModel> model_;
-
-	std::unique_ptr<Transform> transform_;
-
 	std::vector<std::shared_ptr<Model>> models_;
 	std::vector<std::shared_ptr<Transform>> transforms_;
 

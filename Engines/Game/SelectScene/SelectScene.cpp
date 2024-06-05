@@ -27,13 +27,13 @@ void SelectScene::Initialize() {
 	editor_->Initialize();
 
 	loader_ = LevelDataLoader::GetInstance();
-	loader_->Load("./Resources/Levels/parent.json");
+	loader_->Load("./Resources/Levels/myScene.json");
 
 	for (auto& object : loader_->levelData_->objects_) {
 
 		std::shared_ptr<Model> newModel;
 
-		newModel.reset(Model::Create("./Resources/cube/cube.obj"));
+		newModel.reset(Model::Create(object.fileName));
 		
 		models_.push_back(newModel);
 
@@ -53,12 +53,6 @@ void SelectScene::Initialize() {
 
 	editor_->SetCamera(camera_.get());
 
-	model_.reset(SkinningModel::Create("./Resources/human/walking.gltf", 0));
-	
-	model_->LoadAnimation("./Resources/human/stay.gltf", 1);
-
-	transform_ = std::make_unique<Transform>();
-
 	test_ = audioManager_->LoadInMF("./Resources/SE/test.mp3");
 
 	line_ = std::make_unique<Line>();
@@ -77,42 +71,12 @@ void SelectScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	ImGui::Begin("Animation");
-	ImGui::DragFloat("animation - Speed", &speed_, 0.01f);
-	ImGui::End();
-
-	ImGui::Begin("transform");
-	ImGui::DragFloat3("scale", &transform_->scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &transform_->rotateQuaternion_.x, 0.1f);
-	ImGui::DragFloat3("translation", &transform_->translate_.x, 0.1f);
-	ImGui::End();
-
 	ImGui::Begin("Line");
 	ImGui::DragFloat3("start", &line_->start_.x, 0.1f);
 	ImGui::DragFloat3("end", &line_->end_.x, 0.1f);
 	ImGui::End();
 
 #endif // _DEBUG
-
-	if (input_->TriggerKey(DIK_1)) {
-		model_->StartAnimation();
-	}
-
-	if (input_->TriggerKey(DIK_2)) {
-		model_->StopAnimation();
-	}
-
-	if (input_->TriggerKey(DIK_3)) {
-		model_->ResetAnimation();
-	}
-
-	if (input_->TriggerKey(DIK_4)) {
-		model_->SetAnimation(1);
-	}
-
-	if (input_->TriggerKey(DIK_5)) {
-		model_->SetAnimation(0);
-	}
 
 	for (int32_t i = 0; i < transforms_.size(); i++) {
 		transforms_[i]->UpdateMatrix();
@@ -121,14 +85,6 @@ void SelectScene::Update() {
 	for (int32_t i = 0; i < models_.size(); i++) {
 		models_[i]->SetWorldMatrix(transforms_[i]->worldMatrix_);
 	}
-
-	model_->SetAnimationSpeed(speed_);
-
-	transform_->UpdateMatrix();
-
-	model_->SetWorldMatrix(transform_->worldMatrix_);
-
-	model_->UpdateAnimation();
 
 	editor_->Edit();
 
@@ -153,7 +109,7 @@ void SelectScene::DrawModel() {
 
 void SelectScene::DrawSkinningModel() {
 
-	model_->Draw(camera_.get());
+	
 
 }
 
@@ -170,7 +126,5 @@ void SelectScene::DrawSprite() {
 }
 
 void SelectScene::DrawLine() {
-
-	model_->DrawSkeleton(camera_.get());
 
 }
