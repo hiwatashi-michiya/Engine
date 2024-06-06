@@ -314,7 +314,7 @@ void MapEditor::Save(const std::string& filename) {
 
 	root = nlohmann::json::object();
 
-	root[filename] = nlohmann::json::object();
+	root[sceneName_] = nlohmann::json::object();
 
 	//設定したタグを保存
 	nlohmann::json tagArray;
@@ -323,25 +323,25 @@ void MapEditor::Save(const std::string& filename) {
 		tagArray += tag;
 	}
 
-	root[filename]["tags"] = tagArray;
+	root[sceneName_]["tags"] = tagArray;
 
 	for (auto& object : mapObjData_) {
 
-		root[filename]["objectData"][object->objName]["position"] =
+		root[sceneName_]["objectData"][object->objName]["position"] =
 			nlohmann::json::array({ object->transform->translate_.x, object->transform->translate_.y, object->transform->translate_.z });
 		/*root[filename]["objectData"][object->objName]["rotation"] =
 			nlohmann::json::array({ object->transform->rotate_.x, object->transform->rotate_.y, object->transform->rotate_.z });*/
-		root[filename]["objectData"][object->objName]["quaternion"] =
+		root[sceneName_]["objectData"][object->objName]["quaternion"] =
 			nlohmann::json::array({ object->transform->rotateQuaternion_.x,
 				object->transform->rotateQuaternion_.y, object->transform->rotateQuaternion_.z, object->transform->rotateQuaternion_.w });
-		root[filename]["objectData"][object->objName]["scale"] =
+		root[sceneName_]["objectData"][object->objName]["scale"] =
 			nlohmann::json::array({ object->transform->scale_.x, object->transform->scale_.y, object->transform->scale_.z });
 		object->tag = tags_[object->tagNumber];
-		root[filename]["objectData"][object->objName]["tag"] = object->tag;
-		root[filename]["objectData"][object->objName]["tagNumber"] = object->tagNumber;
+		root[sceneName_]["objectData"][object->objName]["tag"] = object->tag;
+		root[sceneName_]["objectData"][object->objName]["tagNumber"] = object->tagNumber;
 		object->meshName = meshNames_[object->meshNumber];
-		root[filename]["objectData"][object->objName]["mesh"] = object->meshName;
-		root[filename]["objectData"][object->objName]["meshNumber"] = object->meshNumber;
+		root[sceneName_]["objectData"][object->objName]["mesh"] = object->meshName;
+		root[sceneName_]["objectData"][object->objName]["meshNumber"] = object->meshNumber;
 
 	}
 
@@ -435,7 +435,7 @@ void MapEditor::Load(const std::string& filename) {
 	//ファイルを閉じる
 	ifs.close();
 	//グループを検索
-	nlohmann::json::iterator itGroup = root.find(filename);
+	nlohmann::json::iterator itGroup = root.find(sceneName_);
 	//未登録チェック
 	if (itGroup == root.end()) {
 		MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
@@ -558,7 +558,7 @@ void MapEditor::Load(const std::string& filename) {
 			
 			/*tagData_.clear();*/
 
-			tagData_ = root[filename]["tags"];
+			tagData_ = root[sceneName_]["tags"];
 
 			tags_.clear();
 

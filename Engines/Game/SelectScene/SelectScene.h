@@ -43,18 +43,4 @@ private:
 
 	std::unique_ptr<Camera> camera_;
 
-	float animationTime_ = 0.0f;
-
-	Matrix4x4 localMatrix_{};
-
-	std::unique_ptr<SkinningModel> model_;
-
-	std::unique_ptr<Transform> transform_;
-
-	float speed_ = 1.0f;
-
-	uint32_t test_;
-
-	std::unique_ptr<Line> line_;
-
 };

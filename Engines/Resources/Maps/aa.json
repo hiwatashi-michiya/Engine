@@ -1,5 +1,5 @@
 {
-    "aa": {
+    "marScene": {
         "objectData": {
             "a": {
                 "mesh": "block",
@@ -9,10 +9,11 @@
                     0.0,
                     0.0
                 ],
-                "rotation": [
+                "quaternion": [
                     0.0,
                     0.0,
-                    0.0
+                    0.0,
+                    1.0
                 ],
                 "scale": [
                     0.999750018119812,

@@ -33,18 +33,6 @@ void SelectScene::Initialize() {
 
 	editor_->SetCamera(camera_.get());
 
-	model_.reset(SkinningModel::Create("./Resources/human/walking.gltf", 0));
-	
-	model_->LoadAnimation("./Resources/human/stay.gltf", 1);
-
-	transform_ = std::make_unique<Transform>();
-
-	test_ = audioManager_->LoadInMF("./Resources/SE/test.mp3");
-
-	line_ = std::make_unique<Line>();
-	line_->start_ = { 0.0f,0.0f,0.0f };
-	line_->end_ = { 0.0f,0.0f,0.0f };
-
 }
 
 void SelectScene::Update() {
@@ -57,59 +45,46 @@ void SelectScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	ImGui::Begin("Animation");
-	ImGui::DragFloat("animation - Speed", &speed_, 0.01f);
-	ImGui::End();
+	Vector3 moves{};
 
-	ImGui::Begin("transform");
-	ImGui::DragFloat3("scale", &transform_->scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &transform_->rotateQuaternion_.x, 0.1f);
-	ImGui::DragFloat3("translation", &transform_->translate_.x, 0.1f);
-	ImGui::End();
+	moves.x = input_->GetMouseMove().x;
+	moves.y = input_->GetMouseMove().y;
+	moves.z = float(input_->GetMouseWheel());
 
-	ImGui::Begin("Line");
-	ImGui::DragFloat3("start", &line_->start_.x, 0.1f);
-	ImGui::DragFloat3("end", &line_->end_.x, 0.1f);
+	ImGui::Begin("mouse");
+	ImGui::Text("Pos x : %1.2f,  y : %1.2f", input_->GetMousePosition().x, input_->GetMousePosition().y);
+	ImGui::Text("move & wheel move x : %1.2f, y : %1.2f, wheel : %1.2f", moves.x, moves.y, moves.z);
+
+	if (input_->PushMouse(Input::kLeft)) {
+		ImGui::Text("Left Push");
+	}
+	if (input_->PushMouse(Input::kRight)) {
+		ImGui::Text("Right Push");
+	}
+	if (input_->PushMouse(Input::kCenter)) {
+		ImGui::Text("Center Push");
+	}
+
+	if (input_->TriggerMouse(Input::kLeft) || input_->TriggerMouse(Input::kRight)
+		|| input_->TriggerMouse(Input::kCenter)) {
+		ImGui::Text("Trigger");
+	}
+
+	if (input_->ReleaseMouse(Input::kLeft) || input_->ReleaseMouse(Input::kRight)
+		|| input_->ReleaseMouse(Input::kCenter)) {
+		ImGui::Text("Release");
+	}
+
 	ImGui::End();
 
 #endif // _DEBUG
 
-	if (input_->TriggerKey(DIK_1)) {
-		model_->StartAnimation();
-	}
-
-	if (input_->TriggerKey(DIK_2)) {
-		model_->StopAnimation();
-	}
-
-	if (input_->TriggerKey(DIK_3)) {
-		model_->ResetAnimation();
-	}
-
-	if (input_->TriggerKey(DIK_4)) {
-		model_->SetAnimation(1);
-	}
-
-	if (input_->TriggerKey(DIK_5)) {
-		model_->SetAnimation(0);
-	}
-
-	model_->SetAnimationSpeed(speed_);
-
-	transform_->UpdateMatrix();
-
-	model_->SetWorldMatrix(transform_->worldMatrix_);
-
-	model_->UpdateAnimation();
 
 	editor_->Edit();
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
 
-	if (input_->TriggerKey(DIK_1)) {
-		audioManager_->Play(test_, 0.5f);
-	}
 
 }
 
@@ -120,8 +95,6 @@ void SelectScene::DrawModel() {
 }
 
 void SelectScene::DrawSkinningModel() {
-
-	model_->Draw(camera_.get());
 
 }
 
@@ -138,7 +111,5 @@ void SelectScene::DrawSprite() {
 }
 
 void SelectScene::DrawLine() {
-
-	model_->DrawSkeleton(camera_.get());
 
 }
