@@ -9,7 +9,6 @@ Player::Player()
 
 	model_.reset(SkinningModel::Create("./resources/human/stay.gltf", 0));
 	model_->LoadAnimation("./resources/human/walking.gltf", 1);
-	transform_ = std::make_unique<Transform>();
 
 }
 

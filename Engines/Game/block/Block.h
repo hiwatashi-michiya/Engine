@@ -1,9 +1,10 @@
 #pragma once
 #include "Engine/3d/Model.h"
-#include "Engine/math/Collision.h"
+#include "Collision.h"
 #include "Transform.h"
+#include "GameObject.h"
 
-class Block
+class Block : public GameObject
 {
 public:
 	Block();
@@ -32,8 +33,6 @@ public:
 private:
 
 	std::unique_ptr<Model> model_;
-
-	std::unique_ptr<Transform> transform_;
 
 	AABB collision_;
 

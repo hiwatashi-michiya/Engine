@@ -4,7 +4,6 @@
 Block::Block()
 {
 	model_.reset(Model::Create("./resources/block/block.obj"));
-	transform_ = std::make_unique<Transform>();
 }
 
 Block::~Block()

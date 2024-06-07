@@ -13,7 +13,6 @@ Ring::~Ring()
 void Ring::Initialize(const Vector3& position) {
 
 	model_->LoadAnimation("./Resources/item/item.gltf");
-	transform_ = std::make_unique<Transform>();
 	transform_->translate_ = position;
 
 	collision_.max = transform_->translate_ + transform_->scale_;

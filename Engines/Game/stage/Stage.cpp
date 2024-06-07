@@ -1,5 +1,5 @@
 #include "Stage.h"
-#include "Engine/math/Collision.h"
+#include "Collision.h"
 #include "Externals/nlohmann/json.hpp"
 #include <fstream>
 #include "Audio/AudioManager.h"
@@ -130,6 +130,8 @@ void Stage::DrawLine(Camera* camera) {
 
 void Stage::LoadStage(uint32_t stageNumber) {
 
+	std::string sceneName = "marScene";
+
 	std::string stageName = "stage";
 
 	stageName += std::to_string(stageNumber);
@@ -154,7 +156,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 	//ファイルを閉じる
 	ifs.close();
 	//グループを検索
-	nlohmann::json::iterator itGroup = root.find(stageName);
+	nlohmann::json::iterator itGroup = root.find(sceneName);
 	//未登録チェック
 	if (itGroup == root.end()) {
 		MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);

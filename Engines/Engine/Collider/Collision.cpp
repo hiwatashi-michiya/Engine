@@ -203,6 +203,12 @@ bool IsCollision(const OBB& obb, const Sphere& sphere) {
 
 }
 
+bool IsCollision(const Sphere& sphere, const OBB& obb) {
+
+	return IsCollision(obb, sphere);
+
+}
+
 bool IsCollision(const OBB& obb, const Segment& segment) {
 
 	//衝突判定のための変数を設定
@@ -230,6 +236,12 @@ bool IsCollision(const OBB& obb, const Segment& segment) {
 	localSegment.diff = Subtract(localEnd, localOrigin);
 
 	return IsCollision(localAABB, localSegment);
+
+}
+
+bool IsCollision(const Segment& segment, const OBB& obb) {
+
+	return IsCollision(obb, segment);
 
 }
 

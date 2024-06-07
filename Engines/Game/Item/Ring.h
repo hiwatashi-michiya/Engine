@@ -4,8 +4,9 @@
 #include "Skinning/SkinningModel.h"
 #include "Transform.h"
 #include <memory>
+#include "GameObject.h"
 
-class Ring
+class Ring : public GameObject
 {
 public:
 	Ring();
@@ -33,8 +34,6 @@ private:
 	AABB collision_{};
 
 	std::unique_ptr<Model> model_;
-
-	std::unique_ptr<Transform> transform_;
 
 	//取得されたフラグ
 	bool isObtained_ = false;

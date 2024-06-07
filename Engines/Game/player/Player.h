@@ -2,13 +2,14 @@
 #include "Application/Particle.h"
 #include "Engine/3d/Model.h"
 #include "Engine/input/Input.h"
-#include "Engine/math/Collision.h"
+#include "Collision.h"
 #include "Engine/math/Quaternion.h"
 #include "Skinning/SkinningModel.h"
 #include "Transform.h"
 #include <memory>
+#include "GameObject.h"
 
-class Player
+class Player : public GameObject
 {
 public:
 	Player();
@@ -45,8 +46,6 @@ private:
 	Input* input_ = nullptr;
 
 	std::unique_ptr<SkinningModel> model_;
-
-	std::unique_ptr<Transform> transform_;
 
 	bool canJump_ = true;
 
