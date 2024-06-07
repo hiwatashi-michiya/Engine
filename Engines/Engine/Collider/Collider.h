@@ -4,6 +4,7 @@
 #include "Collision.h"
 #include <variant>
 #include <functional>
+#include "GameObject.h"
 
 class BoxCollider;
 class SphereCollider;
@@ -37,8 +38,15 @@ public:
 	bool GetIsActive() const { return isActive_; }
 	//関数セット
 	void SetFunction(const std::function<void()>& func) { function_ = func; }
+	//ゲームオブジェクトゲッター
+	GameObject* GetGameObject() { return object_; }
+	//ゲームオブジェクトセッター
+	void SetGameObject(GameObject* object) { object_ = object; }
+
 
 protected:
+
+	GameObject* object_ = nullptr;
 
 	//衝突時に呼び出す関数
 	std::function<void()> function_;
