@@ -58,6 +58,8 @@ void PostEffectDrawer::Initialize() {
 
 	postEffects_.push_back(std::make_shared<BoxFilter>());
 
+	postEffects_.push_back(std::make_shared<GaussianFilter>());
+
 	for (int32_t i = 0; i < PostEffectType::kMaxEffects; i++) {
 
 		postEffects_[i]->Create();
@@ -109,6 +111,26 @@ void PostEffectDrawer::Debug() {
 #ifdef _DEBUG
 
 	ImGui::Begin("PostEffects", nullptr, ImGuiWindowFlags_MenuBar);
+
+	if (ImGui::Button("Normal")) {
+		type_ = kNone;
+	}
+
+	if (ImGui::Button("GrayScale")) {
+		type_ = kGrayscale;
+	}
+
+	if (ImGui::Button("Vignette")) {
+		type_ = kVignette;
+	}
+
+	if (ImGui::Button("BoxFilter")) {
+		type_ = kBoxFilter;
+	}
+
+	if (ImGui::Button("GaussianFilter")) {
+		type_ = kGaussianFilter;
+	}
 
 	if (ImGui::BeginMenuBar()) {
 

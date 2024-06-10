@@ -10,6 +10,7 @@ enum PostEffectType {
 	kGrayscale, //グレースケール
 	kVignette, //ビネット
 	kBoxFilter, //ぼかし
+	kGaussianFilter, //ガウスぼかし
 
 	kMaxEffects, //エフェクト最大数
 
@@ -139,4 +140,32 @@ private:
 
 };
 
+class GaussianFilter : public PostEffects
+{
 
+private:
+
+	struct Parameter {
+		int32_t size = 2;
+		float sigma = 2.0f;
+		float padding[2];
+	};
+
+public:
+
+	GaussianFilter() = default;
+	~GaussianFilter() = default;
+
+	void Create() override;
+
+	void Render() override;
+
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
+
+private:
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
+
+};

@@ -32,7 +32,7 @@ private:
 
 	RenderTexture renderTexture_;
 
-	PostEffectType type_ = kBoxFilter;
+	PostEffectType type_ = kGaussianFilter;
 
 private:
 

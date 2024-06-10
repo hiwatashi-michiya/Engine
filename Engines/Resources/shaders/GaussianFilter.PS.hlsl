@@ -3,6 +3,7 @@
 struct Parameter
 {
     int32_t size;
+    float32_t sigma;
 };
 
 ConstantBuffer<Parameter> gParameter : register(b0);
@@ -34,20 +35,10 @@ PixelShaderOutput main(VertexShaderOutput input)
     output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
     output.color.a = 1.0f;
     
+    const int32_t kSize = gParameter.size;
+    
     //kernelを求める
     float32_t weight = 0.0f;
-    float32_t kernel[gParameter.size * 2 + 1][gParameter.size * 2 + 1];
-    
-    for (int32_t x = -gParameter.size; x <= gParameter.size; ++x)
-    {
-        
-        for (int32_t y = -gParameter.size; y <= gParameter.size; ++y)
-        {
-            kernel[x + gParameter.size][y + gParameter.size];
-            
-        }
-        
-    }
     
     for (int32_t x = -gParameter.size; x <= gParameter.size; ++x)
     {
@@ -62,13 +53,18 @@ PixelShaderOutput main(VertexShaderOutput input)
                 clamp(input.texcoord.y + y * uvStepSize.y, 0.0f, height)
             };
             
+            float32_t kernel = gauss(x, y, gParameter.sigma);
+            
             //色に参照範囲の逆数を掛けて足す
             float32_t3 fetchColor = gTexture.Sample(gSampler, texcoord).rgb;
-            output.color.rgb += fetchColor * rcp(pow(gParameter.size * 2 + 1, 2));
+            output.color.rgb += fetchColor * kernel;
+            weight += kernel;
             
         }
         
     }
+    
+    output.color.rgb *= rcp(weight);
     
     return output;
     
