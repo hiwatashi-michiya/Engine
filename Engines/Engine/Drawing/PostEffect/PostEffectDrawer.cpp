@@ -106,6 +106,8 @@ void PostEffectDrawer::Draw() {
 
 void PostEffectDrawer::Debug() {
 
+#ifdef _DEBUG
+
 	ImGui::Begin("PostEffects", nullptr, ImGuiWindowFlags_MenuBar);
 
 	if (ImGui::BeginMenuBar()) {
@@ -127,5 +129,7 @@ void PostEffectDrawer::Debug() {
 	}
 
 	ImGui::End();
+
+#endif // _DEBUG
 
 }
