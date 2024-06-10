@@ -20,6 +20,8 @@ public:
 
 	void Debug();
 
+	void SetType(PostEffectType type) { type_ = type; }
+
 private:
 
 	DirectXSetter* dxSetter_ = nullptr;
@@ -29,6 +31,8 @@ private:
 	std::vector<std::shared_ptr<PostEffects>> postEffects_;
 
 	RenderTexture renderTexture_;
+
+	PostEffectType type_ = kBoxFilter;
 
 private:
 

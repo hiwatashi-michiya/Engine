@@ -85,7 +85,7 @@ void PostEffectDrawer::Draw() {
 	//TransitionBarrierを張る
 	commandList->ResourceBarrier(1, &barrier);
 
-	postEffects_[2]->Render();
+	postEffects_[type_]->Render();
 
 	renderTexture_.Draw();
 
