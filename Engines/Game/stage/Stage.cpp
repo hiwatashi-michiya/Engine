@@ -96,13 +96,14 @@ void Stage::Draw(Camera* camera) {
 
 	for (auto& block : blocks_) {
 
-		if (!IsCollision(block->GetCollision(), line_)) {
+		if ((!player_->GetIsDead() && !IsCollision(block->GetCollision(), line_)) ||
+			player_->GetIsDead()) {
 
 			block->Draw(camera);
 
 		}
 		else {
-			
+			PostEffectDrawer::GetInstance()->SetType(kVignette);
 		}
 	}
 

@@ -34,6 +34,9 @@ private:
 
 	PostEffectType type_ = kGaussianFilter;
 
+	//最初に一回だけ描画
+	bool isUsedAllEffects_ = false;
+
 private:
 
 	PostEffectDrawer() = default;

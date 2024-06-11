@@ -99,9 +99,6 @@
     <ClCompile Include="Engine\Engine.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\Camera.cpp">
-      <Filter>Engine\base</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\DirectXSetter.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
@@ -252,13 +249,13 @@
     <ClCompile Include="Engine\Drawing\PostEffect\PostEffects.cpp">
       <Filter>Engine\Drawing\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\Camera.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\Camera.h">
-      <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXSetter.h">
       <Filter>Engine\base</Filter>
@@ -427,6 +424,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\PostEffect\PostEffects.h">
       <Filter>Engine\Drawing\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Camera.h">
+      <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

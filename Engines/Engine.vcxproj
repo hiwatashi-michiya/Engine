@@ -167,7 +167,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Skinning\SkinCluster.cpp" />
     <ClCompile Include="Engine\3d\Skinning\SkinningModel.cpp" />
     <ClCompile Include="Engine\Audio\AudioManager.cpp" />
-    <ClCompile Include="Engine\base\Camera.cpp" />
+    <ClCompile Include="Engine\math\Camera.cpp" />
     <ClCompile Include="Engine\base\DescriptorHandle.cpp" />
     <ClCompile Include="Engine\base\DirectXSetter.cpp" />
     <ClCompile Include="Engine\base\WindowManager.cpp" />
@@ -222,7 +222,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Skinning\SkinCluster.h" />
     <ClInclude Include="Engine\3d\Skinning\SkinningModel.h" />
     <ClInclude Include="Engine\Audio\AudioManager.h" />
-    <ClInclude Include="Engine\base\Camera.h" />
+    <ClInclude Include="Engine\math\Camera.h" />
     <ClInclude Include="Engine\base\DescriptorHandle.h" />
     <ClInclude Include="Engine\base\DirectXSetter.h" />
     <ClInclude Include="Engine\base\SafeDelete.h" />

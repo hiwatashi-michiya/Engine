@@ -3,6 +3,7 @@
 #include <cmath>
 #include "Drawing/ImGuiManager.h"
 #include "Audio/AudioManager.h"
+#include "PostEffectDrawer.h"
 
 Player::Player()
 {
@@ -24,7 +25,7 @@ void Player::Initialize() {
 	model_->ResetAnimation();
 	model_->SetAnimation(0);
 	model_->StartAnimation(true);
-	model_->SetAnimationSpeed(1.5f);
+	model_->SetAnimationSpeed(2.0f);
 
 	transform_->translate_ = { 0.0f,5.0f,0.0f };
 	model_->material_->pLightMap_->intensity = 2.0f;
@@ -76,8 +77,6 @@ void Player::Update() {
 
 		velocity_ = Normalize(velocity_);
 
-		velocity_.y -= 0.5f;
-
 		velocity_ *= speed_;
 
 		Vector3 moveXZ = { velocity_.x, 0.0f, velocity_.z };
@@ -95,6 +94,8 @@ void Player::Update() {
 			transform_->rotateQuaternion_ = Slerp(IdentityQuaternion(), diff, 0.5f) * transform_->rotateQuaternion_;
 
 		}
+
+		velocity_.y -= 0.5f;
 
 		//速度加算
 		transform_->translate_ += velocity_;

@@ -1,5 +1,5 @@
 #pragma once
-#include "base/Camera.h"
+#include "Camera.h"
 #include "Drawing/ModelManager.h"
 #include "Mesh.h"
 #include <d3d12.h>

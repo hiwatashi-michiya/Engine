@@ -12,6 +12,8 @@ GameScene::GameScene()
 {
 
 	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
+	pauseTex_ = TextureManager::GetInstance()->Load("./Resources/UI/pause.png");
+	pauseSprite_.reset(Sprite::Create(pauseTex_, { 640.0f - 256.0f,360.0f - 64.0f }));
 
 }
 
@@ -78,28 +80,48 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	if (stage_->GetPlayer()->GetIsDead()) {
+	
 
-		resetCount_--;
+	if (isPause_) {
 
-		if (resetCount_ <= 0) {
-			stage_->Initialize();
-			stage_->LoadStage(1);
-			resetCount_ = 60;
+		if (input_->TriggerButton(Input::Button::START)) {
+			isPause_ = false;
 		}
+
+		PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
 
 	}
 	else {
-		
+
+		if (input_->TriggerButton(Input::Button::START)) {
+			isPause_ = true;
+		}
+
+		if (stage_->GetPlayer()->GetIsDead()) {
+
+			resetCount_--;
+
+			if (resetCount_ <= 0) {
+				stage_->Initialize();
+				stage_->LoadStage(1);
+				resetCount_ = 60;
+			}
+
+			PostEffectDrawer::GetInstance()->SetType(kGrayscale);
+
+		}
+		else {
+			PostEffectDrawer::GetInstance()->SetType(kNone);
+		}
+
+		stage_->Update();
+
+		camera_->Update();
+
+		skyDomeTransform_->UpdateMatrix();
+		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+
 	}
-
-	stage_->Update();
-
-	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
-	camera_->Update();
-
-	skyDomeTransform_->UpdateMatrix();
-	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 
 }
 
@@ -127,7 +149,9 @@ void GameScene::DrawParticle() {
 
 void GameScene::DrawSprite() {
 
-
+	if (isPause_) {
+		pauseSprite_->Draw();
+	}
 
 }
 

@@ -87,6 +87,17 @@ void PostEffectDrawer::Draw() {
 	//TransitionBarrierを張る
 	commandList->ResourceBarrier(1, &barrier);
 
+	//最初の一回だけ全部描画する
+	if (!isUsedAllEffects_) {
+
+		for (int32_t i = 0; i < kMaxEffects; i++) {
+			postEffects_[i]->Render();
+		}
+
+		isUsedAllEffects_ = true;
+
+	}
+
 	postEffects_[type_]->Render();
 
 	renderTexture_.Draw();

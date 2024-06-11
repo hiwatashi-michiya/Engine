@@ -54,9 +54,16 @@ private:
 
 	std::unique_ptr<Stage> stage_;
 
+	std::unique_ptr<Sprite> pauseSprite_;
+
 	int32_t resetCount_ = 60;
 
 	uint32_t testSE_;
+
+	Texture* pauseTex_;
+
+	//ポーズ画面を開いているか
+	bool isPause_ = false;
 
 };
 

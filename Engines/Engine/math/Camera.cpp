@@ -12,6 +12,9 @@ void Camera::Initialize() {
 
 void Camera::Update() {
 
+	rotateQuaternion_ = ConvertFromEuler(rotation_);
+	matRotate_ = MakeRotateMatrix(rotateQuaternion_);
+
 	matWorld_ = MakeScaleMatrix(scale_) * matRotate_ * MakeTranslateMatrix(position_);
 
 	matView_ = Inverse(matWorld_);
