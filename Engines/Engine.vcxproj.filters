@@ -492,5 +492,11 @@
     <FxCompile Include="Resources\shaders\GaussianFilter.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\LuminanceBasedOutline.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\DepthBasedOutline.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

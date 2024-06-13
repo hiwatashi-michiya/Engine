@@ -111,7 +111,7 @@ void GameScene::Update() {
 
 		}
 		else {
-			PostEffectDrawer::GetInstance()->SetType(kNone);
+			PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
 		}
 
 		stage_->Update();
@@ -120,6 +120,8 @@ void GameScene::Update() {
 
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+
+		PostEffectDrawer::GetInstance()->SetCamera(camera_.get());
 
 	}
 

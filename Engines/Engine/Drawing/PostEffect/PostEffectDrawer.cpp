@@ -38,11 +38,15 @@ void PostEffectDrawer::Initialize() {
 	renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
 	renderTextureSrvDesc.Texture2D.MipLevels = 1;
 
+	DirectXSetter::srvHandleNumber_++;
+
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU =
-		GetCPUDescriptorHandle(dxSetter_->GetSrvHeap().Get(), descriptorSizeSRV, 1);
+		GetCPUDescriptorHandle(dxSetter_->GetSrvHeap().Get(), descriptorSizeSRV, DirectXSetter::srvHandleNumber_);
 
 	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU =
-		GetGPUDescriptorHandle(dxSetter_->GetSrvHeap().Get(), descriptorSizeSRV, 1);
+		GetGPUDescriptorHandle(dxSetter_->GetSrvHeap().Get(), descriptorSizeSRV, DirectXSetter::srvHandleNumber_);
+
+	DirectXSetter::srvHandleNumber_++;
 
 	renderTexture_.SetCPUHandle(srvHandleCPU);
 	renderTexture_.SetGPUHandle(srvHandleGPU);
@@ -60,7 +64,11 @@ void PostEffectDrawer::Initialize() {
 
 	postEffects_.push_back(std::make_shared<GaussianFilter>());
 
-	for (int32_t i = 0; i < PostEffectType::kMaxEffects; i++) {
+	postEffects_.push_back(std::make_shared<LuminanceBasedOutline>());
+
+	postEffects_.push_back(std::make_shared<DepthBasedOutline>());
+
+	for (int32_t i = 0; i < postEffects_.size(); i++) {
 
 		postEffects_[i]->Create();
 
@@ -90,17 +98,24 @@ void PostEffectDrawer::Draw() {
 	//最初の一回だけ全部描画する
 	if (!isUsedAllEffects_) {
 
-		for (int32_t i = 0; i < kMaxEffects; i++) {
+		for (int32_t i = 0; i < postEffects_.size(); i++) {
 			postEffects_[i]->Render();
+			postEffects_[i]->PostRender();
 		}
 
 		isUsedAllEffects_ = true;
 
 	}
 
-	postEffects_[type_]->Render();
+	if (type_ < postEffects_.size()) {
+		postEffects_[type_]->Render();
+	}
 
 	renderTexture_.Draw();
+
+	if (type_ < postEffects_.size()) {
+		postEffects_[type_]->PostRender();
+	}
 
 	//今回のバリアはTransition
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
