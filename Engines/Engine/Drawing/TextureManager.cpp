@@ -166,8 +166,6 @@ InstancingResource TextureManager::SetInstancingResource(uint32_t instanceCount,
 
 	instancingResource.resource = mapResource;
 
-	const uint32_t descriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
 	//metadataを基にSRVの設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -179,8 +177,8 @@ InstancingResource TextureManager::SetInstancingResource(uint32_t instanceCount,
 	srvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
 
 	//SRVを作成するDescriptorHeapの場所を決める
-	instancingResource.srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, DirectXSetter::srvHandleNumber_);
-	instancingResource.srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, DirectXSetter::srvHandleNumber_);
+	instancingResource.srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV_, DirectXSetter::srvHandleNumber_);
+	instancingResource.srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV_, DirectXSetter::srvHandleNumber_);
 
 	//SRVの生成
 	device_->CreateShaderResourceView(instancingResource.resource.Get(), &srvDesc, instancingResource.srvHandleCPU);

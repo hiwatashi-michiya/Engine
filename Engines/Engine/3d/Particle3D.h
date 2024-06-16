@@ -8,14 +8,21 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <vector>
 #include <wrl.h>
+#include "Transform.h"
 
 class Particle3D
 {
 public:
 
 	static void StaticInitialize(ID3D12Device* device);
+
+	struct ParticleForGPU {
+		Matrix4x4 WVP;
+		Matrix4x4 World;
+		Matrix4x4 WorldInverseTranspose;
+		Vector4 color;
+	};
 
 	enum BlendMode {
 		kNormal,//通常
@@ -51,21 +58,24 @@ public:
 
 	void SetTexture(Texture* texture) { texture_ = texture; }
 
+	void SetInstanceCount(uint32_t num) { instanceCount_ = num; }
+
 	//ビルボードを使うかどうか
 	bool isBillboard_ = true;
 
-	std::vector<Vector3> positions_{};
+	std::vector<std::shared_ptr<Transform>> transforms_{};
 
-	std::vector<Vector3> rotations_{};
-
-	std::vector<Vector3> scales_{};
+	std::vector<Vector4> colors_{};
 
 	std::vector<Matrix4x4> worldMatrices{};
 
 	std::vector<Vector3> velocities_{};
 
 	//インスタンシングの数
-	uint32_t instanceCount_;
+	uint32_t maxInstanceCount_;
+
+	//表示するインスタンスの数
+	uint32_t instanceCount_ = 0;
 
 	//メッシュ
 	Mesh* mesh_;
@@ -104,7 +114,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> matBuff_;
 	
 	//TransformMatrix
-	TransformationMatrix* matTransformMap_ = nullptr;
+	ParticleForGPU* matTransformMap_ = nullptr;
 
 	//テクスチャ
 	Texture* texture_;

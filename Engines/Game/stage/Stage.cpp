@@ -103,7 +103,7 @@ void Stage::Draw(Camera* camera) {
 
 		}
 		else {
-			PostEffectDrawer::GetInstance()->SetType(kVignette);
+			PostEffectDrawer::GetInstance()->SetType(kNone);
 		}
 	}
 
@@ -124,8 +124,6 @@ void Stage::DrawParticle(Camera* camera) {
 void Stage::DrawLine(Camera* camera) {
 
 	player_->DrawSkeleton(camera);
-
-	drawLine_->Draw(camera);
 
 }
 

@@ -447,8 +447,6 @@ void Model::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
-	//PSO設定
-	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
 	//ルートシグネチャを設定
 	commandList_->SetGraphicsRootSignature(rootSignature_);
 	//プリミティブ形状を設定

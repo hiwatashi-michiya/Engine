@@ -145,8 +145,7 @@ void GameScene::DrawSkinningModel() {
 
 void GameScene::DrawParticle() {
 
-
-
+	stage_->DrawParticle(camera_.get());
 }
 
 void GameScene::DrawSprite() {

@@ -8,8 +8,12 @@
 Player::Player()
 {
 
+	tex_ = TextureManager::GetInstance()->Load("./Resources/plane/particle.png");
 	model_.reset(SkinningModel::Create("./resources/human/stay.gltf", 0));
 	model_->LoadAnimation("./resources/human/walking.gltf", 1);
+	particle_.reset(Particle3D::Create("./Resources/plane/particle.obj", 128));
+	particle_->SetInstanceCount(32);
+	/*particle_->SetTexture(tex_);*/
 	transform_ = std::make_unique<Transform>();
 
 }
@@ -32,6 +36,14 @@ void Player::Initialize() {
 
 	collision_.max = transform_->translate_ + transform_->scale_;
 	collision_.min = transform_->translate_ - transform_->scale_;
+
+	for (int32_t i = 0; i < 32; i++) {
+
+		particle_->colors_[i].w = 1.0f;
+		particle_->velocities_[i] = { 0.0f,1.0f,0.0f };
+		particle_->transforms_[i]->scale_ = { 0.0f,0.0f,0.0f };
+
+	}
 
 	isDead_ = false;
 
@@ -112,6 +124,41 @@ void Player::Update() {
 
 		model_->UpdateAnimation();
 
+		//パーティクル更新
+		for (int32_t i = 0; i < 32; i++) {
+			
+			if (particle_->transforms_[i]->scale_.y <= 0.0f) {
+
+				Matrix4x4 tmpMatrix{};
+
+				tmpMatrix = model_->GetSkeleton()->joints[model_->GetSkeleton()->jointMap["mixamorig:LeftHand"]].skeletonSpaceMatrix * 
+					model_->worldMatrix_;
+
+				particle_->colors_[i].w = 1.0f;
+				particle_->velocities_[i] = { float((rand() % 40 - 20) * 0.001f),float((rand() % 40 - 20) * 0.001f), float((rand() % 40 - 20) * 0.001f) };
+				particle_->transforms_[i]->translate_ = tmpMatrix.GetTranslate();
+				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
+				particle_->transforms_[i]->scale_ = { 0.1f,0.1f,0.1f };
+				break;
+			}
+
+
+
+		}
+
+		for (int32_t i = 0; i < 32; i++) {
+
+			if (particle_->transforms_[i]->scale_.y > 0.0f) {
+				particle_->transforms_[i]->translate_ += particle_->velocities_[i];
+				particle_->transforms_[i]->rotateQuaternion_ = particle_->transforms_[i]->rotateQuaternion_ * ConvertFromEuler(particle_->velocities_[i]);
+				particle_->transforms_[i]->scale_ -= {0.002f, 0.002f, 0.002f};
+			}
+			else {
+				particle_->colors_[i].w = 0.0f;
+			}
+
+		}
+
 	}
 
 }
@@ -125,6 +172,10 @@ void Player::Draw(Camera* camera) {
 }
 
 void Player::DrawParticle(Camera* camera) {
+
+	if (!isDead_) {
+		particle_->Draw(camera);
+	}
 
 }
 

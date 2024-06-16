@@ -1,12 +1,13 @@
 #pragma once
 #include "Application/Particle.h"
-#include "Engine/3d/Model.h"
-#include "Engine/input/Input.h"
-#include "Engine/math/Collision.h"
-#include "Engine/math/Quaternion.h"
+#include "Model.h"
+#include "Input.h"
+#include "Collision.h"
+#include "Quaternion.h"
 #include "Skinning/SkinningModel.h"
 #include "Transform.h"
 #include <memory>
+#include "Particle3D.h"
 
 class Player
 {
@@ -46,6 +47,8 @@ private:
 
 	std::unique_ptr<SkinningModel> model_;
 
+	std::unique_ptr<Particle3D> particle_;
+
 	std::unique_ptr<Transform> transform_;
 
 	bool canJump_ = true;
@@ -59,6 +62,8 @@ private:
 	float speed_ = 0.2f;
 
 	bool isDead_ = false;
+
+	Texture* tex_ = nullptr;
 
 };
 

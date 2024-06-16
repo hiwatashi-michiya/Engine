@@ -80,6 +80,10 @@ public:
 	//アニメーションを指定した数字のものに切り替え
 	void SetAnimation(int32_t number, bool isReset = true);
 
+	Animation* GetAnimation() { return animations_[currentFileName_].get(); }
+
+	Skeleton* GetSkeleton() { return skeleton_.get(); }
+
 	/// <summary>
 	/// アニメーション開始
 	/// </summary>
