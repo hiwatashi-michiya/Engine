@@ -84,6 +84,8 @@ public:
 
 	Skeleton* GetSkeleton() { return skeleton_.get(); }
 
+	Matrix4x4 GetSkeletonSpaceMatrix(std::string name) const { return skeleton_->joints[skeleton_->jointMap[name]].skeletonSpaceMatrix; }
+
 	/// <summary>
 	/// アニメーション開始
 	/// </summary>

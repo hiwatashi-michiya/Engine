@@ -131,7 +131,7 @@ void Player::Update() {
 
 				Matrix4x4 tmpMatrix{};
 
-				tmpMatrix = model_->GetSkeleton()->joints[model_->GetSkeleton()->jointMap["mixamorig:LeftHand"]].skeletonSpaceMatrix * 
+				tmpMatrix = model_->GetSkeletonSpaceMatrix("mixamorig:LeftHand") *
 					model_->worldMatrix_;
 
 				particle_->colors_[i].w = 1.0f;
