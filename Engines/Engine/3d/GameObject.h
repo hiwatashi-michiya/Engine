@@ -9,7 +9,9 @@ public:
 	GameObject() : transform_(std::make_unique<Transform>()) {};
 	~GameObject() = default;
 
+	const std::string& GetName() { return name_; }
 
+	Transform* GetTransform() { return transform_.get(); }
 
 protected:
 

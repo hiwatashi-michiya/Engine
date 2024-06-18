@@ -1,11 +1,14 @@
 #pragma once
 #include "Collider.h"
 #include <list>
+#include <mutex>
 
 class CollisionManager {
 public:
 
 	static CollisionManager* GetInstance();
+
+	void Initialize() { colliders_.clear(); }
 
 	//コライダー追加
 	void PushCollider(Collider* collider);
@@ -21,6 +24,8 @@ private:
 	
 	// コライダーリスト
 	std::list<Collider*> colliders_;
+
+	std::mutex collidersMutex_;
 
 	/// <summary>
 	/// コライダーの2つの衝突判定と応答

@@ -4,6 +4,8 @@
 Block::Block()
 {
 	model_.reset(Model::Create("./resources/block/block.obj"));
+	collider_ = std::make_unique<BoxCollider>();
+
 }
 
 Block::~Block()
@@ -13,6 +15,11 @@ Block::~Block()
 void Block::Initialize() {
 
 	setCount_ = (rand() % 10) * 5 + 10;
+
+	name_ = "block";
+	collider_->SetGameObject(this);
+	collider_->collider_.center = transform_->translate_;
+	collider_->collider_.size = transform_->scale_ / 2.0f;
 
 }
 
@@ -61,8 +68,8 @@ void Block::Update() {
 
 	}
 
-	collision_.max = transform_->translate_ + transform_->scale_;
-	collision_.min = transform_->translate_ - transform_->scale_;
+	collider_->collider_.center = transform_->translate_;
+	collider_->collider_.size = transform_->scale_;
 
 	model_->material_->pLightMap_->intensity = pLightIntensity_;
 

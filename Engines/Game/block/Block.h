@@ -3,6 +3,7 @@
 #include "Collision.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "Collider.h"
 
 class Block : public GameObject
 {
@@ -18,8 +19,8 @@ public:
 
 	void SetPosition(const Vector3& position) { 
 		transform_->translate_ = position;
-		collision_.max = transform_->translate_ + transform_->scale_ / 2.0f;
-		collision_.min = transform_->translate_ - transform_->scale_ / 2.0f;
+		collider_->collider_.center = transform_->translate_;
+		collider_->collider_.size = transform_->scale_ / 2.0f;
 	}
 
 	void SetScale(const Vector3& scale) { transform_->scale_ = scale; }
@@ -28,13 +29,13 @@ public:
 
 	const Vector3& GetScale() { return transform_->scale_; }
 
-	const AABB& GetCollision() { return collision_; }
+	BoxCollider* GetCollider() { return collider_.get(); }
 
 private:
 
 	std::unique_ptr<Model> model_;
 
-	AABB collision_;
+	std::unique_ptr<BoxCollider> collider_;
 
 	float pLightIntensity_ = 0.5f;
 

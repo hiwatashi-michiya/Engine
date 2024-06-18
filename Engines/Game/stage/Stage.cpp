@@ -53,7 +53,7 @@ void Stage::Update() {
 
 		block->Update();
 
-		if (IsCollision(block->GetCollision(), player_->GetCollision())) {
+		/*if (IsCollision(block->GetCollider(), player_->GetCollider())) {
 
 			if (block->GetPosition().y < player_->GetPosition().y) {
 				player_->SetPosition({ player_->GetPosition().x, block->GetPosition().y +
@@ -61,7 +61,7 @@ void Stage::Update() {
 				player_->SetVelocityY(0.0f);
 			}
 
-		}
+		}*/
 
 		i++;
 
@@ -71,12 +71,12 @@ void Stage::Update() {
 
 		ring->Update();
 
-		if (!ring->GetIsObtained() && IsCollision(ring->GetCollision(), player_->GetCollision())) {
+		/*if (!ring->GetIsObtained() && IsCollision(ring->GetCollision(), player_->GetCollider())) {
 
 			ring->Obtained();
 			ring->PlaySE();
 
-		}
+		}*/
 
 	}
 
@@ -96,14 +96,16 @@ void Stage::Draw(Camera* camera) {
 
 	for (auto& block : blocks_) {
 
-		if (!IsCollision(block->GetCollision(), line_)) {
+		block->Draw(camera);
+
+		/*if (!IsCollision(block->GetCollider(), line_)) {
 
 			block->Draw(camera);
 
 		}
 		else {
 			
-		}
+		}*/
 	}
 
 }

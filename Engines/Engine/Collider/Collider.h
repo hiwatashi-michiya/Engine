@@ -15,7 +15,7 @@ public:
 	~Collider();
 
 	// 衝突時に呼ばれる関数
-	virtual void OnCollision(/*Collider* collider*/) { if (function_) { function_(); } }
+	virtual void OnCollision(Collider* collider) { if (function_) { function_(collider); } }
 	// コライダーの中心位置取得
 	virtual Vector3 GetPosition() = 0;
 	// 衝突属性(自分)を取得
@@ -37,7 +37,7 @@ public:
 	//アクティブ状態かどうか
 	bool GetIsActive() const { return isActive_; }
 	//関数セット
-	void SetFunction(const std::function<void()>& func) { function_ = func; }
+	void SetFunction(const std::function<void(Collider*)>& func) { function_ = func; }
 	//ゲームオブジェクトゲッター
 	GameObject* GetGameObject() { return object_; }
 	//ゲームオブジェクトセッター
@@ -49,7 +49,7 @@ protected:
 	GameObject* object_ = nullptr;
 
 	//衝突時に呼び出す関数
-	std::function<void()> function_;
+	std::function<void(Collider*)> function_;
 
 	// 衝突属性(自分)
 	uint32_t collisionAttribute_ = 0xffffffff;
@@ -64,9 +64,9 @@ class BoxCollider : public Collider {
 public:
 
 	Vector3 GetPosition() override { return collider_.center; }
-	bool CollideWith(Collider* other) override { return other->CollideWithBox(this); }
-	bool CollideWithBox(BoxCollider* box) override { return IsCollision(this->collider_, box->collider_); }
-	bool CollideWithSphere(SphereCollider* sphere) override { return IsCollision(this->collider_, sphere->collider_); }
+	bool CollideWith(Collider* other) override;
+	bool CollideWithBox(BoxCollider* box) override;
+	bool CollideWithSphere(SphereCollider* sphere) override;
 
 	OBB collider_;
 

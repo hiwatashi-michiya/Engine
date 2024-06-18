@@ -20,6 +20,7 @@
 #include <cassert>
 #include <string>
 #include <Windows.h>
+#include "CollisionManager.h"
 
 #ifdef _DEBUG
 
@@ -60,6 +61,8 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	TextureManager::GetInstance()->Initialize(dxSetter_->GetSrvHeap());
 	Input::GetInstance()->Initialize();
+
+	CollisionManager::GetInstance()->Initialize();
 
 #ifdef _DEBUG
 

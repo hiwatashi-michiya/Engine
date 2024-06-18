@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "SceneManager.h"
 #include "PostEffectDrawer.h"
+#include "CollisionManager.h"
 
 #ifdef _DEBUG
 
@@ -100,6 +101,8 @@ void GameScene::Update() {
 
 	skyDomeTransform_->UpdateMatrix();
 	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+
+	CollisionManager::GetInstance()->CheckAllCollisions();
 
 }
 

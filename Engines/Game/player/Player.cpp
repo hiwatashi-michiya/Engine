@@ -3,12 +3,14 @@
 #include <cmath>
 #include "Drawing/ImGuiManager.h"
 #include "Audio/AudioManager.h"
+#include <functional>
 
 Player::Player()
 {
 
 	model_.reset(SkinningModel::Create("./resources/human/stay.gltf", 0));
 	model_->LoadAnimation("./resources/human/walking.gltf", 1);
+	collider_ = std::make_unique<BoxCollider>();
 
 }
 
@@ -28,8 +30,15 @@ void Player::Initialize() {
 	transform_->translate_ = { 0.0f,5.0f,0.0f };
 	model_->material_->pLightMap_->intensity = 2.0f;
 
-	collision_.max = transform_->translate_ + transform_->scale_;
-	collision_.min = transform_->translate_ - transform_->scale_;
+	name_ = "player";
+	collider_->SetGameObject(this);
+	collider_->SetFunction([this](Collider* collider) {OnCollision(collider); });
+
+	collider_->collider_.center = transform_->translate_;
+	collider_->collider_.size = transform_->scale_;
+
+	/*collision_.max = transform_->translate_ + transform_->scale_;
+	collision_.min = transform_->translate_ - transform_->scale_;*/
 
 	isDead_ = false;
 
@@ -102,13 +111,27 @@ void Player::Update() {
 			isDead_ = true;
 		}
 
-		collision_.max = transform_->translate_ + transform_->scale_;
-		collision_.min = transform_->translate_ - transform_->scale_;
+		collider_->collider_.center = transform_->translate_;
+
+		/*collision_.max = transform_->translate_ + transform_->scale_;
+		collision_.min = transform_->translate_ - transform_->scale_;*/
 
 		transform_->UpdateMatrix();
 		model_->SetWorldMatrix(transform_->worldMatrix_);
 
 		model_->UpdateAnimation();
+
+	}
+
+}
+
+void Player::OnCollision(Collider* collider) {
+
+	if (collider->GetGameObject()->GetName() == "block") {
+
+		SetPosition({ transform_->worldMatrix_.GetTranslate().x, collider->GetGameObject()->GetTransform()->translate_.y +
+					collider->GetGameObject()->GetTransform()->scale_.y + transform_->scale_.y, transform_->worldMatrix_.GetTranslate().z });
+		SetVelocityY(0.0f);
 
 	}
 

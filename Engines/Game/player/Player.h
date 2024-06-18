@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include <memory>
 #include "GameObject.h"
+#include "Collider.h"
 
 class Player : public GameObject
 {
@@ -25,7 +26,7 @@ public:
 
 	void SetPosition(const Vector3& position) { transform_->translate_ = position; }
 
-	const AABB& GetCollision() { return collision_; }
+	BoxCollider* GetCollider() const { return collider_.get(); }
 
 	Vector3 GetPosition() const { return transform_->worldMatrix_.GetTranslate(); }
 
@@ -41,6 +42,8 @@ public:
 
 private:
 
+	void OnCollision(Collider* collider);
+
 private:
 
 	Input* input_ = nullptr;
@@ -51,7 +54,7 @@ private:
 
 	Quaternion rotation_;
 
-	AABB collision_{};
+	std::unique_ptr<BoxCollider> collider_;
 
 	Vector3 velocity_{};
 
