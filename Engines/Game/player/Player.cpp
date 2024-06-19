@@ -17,6 +17,7 @@ Player::Player()
 	/*particle_->SetTexture(tex_);*/
 	transform_ = std::make_unique<Transform>();
 	collider_ = std::make_unique<BoxCollider>();
+	lineBox_ = std::make_unique<LineBox>();
 
 }
 
@@ -50,6 +51,8 @@ void Player::Initialize() {
 
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
+
+	lineBox_->SetOBB(&collider_->collider_);
 
 	/*collision_.max = transform_->translate_ + transform_->scale_;
 	collision_.min = transform_->translate_ - transform_->scale_;*/
@@ -126,11 +129,17 @@ void Player::Update() {
 		}
 
 		collider_->collider_.center = transform_->translate_;
+		collider_->collider_.orientations[0] = transform_->worldMatrix_.GetXAxis();
+		collider_->collider_.orientations[1] = transform_->worldMatrix_.GetYAxis();
+		collider_->collider_.orientations[2] = transform_->worldMatrix_.GetZAxis();
 
 		/*collision_.max = transform_->translate_ + transform_->scale_;
 		collision_.min = transform_->translate_ - transform_->scale_;*/
 
 		transform_->UpdateMatrix();
+		
+		lineBox_->Update();
+
 		model_->SetWorldMatrix(transform_->worldMatrix_);
 
 		model_->UpdateAnimation();
@@ -202,8 +211,10 @@ void Player::DrawParticle(Camera* camera) {
 
 }
 
-void Player::DrawSkeleton(Camera* camera) {
+void Player::DrawLine(Camera* camera) {
 
 	model_->DrawSkeleton(camera);
+
+	lineBox_->Draw(camera);
 
 }

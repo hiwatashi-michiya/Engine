@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Collider.h"
+#include "LineDrawer.h"
 
 class Block : public GameObject
 {
@@ -16,6 +17,8 @@ public:
 	void Update();
 
 	void Draw(Camera* camera);
+
+	void DrawLine(Camera* camera);
 
 	void SetPosition(const Vector3& position) { 
 		transform_->translate_ = position;
@@ -36,6 +39,8 @@ private:
 	std::unique_ptr<Model> model_;
 
 	std::unique_ptr<BoxCollider> collider_;
+
+	std::unique_ptr<LineBox> lineBox_;
 
 	float pLightIntensity_ = 0.5f;
 

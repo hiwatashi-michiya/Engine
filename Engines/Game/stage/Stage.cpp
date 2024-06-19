@@ -53,16 +53,6 @@ void Stage::Update() {
 
 		block->Update();
 
-		/*if (IsCollision(block->GetCollider(), player_->GetCollider())) {
-
-			if (block->GetPosition().y < player_->GetPosition().y) {
-				player_->SetPosition({ player_->GetPosition().x, block->GetPosition().y +
-					block->GetScale().y + player_->GetScale().y, player_->GetPosition().z});
-				player_->SetVelocityY(0.0f);
-			}
-
-		}*/
-
 		i++;
 
 	}
@@ -125,7 +115,12 @@ void Stage::DrawParticle(Camera* camera) {
 
 void Stage::DrawLine(Camera* camera) {
 
-	player_->DrawSkeleton(camera);
+	player_->DrawLine(camera);
+
+	for (auto& block : blocks_) {
+
+		block->DrawLine(camera);
+	}
 
 }
 

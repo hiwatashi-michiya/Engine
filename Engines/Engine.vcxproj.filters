@@ -261,6 +261,9 @@
     <ClCompile Include="Engine\Collider\Collision.cpp">
       <Filter>Engine\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Drawing\Draw.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -445,6 +448,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Collider\Collision.h">
       <Filter>Engine\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\Draw.h">
+      <Filter>Engine\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

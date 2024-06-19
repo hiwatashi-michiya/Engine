@@ -10,6 +10,7 @@
 #include "Particle3D.h"
 #include "GameObject.h"
 #include "Collider.h"
+#include "LineDrawer.h"
 
 class Player : public GameObject
 {
@@ -39,7 +40,7 @@ public:
 
 	void SetIsDead(bool flag) { isDead_ = flag; }
 
-	void DrawSkeleton(Camera* camera);
+	void DrawLine(Camera* camera);
 
 private:
 
@@ -52,6 +53,8 @@ private:
 	std::unique_ptr<SkinningModel> model_;
 
 	std::unique_ptr<Particle3D> particle_;
+
+	std::unique_ptr<LineBox> lineBox_;
 
 	bool canJump_ = true;
 
