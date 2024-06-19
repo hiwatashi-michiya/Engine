@@ -1,5 +1,5 @@
 #pragma once
-#include "base/Camera.h"
+#include "Camera.h"
 #include "Drawing/LineDrawer.h"
 #include "Drawing/ModelManager.h"
 #include "Keyframe/Keyframe.h"

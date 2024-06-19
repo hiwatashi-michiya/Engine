@@ -172,13 +172,13 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	//Depthの機能を有効化する
 	depthStencilDesc.DepthEnable = true;
 	//書き込み
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	//近ければ描画
 	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
 	//DepthStencilの設定
 	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	//通常
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -266,33 +266,34 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
 
-	instanceCount_ = instanceCount;
+	maxInstanceCount_ = instanceCount;
 
 	//トランスフォーム情報をインスタンス数に合わせてリサイズする
-	positions_.resize(instanceCount_);
-	rotations_.resize(instanceCount_);
-	scales_.resize(instanceCount_);
-	worldMatrices.resize(instanceCount_);
-	velocities_.resize(instanceCount_);
+	transforms_.resize(maxInstanceCount_);
+	colors_.resize(maxInstanceCount_);
+	worldMatrices.resize(maxInstanceCount_);
+	velocities_.resize(maxInstanceCount_);
 
-	for (uint32_t i = 0; i < instanceCount_; i++) {
-		positions_[i] = Vector3::Zero();
-		rotations_[i] = Vector3::Zero();
-		scales_[i] = Vector3::Identity();
+	for (uint32_t i = 0; i < maxInstanceCount_; i++) {
+		transforms_[i] = std::make_shared<Transform>();
+		colors_[i] = { 1.0f,1.0f,1.0f,1.0f };
 		worldMatrices[i] = MakeIdentity4x4();
 	}
+
+	instanceCount_ = maxInstanceCount_;
 
 	//transformMatrix
 	{
 
-		matBuff_ = CreateBufferResource(device_, sizeof(TransformationMatrix) * instanceCount_);
+		matBuff_ = CreateBufferResource(device_, sizeof(ParticleForGPU) * maxInstanceCount_);
 
 		matBuff_->Map(0, nullptr, reinterpret_cast<void**>(&matTransformMap_));
 
 		//インスタンシングの数だけループ
-		for (uint32_t i = 0; i < instanceCount_; i++) {
+		for (uint32_t i = 0; i < maxInstanceCount_; i++) {
 			matTransformMap_[i].WVP = MakeIdentity4x4();
 			matTransformMap_[i].World = MakeIdentity4x4();
+			matTransformMap_[i].color = { 1.0f,1.0f,1.0f,1.0f };
 		}
 
 		matBuff_->Unmap(0, nullptr);
@@ -302,7 +303,7 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 	//インスタンシングリソース設定
 	{
 
-		instancingResource_ = TextureManager::GetInstance()->SetInstancingResource(instanceCount_, matBuff_);
+		instancingResource_ = TextureManager::GetInstance()->SetInstancingResource(maxInstanceCount_, matBuff_);
 
 	}
 
@@ -313,6 +314,9 @@ void Particle3D::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	assert(commandList_ == nullptr);
 
 	commandList_ = commandList;
+
+	//PSO設定
+	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_]);
 
 }
 
@@ -332,13 +336,15 @@ void Particle3D::Draw(Camera* camera) {
 	matBillboard_.m[3][1] = 0.0f;
 	matBillboard_.m[3][2] = 0.0f;
 
+	instanceCount_ = std::clamp(instanceCount_, uint32_t(0), maxInstanceCount_);
+
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 
 		if (isBillboard_) {
-			worldMatrices[i] = MakeScaleMatrix(scales_[i]) * matBillboard_ * MakeTranslateMatrix(positions_[i]);
+			worldMatrices[i] = MakeScaleMatrix(transforms_[i]->scale_) * matBillboard_ * MakeTranslateMatrix(transforms_[i]->translate_);
 		}
 		else {
-			worldMatrices[i] = MakeAffineMatrix(scales_[i], rotations_[i], positions_[i]);
+			worldMatrices[i] = MakeAffineMatrix(transforms_[i]->scale_, transforms_[i]->rotateQuaternion_, transforms_[i]->translate_);
 		}
 
 		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
@@ -346,11 +352,10 @@ void Particle3D::Draw(Camera* camera) {
 		matTransformMap_[i].WVP = worldViewProjectionMatrix;
 		matTransformMap_[i].World = worldMatrices[i];
 		matTransformMap_[i].WorldInverseTranspose = Transpose(Inverse(worldMatrices[i]));
+		matTransformMap_[i].color = colors_[i];
 
 	}
 
-	//PSO設定
-	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_]);
 	//ルートシグネチャを設定
 	commandList_->SetGraphicsRootSignature(rootSignature_);
 	//プリミティブ形状を設定

@@ -98,13 +98,14 @@ void Stage::Draw(Camera* camera) {
 
 		block->Draw(camera);
 
-		/*if (!IsCollision(block->GetCollider(), line_)) {
+		/*if ((!player_->GetIsDead() && !IsCollision(block->GetCollision(), line_)) ||
+			player_->GetIsDead()) {
 
 			block->Draw(camera);
 
 		}
 		else {
-			
+			PostEffectDrawer::GetInstance()->SetType(kNone);
 		}*/
 	}
 
@@ -125,8 +126,6 @@ void Stage::DrawParticle(Camera* camera) {
 void Stage::DrawLine(Camera* camera) {
 
 	player_->DrawSkeleton(camera);
-
-	drawLine_->Draw(camera);
 
 }
 

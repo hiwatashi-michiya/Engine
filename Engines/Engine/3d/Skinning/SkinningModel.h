@@ -1,6 +1,6 @@
 #pragma once
 #include "Animation/Animation.h"
-#include "base/Camera.h"
+#include "Camera.h"
 #include "Drawing/ModelManager.h"
 #include "Mesh.h"
 #include "SkinCluster.h"
@@ -79,6 +79,12 @@ public:
 
 	//アニメーションを指定した数字のものに切り替え
 	void SetAnimation(int32_t number, bool isReset = true);
+
+	Animation* GetAnimation() { return animations_[currentFileName_].get(); }
+
+	Skeleton* GetSkeleton() { return skeleton_.get(); }
+
+	Matrix4x4 GetSkeletonSpaceMatrix(std::string name) const { return skeleton_->joints[skeleton_->jointMap[name]].skeletonSpaceMatrix; }
 
 	/// <summary>
 	/// アニメーション開始

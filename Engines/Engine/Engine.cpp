@@ -122,19 +122,11 @@ void Engine::BeginFrame() {
 
 #endif // _DEBUG
 
-	dxSetter_->RenderTexturePreDraw();
-
 	Input::GetInstance()->Update();
 
 }
 
 void Engine::EndFrame() {
-
-	dxSetter_->RenderTexturePostDraw();
-
-	dxSetter_->PreDraw();
-
-	PostEffectDrawer::GetInstance()->Draw();
 
 #ifdef _DEBUG
 

@@ -102,9 +102,6 @@
     <ClCompile Include="Engine\Engine.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\Camera.cpp">
-      <Filter>Engine\base</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\DirectXSetter.cpp">
       <Filter>Engine\base</Filter>
     </ClCompile>
@@ -252,6 +249,9 @@
     <ClCompile Include="Engine\Drawing\PostEffect\PostEffects.cpp">
       <Filter>Engine\Drawing\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\Camera.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Collider\Collider.cpp">
       <Filter>Engine\Collider</Filter>
     </ClCompile>
@@ -265,9 +265,6 @@
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\Camera.h">
-      <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXSetter.h">
       <Filter>Engine\base</Filter>
@@ -434,6 +431,9 @@
     <ClInclude Include="Engine\Drawing\PostEffect\PostEffects.h">
       <Filter>Engine\Drawing\PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\math\Camera.h">
+      <Filter>Engine\math</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\3d\GameObject.h">
       <Filter>Engine\3d</Filter>
     </ClInclude>
@@ -505,6 +505,15 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\BoxFilter.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\GaussianFilter.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\LuminanceBasedOutline.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\DepthBasedOutline.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

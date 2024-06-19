@@ -3,25 +3,21 @@
 struct Parameter
 {
     int32_t size;
+    float32_t sigma;
 };
 
 ConstantBuffer<Parameter> gParameter : register(b0);
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
 
-static const float32_t2 kIndex3x3[3][3] =
-{
-    { { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f } },
-    { { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } },
-    { { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } },
-};
+static const float32_t PI = 3.14159265f;
 
-static const float32_t kKernel3x3[3][3] =
+float gauss(float x, float y, float sigma)
 {
-    { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f },
-    { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f },
-    { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f },
-};
+    float exponent = -(x * x + y * y) * rcp(2.0f * sigma * sigma);
+    float denominator = 2.0f * PI * sigma * sigma;
+    return exp(exponent) * rcp(denominator);
+}
 
 struct PixelShaderOutput
 {
@@ -39,7 +35,13 @@ PixelShaderOutput main(VertexShaderOutput input)
     output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
     output.color.a = 1.0f;
     
-    for (int32_t x = -gParameter.size; x <= gParameter.size; ++x){
+    const int32_t kSize = gParameter.size;
+    
+    //kernelを求める
+    float32_t weight = 0.0f;
+    
+    for (int32_t x = -gParameter.size; x <= gParameter.size; ++x)
+    {
         
         for (int32_t y = -gParameter.size; y <= gParameter.size; ++y)
         {
@@ -47,17 +49,22 @@ PixelShaderOutput main(VertexShaderOutput input)
             //現在のtexcoordを算出
             float32_t2 texcoord =
             {
-                clamp(input.texcoord.x + x * uvStepSize.x, 0.1f, width - 1.0f),
-                clamp(input.texcoord.y + y * uvStepSize.y, 0.1f, height - 1.0f)
+                clamp(input.texcoord.x + x * uvStepSize.x, 0.0f, width),
+                clamp(input.texcoord.y + y * uvStepSize.y, 0.0f, height)
             };
             
-            //色に1/9を掛けて足す
+            float32_t kernel = gauss(x, y, gParameter.sigma);
+            
+            //色に参照範囲の逆数を掛けて足す
             float32_t3 fetchColor = gTexture.Sample(gSampler, texcoord).rgb;
-            output.color.rgb += fetchColor * rcp(pow(gParameter.size * 2 + 1, 2));
+            output.color.rgb += fetchColor * kernel;
+            weight += kernel;
             
         }
         
     }
+    
+    output.color.rgb *= rcp(weight);
     
     return output;
     

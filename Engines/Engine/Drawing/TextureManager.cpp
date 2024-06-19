@@ -124,7 +124,7 @@ Texture* TextureManager::Load(const std::string& filePath) {
 	}
 
 	//制限数以上の読み込みで止める
-	assert(textureIndex_ < kMaxTextures - 2);
+	assert(DirectXSetter::srvHandleNumber_ < kMaxTextures);
 
 	std::unique_ptr<Texture> tex = std::make_unique<Texture>();
 
@@ -132,7 +132,7 @@ Texture* TextureManager::Load(const std::string& filePath) {
 	DirectX::ScratchImage mipImages = LoadTexture(filePath);
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 	tex->resource = CreateTextureResource(device_, metadata);
-	intermediateResources_[textureIndex_] = UploadTextureData(tex->resource, mipImages, device_, DirectXSetter::GetInstance()->GetCommandList());
+	intermediateResources_[DirectXSetter::srvHandleNumber_] = UploadTextureData(tex->resource, mipImages, device_, DirectXSetter::GetInstance()->GetCommandList());
 
 	//metadataを基にSRVの設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -142,8 +142,8 @@ Texture* TextureManager::Load(const std::string& filePath) {
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	//SRVを作成するDescriptorHeapの場所を決める
-	tex->srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV_, 2 + textureIndex_);
-	tex->srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV_, 2 + textureIndex_);
+	tex->srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV_, DirectXSetter::srvHandleNumber_);
+	tex->srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV_, DirectXSetter::srvHandleNumber_);
 
 	//SRVの生成
 	device_->CreateShaderResourceView(tex->resource.Get(), &srvDesc, tex->srvHandleCPU);
@@ -151,7 +151,7 @@ Texture* TextureManager::Load(const std::string& filePath) {
 	textureMap_[filePath] = std::move(tex);
 
 	//使用カウント上昇
-	textureIndex_++;
+	DirectXSetter::srvHandleNumber_++;
 
 	return textureMap_[filePath].get();
 
@@ -160,13 +160,11 @@ Texture* TextureManager::Load(const std::string& filePath) {
 InstancingResource TextureManager::SetInstancingResource(uint32_t instanceCount, Microsoft::WRL::ComPtr<ID3D12Resource> mapResource) {
 
 	//制限数以上の読み込みで止める
-	assert(textureIndex_ < kMaxTextures - 1);
+	assert(DirectXSetter::srvHandleNumber_ < kMaxTextures);
 
 	InstancingResource instancingResource;
 
 	instancingResource.resource = mapResource;
-
-	const uint32_t descriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	//metadataを基にSRVの設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -179,14 +177,14 @@ InstancingResource TextureManager::SetInstancingResource(uint32_t instanceCount,
 	srvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
 
 	//SRVを作成するDescriptorHeapの場所を決める
-	instancingResource.srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
-	instancingResource.srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV, 1 + textureIndex_);
+	instancingResource.srvHandleCPU = GetCPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV_, DirectXSetter::srvHandleNumber_);
+	instancingResource.srvHandleGPU = GetGPUDescriptorHandle(srvDescHeap_, descriptorSizeSRV_, DirectXSetter::srvHandleNumber_);
 
 	//SRVの生成
 	device_->CreateShaderResourceView(instancingResource.resource.Get(), &srvDesc, instancingResource.srvHandleCPU);
 
 	//使用カウント上昇
-	textureIndex_++;
+	DirectXSetter::srvHandleNumber_++;
 
 	return instancingResource;
 

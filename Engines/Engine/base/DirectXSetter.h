@@ -20,6 +20,9 @@ public:
 
 	static DirectXSetter* GetInstance();
 
+	//srvHeapのHandle
+	static uint32_t srvHandleNumber_;
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -58,6 +61,8 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeap() { return srvHeap_; }
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetRtvHeap() { return rtvHeap_; }
+
+	ID3D12Resource* GetDepthStencilResource() { return depthStencil_.Get(); }
 
 private:
 

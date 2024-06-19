@@ -1,6 +1,7 @@
 #pragma once
-#include "Engine/math/Matrix4x4.h"
-#include "Engine/math/Vector3.h"
+#include "Matrix4x4.h"
+#include "Vector3.h"
+#include "Quaternion.h"
 
 //GPUで利用するカメラ座標
 struct CameraForGPU
@@ -53,7 +54,8 @@ public:
 
 private:
 
-
+	//クォータニオン回転
+	Quaternion rotateQuaternion_ = { 0.0f,0.0f,0.0f,1.0f };
 
 };
 

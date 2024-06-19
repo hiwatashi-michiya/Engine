@@ -3,13 +3,19 @@
 #include <cmath>
 #include "Drawing/ImGuiManager.h"
 #include "Audio/AudioManager.h"
+#include "PostEffectDrawer.h"
 #include <functional>
 
 Player::Player()
 {
 
+	tex_ = TextureManager::GetInstance()->Load("./Resources/plane/particle.png");
 	model_.reset(SkinningModel::Create("./resources/human/stay.gltf", 0));
 	model_->LoadAnimation("./resources/human/walking.gltf", 1);
+	particle_.reset(Particle3D::Create("./Resources/plane/particle.obj", 128));
+	particle_->SetInstanceCount(32);
+	/*particle_->SetTexture(tex_);*/
+	transform_ = std::make_unique<Transform>();
 	collider_ = std::make_unique<BoxCollider>();
 
 }
@@ -25,7 +31,7 @@ void Player::Initialize() {
 	model_->ResetAnimation();
 	model_->SetAnimation(0);
 	model_->StartAnimation(true);
-	model_->SetAnimationSpeed(1.5f);
+	model_->SetAnimationSpeed(2.0f);
 
 	transform_->translate_ = { 0.0f,5.0f,0.0f };
 	model_->material_->pLightMap_->intensity = 2.0f;
@@ -33,6 +39,14 @@ void Player::Initialize() {
 	name_ = "player";
 	collider_->SetGameObject(this);
 	collider_->SetFunction([this](Collider* collider) {OnCollision(collider); });
+
+	for (int32_t i = 0; i < 32; i++) {
+
+		particle_->colors_[i].w = 1.0f;
+		particle_->velocities_[i] = { 0.0f,1.0f,0.0f };
+		particle_->transforms_[i]->scale_ = { 0.0f,0.0f,0.0f };
+
+	}
 
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -84,8 +98,6 @@ void Player::Update() {
 
 		velocity_ = Normalize(velocity_);
 
-		velocity_.y -= 0.5f;
-
 		velocity_ *= speed_;
 
 		Vector3 moveXZ = { velocity_.x, 0.0f, velocity_.z };
@@ -104,6 +116,8 @@ void Player::Update() {
 
 		}
 
+		velocity_.y -= 0.5f;
+
 		//速度加算
 		transform_->translate_ += velocity_;
 
@@ -120,6 +134,41 @@ void Player::Update() {
 		model_->SetWorldMatrix(transform_->worldMatrix_);
 
 		model_->UpdateAnimation();
+
+		//パーティクル更新
+		for (int32_t i = 0; i < 32; i++) {
+			
+			if (particle_->transforms_[i]->scale_.y <= 0.0f) {
+
+				Matrix4x4 tmpMatrix{};
+
+				tmpMatrix = model_->GetSkeletonSpaceMatrix("mixamorig:LeftHand") *
+					model_->worldMatrix_;
+
+				particle_->colors_[i].w = 1.0f;
+				particle_->velocities_[i] = { float((rand() % 40 - 20) * 0.001f),float((rand() % 40 - 20) * 0.001f), float((rand() % 40 - 20) * 0.001f) };
+				particle_->transforms_[i]->translate_ = tmpMatrix.GetTranslate();
+				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
+				particle_->transforms_[i]->scale_ = { 0.1f,0.1f,0.1f };
+				break;
+			}
+
+
+
+		}
+
+		for (int32_t i = 0; i < 32; i++) {
+
+			if (particle_->transforms_[i]->scale_.y > 0.0f) {
+				particle_->transforms_[i]->translate_ += particle_->velocities_[i];
+				particle_->transforms_[i]->rotateQuaternion_ = particle_->transforms_[i]->rotateQuaternion_ * ConvertFromEuler(particle_->velocities_[i]);
+				particle_->transforms_[i]->scale_ -= {0.002f, 0.002f, 0.002f};
+			}
+			else {
+				particle_->colors_[i].w = 0.0f;
+			}
+
+		}
 
 	}
 
@@ -146,6 +195,10 @@ void Player::Draw(Camera* camera) {
 }
 
 void Player::DrawParticle(Camera* camera) {
+
+	if (!isDead_) {
+		particle_->Draw(camera);
+	}
 
 }
 

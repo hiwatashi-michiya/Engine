@@ -37,6 +37,8 @@ void SceneManager::Update() {
 
 void SceneManager::Draw() {
 
+	DirectXSetter::GetInstance()->RenderTexturePreDraw();
+
 	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	scene_->DrawModel();
@@ -54,6 +56,10 @@ void SceneManager::Draw() {
 	scene_->DrawParticle();
 
 	Particle3D::PostDraw();
+
+	DirectXSetter::GetInstance()->PreDraw();
+
+	PostEffectDrawer::GetInstance()->Draw();
 
 	Sprite::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
