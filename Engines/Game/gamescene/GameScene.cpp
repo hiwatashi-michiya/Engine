@@ -142,19 +142,17 @@ void GameScene::Update() {
 
 void GameScene::DrawModel() {
 
-	Model::PostDraw();
+	/*Model::PostDraw();
 
 	Skybox::PreDraw(dxSetter_->GetCommandList());
 
 	skybox_->Draw(camera_.get());
 
-	Skybox::PostDraw();
+	Skybox::PostDraw();*/
 
-	/*skyDome_->Draw(camera_.get());*/
+	skyDome_->Draw(camera_.get());
 
-	/*mapEditor_->Draw(camera_.get());*/
-
-	Model::PreDraw(dxSetter_->GetCommandList());
+	/*Model::PreDraw(dxSetter_->GetCommandList());*/
 
 	stage_->Draw(camera_.get());
 
