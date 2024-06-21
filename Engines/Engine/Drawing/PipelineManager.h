@@ -1,5 +1,4 @@
 #pragma once
-#include "ShaderManager.h"
 #include <array>
 #include <d3d12.h>
 #include <dxcapi.h>
@@ -33,8 +32,6 @@ public:
 	/// <summary>
 	/// パイプライン作成
 	/// </summary>
-	/// <param name="shaderFileName">シェーダーファイル名</param>
-	/// <param name="type">シェーダーのタイプ</param>
 	/// <param name="blendMode">ブレンド設定</param>
 	/// <param name="pipelineName">パイプラインに付ける名前</param>
 	void CreatePipeLine(const D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc, const std::string& pipelineName);

@@ -213,3 +213,95 @@ void Line::Draw(Camera* camera, const Matrix4x4& matrix) {
 	commandList_->DrawInstanced(kVertexNum_, 1, 0, 0);
 
 }
+
+LineBox::LineBox()
+{
+
+	for (int32_t i = 0; i < kMaxLine_; i++) {
+		lines_[i] = std::make_unique<Line>();
+	}
+
+}
+
+LineBox::~LineBox()
+{
+}
+
+void LineBox::Update() {
+
+	Vector3 point[8]{};
+
+	Matrix4x4 rotateMatrix = MakeIdentity4x4();
+
+	if (obb_) {
+
+		rotateMatrix = {
+	   {
+		   {obb_->orientations[0].x,obb_->orientations[0].y,obb_->orientations[0].z,0.0f},
+		   {obb_->orientations[1].x,obb_->orientations[1].y,obb_->orientations[1].z,0.0f},
+		   {obb_->orientations[2].x,obb_->orientations[2].y,obb_->orientations[2].z,0.0f},
+		   {0.0f,0.0f,0.0f,1.0f}
+	   }
+		};
+
+		//左下前
+		point[0] = CoordTransform(Vector3{ -obb_->size.x, -obb_->size.y, -obb_->size.z }, rotateMatrix);
+		//右下前
+		point[1] = CoordTransform(Vector3{ obb_->size.x, -obb_->size.y, -obb_->size.z }, rotateMatrix);
+		//左上前
+		point[2] = CoordTransform(Vector3{ -obb_->size.x, obb_->size.y, -obb_->size.z }, rotateMatrix);
+		//右上前
+		point[3] = CoordTransform(Vector3{ obb_->size.x, obb_->size.y, -obb_->size.z }, rotateMatrix);
+		//左下奥
+		point[4] = CoordTransform(Vector3{ -obb_->size.x, -obb_->size.y, obb_->size.z }, rotateMatrix);
+		//右下奥
+		point[5] = CoordTransform(Vector3{ obb_->size.x, -obb_->size.y, obb_->size.z }, rotateMatrix);
+		//左上奥
+		point[6] = CoordTransform(Vector3{ -obb_->size.x, obb_->size.y, obb_->size.z }, rotateMatrix);
+		//右上奥
+		point[7] = CoordTransform(Vector3{ obb_->size.x, obb_->size.y, obb_->size.z }, rotateMatrix);
+
+		for (int32_t i = 0; i < 8; i++) {
+			point[i] += obb_->center;
+		}
+
+		lines_[0]->start_ = point[0];
+		lines_[0]->end_ = point[1];
+		lines_[1]->start_ = point[0];
+		lines_[1]->end_ = point[2];
+		lines_[2]->start_ = point[2];
+		lines_[2]->end_ = point[3];
+		lines_[3]->start_ = point[1];
+		lines_[3]->end_ = point[3];
+		lines_[4]->start_ = point[0];
+		lines_[4]->end_ = point[4];
+		lines_[5]->start_ = point[1];
+		lines_[5]->end_ = point[5];
+		lines_[6]->start_ = point[2];
+		lines_[6]->end_ = point[6];
+		lines_[7]->start_ = point[3];
+		lines_[7]->end_ = point[7];
+		lines_[8]->start_ = point[4];
+		lines_[8]->end_ = point[5];
+		lines_[9]->start_ = point[4];
+		lines_[9]->end_ = point[6];
+		lines_[10]->start_ = point[6];
+		lines_[10]->end_ = point[7];
+		lines_[11]->start_ = point[5];
+		lines_[11]->end_ = point[7];
+
+	}
+
+}
+
+void LineBox::Draw(Camera* camera, const Matrix4x4& matrix) {
+
+	if (obb_) {
+
+		for (int32_t i = 0; i < kMaxLine_; i++) {
+			lines_[i]->Draw(camera, matrix);
+		}
+
+	}
+
+}

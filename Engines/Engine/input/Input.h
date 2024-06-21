@@ -5,6 +5,7 @@
 #include <dinput.h>
 #include <wrl.h>
 #include <Xinput.h>
+#include "Vector2.h"
 
 class Input
 {
@@ -35,6 +36,12 @@ public:
 		RY,
 	};
 
+	enum Mouse {
+		kLeft,
+		kRight,
+		kCenter,
+	};
+
 	static Input* GetInstance();
 
 	//初期化
@@ -62,6 +69,16 @@ public:
 
 	bool ReleaseButton(Button button);
 
+	bool PushMouse(Mouse mouse);
+
+	bool TriggerMouse(Mouse mouse);
+
+	bool ReleaseMouse(Mouse mouse);
+
+	Vector2 GetMouseMove();
+
+	int32_t GetMouseWheel() const { return mouse_.lZ; }
+
 	XINPUT_GAMEPAD GetGamepad() { return joyState_.Gamepad; }
 
 	//コントローラーが繋がれているか
@@ -69,6 +86,8 @@ public:
 
 	//スティックのそれぞれの値を取得
 	SHORT GetStickValue(Stick stick);
+
+	Vector2 GetMousePosition() const { return mousePosition_; }
 
 private:
 
@@ -83,13 +102,19 @@ private:
 
 	Microsoft::WRL::ComPtr<IDirectInput8> dInput_ = nullptr;
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInputDevice8> mouseDevice_ = nullptr;
+
 	XINPUT_STATE joyState_;
 	XINPUT_STATE preJoyState_;
 
 	std::array<BYTE, 256> key_;
 	std::array<BYTE, 256> preKey_;
+	DIMOUSESTATE2 mouse_;
+	DIMOUSESTATE2 preMouse_;
 	HWND hwnd_;
 	bool isGetController_ = false;
+
+	Vector2 mousePosition_{};
 
 };
 

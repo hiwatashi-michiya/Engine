@@ -47,8 +47,8 @@ PixelShaderOutput main(VertexShaderOutput input)
             //現在のtexcoordを算出
             float32_t2 texcoord =
             {
-                clamp(input.texcoord.x + x * uvStepSize.x, 0.0f, width),
-                clamp(input.texcoord.y + y * uvStepSize.y, 0.0f, height)
+                clamp(input.texcoord.x + x * uvStepSize.x, 0.1f, width - 1.0f),
+                clamp(input.texcoord.y + y * uvStepSize.y, 0.1f, height - 1.0f)
             };
             
             //色に1/9を掛けて足す

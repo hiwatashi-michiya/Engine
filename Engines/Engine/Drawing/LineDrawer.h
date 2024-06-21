@@ -1,11 +1,13 @@
 #pragma once
-#include "base/Camera.h"
+#include "Camera.h"
 #include "Vector3.h"
 #include "Vector4.h"
 #include <d3d12.h>
 #include <dxcapi.h>
 #include <stdint.h>
 #include <wrl.h>
+#include <memory>
+#include <array>
 
 class Line
 {
@@ -60,3 +62,27 @@ private:
 	LineVertexData* vertexMap_ = nullptr;
 
 };
+
+class LineBox
+{
+public:
+	LineBox();
+	~LineBox();
+
+	void SetOBB(OBB* obb) { obb_ = obb; }
+
+	void Update();
+
+	void Draw(Camera* camera, const Matrix4x4& matrix = MakeIdentity4x4());
+
+private:
+
+	//描画に使用する線の数
+	static const uint32_t kMaxLine_ = 12;
+
+	OBB* obb_ = nullptr;
+
+	std::array<std::unique_ptr<Line>, kMaxLine_> lines_;
+
+};
+

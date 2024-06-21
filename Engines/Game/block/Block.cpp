@@ -4,7 +4,9 @@
 Block::Block()
 {
 	model_.reset(Model::Create("./resources/block/block.obj"));
-	transform_ = std::make_unique<Transform>();
+	collider_ = std::make_unique<BoxCollider>();
+	lineBox_ = std::make_unique<LineBox>();
+
 }
 
 Block::~Block()
@@ -14,6 +16,12 @@ Block::~Block()
 void Block::Initialize() {
 
 	setCount_ = (rand() % 10) * 5 + 10;
+
+	name_ = "block";
+	collider_->SetGameObject(this);
+	collider_->collider_.center = transform_->translate_;
+	collider_->collider_.size = transform_->scale_ / 2.0f;
+	lineBox_->SetOBB(&collider_->collider_);
 
 }
 
@@ -62,12 +70,14 @@ void Block::Update() {
 
 	}
 
-	collision_.max = transform_->translate_ + transform_->scale_;
-	collision_.min = transform_->translate_ - transform_->scale_;
+	collider_->collider_.center = transform_->translate_;
+	collider_->collider_.size = transform_->scale_;
 
 	model_->material_->pLightMap_->intensity = pLightIntensity_;
 
 	transform_->UpdateMatrix();
+
+	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
@@ -76,5 +86,11 @@ void Block::Update() {
 void Block::Draw(Camera* camera) {
 
 	model_->Draw(camera);
+
+}
+
+void Block::DrawLine(Camera* camera) {
+
+	lineBox_->Draw(camera);
 
 }

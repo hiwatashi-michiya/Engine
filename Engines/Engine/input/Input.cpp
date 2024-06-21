@@ -37,7 +37,18 @@ void Input::Initialize() {
 		hwnd_, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(hr));
 
+	//マウスデバイスの生成
+	hr = dInput_->CreateDevice(GUID_SysMouse, &mouseDevice_, NULL);
+	assert(SUCCEEDED(hr));
 
+	//入力データ形式のセット
+	hr = mouseDevice_->SetDataFormat(&c_dfDIMouse2); //拡張8ボタン
+	assert(SUCCEEDED(hr));
+
+	//排他制御レベルのセット
+	hr = keyboard_->SetCooperativeLevel(
+		hwnd_, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	assert(SUCCEEDED(hr));
 
 }
 
@@ -47,6 +58,8 @@ void Input::Update() {
 
 	//キーボード情報の取得開始
 	keyboard_->Acquire();
+	//マウスの取得開始
+	mouseDevice_->Acquire();
 
 	if (GetJoyState(0, joyState_)) {
 		isGetController_ = true;
@@ -57,10 +70,26 @@ void Input::Update() {
 
 	CalcDeadZone();
 
+	//前回入力の保存
 	preKey_ = key_;
+	preMouse_ = mouse_;
 
+	//キー入力
 	key_.fill(0);
 	keyboard_->GetDeviceState(sizeof(key_), key_.data());
+
+	//マウス入力
+	std::memset(&mouse_, 0, sizeof(mouse_));
+	mouseDevice_->GetDeviceState(sizeof(mouse_), &mouse_);
+
+	//スクリーン座標の取得
+	POINT mousePosition;
+	GetCursorPos(&mousePosition);
+
+	//ウィンドウ座標へ変換
+	ScreenToClient(hwnd_, &mousePosition);
+	mousePosition_.x = float(mousePosition.x);
+	mousePosition_.y = float(mousePosition.y);
 
 }
 
@@ -94,10 +123,40 @@ bool Input::ReleaseKey(BYTE keyNumber) {
 
 }
 
+bool Input::PushMouse(Mouse mouse) {
+
+	return (mouse_.rgbButtons[mouse] & 0x80) != 0;
+
+}
+
+bool Input::TriggerMouse(Mouse mouse) {
+
+	return (mouse_.rgbButtons[mouse] & 0x80) != 0 &&
+		(preMouse_.rgbButtons[mouse] & 0x80) == 0;
+
+}
+
+bool Input::ReleaseMouse(Mouse mouse) {
+
+	return (mouse_.rgbButtons[mouse] & 0x80) == 0 &&
+		(preMouse_.rgbButtons[mouse] & 0x80) != 0;
+
+}
+
+Vector2 Input::GetMouseMove() {
+	Vector2 tmp{};
+	tmp.x = float(mouse_.lX);
+	tmp.y = float(mouse_.lY);
+	return tmp;
+}
+
 Input::~Input() {
 
 	if (keyboard_) {
 		keyboard_->Unacquire();
+	}
+	if (mouseDevice_) {
+		mouseDevice_->Unacquire();
 	}
 
 }

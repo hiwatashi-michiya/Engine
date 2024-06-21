@@ -1,5 +1,5 @@
 #include "Stage.h"
-#include "Engine/math/Collision.h"
+#include "Collision.h"
 #include "Externals/nlohmann/json.hpp"
 #include <fstream>
 #include "Audio/AudioManager.h"
@@ -53,16 +53,6 @@ void Stage::Update() {
 
 		block->Update();
 
-		if (IsCollision(block->GetCollision(), player_->GetCollision())) {
-
-			if (block->GetPosition().y < player_->GetPosition().y) {
-				player_->SetPosition({ player_->GetPosition().x, block->GetPosition().y +
-					block->GetScale().y + player_->GetScale().y, player_->GetPosition().z});
-				player_->SetVelocityY(0.0f);
-			}
-
-		}
-
 		i++;
 
 	}
@@ -71,12 +61,12 @@ void Stage::Update() {
 
 		ring->Update();
 
-		if (!ring->GetIsObtained() && IsCollision(ring->GetCollision(), player_->GetCollision())) {
+		/*if (!ring->GetIsObtained() && IsCollision(ring->GetCollision(), player_->GetCollider())) {
 
 			ring->Obtained();
 			ring->PlaySE();
 
-		}
+		}*/
 
 	}
 
@@ -96,14 +86,17 @@ void Stage::Draw(Camera* camera) {
 
 	for (auto& block : blocks_) {
 
-		if (!IsCollision(block->GetCollision(), line_)) {
+		block->Draw(camera);
+
+		/*if ((!player_->GetIsDead() && !IsCollision(block->GetCollision(), line_)) ||
+			player_->GetIsDead()) {
 
 			block->Draw(camera);
 
 		}
 		else {
-			
-		}
+			PostEffectDrawer::GetInstance()->SetType(kNone);
+		}*/
 	}
 
 }
@@ -122,13 +115,18 @@ void Stage::DrawParticle(Camera* camera) {
 
 void Stage::DrawLine(Camera* camera) {
 
-	player_->DrawSkeleton(camera);
+	player_->DrawLine(camera);
 
-	drawLine_->Draw(camera);
+	for (auto& block : blocks_) {
+
+		block->DrawLine(camera);
+	}
 
 }
 
 void Stage::LoadStage(uint32_t stageNumber) {
+
+	std::string sceneName = "marScene";
 
 	std::string stageName = "stage";
 
@@ -154,7 +152,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 	//ファイルを閉じる
 	ifs.close();
 	//グループを検索
-	nlohmann::json::iterator itGroup = root.find(stageName);
+	nlohmann::json::iterator itGroup = root.find(sceneName);
 	//未登録チェック
 	if (itGroup == root.end()) {
 		MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);

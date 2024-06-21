@@ -91,6 +91,9 @@
     <Filter Include="Engine\Drawing\PostEffect">
       <UniqueIdentifier>{c6695b30-b1ca-4839-9ed1-56b320c60a22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Collider">
+      <UniqueIdentifier>{d476ce19-a150-426e-a5a6-f40c9a0c0b0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -98,9 +101,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Engine.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\Camera.cpp">
-      <Filter>Engine\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\DirectXSetter.cpp">
       <Filter>Engine\base</Filter>
@@ -134,9 +134,6 @@
     </ClCompile>
     <ClCompile Include="Game\GameScene\GameScene.cpp">
       <Filter>Game\GameScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\math\Collision.cpp">
-      <Filter>Engine\math</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Leak.cpp">
       <Filter>Engine</Filter>
@@ -252,16 +249,28 @@
     <ClCompile Include="Engine\Drawing\PostEffect\PostEffects.cpp">
       <Filter>Engine\Drawing\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\SkyBox.cpp">
+    <ClCompile Include="Engine\math\Camera.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collider\Collider.cpp">
+      <Filter>Engine\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collider\CollisionManager.cpp">
+      <Filter>Engine\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collider\Collision.cpp">
+      <Filter>Engine\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\Draw.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\Skybox.cpp">
       <Filter>Engine\3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\Camera.h">
-      <Filter>Engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXSetter.h">
       <Filter>Engine\base</Filter>
@@ -304,9 +313,6 @@
     </ClInclude>
     <ClInclude Include="Game\GameScene\GameScene.h">
       <Filter>Game\GameScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\math\Collision.h">
-      <Filter>Engine\math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Leak.h">
       <Filter>Engine</Filter>
@@ -431,7 +437,25 @@
     <ClInclude Include="Engine\Drawing\PostEffect\PostEffects.h">
       <Filter>Engine\Drawing\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3d\SkyBox.h">
+    <ClInclude Include="Engine\math\Camera.h">
+      <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\GameObject.h">
+      <Filter>Engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider\Collider.h">
+      <Filter>Engine\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider\CollisionManager.h">
+      <Filter>Engine\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collider\Collision.h">
+      <Filter>Engine\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\Draw.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Skybox.h">
       <Filter>Engine\3d</Filter>
     </ClInclude>
   </ItemGroup>
@@ -449,6 +473,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="Resources\shaders\Line.hlsli">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Resources\shaders\Skybox.hlsli">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
@@ -493,6 +520,21 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\BoxFilter.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\GaussianFilter.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\LuminanceBasedOutline.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\DepthBasedOutline.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Skybox.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Skybox.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

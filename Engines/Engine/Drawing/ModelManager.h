@@ -23,19 +23,19 @@ struct MaterialData
 	Vector4 color;
 	
 	int32_t enableLighting;
-	float padding[3];
+	float shininess; //光沢度
+	float padding[2];
 
 	Matrix4x4 uvTransform;
+	
+	//int32_t isGrayScale = 0; //グレースケール化のint型フラグ
+	//int32_t isInversion = 0; //色反転フラグ
+	//int32_t isRetro = 0; //レトロ化フラグ
 
-	float shininess; //光沢度
-	int32_t isGrayScale = 0; //グレースケール化のint型フラグ
-	int32_t isInversion = 0; //色反転フラグ
-	int32_t isRetro = 0; //レトロ化フラグ
-
-	int32_t isAverageBlur = 0; //平均化ブラーフラグ
-	int32_t isEmboss = 0; //エンボス加工
-	int32_t isSharpness = 0; //シャープネス
-	int32_t isOutline = 0; //輪郭線抽出
+	//int32_t isAverageBlur = 0; //平均化ブラーフラグ
+	//int32_t isEmboss = 0; //エンボス加工
+	//int32_t isSharpness = 0; //シャープネス
+	//int32_t isOutline = 0; //輪郭線抽出
 
 };
 

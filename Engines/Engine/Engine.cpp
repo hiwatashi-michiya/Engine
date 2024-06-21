@@ -20,6 +20,8 @@
 #include <cassert>
 #include <string>
 #include <Windows.h>
+#include "CollisionManager.h"
+#include "Skybox.h"
 
 #ifdef _DEBUG
 
@@ -54,12 +56,15 @@ void Engine::Initialize(const char* title, int width, int height) {
 	Sprite::StaticInitialize(dxSetter_->GetDevice(), WindowManager::kWindowWidth, WindowManager::kWindowHeight);
 	Model::StaticInitialize(dxSetter_->GetDevice());
 	SkinningModel::StaticInitialize(dxSetter_->GetDevice());
+	Skybox::Initialize();
 	Particle3D::StaticInitialize(dxSetter_->GetDevice());
 	Line::Initialize(dxSetter_->GetDevice());
 	PostEffectDrawer::GetInstance()->Initialize();
 
 	TextureManager::GetInstance()->Initialize(dxSetter_->GetSrvHeap());
 	Input::GetInstance()->Initialize();
+
+	CollisionManager::GetInstance()->Initialize();
 
 #ifdef _DEBUG
 
@@ -119,19 +124,11 @@ void Engine::BeginFrame() {
 
 #endif // _DEBUG
 
-	dxSetter_->RenderTexturePreDraw();
-
 	Input::GetInstance()->Update();
 
 }
 
 void Engine::EndFrame() {
-
-	dxSetter_->RenderTexturePostDraw();
-
-	dxSetter_->PreDraw();
-
-	PostEffectDrawer::GetInstance()->Draw();
 
 #ifdef _DEBUG
 

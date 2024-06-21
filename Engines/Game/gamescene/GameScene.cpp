@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "SceneManager.h"
 #include "PostEffectDrawer.h"
+#include "CollisionManager.h"
 
 #ifdef _DEBUG
 
@@ -12,6 +13,10 @@ GameScene::GameScene()
 {
 
 	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
+	skybox_ = std::make_unique<Skybox>();
+	skybox_->LoadDss("./Resources/textures/rostock_laage_airport_4k.dds");
+	pauseTex_ = TextureManager::GetInstance()->Load("./Resources/UI/pause.png");
+	pauseSprite_.reset(Sprite::Create(pauseTex_, { 640.0f - 256.0f,360.0f - 64.0f }));
 
 }
 
@@ -80,36 +85,73 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	if (stage_->GetPlayer()->GetIsDead()) {
+	
 
-		resetCount_--;
+	if (isPause_) {
 
-		if (resetCount_ <= 0) {
-			stage_->Initialize();
-			stage_->LoadStage(1);
-			resetCount_ = 60;
+		if (input_->TriggerButton(Input::Button::START)) {
+			isPause_ = false;
 		}
+
+		PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
 
 	}
 	else {
-		
+
+		if (input_->TriggerButton(Input::Button::START)) {
+			isPause_ = true;
+		}
+
+		if (stage_->GetPlayer()->GetIsDead()) {
+
+			resetCount_--;
+
+			if (resetCount_ <= 0) {
+				stage_->Initialize();
+				stage_->LoadStage(1);
+				resetCount_ = 60;
+			}
+
+			PostEffectDrawer::GetInstance()->SetType(kGrayscale);
+
+		}
+		else {
+			PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
+		}
+
+		stage_->Update();
+
+		camera_->Update();
+
+		skyDomeTransform_->UpdateMatrix();
+		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+		skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+
+		PostEffectDrawer::GetInstance()->SetCamera(camera_.get());
+
+		CollisionManager::GetInstance()->CheckAllCollisions();
+
 	}
+	
 
-	stage_->Update();
-
-	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
-	camera_->Update();
-
-	skyDomeTransform_->UpdateMatrix();
-	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 
 }
 
 void GameScene::DrawModel() {
 
-	skyDome_->Draw(camera_.get());
+	Model::PostDraw();
+
+	Skybox::PreDraw(dxSetter_->GetCommandList());
+
+	skybox_->Draw(camera_.get());
+
+	Skybox::PostDraw();
+
+	/*skyDome_->Draw(camera_.get());*/
 
 	/*mapEditor_->Draw(camera_.get());*/
+
+	Model::PreDraw(dxSetter_->GetCommandList());
 
 	stage_->Draw(camera_.get());
 
@@ -123,13 +165,14 @@ void GameScene::DrawSkinningModel() {
 
 void GameScene::DrawParticle() {
 
-
-
+	stage_->DrawParticle(camera_.get());
 }
 
 void GameScene::DrawSprite() {
 
-
+	if (isPause_) {
+		pauseSprite_->Draw();
+	}
 
 }
 

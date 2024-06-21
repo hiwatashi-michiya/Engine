@@ -9,6 +9,8 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dxcompiler.lib")
 
+uint32_t DirectXSetter::srvHandleNumber_ = 0;
+
 DirectXSetter* DirectXSetter::GetInstance() {
 	static DirectXSetter instance;
 	return &instance;
@@ -223,7 +225,7 @@ void DirectXSetter::InitializeDXGIDevice() {
 		//デバッグレイヤーを有効化する
 		debugController->EnableDebugLayer();
 		//更にGPU側でもチェックを行うようにする
-		debugController->SetEnableGPUBasedValidation(TRUE);
+		debugController->SetEnableGPUBasedValidation(FALSE);
 	}
 #endif //  _DEBUG
 
@@ -352,6 +354,8 @@ void DirectXSetter::CreateSrvHeap() {
 
 	srvHeap_ = DescriptorHeapManager::GetInstance()->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 256, true, "SRVHeap");
 
+	srvHandleNumber_ = 0;
+
 	srvHeap_->SetName(L"srvHeap");
 
 }
@@ -403,7 +407,7 @@ void DirectXSetter::CreateDepthBuffer() {
 
 	//DSVの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; //Format。基本的にはResourceに合わせる
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; //Format。基本的にはResourceに合わせる
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; //2dTexture
 	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 	//DSVHeapの先頭にDSVを作る

@@ -1,14 +1,18 @@
 #pragma once
 #include "Application/Particle.h"
-#include "Engine/3d/Model.h"
-#include "Engine/input/Input.h"
-#include "Engine/math/Collision.h"
-#include "Engine/math/Quaternion.h"
+#include "Model.h"
+#include "Input.h"
+#include "Collision.h"
+#include "Quaternion.h"
 #include "Skinning/SkinningModel.h"
 #include "Transform.h"
 #include <memory>
+#include "Particle3D.h"
+#include "GameObject.h"
+#include "Collider.h"
+#include "LineDrawer.h"
 
-class Player
+class Player : public GameObject
 {
 public:
 	Player();
@@ -24,7 +28,7 @@ public:
 
 	void SetPosition(const Vector3& position) { transform_->translate_ = position; }
 
-	const AABB& GetCollision() { return collision_; }
+	BoxCollider* GetCollider() const { return collider_.get(); }
 
 	Vector3 GetPosition() const { return transform_->worldMatrix_.GetTranslate(); }
 
@@ -36,9 +40,11 @@ public:
 
 	void SetIsDead(bool flag) { isDead_ = flag; }
 
-	void DrawSkeleton(Camera* camera);
+	void DrawLine(Camera* camera);
 
 private:
+
+	void OnCollision(Collider* collider);
 
 private:
 
@@ -46,19 +52,23 @@ private:
 
 	std::unique_ptr<SkinningModel> model_;
 
-	std::unique_ptr<Transform> transform_;
+	std::unique_ptr<Particle3D> particle_;
+
+	std::unique_ptr<LineBox> lineBox_;
 
 	bool canJump_ = true;
 
 	Quaternion rotation_;
 
-	AABB collision_{};
+	std::unique_ptr<BoxCollider> collider_;
 
 	Vector3 velocity_{};
 
-	float speed_ = 0.1f;
+	float speed_ = 0.2f;
 
 	bool isDead_ = false;
+
+	Texture* tex_ = nullptr;
 
 };
 

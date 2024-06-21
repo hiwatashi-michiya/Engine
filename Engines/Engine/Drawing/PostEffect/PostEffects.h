@@ -3,6 +3,8 @@
 #include <string>
 #include "Vector3.h"
 #include "Vector4.h"
+#include "Matrix4x4.h"
+#include "Camera.h"
 
 enum PostEffectType {
 
@@ -10,6 +12,9 @@ enum PostEffectType {
 	kGrayscale, //グレースケール
 	kVignette, //ビネット
 	kBoxFilter, //ぼかし
+	kGaussianFilter, //ガウスぼかし
+	kLuminanceBasedOutline, //輝度ベースアウトライン
+	kDepthBasedOutline, //深度ベースアウトライン
 
 	kMaxEffects, //エフェクト最大数
 
@@ -26,9 +31,16 @@ public:
 
 	virtual void Render();
 
+	//描画後処理
+	virtual void PostRender();
+
 	virtual void Debug();
 
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
 	std::string name_;
+
+	Camera* camera_ = nullptr;
 
 protected:
 
@@ -139,4 +151,98 @@ private:
 
 };
 
+class GaussianFilter : public PostEffects
+{
 
+private:
+
+	struct Parameter {
+		int32_t size = 2;
+		float sigma = 2.0f;
+		float padding[2];
+	};
+
+public:
+
+	GaussianFilter() = default;
+	~GaussianFilter() = default;
+
+	void Create() override;
+
+	void Render() override;
+
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
+
+private:
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
+
+};
+
+class LuminanceBasedOutline : public PostEffects
+{
+
+private:
+
+	struct Parameter {
+		//差の倍率
+		float multiplier = 6.0f;
+		float padding[3];
+	};
+
+public:
+
+	LuminanceBasedOutline() = default;
+	~LuminanceBasedOutline() = default;
+
+	void Create() override;
+
+	void Render() override;
+
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
+
+private:
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
+	
+};
+
+class DepthBasedOutline : public PostEffects
+{
+
+private:
+
+	struct Parameter {
+		//カメラのprojectionInverse行列
+		Matrix4x4 projectionInverse;
+	};
+
+public:
+
+	DepthBasedOutline() = default;
+	~DepthBasedOutline() = default;
+
+	void Create() override;
+
+	void Render() override;
+
+	void PostRender() override;
+
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
+
+private:
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
+
+	/*Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_;*/
+
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU_;
+	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU_;
+
+};

@@ -3,13 +3,21 @@
 #include <cmath>
 #include "Drawing/ImGuiManager.h"
 #include "Audio/AudioManager.h"
+#include "PostEffectDrawer.h"
+#include <functional>
 
 Player::Player()
 {
 
+	tex_ = TextureManager::GetInstance()->Load("./Resources/plane/particle.png");
 	model_.reset(SkinningModel::Create("./resources/human/stay.gltf", 0));
 	model_->LoadAnimation("./resources/human/walking.gltf", 1);
+	particle_.reset(Particle3D::Create("./Resources/plane/particle.obj", 128));
+	particle_->SetInstanceCount(32);
+	/*particle_->SetTexture(tex_);*/
 	transform_ = std::make_unique<Transform>();
+	collider_ = std::make_unique<BoxCollider>();
+	lineBox_ = std::make_unique<LineBox>();
 
 }
 
@@ -24,13 +32,30 @@ void Player::Initialize() {
 	model_->ResetAnimation();
 	model_->SetAnimation(0);
 	model_->StartAnimation(true);
-	model_->SetAnimationSpeed(1.5f);
+	model_->SetAnimationSpeed(2.0f);
 
 	transform_->translate_ = { 0.0f,5.0f,0.0f };
 	model_->material_->pLightMap_->intensity = 2.0f;
 
-	collision_.max = transform_->translate_ + transform_->scale_;
-	collision_.min = transform_->translate_ - transform_->scale_;
+	name_ = "player";
+	collider_->SetGameObject(this);
+	collider_->SetFunction([this](Collider* collider) {OnCollision(collider); });
+
+	for (int32_t i = 0; i < 32; i++) {
+
+		particle_->colors_[i].w = 1.0f;
+		particle_->velocities_[i] = { 0.0f,1.0f,0.0f };
+		particle_->transforms_[i]->scale_ = { 0.0f,0.0f,0.0f };
+
+	}
+
+	collider_->collider_.center = transform_->translate_;
+	collider_->collider_.size = transform_->scale_;
+
+	lineBox_->SetOBB(&collider_->collider_);
+
+	/*collision_.max = transform_->translate_ + transform_->scale_;
+	collision_.min = transform_->translate_ - transform_->scale_;*/
 
 	isDead_ = false;
 
@@ -76,8 +101,6 @@ void Player::Update() {
 
 		velocity_ = Normalize(velocity_);
 
-		velocity_.y -= 0.5f;
-
 		velocity_ *= speed_;
 
 		Vector3 moveXZ = { velocity_.x, 0.0f, velocity_.z };
@@ -96,6 +119,8 @@ void Player::Update() {
 
 		}
 
+		velocity_.y -= 0.5f;
+
 		//速度加算
 		transform_->translate_ += velocity_;
 
@@ -103,13 +128,68 @@ void Player::Update() {
 			isDead_ = true;
 		}
 
-		collision_.max = transform_->translate_ + transform_->scale_;
-		collision_.min = transform_->translate_ - transform_->scale_;
+		collider_->collider_.center = transform_->translate_;
+		collider_->collider_.orientations[0] = transform_->worldMatrix_.GetXAxis();
+		collider_->collider_.orientations[1] = transform_->worldMatrix_.GetYAxis();
+		collider_->collider_.orientations[2] = transform_->worldMatrix_.GetZAxis();
+
+		/*collision_.max = transform_->translate_ + transform_->scale_;
+		collision_.min = transform_->translate_ - transform_->scale_;*/
 
 		transform_->UpdateMatrix();
+		
+		lineBox_->Update();
+
 		model_->SetWorldMatrix(transform_->worldMatrix_);
 
 		model_->UpdateAnimation();
+
+		//パーティクル更新
+		for (int32_t i = 0; i < 32; i++) {
+			
+			if (particle_->transforms_[i]->scale_.y <= 0.0f) {
+
+				Matrix4x4 tmpMatrix{};
+
+				tmpMatrix = model_->GetSkeletonSpaceMatrix("mixamorig:LeftHand") *
+					model_->worldMatrix_;
+
+				particle_->colors_[i].w = 1.0f;
+				particle_->velocities_[i] = { float((rand() % 40 - 20) * 0.001f),float((rand() % 40 - 20) * 0.001f), float((rand() % 40 - 20) * 0.001f) };
+				particle_->transforms_[i]->translate_ = tmpMatrix.GetTranslate();
+				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
+				particle_->transforms_[i]->scale_ = { 0.1f,0.1f,0.1f };
+				break;
+			}
+
+
+
+		}
+
+		for (int32_t i = 0; i < 32; i++) {
+
+			if (particle_->transforms_[i]->scale_.y > 0.0f) {
+				particle_->transforms_[i]->translate_ += particle_->velocities_[i];
+				particle_->transforms_[i]->rotateQuaternion_ = particle_->transforms_[i]->rotateQuaternion_ * ConvertFromEuler(particle_->velocities_[i]);
+				particle_->transforms_[i]->scale_ -= {0.002f, 0.002f, 0.002f};
+			}
+			else {
+				particle_->colors_[i].w = 0.0f;
+			}
+
+		}
+
+	}
+
+}
+
+void Player::OnCollision(Collider* collider) {
+
+	if (collider->GetGameObject()->GetName() == "block") {
+
+		SetPosition({ transform_->worldMatrix_.GetTranslate().x, collider->GetGameObject()->GetTransform()->translate_.y +
+					collider->GetGameObject()->GetTransform()->scale_.y + transform_->scale_.y, transform_->worldMatrix_.GetTranslate().z });
+		SetVelocityY(0.0f);
 
 	}
 
@@ -125,10 +205,16 @@ void Player::Draw(Camera* camera) {
 
 void Player::DrawParticle(Camera* camera) {
 
+	if (!isDead_) {
+		particle_->Draw(camera);
+	}
+
 }
 
-void Player::DrawSkeleton(Camera* camera) {
+void Player::DrawLine(Camera* camera) {
 
 	model_->DrawSkeleton(camera);
+
+	lineBox_->Draw(camera);
 
 }

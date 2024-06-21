@@ -15,6 +15,7 @@
 #include "Transform.h"
 #include <array>
 #include <memory>
+#include "Skybox.h"
 
 class GameScene : public DefaultScene
 {
@@ -49,14 +50,23 @@ private:
 
 	std::unique_ptr<Camera> camera_;
 
+	std::unique_ptr<Skybox> skybox_;
+
 	std::unique_ptr<Model> skyDome_;
 	std::unique_ptr<Transform> skyDomeTransform_;
 
 	std::unique_ptr<Stage> stage_;
 
+	std::unique_ptr<Sprite> pauseSprite_;
+
 	int32_t resetCount_ = 60;
 
 	uint32_t testSE_;
+
+	Texture* pauseTex_;
+
+	//ポーズ画面を開いているか
+	bool isPause_ = false;
 
 	Texture* tex_;
 

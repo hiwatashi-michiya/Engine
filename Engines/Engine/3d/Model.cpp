@@ -177,7 +177,7 @@ void Model::StaticInitialize(ID3D12Device* device) {
 
 	//DepthStencilの設定
 	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	//通常
 	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -447,8 +447,6 @@ void Model::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
-	//PSO設定
-	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
 	//ルートシグネチャを設定
 	commandList_->SetGraphicsRootSignature(rootSignature_);
 	//プリミティブ形状を設定
