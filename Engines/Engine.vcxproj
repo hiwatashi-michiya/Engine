@@ -204,6 +204,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\MapEditor.cpp" />
     <ClCompile Include="Application\Particle.cpp" />
     <ClCompile Include="Game\Block\Block.cpp" />
+    <ClCompile Include="Game\Camera\FollowCamera.cpp" />
     <ClCompile Include="Game\DefaultScene.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameScene\GameScene.cpp" />
@@ -270,6 +271,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\MapEditor.h" />
     <ClInclude Include="Application\Particle.h" />
     <ClInclude Include="Game\Block\Block.h" />
+    <ClInclude Include="Game\Camera\FollowCamera.h" />
     <ClInclude Include="Game\DefaultScene.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameScene\GameScene.h" />

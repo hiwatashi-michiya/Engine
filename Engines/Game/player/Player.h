@@ -42,6 +42,8 @@ public:
 
 	void DrawLine(Camera* camera);
 
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
 private:
 
 	void OnCollision(Collider* collider);
@@ -49,6 +51,8 @@ private:
 private:
 
 	Input* input_ = nullptr;
+
+	Camera* camera_ = nullptr;
 
 	std::unique_ptr<SkinningModel> model_;
 

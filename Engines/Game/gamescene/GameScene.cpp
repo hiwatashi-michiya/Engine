@@ -40,6 +40,9 @@ void GameScene::Initialize() {
 	camera_->rotation_.x = 0.9f;
 	mapEditor_->SetCamera(camera_.get());
 
+	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->SetCamera(camera_.get());
+
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
 	skyDome_->material_->dLightMap_->direction = { 0.0f,0.0f,1.0f };
@@ -51,8 +54,8 @@ void GameScene::Initialize() {
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
 	stage_->LoadStage(1);
-
-	tex_ = TextureManager::GetInstance()->Load("./Resources/textures/rostock_laage_airport_4k.dds");
+	followCamera_->SetTarget(stage_->GetPlayer()->GetTransform());
+	stage_->GetPlayer()->SetCamera(camera_.get());
 
 }
 
@@ -121,7 +124,7 @@ void GameScene::Update() {
 
 		stage_->Update();
 
-		camera_->Update();
+		followCamera_->Update();
 
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);

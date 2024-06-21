@@ -1,14 +1,4 @@
 #pragma once
-#include "Application/MapEditor.h"
-#include "Application/Particle.h"
-#include "Audio/AudioManager.h"
-#include "Engine/2d/Sprite.h"
-#include "Engine/3d/Model.h"
-#include "Engine/3d/Particle3D.h"
-#include "Engine/base/DirectXSetter.h"
-#include "Engine/Drawing/TextureManager.h"
-#include "Engine/input/Input.h"
-#include "Engine/Tool/GlobalVariables.h"
 #include "Game/DefaultScene.h"
 #include "Game/player/Player.h"
 #include "Game/stage/Stage.h"
@@ -16,6 +6,7 @@
 #include <array>
 #include <memory>
 #include "Skybox.h"
+#include "Game/Camera/FollowCamera.h"
 
 class GameScene : public DefaultScene
 {
@@ -50,6 +41,8 @@ private:
 
 	std::unique_ptr<Camera> camera_;
 
+	std::unique_ptr<FollowCamera> followCamera_;
+
 	std::unique_ptr<Skybox> skybox_;
 
 	std::unique_ptr<Model> skyDome_;
@@ -67,8 +60,6 @@ private:
 
 	//ポーズ画面を開いているか
 	bool isPause_ = false;
-
-	Texture* tex_;
 
 };
 

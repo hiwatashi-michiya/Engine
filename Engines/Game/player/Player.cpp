@@ -50,7 +50,7 @@ void Player::Initialize() {
 	}
 
 	collider_->collider_.center = transform_->translate_;
-	collider_->collider_.size = transform_->scale_;
+	collider_->collider_.size = { 0.5f,1.0f,0.5f };
 
 	lineBox_->SetOBB(&collider_->collider_);
 
@@ -99,7 +99,12 @@ void Player::Update() {
 			model_->SetAnimation(0, false);
 		}
 
-		velocity_ = Normalize(velocity_);
+		if (camera_) {
+			velocity_ = TransformNormal(Normalize(velocity_), camera_->matRotate_);
+		}
+		
+
+		velocity_ = Normalize(Vector3{ velocity_.x,0.0f,velocity_.z });
 
 		velocity_ *= speed_;
 
@@ -128,7 +133,7 @@ void Player::Update() {
 			isDead_ = true;
 		}
 
-		collider_->collider_.center = transform_->translate_;
+		collider_->collider_.center = transform_->translate_ + Vector3{0.0f, 0.5f, 0.0f};
 		collider_->collider_.orientations[0] = transform_->worldMatrix_.GetXAxis();
 		collider_->collider_.orientations[1] = transform_->worldMatrix_.GetYAxis();
 		collider_->collider_.orientations[2] = transform_->worldMatrix_.GetZAxis();
@@ -188,7 +193,7 @@ void Player::OnCollision(Collider* collider) {
 	if (collider->GetGameObject()->GetName() == "block") {
 
 		SetPosition({ transform_->worldMatrix_.GetTranslate().x, collider->GetGameObject()->GetTransform()->translate_.y +
-					collider->GetGameObject()->GetTransform()->scale_.y + transform_->scale_.y, transform_->worldMatrix_.GetTranslate().z });
+					collider->GetGameObject()->GetTransform()->scale_.y + transform_->scale_.y - 0.5f, transform_->worldMatrix_.GetTranslate().z });
 		SetVelocityY(0.0f);
 
 	}

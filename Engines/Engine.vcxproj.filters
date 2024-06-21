@@ -94,6 +94,9 @@
     <Filter Include="Engine\Collider">
       <UniqueIdentifier>{d476ce19-a150-426e-a5a6-f40c9a0c0b0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Camera">
+      <UniqueIdentifier>{936cbc72-1aae-48ee-88fe-f425ecab5333}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -266,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="Engine\3d\Skybox.cpp">
       <Filter>Engine\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Camera\FollowCamera.cpp">
+      <Filter>Game\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\Skybox.h">
       <Filter>Engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Camera\FollowCamera.h">
+      <Filter>Game\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
