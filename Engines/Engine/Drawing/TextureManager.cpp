@@ -135,9 +135,16 @@ void TextureManager::Initialize(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srv
 
 Texture* TextureManager::Load(const std::string& filePath) {
 
-	if (textureMap_.find(filePath) != textureMap_.end()) {
+	std::string path = filePath;
 
-		return textureMap_[filePath].get();
+	if (path.empty()) {
+		path = "./Resources/white.png";
+	}
+
+
+	if (textureMap_.find(path) != textureMap_.end()) {
+
+		return textureMap_[path].get();
 
 	}
 
@@ -147,7 +154,7 @@ Texture* TextureManager::Load(const std::string& filePath) {
 	std::unique_ptr<Texture> tex = std::make_unique<Texture>();
 
 	//Textureを読んで転送する
-	DirectX::ScratchImage mipImages = LoadTexture(filePath);
+	DirectX::ScratchImage mipImages = LoadTexture(path);
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 	tex->resource = CreateTextureResource(device_, metadata);
 	intermediateResources_[DirectXSetter::srvHandleNumber_] = UploadTextureData(tex->resource, mipImages, device_, DirectXSetter::GetInstance()->GetCommandList());
@@ -175,12 +182,12 @@ Texture* TextureManager::Load(const std::string& filePath) {
 	//SRVの生成
 	device_->CreateShaderResourceView(tex->resource.Get(), &srvDesc, tex->srvHandleCPU);
 
-	textureMap_[filePath] = std::move(tex);
+	textureMap_[path] = std::move(tex);
 
 	//使用カウント上昇
 	DirectXSetter::srvHandleNumber_++;
 
-	return textureMap_[filePath].get();
+	return textureMap_[path].get();
 
 }
 

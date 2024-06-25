@@ -351,6 +351,9 @@ Quaternion ConvertFromEuler(const Vector3& euler) {
 
 Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix) {
 
+	/// 参考資料
+	/// http://marupeke296.com/DXG_No58_RotQuaternionTrans.html
+
 	Quaternion qr = IdentityQuaternion();
 
 	float elem[4]{}; //0:x 1:y 2:z 3:w

@@ -100,6 +100,9 @@
     <Filter Include="Game\Gimmick">
       <UniqueIdentifier>{a2e5d4ac-3f44-4d2b-bd99-cde4972ef156}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Useful">
+      <UniqueIdentifier>{61055ec7-62f4-42f8-b708-2fbabce33069}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -278,6 +281,12 @@
     </ClCompile>
     <ClCompile Include="Game\Gimmick\Switch.cpp">
       <Filter>Game\Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Tool\LevelDataLoader.cpp">
+      <Filter>Engine\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Useful\UsefulFunc.cpp">
+      <Filter>Engine\Useful</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,6 +484,12 @@
     </ClInclude>
     <ClInclude Include="Game\Gimmick\Switch.h">
       <Filter>Game\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Tool\LevelDataLoader.h">
+      <Filter>Engine\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Useful\UsefulFunc.h">
+      <Filter>Engine\Useful</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

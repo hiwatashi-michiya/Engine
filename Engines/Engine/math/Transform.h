@@ -26,6 +26,6 @@ public:
 
 private:
 
-	Transform* parent_;
+	Transform* parent_ = nullptr;
 
 };
