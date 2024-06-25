@@ -192,6 +192,15 @@ void Player::OnCollision(Collider* collider) {
 
 	if (collider->GetGameObject()->GetName() == "block") {
 
+		//上にいる時
+		if (transform_->translate_.y >= collider->GetGameObject()->GetTransform()->translate_.y) {
+
+		}
+		//下にいる時
+		else if (transform_->translate_.y < collider->GetGameObject()->GetTransform()->translate_.y) {
+
+		}
+
 		SetPosition({ transform_->worldMatrix_.GetTranslate().x, collider->GetGameObject()->GetTransform()->translate_.y +
 					collider->GetGameObject()->GetTransform()->scale_.y + transform_->scale_.y - 0.5f, transform_->worldMatrix_.GetTranslate().z });
 		SetVelocityY(0.0f);

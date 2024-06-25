@@ -97,6 +97,9 @@
     <Filter Include="Game\Camera">
       <UniqueIdentifier>{936cbc72-1aae-48ee-88fe-f425ecab5333}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Gimmick">
+      <UniqueIdentifier>{a2e5d4ac-3f44-4d2b-bd99-cde4972ef156}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -272,6 +275,9 @@
     </ClCompile>
     <ClCompile Include="Game\Camera\FollowCamera.cpp">
       <Filter>Game\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Gimmick\Switch.cpp">
+      <Filter>Game\Gimmick</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="Game\Camera\FollowCamera.h">
       <Filter>Game\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Gimmick\Switch.h">
+      <Filter>Game\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
