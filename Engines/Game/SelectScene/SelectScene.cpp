@@ -1,5 +1,6 @@
 #include "SelectScene.h"
 #include "FrameWork/SceneManager.h"
+#include "PostEffectDrawer.h"
 #include <cmath>
 
 #ifdef _DEBUG
@@ -26,7 +27,7 @@ void SelectScene::Initialize() {
 	editor_ = MapEditor::GetInstance();
 	editor_->Initialize();
 
-	loader_ = LevelDataLoader::GetInstance();
+	/*loader_ = LevelDataLoader::GetInstance();
 	loader_->Load("./Resources/Levels/myScene.json");
 
 	for (auto& object : loader_->levelData_->objects_) {
@@ -44,7 +45,7 @@ void SelectScene::Initialize() {
 
 		transforms_.push_back(newTransform);
 
-	}
+	}*/
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
@@ -97,6 +98,12 @@ void SelectScene::Update() {
 
 	ImGui::End();
 
+	ImGui::Begin("camera");
+	ImGui::DragFloat3("scale", &camera_->scale_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
+	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
+	ImGui::End();
+
 #endif // _DEBUG
 
 	for (int32_t i = 0; i < models_.size(); i++) {
@@ -104,7 +111,7 @@ void SelectScene::Update() {
 		models_[i]->SetWorldMatrix(transforms_[i]->worldMatrix_);
 	}
 
-
+	editor_->Edit();
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
@@ -113,6 +120,8 @@ void SelectScene::Update() {
 }
 
 void SelectScene::DrawModel() {
+
+	editor_->Draw(camera_.get());
 
 	for (int32_t i = 0; i < models_.size(); i++) {
 		models_[i]->Draw(camera_.get());

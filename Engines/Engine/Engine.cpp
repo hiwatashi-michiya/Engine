@@ -64,6 +64,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	TextureManager::GetInstance()->Initialize(dxSetter_->GetSrvHeap());
 	Input::GetInstance()->Initialize();
 
+	//Engineクラスでインスタンス生成をしておく
 	CollisionManager::GetInstance()->Initialize();
 
 #ifdef _DEBUG

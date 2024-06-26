@@ -20,7 +20,7 @@ void Block::Initialize() {
 	name_ = "block";
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
-	collider_->collider_.size = transform_->scale_ / 2.0f;
+	collider_->collider_.size = transform_->scale_;
 	lineBox_->SetOBB(&collider_->collider_);
 
 }

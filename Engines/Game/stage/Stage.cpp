@@ -122,6 +122,11 @@ void Stage::DrawLine(Camera* camera) {
 		block->DrawLine(camera);
 	}
 
+	for (auto& ring : rings_) {
+
+		ring->DrawLine(camera);
+	}
+
 }
 
 void Stage::LoadStage(uint32_t stageNumber) {

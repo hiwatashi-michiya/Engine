@@ -35,7 +35,7 @@ private:
 
 	RenderTexture renderTexture_;
 
-	PostEffectType type_ = kGaussianFilter;
+	PostEffectType type_ = kNone;
 
 	//最初に一回だけ描画
 	bool isUsedAllEffects_ = false;
