@@ -3,7 +3,6 @@
         "objectData": {
             "block": {
                 "mesh": "block",
-                "meshNumber": 0,
                 "position": [
                     -10.0,
                     5.0,
@@ -20,12 +19,10 @@
                     1.0,
                     10.0
                 ],
-                "tag": "block",
-                "tagNumber": 2
+                "tag": "block"
             },
             "block1": {
                 "mesh": "block",
-                "meshNumber": 0,
                 "position": [
                     10.0,
                     5.0,
@@ -42,12 +39,10 @@
                     1.0,
                     10.0
                 ],
-                "tag": "block",
-                "tagNumber": 2
+                "tag": "block"
             },
             "item": {
                 "mesh": "block",
-                "meshNumber": 0,
                 "position": [
                     0.0,
                     -2.0,
@@ -64,12 +59,10 @@
                     0.8853543400764465,
                     20.0
                 ],
-                "tag": "block",
-                "tagNumber": 2
+                "tag": "block"
             },
             "item1": {
-                "mesh": "AnimatedCube",
-                "meshNumber": 10,
+                "mesh": "item_2",
                 "position": [
                     -3.151249408721924,
                     0.30000001192092896,
@@ -86,12 +79,10 @@
                     1.0,
                     1.0
                 ],
-                "tag": "item",
-                "tagNumber": 1
+                "tag": "item"
             },
             "item11": {
-                "mesh": "AnimatedCube",
-                "meshNumber": 10,
+                "mesh": "item_2",
                 "position": [
                     0.38324081897735596,
                     0.30000001192092896,
@@ -108,12 +99,10 @@
                     1.0,
                     1.0
                 ],
-                "tag": "item",
-                "tagNumber": 1
+                "tag": "item"
             },
             "item111": {
-                "mesh": "AnimatedCube",
-                "meshNumber": 10,
+                "mesh": "item_2",
                 "position": [
                     5.382999897003174,
                     0.30000001192092896,
@@ -130,8 +119,7 @@
                     1.0,
                     1.0
                 ],
-                "tag": "item",
-                "tagNumber": 1
+                "tag": "item"
             }
         },
         "tags": [

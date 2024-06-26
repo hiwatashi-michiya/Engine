@@ -82,33 +82,6 @@ void MapEditor::EditTransform()
 
 		object->transform->UpdateMatrix();
 
-		/*object->matrix = reinterpret_cast<float*>(object->transform->worldMatrix_.m);*/
-
-		//if (count < matrices.size()) {
-
-		//	/*float* matrix = reinterpret_cast<float*>(matrices[count].m);*/
-		//	if (ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
-		//		object->matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL)) {
-		//		
-		//		uint32_t count = 0;
-
-		//		for (uint32_t i = 0; i < 4; i++) {
-
-		//			for (uint32_t j = 0; j < 4; j++) {
-		//				object->transform->worldMatrix_.m[i][j] = object->matrix[count];
-		//				count++;
-		//			}
-
-		//		}
-
-		//		object->transform->scale_ = object->transform->worldMatrix_.GetScale();
-		//		object->transform->rotateQuaternion_ = ConvertFromRotateMatrix(object->transform->worldMatrix_.GetRotateMatrix());
-		//		object->transform->translate_ = object->transform->worldMatrix_.GetTranslate();
-
-		//	}
-
-		//}
-
 		object->transform->scale_ = matrices[count].GetScale();
 		object->transform->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
 		object->transform->translate_ = matrices[count].GetTranslate();
@@ -227,10 +200,26 @@ void MapEditor::Edit() {
 					isSave_ = false;
 				}
 
-				if (ImGui::Combo("tag", &object->tagNumber, tags_.data(), int(tags_.size()))) {
+				{
+
+					//vectorを中間バッファとして利用
+					std::vector<char> bufferStr(object->tag.begin(), object->tag.end());
+					//リサイズする
+					bufferStr.resize(256);
+
+					//書き換えた文字列をtagに戻す
+					if (ImGui::InputText("tag", bufferStr.data(), bufferStr.size())) {
+						isSave_ = false;
+						auto endIt = std::find(bufferStr.begin(), bufferStr.end(), '\0');
+						object->tag = std::string(bufferStr.begin(), endIt);
+					}
+
+				}
+
+				/*if (ImGui::Combo("tag", &object->tagNumber, tags_.data(), int(tags_.size()))) {
 					object->tag = tags_[object->tagNumber];
 					isSave_ = false;
-				}
+				}*/
 
 				std::vector<const char*> meshNames;
 
@@ -336,12 +325,11 @@ void MapEditor::Save(const std::string& filename) {
 				object->transform->rotateQuaternion_.y, object->transform->rotateQuaternion_.z, object->transform->rotateQuaternion_.w });
 		root[sceneName_]["objectData"][object->objName]["scale"] =
 			nlohmann::json::array({ object->transform->scale_.x, object->transform->scale_.y, object->transform->scale_.z });
-		object->tag = tags_[object->tagNumber];
+		/*object->tag = tags_[object->tagNumber];*/
 		root[sceneName_]["objectData"][object->objName]["tag"] = object->tag;
-		root[sceneName_]["objectData"][object->objName]["tagNumber"] = object->tagNumber;
 		object->meshName = meshNames_[object->meshNumber];
 		root[sceneName_]["objectData"][object->objName]["mesh"] = object->meshName;
-		root[sceneName_]["objectData"][object->objName]["meshNumber"] = object->meshNumber;
+		/*root[sceneName_]["objectData"][object->objName]["meshNumber"] = object->meshNumber;*/
 
 	}
 
@@ -530,17 +518,15 @@ void MapEditor::Load(const std::string& filename) {
 						else if (itemNameObject == "tag") {
 							object->tag = itItemObject.value();
 						}
-						else if (itemNameObject == "tagNumber") {
-							object->tagNumber = itItemObject->get<int32_t>();
-						}
 						//メッシュを登録
 						else if (itemNameObject == "mesh") {
 							object->meshName = itItemObject.value();
+							object->meshNumber = meshNumMap_[object->meshName];
 							ChangeMesh(object->model.get(), object->meshName);
 						}
-						else if (itemNameObject == "meshNumber") {
+						/*else if (itemNameObject == "meshNumber") {
 							object->meshNumber = itItemObject->get<int32_t>();
-						}
+						}*/
 
 					}
 
@@ -644,7 +630,6 @@ void MapEditor::CopyObject(std::shared_ptr<MapObject> object) {
 	tmpObject->transform->rotate_ = object->transform->rotate_;
 	tmpObject->transform->scale_ = object->transform->scale_;
 	tmpObject->tag = object->tag;
-	tmpObject->tagNumber = object->tagNumber;
 
 	mapObjData_.push_back(tmpObject);
 
@@ -734,7 +719,11 @@ void MapEditor::LoadAllModelFile() {
 		if (std::filesystem::is_regular_file(entry.path()) &&
 			entry.path().extension() == extension) {
 			std::string meshName = entry.path().stem().string();
+			//名前と番号を紐づけ
+			meshNumMap_[meshName] = int32_t(meshNames_.size());
+			//最後尾に追加
 			meshNames_.push_back(meshName);
+			//名前とパスを紐づけ
 			meshMap_[meshName] = entry.path().string();
 		}
 
@@ -752,7 +741,11 @@ void MapEditor::LoadAllModelFile() {
 		if (std::filesystem::is_regular_file(entry.path()) &&
 			entry.path().extension() == extension) {
 			std::string meshName = entry.path().stem().string();
+			//名前と番号を紐づけ
+			meshNumMap_[meshName] = int32_t(meshNames_.size());
+			//最後尾に追加
 			meshNames_.push_back(meshName);
+			//名前とパスを紐づけ
 			meshMap_[meshName] = entry.path().string();
 		}
 

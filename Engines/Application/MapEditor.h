@@ -49,8 +49,6 @@ private:
 		//オブジェクトの役割を表すタグ
 		std::string tag;
 
-		int32_t tagNumber = 0;
-
 		bool isSelect = false;
 
 		//削除に使用するフラグ
@@ -119,6 +117,8 @@ private:
 	std::vector<std::string> meshNames_;
 
 	std::unordered_map<std::string, std::string> meshMap_;
+
+	std::unordered_map<std::string, int32_t> meshNumMap_;
 
 	int32_t selectObject_ = 0;
 
