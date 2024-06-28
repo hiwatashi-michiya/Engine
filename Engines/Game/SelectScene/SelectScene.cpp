@@ -104,6 +104,10 @@ void SelectScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
+	ImGui::Begin("Frame Late");
+	ImGui::Text("%1.2f", ImGui::GetIO().Framerate);
+	ImGui::End();
+
 #endif // _DEBUG
 
 	for (int32_t i = 0; i < models_.size(); i++) {

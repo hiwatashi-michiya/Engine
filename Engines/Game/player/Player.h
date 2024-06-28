@@ -26,7 +26,7 @@ public:
 
 	void DrawParticle(Camera* camera);
 
-	void SetPosition(const Vector3& position) { transform_->translate_ = position; }
+	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
 
 	BoxCollider* GetCollider() const { return collider_.get(); }
 
@@ -66,11 +66,18 @@ private:
 
 	std::unique_ptr<BoxCollider> collider_;
 
+	Vector3 preTranslate_{};
+
 	Vector3 velocity_{};
 
-	float speed_ = 0.2f;
+	float speed_ = 0.5f;
+
+	float jumpVelocity_ = 1.5f;
 
 	bool isDead_ = false;
+
+	//地面判定
+	bool onGround_ = false;
 
 	Texture* tex_ = nullptr;
 

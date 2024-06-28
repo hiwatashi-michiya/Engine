@@ -21,6 +21,8 @@ void Block::Initialize() {
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
+	collider_->SetCollisionAttribute(0x00000002);
+	collider_->SetCollisionMask(0xfffffffd);
 	lineBox_->SetOBB(&collider_->collider_);
 
 }

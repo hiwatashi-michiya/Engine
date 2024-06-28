@@ -92,6 +92,8 @@ private:
 
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
+	//前回参照時間
+	std::chrono::steady_clock::time_point preReference_;
 
 private:
 

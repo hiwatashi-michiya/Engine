@@ -429,6 +429,7 @@ void DirectXSetter::InitializeFixFPS() {
 
 	//現在時間を記録する
 	reference_ = std::chrono::steady_clock::now();
+	preReference_ = reference_;
 
 }
 
@@ -447,7 +448,7 @@ void DirectXSetter::UpdateFixFPS() {
 		std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
 
 	//1/60秒よりわずかに短い時間が経っていない場合
-	if (elapsed < kMinTime) {
+	if (elapsed < kMinCheckTime) {
 		//1/60秒経過するまで微小なスリーブを繰り返す
 		while (std::chrono::steady_clock::now() - reference_ < kMinTime) {
 			//1マイクロ秒スリーブ
@@ -456,6 +457,7 @@ void DirectXSetter::UpdateFixFPS() {
 
 	}
 	//現在の時間を記録する
+	preReference_ = reference_;
 	reference_ = std::chrono::steady_clock::now();
 
 }

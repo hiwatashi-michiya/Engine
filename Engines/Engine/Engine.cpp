@@ -23,6 +23,8 @@
 #include "CollisionManager.h"
 #include "Skybox.h"
 
+#pragma comment(lib, "winmm.lib")
+
 #ifdef _DEBUG
 
 #include "Drawing/ImGuiManager.h"
@@ -35,6 +37,9 @@ DirectXSetter* dxSetter_ = nullptr;
 void Engine::Initialize(const char* title, int width, int height) {
 
 	CoInitializeEx(0, COINIT_MULTITHREADED);
+
+	//システムタイマーの分解能を上げる
+	timeBeginPeriod(1);
 
 	//乱数生成
 	SetRandom();

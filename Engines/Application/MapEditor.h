@@ -70,13 +70,8 @@ private:
 
 	bool CheckIsEmpty(const std::string& name);
 
-	void AddTag(const std::string& tagname);
-
 	//同名オブジェクトを探す
 	std::string CheckSameName(std::string name, uint32_t addNumber = 0);
-
-	//同名タグを探す
-	bool CheckSameTag(const std::string& name);
 
 	void ChangeMesh(Model* model, const std::string& name);
 
@@ -107,12 +102,6 @@ private:
 	char fileName_[256];
 
 	bool isSave_ = true;
-
-	char tagName_[256];
-
-	std::vector<std::string> tagData_ = { "None" };
-
-	std::vector<const char*> tags_;
 
 	std::vector<std::string> meshNames_;
 

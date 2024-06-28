@@ -109,14 +109,6 @@ void MapEditor::Initialize() {
 		Close();
 	}
 
-	tags_.clear();
-
-	for (const auto& tag : tagData_) {
-
-		tags_.push_back(tag.c_str());
-
-	}
-
 	LoadAllModelFile();
 
 }
@@ -163,20 +155,6 @@ void MapEditor::Edit() {
 			}
 		}
 
-		ImGui::InputText("Tag name", tagName_, sizeof(tagName_));
-
-		if (ImGui::Button("Add Tag")) {
-
-			if (!CheckIsEmpty(tagName_)) {
-				AddTag(tagName_);
-				isSave_ = false;
-			}
-			else {
-				MessageBox(nullptr, L"タグ名を入力してください。", L"Map Editor - Add Tag", 0);
-			}
-
-		}
-
 		if (!mapObjData_.empty()) {
 			ImGui::SliderInt("Select Object", &selectObject_, 0, int(mapObjData_.size() - 1));
 		}
@@ -215,11 +193,6 @@ void MapEditor::Edit() {
 					}
 
 				}
-
-				/*if (ImGui::Combo("tag", &object->tagNumber, tags_.data(), int(tags_.size()))) {
-					object->tag = tags_[object->tagNumber];
-					isSave_ = false;
-				}*/
 
 				std::vector<const char*> meshNames;
 
@@ -305,15 +278,6 @@ void MapEditor::Save(const std::string& filename) {
 
 	root[sceneName_] = nlohmann::json::object();
 
-	//設定したタグを保存
-	nlohmann::json tagArray;
-
-	for (const auto& tag : tagData_) {
-		tagArray += tag;
-	}
-
-	root[sceneName_]["tags"] = tagArray;
-
 	for (auto& object : mapObjData_) {
 
 		root[sceneName_]["objectData"][object->objName]["position"] =
@@ -388,14 +352,6 @@ void MapEditor::Close() {
 	}
 
 	mapObjData_.clear();
-
-	tagData_.clear();
-
-	tagData_ = { "None" };
-
-	tags_.clear();
-
-	tags_ = { "None" };
 
 	isOpenFile_ = false;
 
@@ -539,22 +495,7 @@ void MapEditor::Load(const std::string& filename) {
 			}
 
 		}
-		//追加したタグを登録
-		else if (itemName == "tags") {
-			
-			/*tagData_.clear();*/
 
-			tagData_ = root[sceneName_]["tags"];
-
-			tags_.clear();
-
-			for (const auto& tag : tagData_) {
-
-				tags_.push_back(tag.c_str());
-
-			}
-
-		}
 	}
 
 	isOpenFile_ = true;
@@ -635,30 +576,6 @@ void MapEditor::CopyObject(std::shared_ptr<MapObject> object) {
 
 }
 
-void MapEditor::AddTag(const std::string& tagname) {
-
-	if (CheckSameTag(tagname)) {
-
-		MessageBox(nullptr, L"既に同名のタグがあります。", L"Map Editor - Add Tag", 0);
-
-		return;
-
-	}
-
-	tagData_.push_back(tagname);
-
-	tags_.clear();
-
-	for (const auto& tag : tagData_) {
-
-		tags_.push_back(tag.c_str());
-
-	}
-
-	
-
-}
-
 std::string MapEditor::CheckSameName(std::string name, uint32_t addNumber) {
 
 	std::string newName = name;
@@ -677,22 +594,6 @@ std::string MapEditor::CheckSameName(std::string name, uint32_t addNumber) {
 	}
 
 	return newName;
-
-}
-
-bool MapEditor::CheckSameTag(const std::string& name) {
-
-	std::string newName = name;
-
-	for (auto& tag : tagData_) {
-
-		if (tag.c_str() == newName) {
-			return true;
-		}
-
-	}
-
-	return false;
 
 }
 

@@ -279,7 +279,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 	for (auto& object : mapObjData_) {
 
 		if (object->tag == "player") {
-			player_->SetPosition(object->transform->translate_);
+			player_->SetColliderPosition(object->transform->translate_);
 		}
 
 		if (object->tag == "block") {

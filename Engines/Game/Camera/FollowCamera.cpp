@@ -28,7 +28,7 @@ void FollowCamera::Update() {
 			offsetPosition = TransformNormal(offsetPosition, camera_->matRotate_);
 
 			//傾けたオフセット位置をターゲットの座標に足して、カメラの位置とする
-			camera_->position_ = Slerp(camera_->position_, target_->worldMatrix_.GetTranslate() + offsetPosition, 0.75f);
+			camera_->position_ = target_->worldMatrix_.GetTranslate() + offsetPosition;
 
 		}
 

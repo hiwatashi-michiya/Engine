@@ -43,6 +43,10 @@ public:
 	//ゲームオブジェクトセッター
 	void SetGameObject(GameObject* object) { object_ = object; }
 
+	//サイズ取得(OBB用)
+	virtual Vector3 GetSize() const { return Vector3(0.0f, 0.0f, 0.0f); }
+	//半径取得(Sphere用)
+	virtual float GetRadius() const { return 0.0f; }
 
 protected:
 
@@ -67,6 +71,7 @@ public:
 	bool CollideWith(Collider* other) override;
 	bool CollideWithBox(BoxCollider* box) override;
 	bool CollideWithSphere(SphereCollider* sphere) override;
+	Vector3 GetSize() const override { return collider_.size; }
 
 	OBB collider_;
 
@@ -79,6 +84,7 @@ public:
 	bool CollideWith(Collider* other) override { return other->CollideWithSphere(this); }
 	bool CollideWithBox(BoxCollider* box) override { return IsCollision(this->collider_, box->collider_); }
 	bool CollideWithSphere(SphereCollider* sphere) override { return IsCollision(this->collider_, sphere->collider_); }
+	float GetRadius() const override { return collider_.radius; }
 
 	Sphere collider_;
 

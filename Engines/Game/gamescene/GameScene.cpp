@@ -76,6 +76,10 @@ void GameScene::Update() {
 	ImGui::Text("Reset : R key");
 	ImGui::End();
 
+	ImGui::Begin("Frame Late");
+	ImGui::Text("%1.2f", ImGui::GetIO().Framerate);
+	ImGui::End();
+
 	PostEffectDrawer::GetInstance()->Debug();
 
 	if (input_->TriggerKey(DIK_R)) {
@@ -124,8 +128,6 @@ void GameScene::Update() {
 
 		stage_->Update();
 
-		followCamera_->Update();
-
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 		skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
@@ -133,6 +135,8 @@ void GameScene::Update() {
 		PostEffectDrawer::GetInstance()->SetCamera(camera_.get());
 
 		CollisionManager::GetInstance()->CheckAllCollisions();
+
+		followCamera_->Update();
 
 	}
 	
