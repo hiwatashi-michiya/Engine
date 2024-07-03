@@ -17,6 +17,7 @@
 #include "Drawing/ShaderManager.h"
 #include "Drawing/PipelineManager.h"
 #include "Drawing/RootSignatureManager.h"
+#pragma comment (lib, "winmm.lib")
 
 #ifdef _DEBUG
 
@@ -33,6 +34,9 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	//乱数生成
 	SetRandom();
+
+	//システムタイマーの分解能を上げる
+	timeBeginPeriod(1);
 
 	//ウィンドウ作成
 	auto&& titleString = ConvertString(title);
