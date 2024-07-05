@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "GameObject.h"
 #include "Collider.h"
+#include "LineDrawer.h"
 
 class Switch : public GameObject
 {
@@ -20,6 +21,8 @@ private:
 	std::unique_ptr<Model> model_;
 
 	std::unique_ptr<BoxCollider> collider_;
+
+	std::unique_ptr<LineBox> lineBox_;
 
 };
 

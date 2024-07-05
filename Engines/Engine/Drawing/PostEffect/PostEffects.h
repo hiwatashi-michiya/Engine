@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderTexture.h"
 #include <string>
+#include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4x4.h"
@@ -15,6 +16,7 @@ enum PostEffectType {
 	kGaussianFilter, //ガウスぼかし
 	kLuminanceBasedOutline, //輝度ベースアウトライン
 	kDepthBasedOutline, //深度ベースアウトライン
+	kRadialBlur, //放射状ブラー
 
 	kMaxEffects, //エフェクト最大数
 
@@ -65,7 +67,7 @@ private:
 class Grayscale : public PostEffects
 {
 
-private:
+public:
 
 	struct Parameter {
 		
@@ -93,7 +95,7 @@ private:
 class Vignette : public PostEffects
 {
 
-private:
+public:
 
 	struct Parameter {
 		Vector3 color = { 1.0f,1.0f,1.0f };
@@ -125,7 +127,7 @@ private:
 class BoxFilter : public PostEffects
 {
 
-private:
+public:
 
 	struct Parameter {
 		int32_t size = 2;
@@ -154,7 +156,7 @@ private:
 class GaussianFilter : public PostEffects
 {
 
-private:
+public:
 
 	struct Parameter {
 		int32_t size = 2;
@@ -184,7 +186,7 @@ private:
 class LuminanceBasedOutline : public PostEffects
 {
 
-private:
+public:
 
 	struct Parameter {
 		//差の倍率
@@ -214,7 +216,7 @@ private:
 class DepthBasedOutline : public PostEffects
 {
 
-private:
+public:
 
 	struct Parameter {
 		//カメラのprojectionInverse行列
@@ -231,6 +233,41 @@ public:
 	void Render() override;
 
 	void PostRender() override;
+
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
+
+private:
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
+
+	/*Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_;*/
+
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU_;
+	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU_;
+
+};
+
+class RadialBlur : public PostEffects
+{
+
+public:
+
+	struct Parameter {
+		Vector2 center{};
+		float blurWidth = 0.01f;
+		int32_t numSamples = 1;
+	};
+
+public:
+
+	RadialBlur() = default;
+	~RadialBlur() = default;
+
+	void Create() override;
+
+	void Render() override;
 
 	void Debug() override;
 

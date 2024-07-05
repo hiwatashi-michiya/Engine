@@ -69,15 +69,18 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	skyDome_->ImGuiUpdate("skyDome");
+	/*skyDome_->ImGuiUpdate("skyDome");*/
 
 	ImGui::Begin("manual");
 	ImGui::Text("Move : Left Stick");
+	ImGui::Text("Camera : Right Stick");
+	ImGui::Text("Jump : A Button");
+	ImGui::Text("Pause : Start Button");
 	ImGui::Text("Reset : R key");
 	ImGui::End();
 
 	ImGui::Begin("Frame Late");
-	ImGui::Text("%1.2f", ImGui::GetIO().Framerate);
+	ImGui::Text("%1.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
 
 	PostEffectDrawer::GetInstance()->Debug();
@@ -183,6 +186,6 @@ void GameScene::DrawSprite() {
 
 void GameScene::DrawLine() {
 
-	stage_->DrawLine(camera_.get());
+	/*stage_->DrawLine(camera_.get());*/
 
 }
