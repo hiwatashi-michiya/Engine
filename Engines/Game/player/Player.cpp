@@ -62,6 +62,8 @@ void Player::Initialize() {
 
 	preTranslate_ = collider_->collider_.center;
 
+	velocity_ = { 0.0f,0.0f,0.0f };
+
 	/*collision_.max = transform_->translate_ + transform_->scale_;
 	collision_.min = transform_->translate_ - transform_->scale_;*/
 

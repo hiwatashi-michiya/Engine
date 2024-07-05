@@ -76,7 +76,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     //差を大きくするため定数倍する
     weight = saturate(weight);
     //weightが大きいほど暗く表示
-    output.color.rgb = (1.0f - weight) * gTexture.Sample(gSampler, input.texcoord).rgb;
+    output.color.rgb = (1.0f + weight) * gTexture.Sample(gSampler, input.texcoord).rgb;
     output.color.a = 1.0f;
     
     return output;

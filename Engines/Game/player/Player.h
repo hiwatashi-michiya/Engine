@@ -30,7 +30,7 @@ public:
 
 	BoxCollider* GetCollider() const { return collider_.get(); }
 
-	Vector3 GetPosition() const { return transform_->worldMatrix_.GetTranslate(); }
+	Vector3 GetPosition() const { return collider_->collider_.center; }
 
 	const Vector3& GetScale() { return transform_->scale_; }
 

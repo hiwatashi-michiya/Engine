@@ -1,5 +1,7 @@
 #include "FollowCamera.h"
 #include "Input.h"
+#include <cmath>
+#include <algorithm>
 
 FollowCamera::FollowCamera()
 {
@@ -19,6 +21,8 @@ void FollowCamera::Update() {
 			float(Input::GetInstance()->GetStickValue(Input::Stick::RX) * 0.000001f) };
 
 			camera_->rotation_ += {addRotate.x, addRotate.y, 0.0f};
+
+			camera_->rotation_.x = std::clamp(camera_->rotation_.x, -0.6f, 0.6f);
 
 			camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 

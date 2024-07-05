@@ -2,7 +2,7 @@
 
 Switch::Switch()
 {
-	model_.reset(Model::Create("./Resources/block/block.obj"));
+	model_.reset(Model::Create("./Resources/switch/switch.obj"));
 }
 
 Switch::~Switch()

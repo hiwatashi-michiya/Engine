@@ -570,5 +570,8 @@
     <FxCompile Include="Resources\shaders\Skybox.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\RadialBlur.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
