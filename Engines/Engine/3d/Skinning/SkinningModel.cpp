@@ -448,6 +448,10 @@ void SkinningModel::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	//PSO設定
 	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature_);
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 }
 
@@ -463,10 +467,10 @@ void SkinningModel::Draw(Camera* camera) {
 
 	Matrix4x4 worldViewProjectionMatrix;
 
-	worldViewProjectionMatrix = /*localMatrix_ * */worldMatrix_ * camera->matViewProjection_;
+	worldViewProjectionMatrix = worldMatrix_ * camera->matViewProjection_;
 	matTransformMap_->WVP = worldViewProjectionMatrix;
-	matTransformMap_->World = /*localMatrix_ * */worldMatrix_;
-	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(/*localMatrix_ * */worldMatrix_));
+	matTransformMap_->World = worldMatrix_;
+	matTransformMap_->WorldInverseTranspose = Transpose(Inverse(worldMatrix_));
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
@@ -474,13 +478,6 @@ void SkinningModel::Draw(Camera* camera) {
 		mesh_->vbView_,
 		skinCluster_->influenceBufferView_
 	};
-
-	//PSO設定
-	/*commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);*/
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//カメラ設定
 	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
@@ -509,21 +506,24 @@ void SkinningModel::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
-	//PSO設定
-	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		mesh_->vbView_,
+		skinCluster_->influenceBufferView_
+	};
 
 	//カメラ設定
 	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
+
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 
+	commandList_->SetGraphicsRootDescriptorTable(6, skinCluster_->paletteSrvHandle_.second);
+
 	//描画
 	material_->SetCommandMaterial(commandList_);
+
+	commandList_->IASetVertexBuffers(0, 2, vbvs);
 
 	mesh_->SetCommandMeshForSkinning(commandList_);
 

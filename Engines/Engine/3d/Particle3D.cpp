@@ -317,6 +317,10 @@ void Particle3D::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	//PSO設定
 	commandList_->SetPipelineState(particlePipelineStates_[currentBlendMode_]);
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature_);
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 }
 
@@ -355,11 +359,6 @@ void Particle3D::Draw(Camera* camera) {
 		matTransformMap_[i].color = colors_[i];
 
 	}
-
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	commandList_->SetGraphicsRootDescriptorTable(1, instancingResource_.srvHandleGPU);
 	

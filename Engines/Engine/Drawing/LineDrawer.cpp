@@ -134,6 +134,10 @@ void Line::PreDraw(ID3D12GraphicsCommandList* commandList) {
 	//PSO設定
 	commandList_->SetPipelineState(pipelineState_);
 
+	commandList_->SetGraphicsRootSignature(rootSignature_);
+
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+
 }
 
 void Line::PostDraw() {
@@ -199,12 +203,6 @@ void Line::Draw(Camera* camera, const Matrix4x4& matrix) {
 	vertexMap_[1].color = color_;
 
 	*wvpMatrix_ = matrix * camera->matViewProjection_;
-
-	commandList_->SetPipelineState(pipelineState_);
-
-	commandList_->SetGraphicsRootSignature(rootSignature_);
-
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);
 
