@@ -131,8 +131,8 @@ void LevelDataLoader::ScanObject(nlohmann::json objects, const std::string& name
 			objectData.translation.y = (float)transform["translation"][2];
 			objectData.translation.z = -(float)transform["translation"][0];
 			//回転角。エンジンのカメラに合わせる
-			objectData.rotation.x = -(float)transform["rotation"][0] + 1.57f;
-			objectData.rotation.y = -(float)transform["rotation"][2] + 1.57f;
+			objectData.rotation.x = -(float)transform["rotation"][0] + 1.570796326f;
+			objectData.rotation.y = -(float)transform["rotation"][2] + 1.570796326f;
 			objectData.rotation.z = -(float)transform["rotation"][1];
 			//スケーリング
 			objectData.scaling.x = (float)transform["scaling"][1];
