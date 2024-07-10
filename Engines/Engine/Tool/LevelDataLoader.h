@@ -10,6 +10,7 @@ class LevelData
 public:
 
 	struct ObjectData {
+		std::string type;
 		std::string fileName;
 		Vector3 translation;
 		Vector3 rotation;

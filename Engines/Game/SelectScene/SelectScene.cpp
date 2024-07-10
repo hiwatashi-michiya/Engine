@@ -27,30 +27,36 @@ void SelectScene::Initialize() {
 	editor_ = MapEditor::GetInstance();
 	editor_->Initialize();
 
-	loader_ = LevelDataLoader::GetInstance();
-	loader_->Load("./Resources/Levels/myScene.json");
-
-	for (auto& object : loader_->levelData_->objects_) {
-
-		std::shared_ptr<Model> newModel;
-
-		newModel.reset(Model::Create(object.fileName));
-		
-		models_.push_back(newModel);
-
-		std::shared_ptr<Transform> newTransform = std::make_shared<Transform>();
-		newTransform->translate_ = object.translation;
-		newTransform->rotateQuaternion_ = ConvertFromEuler(object.rotation);
-		newTransform->scale_ = object.scaling;
-
-		transforms_.push_back(newTransform);
-
-	}
-
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,2.0f, -20.0f };
 	camera_->rotation_.y = 0.0f;
+
+	loader_ = LevelDataLoader::GetInstance();
+	loader_->Load("./Resources/Levels/aa.json");
+
+	for (auto& object : loader_->levelData_->objects_) {
+
+		if (object.type.compare("MESH") == 0) {
+			std::shared_ptr<Model> newModel;
+
+			newModel.reset(Model::Create(object.fileName));
+
+			models_.push_back(newModel);
+
+			std::shared_ptr<Transform> newTransform = std::make_shared<Transform>();
+			newTransform->translate_ = object.translation;
+			newTransform->rotateQuaternion_ = ConvertFromEuler(object.rotation);
+			newTransform->scale_ = object.scaling;
+
+			transforms_.push_back(newTransform);
+		}
+		if (object.type.compare("CAMERA") == 0) {
+			camera_->position_ = object.translation;
+			camera_->rotation_ = object.rotation;
+		}
+
+	}
 
 	editor_->SetCamera(camera_.get());
 
