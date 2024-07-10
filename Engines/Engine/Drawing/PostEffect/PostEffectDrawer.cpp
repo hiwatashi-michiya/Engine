@@ -18,41 +18,49 @@ void PostEffectDrawer::Initialize() {
 	uint32_t descriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	uint32_t descriptorSizeRTV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	//レンダーターゲットビューの設定
-	D3D12_RENDER_TARGET_VIEW_DESC renderTargetViewDesc{};
-	renderTargetViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	renderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-
-	//RenderTexture用のRTVを作成
-	const Vector4 kRenderTargetClearValue{ 0.05f,0.1f,0.5f,1.0f }; //青
-	//ディスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = GetCPUDescriptorHandle(dxSetter_->GetRtvHeap().Get(), descriptorSizeRTV, 2);
-	renderTexture_.Create(device_, WindowManager::kWindowWidth, WindowManager::kWindowHeight,
-		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
-	device_->CreateRenderTargetView(renderTexture_.Get(), &renderTargetViewDesc, rtvHandle);
-
-	//SRVの設定。FormatはResourceと同じ
-	D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
-	renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
-	renderTextureSrvDesc.Texture2D.MipLevels = 1;
-
 	DirectXSetter::srvHandleNumber_++;
 
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU =
-		GetCPUDescriptorHandle(dxSetter_->GetSrvHeap().Get(), descriptorSizeSRV, DirectXSetter::srvHandleNumber_);
+	for (int32_t i = 0; i < 1; i++) {
 
-	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU =
-		GetGPUDescriptorHandle(dxSetter_->GetSrvHeap().Get(), descriptorSizeSRV, DirectXSetter::srvHandleNumber_);
+		RenderTexture newRenderTex;
 
-	DirectXSetter::srvHandleNumber_++;
+		//レンダーターゲットビューの設定
+		D3D12_RENDER_TARGET_VIEW_DESC renderTargetViewDesc{};
+		renderTargetViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		renderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
-	renderTexture_.SetCPUHandle(srvHandleCPU);
-	renderTexture_.SetGPUHandle(srvHandleGPU);
+		//RenderTexture用のRTVを作成
+		const Vector4 kRenderTargetClearValue{ 0.05f,0.1f,0.5f,1.0f}; //青
 
-	device_->CreateShaderResourceView(renderTexture_.Get(), &renderTextureSrvDesc, srvHandleCPU);
+		//ディスクリプタヒープのハンドルを取得
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = GetCPUDescriptorHandle(dxSetter_->GetRtvHeap().Get(), descriptorSizeRTV, 2 + i);
+		newRenderTex.Create(device_, WindowManager::kWindowWidth, WindowManager::kWindowHeight,
+			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
+		device_->CreateRenderTargetView(newRenderTex.Get(), &renderTargetViewDesc, rtvHandle);
 
+		//SRVの設定。FormatはResourceと同じ
+		D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
+		renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
+		renderTextureSrvDesc.Texture2D.MipLevels = 1;
+
+		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU =
+			GetCPUDescriptorHandle(dxSetter_->GetSrvHeap().Get(), descriptorSizeSRV, DirectXSetter::srvHandleNumber_);
+
+		D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU =
+			GetGPUDescriptorHandle(dxSetter_->GetSrvHeap().Get(), descriptorSizeSRV, DirectXSetter::srvHandleNumber_);
+
+		DirectXSetter::srvHandleNumber_++;
+
+		newRenderTex.SetCPUHandle(srvHandleCPU);
+		newRenderTex.SetGPUHandle(srvHandleGPU);
+
+		device_->CreateShaderResourceView(newRenderTex.Get(), &renderTextureSrvDesc, srvHandleCPU);
+
+		renderTextures_.push_back(newRenderTex);
+
+	}
 	
 	postEffects_.push_back(std::make_shared<CopyImageRender>());
 
@@ -89,7 +97,7 @@ void PostEffectDrawer::Draw() {
 	//Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = renderTexture_.Get();
+	barrier.Transition.pResource = renderTextures_[0].Get();
 	//遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//遷移後のResourceState
@@ -113,7 +121,7 @@ void PostEffectDrawer::Draw() {
 		postEffects_[type_]->Render();
 	}
 
-	renderTexture_.Draw();
+	renderTextures_[0].Draw();
 
 	if (type_ < postEffects_.size()) {
 		postEffects_[type_]->PostRender();
@@ -124,7 +132,7 @@ void PostEffectDrawer::Draw() {
 	//Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = renderTexture_.Get();
+	barrier.Transition.pResource = renderTextures_[0].Get();
 	//遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	//遷移後のResourceState

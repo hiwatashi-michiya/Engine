@@ -396,6 +396,10 @@ void Model::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	//PSO設定
 	commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature_);
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 }
 
@@ -420,10 +424,6 @@ void Model::Draw(Camera* camera) {
 
 	//PSO設定
 	/*commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);*/
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//カメラ設定
 	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());

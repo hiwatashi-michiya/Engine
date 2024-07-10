@@ -294,6 +294,13 @@ void Sprite::PreDraw(ID3D12GraphicsCommandList* commandList) {
 
 	commandList_ = commandList;
 
+	//PSO設定
+	commandList_->SetPipelineState(pipelineState2D_);
+	//ルートシグネチャを設定
+	commandList_->SetGraphicsRootSignature(rootSignature2D_);
+	//プリミティブ形状を設定
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 }
 
 void Sprite::PostDraw() {
@@ -329,13 +336,6 @@ void Sprite::Draw() {
 		MakeTranslateMatrix(Vector3(uvTranslate_.x, uvTranslate_.y, 0.0f));
 
 	constMap_->uvTransform = matUVTransform;
-
-	//PSO設定
-	commandList_->SetPipelineState(pipelineState2D_);
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature2D_);
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//Spriteの描画
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);
