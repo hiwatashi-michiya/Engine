@@ -37,7 +37,7 @@ void Player::Initialize() {
 	model_->ResetAnimation();
 	model_->SetAnimation(0);
 	model_->StartAnimation(true);
-	model_->SetAnimationSpeed(2.0f);
+	model_->SetAnimationSpeed(1.0f);
 
 	transform_->translate_ = { 0.0f,5.0f,0.0f };
 	transform_->UpdateMatrix();

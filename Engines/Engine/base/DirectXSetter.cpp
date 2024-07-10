@@ -368,7 +368,7 @@ void DirectXSetter::CreateRenderTargets() {
 	hr = swapChain_->GetDesc(&swcDesc);
 	assert(SUCCEEDED(hr));
 
-	rtvHeap_ = DescriptorHeapManager::GetInstance()->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 3, false, "RTVHeap");
+	rtvHeap_ = DescriptorHeapManager::GetInstance()->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 4, false, "RTVHeap");
 
 	rtvHeap_->SetName(L"rtvHeap");
 

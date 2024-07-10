@@ -33,6 +33,8 @@ private:
 
 	std::vector<std::shared_ptr<PostEffects>> postEffects_;
 
+	std::vector<RenderTexture> renderTextures_;
+
 	RenderTexture renderTexture_;
 
 	PostEffectType type_ = kNone;
