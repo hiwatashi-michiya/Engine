@@ -36,7 +36,11 @@ DirectXSetter* dxSetter_ = nullptr;
 
 void Engine::Initialize(const char* title, int width, int height) {
 
-	CoInitializeEx(0, COINIT_MULTITHREADED);
+	HRESULT hr;
+
+	hr = CoInitializeEx(0, COINIT_MULTITHREADED);
+
+	assert(SUCCEEDED(hr));
 
 	//システムタイマーの分解能を上げる
 	timeBeginPeriod(1);
