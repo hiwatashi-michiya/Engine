@@ -24,6 +24,8 @@ protected:
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 
-	
+	static uint32_t stageNumber_;
+
+	static const uint32_t kMaxStage_ = 2;
 
 };

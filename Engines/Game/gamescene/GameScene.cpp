@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
-	stage_->LoadStage(1);
+	stage_->LoadStage(stageNumber_);
 	followCamera_->SetTarget(stage_->GetPlayer()->GetTransform());
 	stage_->GetPlayer()->SetCamera(camera_.get());
 
@@ -83,6 +83,17 @@ void GameScene::Update() {
 	ImGui::Text("Reset : R key");
 	ImGui::End();
 
+	ImGui::Begin("Scene Change");
+	ImGui::Text("Key 1 or 2 + L_ctrl: Change Scene\n1 : title\n2 : select");
+	ImGui::End();
+
+	if (input_->TriggerKey(DIK_1) && input_->PushKey(DIK_LCONTROL)) {
+		SceneManager::GetInstance()->ChangeScene("TITLE");
+	}
+	else if (input_->TriggerKey(DIK_2) && input_->PushKey(DIK_LCONTROL)) {
+		SceneManager::GetInstance()->ChangeScene("SELECT");
+	}
+
 	ImGui::Begin("Frame Late");
 	ImGui::Text("%1.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
@@ -91,7 +102,7 @@ void GameScene::Update() {
 
 	if (input_->TriggerKey(DIK_R)) {
 		stage_->Initialize();
-		stage_->LoadStage(1);
+		stage_->LoadStage(stageNumber_);
 		resetCount_ = 60;
 	}
 
@@ -116,13 +127,25 @@ void GameScene::Update() {
 			isPause_ = true;
 		}
 
+		if (stage_->GetPlayer()->GetIsGoal()) {
+
+			if (stageNumber_ < kMaxStage_) {
+				stageNumber_++;
+			}
+
+			stage_->Initialize();
+			stage_->LoadStage(stageNumber_);
+			resetCount_ = 60;
+
+		}
+
 		if (stage_->GetPlayer()->GetIsDead()) {
 
 			resetCount_--;
 
 			if (resetCount_ <= 0) {
 				stage_->Initialize();
-				stage_->LoadStage(1);
+				stage_->LoadStage(stageNumber_);
 				resetCount_ = 60;
 			}
 

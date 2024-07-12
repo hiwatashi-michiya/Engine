@@ -28,6 +28,12 @@ public:
 
 	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
 
+	void SetPosition(const Vector3& position) {
+		transform_->translate_ = position;
+		transform_->UpdateMatrix();
+		collider_->collider_.center = transform_->worldMatrix_.GetTranslate() + Vector3{ 0.0f, collider_->collider_.size.y, 0.0f };
+	}
+
 	BoxCollider* GetCollider() const { return collider_.get(); }
 
 	Vector3 GetPosition() const { return collider_->collider_.center; }
@@ -44,6 +50,8 @@ public:
 
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
+	bool GetIsGoal() const { return isGoal_; }
+
 private:
 
 	void OnCollision(Collider* collider);
@@ -59,6 +67,9 @@ private:
 	std::unique_ptr<Particle3D> particle_;
 
 	std::unique_ptr<LineBox> lineBox_;
+
+	//ゴール判定
+	bool isGoal_ = false;
 
 	bool canJump_ = true;
 

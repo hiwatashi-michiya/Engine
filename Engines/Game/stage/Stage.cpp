@@ -21,6 +21,7 @@ void Stage::Initialize() {
 	blocks_.clear();
 	rings_.clear();
 	mapObjData_.clear();
+	goals_.clear();
 
 	drawLine_ = std::make_unique<Line>();
 
@@ -61,13 +62,10 @@ void Stage::Update() {
 
 		ring->Update();
 
-		/*if (!ring->GetIsObtained() && IsCollision(ring->GetCollision(), player_->GetCollider())) {
+	}
 
-			ring->Obtained();
-			ring->PlaySE();
-
-		}*/
-
+	for (auto& goal : goals_) {
+		goal->Update();
 	}
 
 }
@@ -97,6 +95,10 @@ void Stage::Draw(Camera* camera) {
 		}
 	}
 
+	for (auto& goal : goals_) {
+		goal->Draw(camera);
+	}
+
 }
 
 void Stage::DrawSkinningModel(Camera* camera) {
@@ -123,6 +125,10 @@ void Stage::DrawLine(Camera* camera) {
 	for (auto& ring : rings_) {
 
 		ring->DrawLine(camera);
+	}
+
+	for (auto& goal : goals_) {
+		goal->DrawLine(camera);
 	}
 
 }
@@ -277,7 +283,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 	for (auto& object : mapObjData_) {
 
 		if (object->tag == "player") {
-			player_->SetColliderPosition(object->transform->translate_);
+			player_->SetPosition(object->transform->translate_);
 		}
 
 		if (object->tag == "block") {
@@ -292,6 +298,13 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			std::shared_ptr<Ring> newRing = std::make_shared<Ring>();
 			newRing->Initialize(object->transform->translate_);
 			rings_.push_back(newRing);
+		}
+
+		if (object->tag == "goal") {
+			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
+			newGoal->Initialize();
+			newGoal->SetPosition(object->transform->translate_);
+			goals_.push_back(newGoal);
 		}
 
 	}

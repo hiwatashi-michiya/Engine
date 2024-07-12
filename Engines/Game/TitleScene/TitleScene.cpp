@@ -18,17 +18,18 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize() {
 
+	editor_ = MapEditor::GetInstance();
+	editor_->Initialize();
+
 	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,1.0f, -0.0f };
-	camera_->rotation_.x = 0.0f;
+	camera_->position_ = { 0.0f,65.0f, -60.0f };
+	camera_->rotation_.x = 0.9f;
 
-	model_.reset(Model::Create("./Resources/terrain/terrain.obj"));
-	transform_ = std::make_unique<Transform>();
-	transform_->scale_ = { 10.0f,10.0f,10.0f };
+	editor_->SetCamera(camera_.get());
 
 }
 
@@ -42,23 +43,20 @@ void TitleScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	ImGui::Begin("transform");
-	ImGui::DragFloat3("scale", &transform_->scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &transform_->rotate_.x, 0.1f);
-	ImGui::DragFloat3("translation", &transform_->translate_.x, 0.1f);
+	ImGui::Begin("Scene Change");
+	ImGui::Text("Key 2 or 3 + L_ctrl: Change Scene\n2 : select\n3 : game");
 	ImGui::End();
 
-	ImGui::Begin("Manual");
-	ImGui::Text("Key S + L_ctrl: Change Scene");
-	ImGui::End();
-
-	model_->ImGuiUpdate("terrain");
-
-#endif // _DEBUG
-
-	if (input_->TriggerKey(DIK_S) && input_->PushKey(DIK_LCONTROL)) {
+	if (input_->TriggerKey(DIK_2) && input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("SELECT");
 	}
+	else if (input_->TriggerKey(DIK_3) && input_->PushKey(DIK_LCONTROL)) {
+		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
+	}
+
+	editor_->Edit();
+
+#endif // _DEBUG
 
 	Quaternion cameraQuaternion = IdentityQuaternion();
 
@@ -66,18 +64,12 @@ void TitleScene::Update() {
 
 	camera_->matRotate_ = MakeRotateMatrix(cameraQuaternion);
 	camera_->Update();
-
-	transform_->UpdateMatrix();
-
-	transform_->worldMatrix_.GetRotate();
-
-	model_->SetWorldMatrix(transform_->worldMatrix_);
-
+	
 }
 
 void TitleScene::DrawModel() {
 
-	model_->Draw(camera_.get());
+	editor_->Draw(camera_.get());
 
 }
 

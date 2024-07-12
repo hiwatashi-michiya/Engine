@@ -158,14 +158,14 @@ Quaternion Quaternion::Slerp(const Quaternion& qr, float t) {
 Quaternion Quaternion::ConvertFromEuler(const Vector3& euler) {
 
 	return Quaternion(
-		sinf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
-		+ (cosf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
-		cosf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
-		- (sinf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
-		cosf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * sinf(euler.z / 2.0f)
-		+ (sinf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * cosf(euler.z / 2.0f)),
-		cosf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
-		- (sinf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * sinf(euler.z / 2.0f))
+		std::sin(euler.x * 0.5f) * std::cos(euler.y * 0.5f) * std::cos(euler.z * 0.5f)
+		+ (std::cos(euler.x * 0.5f) * std::sin(euler.y * 0.5f) * std::sin(euler.z * 0.5f)),
+		std::cos(euler.x * 0.5f) * std::sin(euler.y * 0.5f) * std::cos(euler.z * 0.5f)
+		- (std::sin(euler.x * 0.5f) * std::cos(euler.y * 0.5f) * std::sin(euler.z * 0.5f)),
+		std::cos(euler.x * 0.5f) * std::cos(euler.y * 0.5f) * std::sin(euler.z * 0.5f)
+		+ (std::sin(euler.x * 0.5f) * std::sin(euler.y * 0.5f) * std::cos(euler.z * 0.5f)),
+		std::cos(euler.x * 0.5f) * std::cos(euler.y * 0.5f) * std::cos(euler.z * 0.5f)
+		- (std::sin(euler.x * 0.5f) * std::sin(euler.y * 0.5f) * std::sin(euler.z * 0.5f))
 	);
 
 }
@@ -336,15 +336,16 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 
 Quaternion ConvertFromEuler(const Vector3& euler) {
 
+
 	return Quaternion(
-		sinf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
-		+ (cosf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
-		cosf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
-		- (sinf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * sinf(euler.z / 2.0f)),
-		cosf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * sinf(euler.z / 2.0f)
-		+ (sinf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * cosf(euler.z / 2.0f)),
-		cosf(euler.x / 2.0f) * cosf(euler.y / 2.0f) * cosf(euler.z / 2.0f)
-		- (sinf(euler.x / 2.0f) * sinf(euler.y / 2.0f) * sinf(euler.z / 2.0f))
+		std::sin(euler.x * 0.5f) * std::cos(euler.y * 0.5f) * std::cos(euler.z * 0.5f)
+		+ (std::cos(euler.x * 0.5f) * std::sin(euler.y * 0.5f) * std::sin(euler.z * 0.5f)),
+		std::cos(euler.x * 0.5f) * std::sin(euler.y * 0.5f) * std::cos(euler.z * 0.5f)
+		- (std::sin(euler.x * 0.5f) * std::cos(euler.y * 0.5f) * std::sin(euler.z * 0.5f)),
+		std::cos(euler.x * 0.5f) * std::cos(euler.y * 0.5f) * std::sin(euler.z * 0.5f)
+		+ (std::sin(euler.x * 0.5f) * std::sin(euler.y * 0.5f) * std::cos(euler.z * 0.5f)),
+		std::cos(euler.x * 0.5f) * std::cos(euler.y * 0.5f) * std::cos(euler.z * 0.5f)
+		- (std::sin(euler.x * 0.5f) * std::sin(euler.y * 0.5f) * std::sin(euler.z * 0.5f))
 	);
 
 }

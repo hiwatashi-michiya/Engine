@@ -6,6 +6,7 @@
 #include "Game/Player/Player.h"
 #include <memory>
 #include <string>
+#include "Game/Goal/Goal.h"
 
 class Stage
 {
@@ -67,6 +68,8 @@ private:
 	std::list<std::shared_ptr<Block>> blocks_;
 
 	std::list<std::shared_ptr<Ring>> rings_;
+
+	std::list<std::shared_ptr<Goal>> goals_;
 
 	Segment line_{};
 

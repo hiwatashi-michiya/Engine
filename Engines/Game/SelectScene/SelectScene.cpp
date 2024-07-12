@@ -33,7 +33,7 @@ void SelectScene::Initialize() {
 	camera_->rotation_.y = 0.0f;
 
 	loader_ = LevelDataLoader::GetInstance();
-	loader_->Load("./Resources/Levels/aa.json");
+	loader_->Load("./Resources/Levels/scene.json");
 
 	for (auto& object : loader_->levelData_->objects_) {
 
@@ -113,6 +113,17 @@ void SelectScene::Update() {
 	ImGui::Begin("Frame Late");
 	ImGui::Text("%1.2f", ImGui::GetIO().Framerate);
 	ImGui::End();
+
+	ImGui::Begin("Scene Change");
+	ImGui::Text("Key 1 or 3 + L_ctrl: Change Scene\n1 : title\n3 : game");
+	ImGui::End();
+
+	if (input_->TriggerKey(DIK_1) && input_->PushKey(DIK_LCONTROL)) {
+		SceneManager::GetInstance()->ChangeScene("TITLE");
+	}
+	else if (input_->TriggerKey(DIK_3) && input_->PushKey(DIK_LCONTROL)) {
+		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
+	}
 
 #endif // _DEBUG
 

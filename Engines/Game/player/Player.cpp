@@ -64,9 +64,7 @@ void Player::Initialize() {
 
 	velocity_ = { 0.0f,0.0f,0.0f };
 
-	/*collision_.max = transform_->translate_ + transform_->scale_;
-	collision_.min = transform_->translate_ - transform_->scale_;*/
-
+	isGoal_ = false;
 	isDead_ = false;
 	onGround_ = false;
 
@@ -375,6 +373,13 @@ void Player::OnCollision(Collider* collider) {
 
 		//モデルに再度設定
 		model_->SetWorldMatrix(transform_->worldMatrix_);
+
+	}
+
+	//ゴールとの当たり判定
+	if (collider->GetGameObject()->GetName() == "goal") {
+
+		isGoal_ = true;
 
 	}
 
