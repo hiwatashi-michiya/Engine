@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include "Game/Goal/Goal.h"
+#include "Game/Gimmick/MoveBox.h"
 
 class Stage
 {
@@ -70,6 +71,8 @@ private:
 	std::list<std::shared_ptr<Ring>> rings_;
 
 	std::list<std::shared_ptr<Goal>> goals_;
+
+	std::list<std::shared_ptr<MoveBox>> moveBoxes_;
 
 	Segment line_{};
 

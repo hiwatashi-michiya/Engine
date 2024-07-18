@@ -294,6 +294,9 @@
     <ClCompile Include="Game\Goal\Goal.cpp">
       <Filter>Game\Goal</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Gimmick\MoveBox.cpp">
+      <Filter>Game\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -499,6 +502,9 @@
     </ClInclude>
     <ClInclude Include="Game\Goal\Goal.h">
       <Filter>Game\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Gimmick\MoveBox.h">
+      <Filter>Game\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

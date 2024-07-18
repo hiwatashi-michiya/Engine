@@ -3,7 +3,7 @@
 
 Block::Block()
 {
-	model_.reset(Model::Create("./resources/block/block.obj"));
+	model_.reset(Model::Create("./Resources/block/block.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 

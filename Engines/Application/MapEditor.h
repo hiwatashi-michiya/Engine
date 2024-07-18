@@ -54,6 +54,11 @@ private:
 		//削除に使用するフラグ
 		bool isDelete = false;
 
+		bool isOpen_ = false;
+
+		bool preOpen_ = false;
+
+
 	};
 
 	void Create(const std::string& filename);

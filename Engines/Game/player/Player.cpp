@@ -10,8 +10,8 @@ Player::Player()
 {
 
 	tex_ = TextureManager::GetInstance()->Load("./Resources/plane/particle.png");
-	model_.reset(SkinningModel::Create("./resources/human/stay.gltf", 0));
-	model_->LoadAnimation("./resources/human/walking.gltf", 1);
+	model_.reset(SkinningModel::Create("./Resources/human/stay.gltf", 0));
+	model_->LoadAnimation("./Resources/human/walking.gltf", 1);
 	particle_.reset(Particle3D::Create("./Resources/plane/particle.obj", 128));
 	particle_->SetInstanceCount(32);
 	/*particle_->SetTexture(tex_);*/
@@ -220,7 +220,7 @@ void Player::Update() {
 
 void Player::OnCollision(Collider* collider) {
 
-	if (collider->GetGameObject()->GetName() == "block") {
+	if (collider->GetGameObject()->GetName() == "block" || collider->GetGameObject()->GetName() == "moveBox") {
 
 		//上にいる時
 		if (preTranslate_.y >= collider->GetPosition().y + collider->GetSize().y) {
@@ -283,14 +283,33 @@ void Player::OnCollision(Collider* collider) {
 				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z &&
 				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
 
-				preTranslate_ = collider_->collider_.center;
+				if (collider->GetGameObject()->GetName() == "block") {
 
-				//当たり判定更新
-				collider_->collider_.center.x = collider->GetPosition().x - collider->GetSize().x - collider_->collider_.size.x;
+					preTranslate_ = collider_->collider_.center;
 
-				//座標更新
-				transform_->translate_.x = collider_->collider_.center.x;
-				transform_->UpdateMatrix();
+					//当たり判定更新
+					collider_->collider_.center.x = collider->GetPosition().x - collider->GetSize().x - collider_->collider_.size.x;
+
+					//座標更新
+					transform_->translate_.x = collider_->collider_.center.x;
+					transform_->UpdateMatrix();
+
+				}
+				else {
+
+					preTranslate_ = collider_->collider_.center;
+
+					//当たり判定更新
+					collider_->collider_.center.x = collider->GetPosition().x - collider->GetSize().x - collider_->collider_.size.x;
+
+					//座標更新
+					transform_->translate_.x = collider_->collider_.center.x;
+					transform_->UpdateMatrix();
+
+					collider->GetGameObject()->GetTransform()->translate_.x += velocity_.x;
+					collider->SetPosition(collider->GetGameObject()->GetTransform()->translate_);
+
+				}
 
 			}
 
@@ -306,14 +325,33 @@ void Player::OnCollision(Collider* collider) {
 				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z &&
 				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
 
-				preTranslate_ = collider_->collider_.center;
+				if (collider->GetGameObject()->GetName() == "block") {
 
-				//当たり判定更新
-				collider_->collider_.center.x = collider->GetPosition().x + collider->GetSize().x + collider_->collider_.size.x;
+					preTranslate_ = collider_->collider_.center;
 
-				//座標更新
-				transform_->translate_.x = collider_->collider_.center.x;
-				transform_->UpdateMatrix();
+					//当たり判定更新
+					collider_->collider_.center.x = collider->GetPosition().x + collider->GetSize().x + collider_->collider_.size.x;
+
+					//座標更新
+					transform_->translate_.x = collider_->collider_.center.x;
+					transform_->UpdateMatrix();
+
+				}
+				else {
+
+					preTranslate_ = collider_->collider_.center;
+
+					//当たり判定更新
+					collider_->collider_.center.x = collider->GetPosition().x + collider->GetSize().x + collider_->collider_.size.x;
+
+					//座標更新
+					transform_->translate_.x = collider_->collider_.center.x;
+					transform_->UpdateMatrix();
+
+					collider->GetGameObject()->GetTransform()->translate_.x += velocity_.x;
+					collider->SetPosition(collider->GetGameObject()->GetTransform()->translate_);
+
+				}
 
 			}
 
@@ -330,14 +368,33 @@ void Player::OnCollision(Collider* collider) {
 				transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x &&
 				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x) {
 
-				preTranslate_ = collider_->collider_.center;
+				if (collider->GetGameObject()->GetName() == "block") {
 
-				//当たり判定更新
-				collider_->collider_.center.z = collider->GetPosition().z - collider->GetSize().z - collider_->collider_.size.z;
+					preTranslate_ = collider_->collider_.center;
 
-				//座標更新
-				transform_->translate_.z = collider_->collider_.center.z;
-				transform_->UpdateMatrix();
+					//当たり判定更新
+					collider_->collider_.center.z = collider->GetPosition().z - collider->GetSize().z - collider_->collider_.size.z;
+
+					//座標更新
+					transform_->translate_.z = collider_->collider_.center.z;
+					transform_->UpdateMatrix();
+
+				}
+				else {
+
+					preTranslate_ = collider_->collider_.center;
+
+					//当たり判定更新
+					collider_->collider_.center.z = collider->GetPosition().z - collider->GetSize().z - collider_->collider_.size.z;
+
+					//座標更新
+					transform_->translate_.z = collider_->collider_.center.z;
+					transform_->UpdateMatrix();
+
+					collider->GetGameObject()->GetTransform()->translate_.z += velocity_.z;
+					collider->SetPosition(collider->GetGameObject()->GetTransform()->translate_);
+
+				}
 
 			}
 
@@ -353,14 +410,33 @@ void Player::OnCollision(Collider* collider) {
 				transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x &&
 				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x) {
 
-				preTranslate_ = collider_->collider_.center;
+				if (collider->GetGameObject()->GetName() == "block") {
 
-				//当たり判定更新
-				collider_->collider_.center.z = collider->GetPosition().z + collider->GetSize().z + collider_->collider_.size.z;
+					preTranslate_ = collider_->collider_.center;
 
-				//座標更新
-				transform_->translate_.z = collider_->collider_.center.z;
-				transform_->UpdateMatrix();
+					//当たり判定更新
+					collider_->collider_.center.z = collider->GetPosition().z + collider->GetSize().z + collider_->collider_.size.z;
+
+					//座標更新
+					transform_->translate_.z = collider_->collider_.center.z;
+					transform_->UpdateMatrix();
+
+				}
+				else {
+
+					preTranslate_ = collider_->collider_.center;
+
+					//当たり判定更新
+					collider_->collider_.center.z = collider->GetPosition().z + collider->GetSize().z + collider_->collider_.size.z;
+
+					//座標更新
+					transform_->translate_.z = collider_->collider_.center.z;
+					transform_->UpdateMatrix();
+
+					collider->GetGameObject()->GetTransform()->translate_.z += velocity_.z;
+					collider->SetPosition(collider->GetGameObject()->GetTransform()->translate_);
+
+				}
 
 			}
 

@@ -25,6 +25,8 @@ public:
 
 	void SetCamera(Camera* camera) { for (int32_t i = 0; i < postEffects_.size(); i++) { postEffects_[i]->SetCamera(camera); } }
 
+	std::vector<std::shared_ptr<PostEffects>> GetPostEffects() const { return postEffects_; }
+
 private:
 
 	DirectXSetter* dxSetter_ = nullptr;

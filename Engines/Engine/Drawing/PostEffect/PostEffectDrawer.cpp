@@ -20,7 +20,7 @@ void PostEffectDrawer::Initialize() {
 
 	DirectXSetter::srvHandleNumber_++;
 
-	for (int32_t i = 0; i < 1; i++) {
+	for (int32_t i = 0; i < 2; i++) {
 
 		RenderTexture newRenderTex;
 
@@ -61,7 +61,7 @@ void PostEffectDrawer::Initialize() {
 		renderTextures_.push_back(newRenderTex);
 
 	}
-	
+
 	postEffects_.push_back(std::make_shared<CopyImageRender>());
 
 	postEffects_.push_back(std::make_shared<Grayscale>());

@@ -2,7 +2,7 @@
 
 Goal::Goal()
 {
-	model_.reset(Model::Create("./resources/goal/goal.obj"));
+	model_.reset(Model::Create("./Resources/goal/goal.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 }

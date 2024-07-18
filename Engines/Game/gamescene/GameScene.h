@@ -52,8 +52,6 @@ private:
 
 	std::unique_ptr<Sprite> pauseSprite_;
 
-	std::unique_ptr<Line> line_;
-
 	int32_t resetCount_ = 60;
 
 	uint32_t testSE_;

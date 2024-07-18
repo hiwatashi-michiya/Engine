@@ -59,7 +59,7 @@
                     5.0,
                     5.0
                 ],
-                "tag": "block"
+                "tag": "moveBox"
             },
             "block111": {
                 "mesh": "block",

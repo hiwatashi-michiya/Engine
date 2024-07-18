@@ -18,6 +18,8 @@ public:
 	virtual void OnCollision(Collider* collider) { if (function_) { function_(collider); } }
 	// コライダーの中心位置取得
 	virtual Vector3 GetPosition() = 0;
+	//中心位置セット
+	virtual void SetPosition(const Vector3& position) = 0;
 	// 衝突属性(自分)を取得
 	uint32_t GetCollisionAttribute() { return collisionAttribute_; }
 	// 衝突属性(自分)を設定
@@ -68,6 +70,7 @@ class BoxCollider : public Collider {
 public:
 
 	Vector3 GetPosition() override { return collider_.center; }
+	void SetPosition(const Vector3& position) override { collider_.center = position; }
 	bool CollideWith(Collider* other) override;
 	bool CollideWithBox(BoxCollider* box) override;
 	bool CollideWithSphere(SphereCollider* sphere) override;
@@ -81,6 +84,7 @@ class SphereCollider : public Collider {
 public:
 
 	Vector3 GetPosition() override { return collider_.center; }
+	void SetPosition(const Vector3& position) override { collider_.center = position; }
 	bool CollideWith(Collider* other) override { return other->CollideWithSphere(this); }
 	bool CollideWithBox(BoxCollider* box) override { return IsCollision(this->collider_, box->collider_); }
 	bool CollideWithSphere(SphereCollider* sphere) override { return IsCollision(this->collider_, sphere->collider_); }

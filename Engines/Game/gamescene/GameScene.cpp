@@ -17,7 +17,6 @@ GameScene::GameScene()
 	skybox_->LoadDss("./Resources/textures/rostock_laage_airport_4k.dds");
 	pauseTex_ = TextureManager::GetInstance()->Load("./Resources/UI/pause.png");
 	pauseSprite_.reset(Sprite::Create(pauseTex_, { 640.0f - 256.0f,360.0f - 64.0f }));
-	line_ = std::make_unique<Line>();
 
 }
 
@@ -57,9 +56,6 @@ void GameScene::Initialize() {
 	stage_->LoadStage(stageNumber_);
 	followCamera_->SetTarget(stage_->GetPlayer()->GetTransform());
 	stage_->GetPlayer()->SetCamera(camera_.get());
-
-	line_->start_ = camera_->position_;
-	line_->end_ = { 0.0f,0.0f,0.0f };
 
 }
 
@@ -170,7 +166,7 @@ void GameScene::Update() {
 
 	}
 	
-	Vector3 mousePos3D = { input_->GetMousePosition().x, input_->GetMousePosition().y, 0.0f };
+	/*Vector3 mousePos3D = { input_->GetMousePosition().x, input_->GetMousePosition().y, 0.0f };
 
 	mousePos3D = CoordTransform(mousePos3D, Inverse(MakeViewportMatrix(
 		0, 0, 1280.0f, 720.0f, 0.0f, 1.0f)));
@@ -178,7 +174,7 @@ void GameScene::Update() {
 	mousePos3D = CoordTransform(mousePos3D, Inverse(camera_->matView_));
 
 	line_->start_ = camera_->position_;
-	line_->end_ = mousePos3D;
+	line_->end_ = mousePos3D;*/
 
 }
 
@@ -221,8 +217,6 @@ void GameScene::DrawSprite() {
 
 void GameScene::DrawLine() {
 
-	line_->Draw(camera_.get());
-
-	/*stage_->DrawLine(camera_.get());*/
+	stage_->DrawLine(camera_.get());
 
 }

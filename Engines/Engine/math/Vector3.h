@@ -122,6 +122,8 @@ struct Capsule {
 
 class Matrix4x4;
 
+class Quaternion;
+
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);

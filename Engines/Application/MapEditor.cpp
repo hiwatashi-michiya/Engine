@@ -159,12 +159,20 @@ void MapEditor::Edit() {
 			ImGui::SliderInt("Select Object", &selectObject_, 0, int(mapObjData_.size() - 1));
 		}
 
-		for (auto& object : mapObjData_) {
+		for (int32_t i = 0; auto & object : mapObjData_) {
+
+			object->preOpen_ = object->isOpen_;
 
 			std::string showObjName = object->objName.c_str();
 			showObjName += " ";
 
 			if (ImGui::TreeNode(showObjName.c_str())) {
+
+				object->isOpen_ = true;
+
+				if (object->isOpen_ && !object->preOpen_) {
+					selectObject_ = i;
+				}
 
 				if (ImGui::DragFloat3("position", &object->transform->translate_.x, 0.1f)) {
 					isSave_ = false;
@@ -172,6 +180,7 @@ void MapEditor::Edit() {
 
 				if (ImGui::DragFloat3("rotation", &object->transform->rotate_.x, 0.01f)) {
 					isSave_ = false;
+					object->transform->rotateQuaternion_ = ConvertFromEuler(object->transform->rotate_);
 				}
 
 				if (ImGui::DragFloat3("scale", &object->transform->scale_.x, 0.01f)) {
@@ -217,9 +226,14 @@ void MapEditor::Edit() {
 
 				ImGui::TreePop();
 			}
+			else {
+				object->isOpen_ = false;
+			}
 
 			object->transform->UpdateMatrix();
 			object->model->SetWorldMatrix(object->transform->worldMatrix_);
+
+			i++;
 
 		}
 

@@ -22,6 +22,7 @@ void Stage::Initialize() {
 	rings_.clear();
 	mapObjData_.clear();
 	goals_.clear();
+	moveBoxes_.clear();
 
 	drawLine_ = std::make_unique<Line>();
 
@@ -58,6 +59,12 @@ void Stage::Update() {
 
 	}
 
+	for (auto& box : moveBoxes_) {
+
+		box->Update();
+
+	}
+
 	for (auto& ring : rings_) {
 
 		ring->Update();
@@ -80,6 +87,12 @@ void Stage::Draw(Camera* camera) {
 
 	for (auto& ring : rings_) {
 		ring->Draw(camera);
+	}
+
+	for (auto& box : moveBoxes_) {
+
+		box->Draw(camera);
+
 	}
 
 	for (auto& block : blocks_) {
@@ -120,6 +133,11 @@ void Stage::DrawLine(Camera* camera) {
 	for (auto& block : blocks_) {
 
 		block->DrawLine(camera);
+	}
+
+	for (auto& box : moveBoxes_) {
+
+		box->DrawLine(camera);
 	}
 
 	for (auto& ring : rings_) {
@@ -305,6 +323,14 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newGoal->Initialize();
 			newGoal->SetPosition(object->transform->translate_);
 			goals_.push_back(newGoal);
+		}
+
+		if (object->tag == "moveBox") {
+			std::shared_ptr<MoveBox> newBox = std::make_shared<MoveBox>();
+			newBox->Initialize();
+			newBox->SetPosition(object->transform->translate_);
+			newBox->SetScale(object->transform->scale_);
+			moveBoxes_.push_back(newBox);
 		}
 
 	}
