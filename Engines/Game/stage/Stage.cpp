@@ -321,7 +321,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			blocks_.push_back(newBlock);
 		}
 
-		if (object->tag == "item") {
+		if (object->tag == "item" || object->tag == "ring") {
 			std::shared_ptr<Ring> newRing = std::make_shared<Ring>();
 			newRing->Initialize(object->transforms_[0]->translate_);
 			rings_.push_back(newRing);
