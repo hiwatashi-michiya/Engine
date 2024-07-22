@@ -72,6 +72,8 @@ void PlayerObject::Initialize(const std::string& name) {
 
 void PlayerObject::Edit() {
 
+#ifdef _DEBUG
+
 	isOpen_ = true;
 
 	if (isOpen_ && preOpen_) {
@@ -81,6 +83,8 @@ void PlayerObject::Edit() {
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
 
 	}
+
+#endif // _DEBUG
 
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
@@ -97,6 +101,8 @@ void BlockObject::Initialize(const std::string& name) {
 
 void BlockObject::Edit() {
 
+#ifdef _DEBUG
+
 	isOpen_ = true;
 
 	if (isOpen_ && preOpen_) {
@@ -110,6 +116,8 @@ void BlockObject::Edit() {
 	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
 
 	}
+
+#endif // _DEBUG
 
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
@@ -126,6 +134,8 @@ void MoveBoxObject::Initialize(const std::string& name) {
 
 void MoveBoxObject::Edit() {
 
+#ifdef _DEBUG
+
 	isOpen_ = true;
 
 	if (isOpen_ && preOpen_) {
@@ -139,6 +149,8 @@ void MoveBoxObject::Edit() {
 	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
 
 	}
+
+#endif // _DEBUG
 
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
@@ -155,6 +167,8 @@ void RingObject::Initialize(const std::string& name) {
 
 void RingObject::Edit() {
 
+#ifdef _DEBUG
+
 	isOpen_ = true;
 
 	if (isOpen_ && preOpen_) {
@@ -164,6 +178,8 @@ void RingObject::Edit() {
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
 
 	}
+
+#endif // _DEBUG
 
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
@@ -180,6 +196,8 @@ void GoalObject::Initialize(const std::string& name) {
 
 void GoalObject::Edit() {
 
+#ifdef _DEBUG
+
 	isOpen_ = true;
 
 	if (isOpen_ && preOpen_) {
@@ -189,6 +207,8 @@ void GoalObject::Edit() {
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
 
 	}
+
+#endif // _DEBUG
 
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
@@ -209,6 +229,8 @@ void WarpObject::Initialize(const std::string& name) {
 
 void WarpObject::Edit() {
 
+#ifdef _DEBUG
+
 	isOpen_ = true;
 
 	if (isOpen_ && preOpen_) {
@@ -222,6 +244,8 @@ void WarpObject::Edit() {
 	if (ImGui::DragFloat3("positionB", &transformB_->translate_.x, 0.1f)) {
 
 	}
+
+#endif // _DEBUG
 
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
