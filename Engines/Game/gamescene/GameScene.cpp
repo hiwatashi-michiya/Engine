@@ -89,6 +89,9 @@ void GameScene::Update() {
 	else if (input_->TriggerKey(DIK_2) && input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("SELECT");
 	}
+	else if (input_->TriggerKey(DIK_4) && input_->PushKey(DIK_LCONTROL)) {
+		SceneManager::GetInstance()->ChangeScene("EDITOR");
+	}
 
 	ImGui::Begin("Frame Late");
 	ImGui::Text("%1.2f fps", ImGui::GetIO().Framerate);

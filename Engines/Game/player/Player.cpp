@@ -278,10 +278,10 @@ void Player::OnCollision(Collider* collider) {
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.5f < collider->GetPosition().y + collider->GetSize().y &&
-				transform_->translate_.y + transform_->scale_.y * 0.5f > collider->GetPosition().y - collider->GetSize().y &&
-				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z &&
-				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
+			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y &&
+				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y &&
+				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z &&
+				transform_->translate_.z + transform_->scale_.z * 0.99f > collider->GetPosition().z - collider->GetSize().z) {
 
 				if (collider->GetGameObject()->GetName() == "block") {
 
@@ -320,10 +320,10 @@ void Player::OnCollision(Collider* collider) {
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.5f < collider->GetPosition().y + collider->GetSize().y &&
-				transform_->translate_.y + transform_->scale_.y * 0.5f > collider->GetPosition().y - collider->GetSize().y &&
-				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z &&
-				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
+			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y &&
+				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y &&
+				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z &&
+				transform_->translate_.z + transform_->scale_.z * 0.99f > collider->GetPosition().z - collider->GetSize().z) {
 
 				if (collider->GetGameObject()->GetName() == "block") {
 
@@ -363,10 +363,10 @@ void Player::OnCollision(Collider* collider) {
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.5f < collider->GetPosition().y + collider->GetSize().y &&
-				transform_->translate_.y + transform_->scale_.y * 0.5f > collider->GetPosition().y - collider->GetSize().y &&
-				transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x &&
-				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x) {
+			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y &&
+				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y &&
+				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x &&
+				transform_->translate_.x + transform_->scale_.x * 0.99f > collider->GetPosition().x - collider->GetSize().x) {
 
 				if (collider->GetGameObject()->GetName() == "block") {
 
@@ -405,10 +405,10 @@ void Player::OnCollision(Collider* collider) {
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.5f < collider->GetPosition().y + collider->GetSize().y &&
-				transform_->translate_.y + transform_->scale_.y * 0.5f > collider->GetPosition().y - collider->GetSize().y &&
-				transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x &&
-				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x) {
+			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y &&
+				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y &&
+				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x &&
+				transform_->translate_.x + transform_->scale_.x * 0.99f > collider->GetPosition().x - collider->GetSize().x) {
 
 				if (collider->GetGameObject()->GetName() == "block") {
 

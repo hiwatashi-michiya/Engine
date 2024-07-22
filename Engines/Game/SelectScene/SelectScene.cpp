@@ -124,6 +124,9 @@ void SelectScene::Update() {
 	else if (input_->TriggerKey(DIK_3) && input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	}
+	else if (input_->TriggerKey(DIK_4) && input_->PushKey(DIK_LCONTROL)) {
+		SceneManager::GetInstance()->ChangeScene("EDITOR");
+	}
 
 #endif // _DEBUG
 

@@ -230,7 +230,8 @@ void Stage::LoadStage(uint32_t stageNumber) {
 
 				mapObject->isSelect = true;
 				mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
-				mapObject->transform = std::make_unique<Transform>();
+				mapObject->transforms_.resize(2);
+				mapObject->transforms_[0] = std::make_unique<Transform>();
 				mapObject->objName = objectName;
 
 				uint32_t roopCount = 0;
@@ -246,27 +247,35 @@ void Stage::LoadStage(uint32_t stageNumber) {
 						//名前がpositionだった場合、positionを登録
 						if (itemNameObject == "position") {
 							//float型のjson配列登録
-							mapObject->transform->translate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							mapObject->transforms_[0]->translate_ = {itItemObject->at(0), itItemObject->at(1), itItemObject->at(2)};
 						}
 						//名前がrotationだった場合、rotationを登録
 						else if (itemNameObject == "rotation") {
 							//float型のjson配列登録
-							mapObject->transform->rotate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							mapObject->transforms_[0]->rotate_ = {itItemObject->at(0), itItemObject->at(1), itItemObject->at(2)};
 						}
 						//名前がscaleだった場合、scaleを登録
 						else if (itemNameObject == "scale") {
 							//float型のjson配列登録
-							mapObject->transform->scale_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							mapObject->transforms_[0]->scale_ = {itItemObject->at(0), itItemObject->at(1), itItemObject->at(2)};
 						}
 
 					}
 					//Vector3以外の場合
 					else {
 
+						//名前がpositionだった場合、positionを登録
+						if (itemNameObject == "position") {
+							//float型のjson配列登録
+							mapObject->transforms_[0]->translate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
+							mapObject->transforms_[1] = std::make_unique<Transform>();
+							mapObject->transforms_[1]->translate_ = { itItemObject->at(3), itItemObject->at(4), itItemObject->at(5) };
+						}
+
 						//クォータニオン追加
 						if (itemNameObject == "quaternion") {
 							//float型のjson配列登録
-							mapObject->transform->rotateQuaternion_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2),itItemObject->at(3) };
+							mapObject->transforms_[0]->rotateQuaternion_ = {itItemObject->at(0), itItemObject->at(1), itItemObject->at(2),itItemObject->at(3)};
 						}
 
 						//タグを登録
@@ -301,35 +310,35 @@ void Stage::LoadStage(uint32_t stageNumber) {
 	for (auto& object : mapObjData_) {
 
 		if (object->tag == "player") {
-			player_->SetPosition(object->transform->translate_);
+			player_->SetPosition(object->transforms_[0]->translate_);
 		}
 
 		if (object->tag == "block") {
 			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
 			newBlock->Initialize();
-			newBlock->SetPosition(object->transform->translate_);
-			newBlock->SetScale(object->transform->scale_);
+			newBlock->SetPosition(object->transforms_[0]->translate_);
+			newBlock->SetScale(object->transforms_[0]->scale_);
 			blocks_.push_back(newBlock);
 		}
 
 		if (object->tag == "item") {
 			std::shared_ptr<Ring> newRing = std::make_shared<Ring>();
-			newRing->Initialize(object->transform->translate_);
+			newRing->Initialize(object->transforms_[0]->translate_);
 			rings_.push_back(newRing);
 		}
 
 		if (object->tag == "goal") {
 			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
 			newGoal->Initialize();
-			newGoal->SetPosition(object->transform->translate_);
+			newGoal->SetPosition(object->transforms_[0]->translate_);
 			goals_.push_back(newGoal);
 		}
 
 		if (object->tag == "moveBox") {
 			std::shared_ptr<MoveBox> newBox = std::make_shared<MoveBox>();
 			newBox->Initialize();
-			newBox->SetPosition(object->transform->translate_);
-			newBox->SetScale(object->transform->scale_);
+			newBox->SetPosition(object->transforms_[0]->translate_);
+			newBox->SetScale(object->transforms_[0]->scale_);
 			moveBoxes_.push_back(newBox);
 		}
 

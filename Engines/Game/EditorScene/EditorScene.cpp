@@ -1,4 +1,4 @@
-#include "TitleScene.h"
+#include "EditorScene.h"
 #include "FrameWork/SceneManager.h"
 
 #ifdef _DEBUG
@@ -7,18 +7,18 @@
 
 #endif // _DEBUG
 
-TitleScene::TitleScene()
+EditorScene::EditorScene()
 {
 
 }
 
-TitleScene::~TitleScene()
+EditorScene::~EditorScene()
 {
 }
 
-void TitleScene::Initialize() {
+void EditorScene::Initialize() {
 
-	editor_ = MapEditor::GetInstance();
+	editor_ = UniqueEditor::GetInstance();
 	editor_->Initialize();
 
 	dxSetter_ = DirectXSetter::GetInstance();
@@ -33,7 +33,7 @@ void TitleScene::Initialize() {
 
 }
 
-void TitleScene::Update() {
+void EditorScene::Update() {
 
 #ifdef _DEBUG
 
@@ -47,14 +47,14 @@ void TitleScene::Update() {
 	ImGui::Text("Key 2 or 3 + L_ctrl: Change Scene\n2 : select\n3 : game");
 	ImGui::End();
 
-	if (input_->TriggerKey(DIK_2) && input_->PushKey(DIK_LCONTROL)) {
+	if (input_->TriggerKey(DIK_1) && input_->PushKey(DIK_LCONTROL)) {
+		SceneManager::GetInstance()->ChangeScene("TITLE");
+	}
+	else if (input_->TriggerKey(DIK_2) && input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("SELECT");
 	}
 	else if (input_->TriggerKey(DIK_3) && input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
-	}
-	else if (input_->TriggerKey(DIK_4) && input_->PushKey(DIK_LCONTROL)) {
-		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
 	editor_->Edit();
@@ -70,29 +70,29 @@ void TitleScene::Update() {
 	
 }
 
-void TitleScene::DrawModel() {
+void EditorScene::DrawModel() {
 
 	editor_->Draw(camera_.get());
 
 }
 
-void TitleScene::DrawSkinningModel() {
+void EditorScene::DrawSkinningModel() {
 
 }
 
-void TitleScene::DrawParticle() {
-
-
-
-}
-
-void TitleScene::DrawSprite() {
+void EditorScene::DrawParticle() {
 
 
 
 }
 
-void TitleScene::DrawLine() {
+void EditorScene::DrawSprite() {
+
+
+
+}
+
+void EditorScene::DrawLine() {
 
 
 

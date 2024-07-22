@@ -46,7 +46,7 @@ private:
 
 		std::unique_ptr<Model> model;
 
-		std::unique_ptr<Transform> transform;
+		std::vector<std::unique_ptr<Transform>> transforms_;
 
 		//メッシュ
 		std::string meshName;
