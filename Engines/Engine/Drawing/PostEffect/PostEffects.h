@@ -17,6 +17,7 @@ enum PostEffectType {
 	kLuminanceBasedOutline, //輝度ベースアウトライン
 	kDepthBasedOutline, //深度ベースアウトライン
 	kRadialBlur, //放射状ブラー
+	kHSVFilter, //HSV
 
 	kMaxEffects, //エフェクト最大数
 
@@ -281,5 +282,38 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU_;
 	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU_;
+
+};
+
+class HSVFilter : public PostEffects
+{
+
+public:
+
+	struct Parameter {
+		//色相
+		float hue = 0.0f;
+		//彩度
+		float saturation = 0.0f;
+		//明度
+		float value = 0.0f;
+	};
+
+public:
+
+	HSVFilter() = default;
+	~HSVFilter() = default;
+
+	void Create() override;
+
+	void Render() override;
+
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
+
+private:
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
 
 };

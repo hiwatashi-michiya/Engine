@@ -152,7 +152,7 @@ void GameScene::Update() {
 
 		}
 		else {
-			PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
+			PostEffectDrawer::GetInstance()->SetType(kHSVFilter);
 		}
 
 		stage_->Update();

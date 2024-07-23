@@ -621,5 +621,8 @@
     <FxCompile Include="Resources\shaders\RadialBlur.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\HSVFilter.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

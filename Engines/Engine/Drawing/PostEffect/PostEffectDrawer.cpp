@@ -78,6 +78,8 @@ void PostEffectDrawer::Initialize() {
 
 	postEffects_.push_back(std::make_shared<RadialBlur>());
 
+	postEffects_.push_back(std::make_shared<HSVFilter>());
+
 	for (int32_t i = 0; i < postEffects_.size(); i++) {
 
 		postEffects_[i]->Create();
