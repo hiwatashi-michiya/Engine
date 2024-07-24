@@ -96,6 +96,11 @@ class WarpObject : public MapObject
 {
 public:
 
+	WarpObject() { colorCount_++; };
+	~WarpObject() { colorCount_--; };
+
+	static int32_t colorCount_;
+
 	std::unique_ptr<Model> modelB_;
 
 	std::unique_ptr<Transform> transformB_;
@@ -105,5 +110,7 @@ public:
 	void Edit() override;
 
 	void Draw(Camera* camera) override;
+
+	bool isMoveA_ = true;
 
 };

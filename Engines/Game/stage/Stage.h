@@ -8,6 +8,8 @@
 #include <string>
 #include "Game/Goal/Goal.h"
 #include "Game/Gimmick/MoveBox.h"
+#include "Game/Gimmick/Warp.h"
+#include "Game/Gimmick/GhostBox.h"
 
 class Stage
 {
@@ -74,9 +76,11 @@ private:
 
 	std::list<std::shared_ptr<MoveBox>> moveBoxes_;
 
-	Segment line_{};
+	std::list<std::shared_ptr<Warp>> warps_;
 
-	std::unique_ptr<Line> drawLine_;
+	std::list<std::shared_ptr<GhostBox>> ghostBoxes_;
+
+	Segment line_{};
 
 };
 

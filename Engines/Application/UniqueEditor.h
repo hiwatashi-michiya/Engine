@@ -41,8 +41,6 @@ private:
 
 	void Load(const std::string& filename);
 
-	void AddObject(char* name);
-
 	void CopyObject(std::shared_ptr<MapObject> object);
 
 	bool CheckIsEmpty(const std::string& name);
@@ -57,6 +55,9 @@ private:
 	void EditTransform();
 
 	void CreateObject(const std::string& name);
+
+	//初期ステージ配置をセット
+	void SetDefaultStage();
 
 //変数
 private:

@@ -315,6 +315,9 @@
     <ClCompile Include="Application\Menu.cpp">
       <Filter>Application</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Gimmick\GhostBox.cpp">
+      <Filter>Game\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -538,6 +541,9 @@
     </ClInclude>
     <ClInclude Include="Application\Menu.h">
       <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Gimmick\GhostBox.h">
+      <Filter>Game\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

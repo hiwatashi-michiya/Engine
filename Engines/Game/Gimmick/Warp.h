@@ -12,6 +12,8 @@ public:
 	Warp();
 	~Warp();
 
+	static int32_t colorCount_;
+
 	void Initialize();
 
 	void Update();
@@ -28,9 +30,21 @@ public:
 
 	void SetScale(const Vector3& scale) { transform_->scale_ = scale; }
 
+	void SetPositionB(const Vector3& position) {
+		transformB_->translate_ = position;
+		colliderB_->collider_.center = transformB_->translate_;
+		colliderB_->collider_.size = transformB_->scale_ / 2.0f;
+	}
+
+	void SetScaleB(const Vector3& scale) { transformB_->scale_ = scale; }
+
 	const Vector3& GetPosition() { return transform_->translate_; }
 
 	const Vector3& GetScale() { return transform_->scale_; }
+
+	const Vector3& GetPositionB() { return transformB_->translate_; }
+
+	const Vector3& GetScaleB() { return transformB_->scale_; }
 
 	BoxCollider* GetColliderA() { return colliderA_.get(); }
 
@@ -38,7 +52,9 @@ public:
 
 private:
 
-	void OnCollision(Collider* collider);
+	void OnCollisionA(Collider* collider);
+
+	void OnCollisionB(Collider* collider);
 
 private:
 
@@ -56,6 +72,14 @@ private:
 
 	std::unique_ptr<LineBox> lineBox_;
 
-	Vector3 preTranslate_{};
+	std::unique_ptr<LineBox> lineBoxB_;
+
+	bool isActiveWarp_ = true;
+
+	bool isPreActiveWarp_ = true;
+
+	int32_t countCoolTimer_ = 0;
+
+	int32_t coolTime_ = 60;
 
 };

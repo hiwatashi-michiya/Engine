@@ -214,6 +214,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\EditorScene\EditorScene.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameScene\GameScene.cpp" />
+    <ClCompile Include="Game\Gimmick\GhostBox.cpp" />
     <ClCompile Include="Game\Gimmick\MoveBox.cpp" />
     <ClCompile Include="Game\Gimmick\Switch.cpp" />
     <ClCompile Include="Game\Gimmick\Warp.cpp" />
@@ -291,6 +292,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\EditorScene\EditorScene.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameScene\GameScene.h" />
+    <ClInclude Include="Game\Gimmick\GhostBox.h" />
     <ClInclude Include="Game\Gimmick\MoveBox.h" />
     <ClInclude Include="Game\Gimmick\Switch.h" />
     <ClInclude Include="Game\Gimmick\Warp.h" />

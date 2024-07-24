@@ -23,8 +23,8 @@ void Stage::Initialize() {
 	mapObjData_.clear();
 	goals_.clear();
 	moveBoxes_.clear();
-
-	drawLine_ = std::make_unique<Line>();
+	warps_.clear();
+	GhostBox::SetLine(&line_);
 
 }
 
@@ -71,6 +71,10 @@ void Stage::Update() {
 
 	}
 
+	for (auto& warp : warps_) {
+		warp->Update();
+	}
+
 	for (auto& goal : goals_) {
 		goal->Update();
 	}
@@ -81,9 +85,6 @@ void Stage::Draw(Camera* camera) {
 
 	line_.origin = camera->GetWorldPosition();
 	line_.diff = player_->GetPosition() - camera->GetWorldPosition();
-
-	drawLine_->start_ = line_.origin;
-	drawLine_->end_ = line_.origin + line_.diff;
 
 	for (auto& ring : rings_) {
 		ring->Draw(camera);
@@ -97,15 +98,21 @@ void Stage::Draw(Camera* camera) {
 
 	for (auto& block : blocks_) {
 
-		if ((!player_->GetIsDead() && !(IsCollision(block->GetCollider()->collider_, line_) && block->GetPosition().y > player_->GetPosition().y)) ||
+		block->Draw(camera);
+
+		/*if ((!player_->GetIsDead() && !(IsCollision(block->GetCollider()->collider_, line_) && block->GetPosition().y > player_->GetPosition().y)) ||
 			player_->GetIsDead()) {
 
-			block->Draw(camera);
+			
 
 		}
 		else {
 			PostEffectDrawer::GetInstance()->SetType(kVignette);
-		}
+		}*/
+	}
+
+	for (auto& warp : warps_) {
+		warp->Draw(camera);
 	}
 
 	for (auto& goal : goals_) {
@@ -143,6 +150,10 @@ void Stage::DrawLine(Camera* camera) {
 	for (auto& ring : rings_) {
 
 		ring->DrawLine(camera);
+	}
+
+	for (auto& warp : warps_) {
+		warp->DrawLine(camera);
 	}
 
 	for (auto& goal : goals_) {
@@ -340,6 +351,16 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newBox->SetPosition(object->transforms_[0]->translate_);
 			newBox->SetScale(object->transforms_[0]->scale_);
 			moveBoxes_.push_back(newBox);
+		}
+
+		if (object->tag == "warp") {
+			std::shared_ptr<Warp> newWarp = std::make_shared<Warp>();
+			newWarp->Initialize();
+			newWarp->SetPosition(object->transforms_[0]->translate_);
+			newWarp->SetScale(object->transforms_[0]->scale_);
+			newWarp->SetPositionB(object->transforms_[1]->translate_);
+			newWarp->SetScaleB(object->transforms_[1]->scale_);
+			warps_.push_back(newWarp);
 		}
 
 	}

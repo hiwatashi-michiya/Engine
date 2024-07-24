@@ -26,6 +26,6 @@ protected:
 
 	static uint32_t stageNumber_;
 
-	static const uint32_t kMaxStage_ = 2;
+	static const uint32_t kMaxStage_ = 3;
 
 };
