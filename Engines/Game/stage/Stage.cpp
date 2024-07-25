@@ -65,6 +65,10 @@ void Stage::Update() {
 
 	}
 
+	for (auto& ghostBox : ghostBoxes_) {
+		ghostBox->Update();
+	}
+
 	for (auto& ring : rings_) {
 
 		ring->Update();
@@ -100,15 +104,10 @@ void Stage::Draw(Camera* camera) {
 
 		block->Draw(camera);
 
-		/*if ((!player_->GetIsDead() && !(IsCollision(block->GetCollider()->collider_, line_) && block->GetPosition().y > player_->GetPosition().y)) ||
-			player_->GetIsDead()) {
+	}
 
-			
-
-		}
-		else {
-			PostEffectDrawer::GetInstance()->SetType(kVignette);
-		}*/
+	for (auto& ghostBox : ghostBoxes_) {
+		ghostBox->Draw(camera);
 	}
 
 	for (auto& warp : warps_) {
@@ -158,6 +157,10 @@ void Stage::DrawLine(Camera* camera) {
 
 	for (auto& goal : goals_) {
 		goal->DrawLine(camera);
+	}
+
+	for (auto& ghostBox : ghostBoxes_) {
+		ghostBox->DrawLine(camera);
 	}
 
 }
@@ -361,6 +364,14 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newWarp->SetPositionB(object->transforms_[1]->translate_);
 			newWarp->SetScaleB(object->transforms_[1]->scale_);
 			warps_.push_back(newWarp);
+		}
+
+		if (object->tag == "ghostBox") {
+			std::shared_ptr<GhostBox> newBox = std::make_shared<GhostBox>();
+			newBox->Initialize();
+			newBox->SetPosition(object->transforms_[0]->translate_);
+			newBox->SetScale(object->transforms_[0]->scale_);
+			ghostBoxes_.push_back(newBox);
 		}
 
 	}

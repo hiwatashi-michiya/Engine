@@ -232,6 +232,13 @@ void UniqueEditor::Edit() {
 						}
 
 					}
+					else if (objectName_[i] == "ghostBox") {
+
+						if (ImGui::Button("Add")) {
+							CreateObject(objectName_[i]);
+						}
+
+					}
 
 					for (int32_t k = 0; auto & object : mapObjData_) {
 
@@ -731,6 +738,17 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
+	else if (name == "ghostBox") {
+
+		std::string objectName = name;
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<GhostBoxObject> object = std::make_shared<GhostBoxObject>();
+		object->Initialize(objectName);
+		mapObjData_.push_back(object);
+
+	}
 	else {
 
 	}
@@ -807,6 +825,16 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 			tmpObject->transformB_->scale_ = warpPtr->transformB_->scale_;
 		}
 
+		mapObjData_.push_back(tmpObject);
+
+	}
+	else if (object->tag_ == "ghostBox") {
+
+		std::shared_ptr<GhostBoxObject> tmpObject = std::make_shared<GhostBoxObject>();
+		tmpObject->Initialize(objectName);
+		tmpObject->transform_->translate_ = tmpObject->transform_->translate_;
+		tmpObject->transform_->rotate_ = tmpObject->transform_->rotate_;
+		tmpObject->transform_->scale_ = tmpObject->transform_->scale_;
 		mapObjData_.push_back(tmpObject);
 
 	}

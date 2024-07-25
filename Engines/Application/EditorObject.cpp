@@ -226,3 +226,30 @@ void WarpObject::Draw(Camera* camera) {
 	modelB_->Draw(camera);
 
 }
+
+void GhostBoxObject::Initialize(const std::string& name) {
+
+	model_->SetMesh("./Resources/block/block.obj");
+	objName_ = name;
+	tag_ = "ghostBox";
+
+}
+
+void GhostBoxObject::Edit() {
+
+#ifdef _DEBUG
+
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+
+	}
+
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
+
+	}
+
+#endif // _DEBUG
+
+	transform_->UpdateMatrix();
+	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+}

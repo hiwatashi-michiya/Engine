@@ -15,8 +15,6 @@ MoveBox::~MoveBox()
 
 void MoveBox::Initialize() {
 
-	setCount_ = (rand() % 10) * 5 + 10;
-
 	name_ = "moveBox";
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
@@ -33,8 +31,6 @@ void MoveBox::Update() {
 
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
-
-	model_->material_->pLightMap_->intensity = pLightIntensity_;
 
 	transform_->UpdateMatrix();
 

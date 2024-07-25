@@ -114,3 +114,13 @@ public:
 	bool isMoveA_ = true;
 
 };
+
+class GhostBoxObject : public MapObject
+{
+public:
+
+	void Initialize(const std::string& name) override;
+
+	void Edit() override;
+
+};
