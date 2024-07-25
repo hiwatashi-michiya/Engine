@@ -239,6 +239,13 @@ void UniqueEditor::Edit() {
 						}
 
 					}
+					else if (objectName_[i] == "switch") {
+
+						if (ImGui::Button("Add")) {
+							CreateObject(objectName_[i]);
+						}
+
+					}
 
 					for (int32_t k = 0; auto & object : mapObjData_) {
 
@@ -377,6 +384,7 @@ void UniqueEditor::Save(const std::string& filename) {
 			root[sceneName_]["objectData"][warpPtr->objName_]["scale"] =
 				nlohmann::json::array({ warpPtr->transform_->scale_.x, warpPtr->transform_->scale_.y, warpPtr->transform_->scale_.z });
 			root[sceneName_]["objectData"][warpPtr->objName_]["tag"] = warpPtr->tag_;
+			root[sceneName_]["objectData"][object->objName_]["color"] = object->colorNumber_;
 
 		}
 		else {
@@ -389,6 +397,7 @@ void UniqueEditor::Save(const std::string& filename) {
 			root[sceneName_]["objectData"][object->objName_]["scale"] =
 				nlohmann::json::array({ object->transform_->scale_.x, object->transform_->scale_.y, object->transform_->scale_.z });
 			root[sceneName_]["objectData"][object->objName_]["tag"] = object->tag_;
+			root[sceneName_]["objectData"][object->objName_]["color"] = object->colorNumber_;
 
 		}
 
@@ -582,6 +591,10 @@ void UniqueEditor::Load(const std::string& filename) {
 
 						}
 
+						if (itemNameObject == "color") {
+							object->colorNumber_ = itItemObject->get<int32_t>();
+						}
+
 						//クォータニオン追加
 						if (itemNameObject == "quaternion") {
 							//float型のjson配列登録
@@ -749,6 +762,17 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
+	else if (name == "switch") {
+
+		std::string objectName = name;
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<SwitchObject> object = std::make_shared<SwitchObject>();
+		object->Initialize(objectName);
+		mapObjData_.push_back(object);
+
+	}
 	else {
 
 	}
@@ -788,6 +812,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -798,6 +823,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -808,6 +834,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -825,6 +852,8 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 			tmpObject->transformB_->scale_ = warpPtr->transformB_->scale_;
 		}
 
+		tmpObject->colorNumber_ = object->colorNumber_;
+
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -835,9 +864,22 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = tmpObject->transform_->translate_;
 		tmpObject->transform_->rotate_ = tmpObject->transform_->rotate_;
 		tmpObject->transform_->scale_ = tmpObject->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}
+	else if (object->tag_ == "switch") {
+
+		std::shared_ptr<SwitchObject> tmpObject = std::make_shared<SwitchObject>();
+		tmpObject->Initialize(objectName);
+		tmpObject->transform_->translate_ = tmpObject->transform_->translate_;
+		tmpObject->transform_->rotate_ = tmpObject->transform_->rotate_;
+		tmpObject->transform_->scale_ = tmpObject->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
+		mapObjData_.push_back(tmpObject);
+
+	}
+
 	else {
 
 		std::shared_ptr<MapObject> tmpObject = std::make_shared<MapObject>();
@@ -845,6 +887,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}

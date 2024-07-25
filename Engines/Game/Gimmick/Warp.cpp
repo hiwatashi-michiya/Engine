@@ -1,8 +1,7 @@
 #include "Warp.h"
 #include "Rand.h"
 #include "UsefulFunc.h"
-
-int32_t Warp::colorCount_ = 0;
+#include "Game/stage/Stage.h"
 
 Warp::Warp()
 {
@@ -13,13 +12,11 @@ Warp::Warp()
 	lineBox_ = std::make_unique<LineBox>();
 	lineBoxB_ = std::make_unique<LineBox>();
 	transformB_ = std::make_unique<Transform>();
-	colorCount_++;
 
 }
 
 Warp::~Warp()
 {
-	colorCount_--;
 }
 
 void Warp::Initialize() {
@@ -35,12 +32,21 @@ void Warp::Initialize() {
 	colliderB_->collider_.size = transformB_->scale_;
 	colliderB_->SetFunction([this](Collider* collider) {OnCollisionB(collider); });
 	lineBoxB_->SetOBB(&colliderB_->collider_);
-	modelA_->SetColor(CreateColor(colorCount_));
-	modelB_->SetColor(CreateColor(colorCount_));
+	modelA_->SetColor(CreateColor(colorNumber_));
+	modelB_->SetColor(CreateColor(colorNumber_));
 
 }
 
 void Warp::Update() {
+
+	if (colorNumber_ == Stage::stageColor_) {
+		colliderA_->SetIsActive(true);
+		colliderB_->SetIsActive(true);
+	}
+	else {
+		colliderA_->SetIsActive(false);
+		colliderB_->SetIsActive(false);
+	}
 
 	isPreActiveWarp_ = isActiveWarp_;
 
@@ -52,7 +58,7 @@ void Warp::Update() {
 
 	isActiveWarp_ = true;
 
-	if (countCoolTimer_ <= 0) {
+	if (countCoolTimer_ <= 0 && colliderA_->GetIsActive() && colliderB_->GetIsActive()) {
 
 		transform_->rotate_.y += 0.02f;
 		transformB_->rotate_.y += 0.02f;
@@ -83,6 +89,9 @@ void Warp::Update() {
 
 	modelA_->SetWorldMatrix(transform_->worldMatrix_);
 	modelB_->SetWorldMatrix(transformB_->worldMatrix_);
+
+	modelA_->SetColor(CreateColor(colorNumber_));
+	modelB_->SetColor(CreateColor(colorNumber_));
 
 }
 

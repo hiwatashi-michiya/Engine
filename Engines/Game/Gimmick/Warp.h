@@ -12,8 +12,6 @@ public:
 	Warp();
 	~Warp();
 
-	static int32_t colorCount_;
-
 	void Initialize();
 
 	void Update();
@@ -37,6 +35,8 @@ public:
 	}
 
 	void SetScaleB(const Vector3& scale) { transformB_->scale_ = scale; }
+
+	void SetColor(int32_t color) { colorNumber_ = color; }
 
 	const Vector3& GetPosition() { return transform_->translate_; }
 
@@ -81,5 +81,7 @@ private:
 	int32_t countCoolTimer_ = 0;
 
 	int32_t coolTime_ = 60;
+
+	int32_t colorNumber_ = 0;
 
 };

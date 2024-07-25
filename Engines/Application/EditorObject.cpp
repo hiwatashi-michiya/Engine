@@ -83,6 +83,7 @@ void PlayerObject::Edit() {
 void BlockObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
+	model_->SetColor(CreateColor(colorNumber_));
 	objName_ = name;
 	tag_ = "block";
 
@@ -110,6 +111,7 @@ void BlockObject::Edit() {
 void MoveBoxObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
+	model_->SetColor(CreateColor(colorNumber_));
 	objName_ = name;
 	tag_ = "moveBox";
 
@@ -127,6 +129,10 @@ void MoveBoxObject::Edit() {
 
 	}
 
+	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
+		model_->SetColor(CreateColor(colorNumber_));
+	}
+
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
@@ -137,6 +143,7 @@ void MoveBoxObject::Edit() {
 void RingObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/item/item.gltf");
+	model_->SetColor(CreateColor(colorNumber_));
 	objName_ = name;
 	tag_ = "ring";
 
@@ -150,6 +157,10 @@ void RingObject::Edit() {
 
 	}
 
+	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
+		model_->SetColor(CreateColor(colorNumber_));
+	}
+
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
@@ -160,6 +171,7 @@ void RingObject::Edit() {
 void GoalObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/goal/goal.obj");
+	model_->SetColor(CreateColor(colorNumber_));
 	objName_ = name;
 	tag_ = "goal";
 
@@ -173,14 +185,16 @@ void GoalObject::Edit() {
 
 	}
 
+	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
+		model_->SetColor(CreateColor(colorNumber_));
+	}
+
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
-
-int32_t WarpObject::colorCount_ = 0;
 
 void WarpObject::Initialize(const std::string& name) {
 
@@ -191,8 +205,8 @@ void WarpObject::Initialize(const std::string& name) {
 	objName_ = name;
 	tag_ = "warp";
 
-	model_->SetColor(CreateColor(colorCount_));
-	modelB_->SetColor(CreateColor(colorCount_));
+	model_->SetColor(CreateColor(colorNumber_));
+	modelB_->SetColor(CreateColor(colorNumber_));
 
 }
 
@@ -206,6 +220,11 @@ void WarpObject::Edit() {
 
 	if (ImGui::DragFloat3("positionB", &transformB_->translate_.x, 0.1f)) {
 		isMoveA_ = false;
+	}
+
+	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
+		model_->SetColor(CreateColor(colorNumber_));
+		modelB_->SetColor(CreateColor(colorNumber_));
 	}
 
 	//どちらを動かすか選択
@@ -230,6 +249,7 @@ void WarpObject::Draw(Camera* camera) {
 void GhostBoxObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
+	model_->SetColor(CreateColor(colorNumber_));
 	objName_ = name;
 	tag_ = "ghostBox";
 
@@ -245,6 +265,38 @@ void GhostBoxObject::Edit() {
 
 	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
 
+	}
+
+	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
+		model_->SetColor(CreateColor(colorNumber_));
+	}
+
+#endif // _DEBUG
+
+	transform_->UpdateMatrix();
+	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+}
+
+void SwitchObject::Initialize(const std::string& name) {
+
+	model_->SetMesh("./Resources/switch/switch.obj");
+	model_->SetColor(CreateColor(colorNumber_));
+	objName_ = name;
+	tag_ = "switch";
+
+}
+
+void SwitchObject::Edit() {
+
+#ifdef _DEBUG
+
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+
+	}
+
+	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
+		model_->SetColor(CreateColor(colorNumber_));
 	}
 
 #endif // _DEBUG

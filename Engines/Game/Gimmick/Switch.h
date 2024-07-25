@@ -16,6 +16,14 @@ public:
 
 	void Draw(Camera* camera);
 
+	void DrawLine(Camera* camera);
+
+	void SetColor(int32_t color) { colorNumber_ = color; }
+
+private:
+
+	void OnCollision(Collider* collider);
+
 private:
 
 	std::unique_ptr<Model> model_;
@@ -23,6 +31,8 @@ private:
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
+
+	int32_t colorNumber_ = 0;
 
 };
 

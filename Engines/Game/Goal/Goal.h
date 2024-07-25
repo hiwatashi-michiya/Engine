@@ -33,6 +33,8 @@ public:
 
 	BoxCollider* GetCollider() { return collider_.get(); }
 
+	void SetColor(int32_t color) { colorNumber_ = color; }
+
 private:
 
 	std::unique_ptr<Model> model_;
@@ -40,6 +42,8 @@ private:
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
+
+	int32_t colorNumber_ = 0;
 
 };
 

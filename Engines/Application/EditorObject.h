@@ -40,6 +40,10 @@ public:
 
 	bool preOpen_ = false;
 
+	const int32_t  kMaxColor_ = 8;
+
+	int32_t colorNumber_ = 0;
+
 };
 
 class PlayerObject : public MapObject
@@ -96,11 +100,6 @@ class WarpObject : public MapObject
 {
 public:
 
-	WarpObject() { colorCount_++; };
-	~WarpObject() { colorCount_--; };
-
-	static int32_t colorCount_;
-
 	std::unique_ptr<Model> modelB_;
 
 	std::unique_ptr<Transform> transformB_;
@@ -116,6 +115,16 @@ public:
 };
 
 class GhostBoxObject : public MapObject
+{
+public:
+
+	void Initialize(const std::string& name) override;
+
+	void Edit() override;
+
+};
+
+class SwitchObject : public MapObject
 {
 public:
 

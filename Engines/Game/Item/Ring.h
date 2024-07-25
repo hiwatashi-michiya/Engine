@@ -33,6 +33,8 @@ public:
 
 	void PlaySE();
 
+	void SetColor(int32_t color) { colorNumber_ = color; }
+
 private:
 
 	void OnCollision(Collider* collider);
@@ -50,6 +52,8 @@ private:
 
 	//リングが消えるフラグ
 	bool isVanish_ = false;
+
+	int32_t colorNumber_ = 0;
 
 	uint32_t getSE_;
 

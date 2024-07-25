@@ -1,8 +1,8 @@
 #include "GhostBox.h"
 #include "Rand.h"
 #include "Collision.h"
-
-Segment* GhostBox::hideLine_ = nullptr;
+#include "Game/stage/Stage.h"
+#include "UsefulFunc.h"
 
 GhostBox::GhostBox()
 {
@@ -30,14 +30,14 @@ void GhostBox::Initialize() {
 
 void GhostBox::Update() {
 
-	if (IsCollision(collider_->collider_, *hideLine_)) {
-		collider_->SetIsActive(false);
-	}
-	else {
+	preTranslate_ = collider_->collider_.center;
+
+	if (colorNumber_ == Stage::stageColor_) {
 		collider_->SetIsActive(true);
 	}
-
-	preTranslate_ = collider_->collider_.center;
+	else {
+		collider_->SetIsActive(false);
+	}
 
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -47,6 +47,8 @@ void GhostBox::Update() {
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+	model_->SetColor(CreateColor(colorNumber_));
 
 }
 

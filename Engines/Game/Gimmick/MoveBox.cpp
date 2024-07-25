@@ -1,5 +1,7 @@
 #include "MoveBox.h"
 #include "Rand.h"
+#include "Game/stage/Stage.h"
+#include "UsefulFunc.h"
 
 MoveBox::MoveBox()
 {
@@ -37,6 +39,8 @@ void MoveBox::Update() {
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+	model_->SetColor(CreateColor(colorNumber_));
 
 }
 

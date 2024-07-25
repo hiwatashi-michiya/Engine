@@ -6,6 +6,8 @@
 #include "ImGuiManager.h"
 #include "PostEffectDrawer.h"
 
+int32_t Stage::stageColor_ = 0;
+
 Stage::Stage()
 {
 	player_ = std::make_unique<Player>();
@@ -23,8 +25,11 @@ void Stage::Initialize() {
 	mapObjData_.clear();
 	goals_.clear();
 	moveBoxes_.clear();
+	ghostBoxes_.clear();
+	switches_.clear();
 	warps_.clear();
-	GhostBox::SetLine(&line_);
+
+	stageColor_ = 0;
 
 }
 
@@ -32,9 +37,7 @@ void Stage::Update() {
 
 #ifdef _DEBUG
 
-	/*ImGui::Begin("origin");
-	ImGui::DragFloat3("translate", &line_.origin.x, 0.1f);
-	ImGui::End();*/
+	
 
 #endif // _DEBUG
 
@@ -79,6 +82,10 @@ void Stage::Update() {
 		warp->Update();
 	}
 
+	for (auto& colorSwitch : switches_) {
+		colorSwitch->Update();
+	}
+
 	for (auto& goal : goals_) {
 		goal->Update();
 	}
@@ -112,6 +119,10 @@ void Stage::Draw(Camera* camera) {
 
 	for (auto& warp : warps_) {
 		warp->Draw(camera);
+	}
+
+	for (auto& colorSwitch : switches_) {
+		colorSwitch->Draw(camera);
 	}
 
 	for (auto& goal : goals_) {
@@ -157,6 +168,10 @@ void Stage::DrawLine(Camera* camera) {
 
 	for (auto& goal : goals_) {
 		goal->DrawLine(camera);
+	}
+
+	for (auto& colorSwitch : switches_) {
+		colorSwitch->DrawLine(camera);
 	}
 
 	for (auto& ghostBox : ghostBoxes_) {
@@ -286,6 +301,10 @@ void Stage::LoadStage(uint32_t stageNumber) {
 							mapObject->transforms_[1]->translate_ = { itItemObject->at(3), itItemObject->at(4), itItemObject->at(5) };
 						}
 
+						if (itemNameObject == "color") {
+							mapObject->colorNumber = itItemObject->get<int32_t>();
+						}
+
 						//クォータニオン追加
 						if (itemNameObject == "quaternion") {
 							//float型のjson配列登録
@@ -328,50 +347,63 @@ void Stage::LoadStage(uint32_t stageNumber) {
 		}
 
 		if (object->tag == "block") {
-			std::shared_ptr<Block> newBlock = std::make_shared<Block>();
-			newBlock->Initialize();
-			newBlock->SetPosition(object->transforms_[0]->translate_);
-			newBlock->SetScale(object->transforms_[0]->scale_);
-			blocks_.push_back(newBlock);
+			std::shared_ptr<Block> newObject = std::make_shared<Block>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetScale(object->transforms_[0]->scale_);
+			blocks_.push_back(newObject);
 		}
 
 		if (object->tag == "item" || object->tag == "ring") {
-			std::shared_ptr<Ring> newRing = std::make_shared<Ring>();
-			newRing->Initialize(object->transforms_[0]->translate_);
-			rings_.push_back(newRing);
+			std::shared_ptr<Ring> newObject = std::make_shared<Ring>();
+			newObject->Initialize(object->transforms_[0]->translate_);
+			newObject->SetColor(object->colorNumber);
+			rings_.push_back(newObject);
 		}
 
 		if (object->tag == "goal") {
-			std::shared_ptr<Goal> newGoal = std::make_shared<Goal>();
-			newGoal->Initialize();
-			newGoal->SetPosition(object->transforms_[0]->translate_);
-			goals_.push_back(newGoal);
+			std::shared_ptr<Goal> newObject = std::make_shared<Goal>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetColor(object->colorNumber);
+			goals_.push_back(newObject);
 		}
 
 		if (object->tag == "moveBox") {
-			std::shared_ptr<MoveBox> newBox = std::make_shared<MoveBox>();
-			newBox->Initialize();
-			newBox->SetPosition(object->transforms_[0]->translate_);
-			newBox->SetScale(object->transforms_[0]->scale_);
-			moveBoxes_.push_back(newBox);
+			std::shared_ptr<MoveBox> newObject = std::make_shared<MoveBox>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetScale(object->transforms_[0]->scale_);
+			newObject->SetColor(object->colorNumber);
+			moveBoxes_.push_back(newObject);
 		}
 
 		if (object->tag == "warp") {
-			std::shared_ptr<Warp> newWarp = std::make_shared<Warp>();
-			newWarp->Initialize();
-			newWarp->SetPosition(object->transforms_[0]->translate_);
-			newWarp->SetScale(object->transforms_[0]->scale_);
-			newWarp->SetPositionB(object->transforms_[1]->translate_);
-			newWarp->SetScaleB(object->transforms_[1]->scale_);
-			warps_.push_back(newWarp);
+			std::shared_ptr<Warp> newObject = std::make_shared<Warp>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetScale(object->transforms_[0]->scale_);
+			newObject->SetPositionB(object->transforms_[1]->translate_);
+			newObject->SetScaleB(object->transforms_[1]->scale_);
+			newObject->SetColor(object->colorNumber);
+			warps_.push_back(newObject);
 		}
 
 		if (object->tag == "ghostBox") {
-			std::shared_ptr<GhostBox> newBox = std::make_shared<GhostBox>();
-			newBox->Initialize();
-			newBox->SetPosition(object->transforms_[0]->translate_);
-			newBox->SetScale(object->transforms_[0]->scale_);
-			ghostBoxes_.push_back(newBox);
+			std::shared_ptr<GhostBox> newObject = std::make_shared<GhostBox>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetScale(object->transforms_[0]->scale_);
+			newObject->SetColor(object->colorNumber);
+			ghostBoxes_.push_back(newObject);
+		}
+
+		if (object->tag == "switch") {
+			std::shared_ptr<Switch> newObject = std::make_shared<Switch>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetColor(object->colorNumber);
+			switches_.push_back(newObject);
 		}
 
 	}

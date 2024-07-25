@@ -13,10 +13,6 @@ public:
 	GhostBox();
 	~GhostBox();
 
-	static Segment* hideLine_;
-
-	static void SetLine(Segment* segment) { hideLine_ = segment; }
-
 	void Initialize();
 
 	void Update();
@@ -39,6 +35,8 @@ public:
 
 	BoxCollider* GetCollider() { return collider_.get(); }
 
+	void SetColor(int32_t color) { colorNumber_ = color; }
+
 private:
 
 	void OnCollision(Collider* collider);
@@ -52,5 +50,7 @@ private:
 	std::unique_ptr<LineBox> lineBox_;
 
 	Vector3 preTranslate_{};
+
+	int32_t colorNumber_ = 0;
 
 };

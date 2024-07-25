@@ -1,4 +1,6 @@
 #include "Goal.h"
+#include "Game/stage/Stage.h"
+#include "UsefulFunc.h"
 
 Goal::Goal()
 {
@@ -25,6 +27,13 @@ void Goal::Initialize() {
 
 void Goal::Update() {
 
+	if (colorNumber_ == Stage::stageColor_) {
+		collider_->SetIsActive(true);
+	}
+	else {
+		collider_->SetIsActive(false);
+	}
+
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
 
@@ -33,6 +42,8 @@ void Goal::Update() {
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+	model_->SetColor(CreateColor(colorNumber_));
 
 }
 
