@@ -503,6 +503,12 @@ void Model::SetMesh(const std::string& objFileName) {
 
 }
 
+void Model::SetTexture(const std::string& name) {
+
+	texture_ = TextureManager::GetInstance()->Load(name);
+
+}
+
 void Model::ImGuiUpdate(const std::string& name) {
 
 #ifdef _DEBUG

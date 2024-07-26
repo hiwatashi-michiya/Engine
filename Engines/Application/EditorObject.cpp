@@ -111,6 +111,7 @@ void BlockObject::Edit() {
 void MoveBoxObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
+	model_->SetTexture("./Resources/block/circle.png");
 	model_->SetColor(CreateColor(colorNumber_));
 	objName_ = name;
 	tag_ = "moveBox";
@@ -183,10 +184,6 @@ void GoalObject::Edit() {
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
 
-	}
-
-	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
-		model_->SetColor(CreateColor(colorNumber_));
 	}
 
 #endif // _DEBUG

@@ -52,6 +52,10 @@ public:
 
 	bool GetIsGoal() const { return isGoal_; }
 
+	bool GetCanGoal() const { return canGoal_; }
+
+	void SetGoalCount(int32_t count) { goalCount_ = count; }
+
 private:
 
 	void OnCollision(Collider* collider);
@@ -70,6 +74,13 @@ private:
 
 	//ゴール判定
 	bool isGoal_ = false;
+
+	//ゴールに必要なアイテム数
+	int32_t goalCount_ = 0;
+
+	int32_t ringGetCount_ = 0;
+
+	bool canGoal_ = false;
 
 	bool canJump_ = true;
 

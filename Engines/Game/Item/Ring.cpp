@@ -16,6 +16,7 @@ Ring::~Ring()
 
 void Ring::Initialize(const Vector3& position) {
 
+	name_ = "ring";
 	model_->LoadAnimation("./Resources/item/item.gltf");
 	model_->SetMesh("./Resources/item/wireRing.gltf");
 	transform_->translate_ = position;
@@ -103,7 +104,11 @@ void Ring::Draw(Camera* camera) {
 
 void Ring::DrawLine(Camera* camera) {
 
+#ifdef _DEBUG
+
 	lineBox_->Draw(camera);
+
+#endif // _DEBUG
 
 }
 

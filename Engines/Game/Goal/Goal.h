@@ -4,6 +4,8 @@
 #include "Collider.h"
 #include <memory>
 #include "LineDrawer.h"
+#include "Game/player/Player.h"
+#include "Particle3D.h"
 
 class Goal : public GameObject
 {
@@ -17,12 +19,14 @@ public:
 
 	void Draw(Camera* camera);
 
+	void DrawParticle(Camera* camera);
+
 	void DrawLine(Camera* camera);
 
 	void SetPosition(const Vector3& position) {
 		transform_->translate_ = position;
 		collider_->collider_.center = transform_->translate_;
-		collider_->collider_.size = transform_->scale_ / 2.0f;
+		collider_->collider_.size = transform_->scale_;
 	}
 
 	void SetScale(const Vector3& scale) { transform_->scale_ = scale; }
@@ -33,17 +37,23 @@ public:
 
 	BoxCollider* GetCollider() { return collider_.get(); }
 
-	void SetColor(int32_t color) { colorNumber_ = color; }
+	void SetPlayer(Player* player) { player_ = player; }
 
 private:
 
+	Player* player_ = nullptr;
+
 	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Particle3D> particle_;
 
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
 
-	int32_t colorNumber_ = 0;
+	bool isActiveEffect_ = false;
+
+	int32_t particleCount_ = 32;
 
 };
 

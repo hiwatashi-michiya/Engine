@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <windows.h>
 #include "Menu.h"
+#include "UsefulFunc.h"
 
 void UniqueEditor::EditTransform()
 {
@@ -592,7 +593,16 @@ void UniqueEditor::Load(const std::string& filename) {
 						}
 
 						if (itemNameObject == "color") {
+							
 							object->colorNumber_ = itItemObject->get<int32_t>();
+							object->model_->SetColor(CreateColor(object->colorNumber_));
+
+							if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
+
+								warpPtr->modelB_->SetColor(CreateColor(warpPtr->colorNumber_));
+
+							}
+
 						}
 
 						//クォータニオン追加

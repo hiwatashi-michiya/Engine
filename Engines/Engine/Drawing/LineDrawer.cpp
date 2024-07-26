@@ -294,6 +294,8 @@ void LineBox::Update() {
 
 void LineBox::Draw(Camera* camera, const Matrix4x4& matrix) {
 
+#ifdef _DEBUG
+
 	if (obb_) {
 
 		for (int32_t i = 0; i < kMaxLine_; i++) {
@@ -301,5 +303,7 @@ void LineBox::Draw(Camera* camera, const Matrix4x4& matrix) {
 		}
 
 	}
+
+#endif // _DEBUG
 
 }

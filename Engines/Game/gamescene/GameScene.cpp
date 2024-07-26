@@ -222,8 +222,8 @@ void GameScene::DrawLine() {
 
 #ifdef _DEBUG
 
-	stage_->DrawLine(camera_.get());
-
 #endif // _DEBUG
+
+	stage_->DrawLine(camera_.get());
 
 }

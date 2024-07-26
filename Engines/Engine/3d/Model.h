@@ -58,6 +58,8 @@ public:
 
 	void SetTexture(Texture* texture) { texture_ = texture; }
 
+	void SetTexture(const std::string& name);
+
 	//メッシュ切り替え
 	void SetMesh(const std::string& objFileName);
 

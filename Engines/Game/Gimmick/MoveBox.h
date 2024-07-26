@@ -52,4 +52,7 @@ private:
 
 	int32_t colorNumber_ = 0;
 
+	Texture* circleTex_;
+	Texture* crossTex_;
+
 };

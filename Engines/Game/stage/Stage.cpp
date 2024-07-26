@@ -141,6 +141,10 @@ void Stage::DrawParticle(Camera* camera) {
 
 	player_->DrawParticle(camera);
 
+	for (auto& goal : goals_) {
+		goal->DrawParticle(camera);
+	}
+
 }
 
 void Stage::DrawLine(Camera* camera) {
@@ -365,7 +369,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			std::shared_ptr<Goal> newObject = std::make_shared<Goal>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetPlayer(player_.get());
 			goals_.push_back(newObject);
 		}
 
@@ -407,5 +411,8 @@ void Stage::LoadStage(uint32_t stageNumber) {
 		}
 
 	}
+
+	//プレイヤーのゴールカウントを設定
+	player_->SetGoalCount(int32_t(rings_.size()));
 
 }

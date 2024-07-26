@@ -5,6 +5,8 @@
 #include "Audio/AudioManager.h"
 #include "PostEffectDrawer.h"
 #include <functional>
+#include "UsefulFunc.h"
+#include "Game/stage/Stage.h"
 
 Player::Player()
 {
@@ -51,7 +53,7 @@ void Player::Initialize() {
 
 	for (int32_t i = 0; i < 32; i++) {
 
-		particle_->colors_[i].w = 1.0f;
+		particle_->colors_[i] = CreateColor(Stage::stageColor_);
 		particle_->velocities_[i] = { 0.0f,1.0f,0.0f };
 		particle_->transforms_[i]->scale_ = { 0.0f,0.0f,0.0f };
 
@@ -66,7 +68,10 @@ void Player::Initialize() {
 
 	isGoal_ = false;
 	isDead_ = false;
+	canJump_ = true;
 	onGround_ = false;
+	ringGetCount_ = 0;
+	canGoal_ = false;
 
 #ifdef _DEBUG
 
@@ -92,6 +97,14 @@ void Player::Update() {
 
 	//死んでいない時の処理
 	if (!isDead_) {
+
+		//リングを規定数集めていたらゴール可能
+		if (ringGetCount_ >= goalCount_) {
+			canGoal_ = true;
+		}
+		else {
+			canGoal_ = false;
+		}
 
 		Vector3 moveVector{};
 
@@ -140,10 +153,10 @@ void Player::Update() {
 		}
 
 		//ジャンプ処理。地面にいたらジャンプ
-		if (onGround_ && input_->TriggerButton(Input::Button::A)) {
+		/*if (onGround_ && input_->TriggerButton(Input::Button::A)) {
 			velocity_.y = jumpVelocity_;
 			onGround_ = false;
-		}
+		}*/
 
 		velocity_.x = moveVector.x;
 		velocity_.z = moveVector.z;
@@ -179,7 +192,7 @@ void Player::Update() {
 				tmpMatrix = model_->GetSkeletonSpaceMatrix("mixamorig:LeftHand") *
 					model_->worldMatrix_;
 
-				particle_->colors_[i].w = 1.0f;
+				particle_->colors_[i] = CreateColor(Stage::stageColor_);
 				particle_->velocities_[i] = { float((rand() % 40 - 20) * 0.001f),float((rand() % 40 - 20) * 0.001f), float((rand() % 40 - 20) * 0.001f) };
 				particle_->transforms_[i]->translate_ = tmpMatrix.GetTranslate();
 				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
@@ -194,6 +207,7 @@ void Player::Update() {
 		for (int32_t i = 0; i < 32; i++) {
 
 			if (particle_->transforms_[i]->scale_.y > 0.0f) {
+				particle_->colors_[i] = CreateColor(Stage::stageColor_);
 				particle_->transforms_[i]->translate_ += particle_->velocities_[i];
 				particle_->transforms_[i]->rotateQuaternion_ = particle_->transforms_[i]->rotateQuaternion_ * ConvertFromEuler(particle_->velocities_[i]);
 				particle_->transforms_[i]->scale_ -= {0.002f, 0.002f, 0.002f};
@@ -453,10 +467,17 @@ void Player::OnCollision(Collider* collider) {
 
 	}
 
+	if (collider->GetGameObject()->GetName() == "ring") {
+		ringGetCount_++;
+	}
+
 	//ゴールとの当たり判定
 	if (collider->GetGameObject()->GetName() == "goal") {
 
-		isGoal_ = true;
+		//ゴール可能な状態なら判定
+		if (canGoal_) {
+			isGoal_ = true;
+		}
 
 	}
 

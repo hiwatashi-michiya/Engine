@@ -104,8 +104,12 @@ void Warp::Draw(Camera* camera) {
 
 void Warp::DrawLine(Camera* camera) {
 
+#ifdef _DEBUG
+
 	lineBox_->Draw(camera);
 	lineBoxB_->Draw(camera);
+
+#endif // _DEBUG
 
 }
 
