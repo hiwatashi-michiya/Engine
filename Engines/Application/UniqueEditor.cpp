@@ -161,6 +161,8 @@ void UniqueEditor::Initialize() {
 
 	LoadAllModelFile();
 
+	LoadAllMaps();
+
 }
 
 void UniqueEditor::Edit() {
@@ -197,6 +199,9 @@ void UniqueEditor::Edit() {
 			for (int32_t i = 0; i < kMaxObjects_; i++) {
 
 				if (ImGui::BeginTabItem(objectName_[i].c_str())) {
+
+					ImGui::Text(objectName_[i].c_str());
+					ImGui::Separator();
 
 					if (objectName_[i] == "block") {
 
@@ -346,6 +351,22 @@ void UniqueEditor::Edit() {
 
 		}
 
+		ImGui::Separator();
+		ImGui::Text("Map List");
+
+		for (int32_t i = 0; i < mapNames_.size(); i++) {
+
+			if (ImGui::Button(mapNames_[i].c_str())) {
+				
+				for (int32_t k = 0; k < mapNames_[i].size(); k++) {
+					fileName_[k] = mapNames_[i][k];
+				}
+
+				Load(fileName_);
+			}
+
+		}
+
 	}
 
 	ImGui::End();
@@ -457,6 +478,8 @@ void UniqueEditor::Close() {
 		}
 
 	}
+
+	std::memset(fileName_, 0, sizeof(fileName_));
 
 	mapObjData_.clear();
 
@@ -976,6 +999,29 @@ void UniqueEditor::LoadAllModelFile() {
 			meshNames_.push_back(meshName);
 			//名前とパスを紐づけ
 			meshMap_[meshName] = entry.path().string();
+		}
+
+	}
+
+}
+
+void UniqueEditor::LoadAllMaps() {
+
+	mapNames_.clear();
+
+	std::filesystem::recursive_directory_iterator itr("./Resources/Maps");
+
+	//検索する拡張子
+	std::string extension = ".json";
+
+	//マップ全検索
+	for (const auto& entry : itr) {
+
+		if (std::filesystem::is_regular_file(entry.path()) &&
+			entry.path().extension() == extension) {
+			std::string mapName = entry.path().stem().string();
+			//最後尾に追加
+			mapNames_.push_back(mapName);
 		}
 
 	}

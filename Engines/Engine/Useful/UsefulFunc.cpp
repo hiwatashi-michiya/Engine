@@ -8,10 +8,9 @@ std::string SearchResourceFile(const std::string& name, const std::string& exten
 		return "";
 	}
 
-	//リソース内のobjファイル全検索
 	std::filesystem::recursive_directory_iterator itr("./Resources");
 
-	//ファイル内の.objのファイルを全検索
+	//リソースファイル内を全検索
 	for (const auto& entry : itr) {
 
 		if (std::filesystem::is_regular_file(entry.path()) &&

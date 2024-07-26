@@ -52,6 +52,8 @@ private:
 
 	void LoadAllModelFile();
 
+	void LoadAllMaps();
+
 	void EditTransform();
 
 	void CreateObject(const std::string& name);
@@ -93,6 +95,8 @@ private:
 	std::unordered_map<std::string, std::string> meshMap_;
 
 	std::unordered_map<std::string, int32_t> meshNumMap_;
+
+	std::vector<std::string> mapNames_;
 
 	int32_t selectObject_ = 0;
 

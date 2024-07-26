@@ -2,7 +2,7 @@
     "marScene": {
         "objectData": {
             "block": {
-                "mesh": "block",
+                "color": 0,
                 "position": [
                     0.0,
                     0.0,
@@ -22,7 +22,7 @@
                 "tag": "block"
             },
             "block1": {
-                "mesh": "block",
+                "color": 0,
                 "position": [
                     20.0,
                     2.0,
@@ -41,8 +41,8 @@
                 ],
                 "tag": "block"
             },
-            "block11": {
-                "mesh": "block",
+            "block2": {
+                "color": 0,
                 "position": [
                     40.0,
                     6.0,
@@ -62,7 +62,7 @@
                 "tag": "block"
             },
             "goal": {
-                "mesh": "goal",
+                "color": 0,
                 "position": [
                     40.0,
                     10.0,
@@ -81,88 +81,8 @@
                 ],
                 "tag": "goal"
             },
-            "item": {
-                "mesh": "item_2",
-                "position": [
-                    15.0,
-                    6.0,
-                    -10.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "item"
-            },
-            "item1": {
-                "mesh": "item_2",
-                "position": [
-                    20.0,
-                    6.0,
-                    -10.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "item"
-            },
-            "item11": {
-                "mesh": "item_2",
-                "position": [
-                    25.0,
-                    6.0,
-                    -10.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "item"
-            },
-            "item111": {
-                "mesh": "item_2",
-                "position": [
-                    35.0,
-                    10.0,
-                    -10.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "item"
-            },
             "player": {
-                "mesh": "walking",
+                "color": 0,
                 "position": [
                     0.0,
                     4.0,
@@ -180,6 +100,86 @@
                     1.0
                 ],
                 "tag": "player"
+            },
+            "ring": {
+                "color": 0,
+                "position": [
+                    15.0,
+                    6.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "ring"
+            },
+            "ring1": {
+                "color": 0,
+                "position": [
+                    20.0,
+                    6.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "ring"
+            },
+            "ring2": {
+                "color": 0,
+                "position": [
+                    25.0,
+                    6.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "ring"
+            },
+            "ring3": {
+                "color": 0,
+                "position": [
+                    35.0,
+                    10.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "ring"
             }
         }
     }
