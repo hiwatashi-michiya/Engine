@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "PostEffectDrawer.h"
 #include "CollisionManager.h"
+#include "UsefulFunc.h"
 
 #ifdef _DEBUG
 
@@ -45,10 +46,10 @@ void GameScene::Initialize() {
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
-	skyDome_->material_->dLightMap_->direction = { 0.0f,0.0f,1.0f };
+	skyDome_->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
 	skyDome_->material_->dLightMap_->intensity = 5.0f;
 	skyDome_->material_->pLightMap_->radius = 650.0f;
-	skyDome_->material_->pLightMap_->intensity = 0.0f;
+	skyDome_->material_->pLightMap_->intensity = 0.15f;
 	skyDome_->material_->pLightMap_->decay = 0.5f;
 
 	stage_ = std::make_unique<Stage>();
@@ -80,7 +81,7 @@ void GameScene::Update() {
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
 
-	/*skyDome_->ImGuiUpdate("skyDome");*/
+	skyDome_->ImGuiUpdate("skyDome");
 
 	ImGui::Begin("manual");
 	ImGui::Text("Move : Left Stick");
@@ -173,6 +174,7 @@ void GameScene::Update() {
 
 		stage_->Update();
 
+		skyDome_->SetColor(CreateColor(stage_->stageColor_));
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 		skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
@@ -181,7 +183,9 @@ void GameScene::Update() {
 
 		CollisionManager::GetInstance()->CheckAllCollisions();
 
-		followCamera_->Update();
+		if (!stage_->GetPlayer()->GetIsDead()) {
+			followCamera_->Update();
+		}
 
 	}
 	
@@ -240,6 +244,6 @@ void GameScene::DrawLine() {
 
 #endif // _DEBUG
 
-	/*stage_->DrawLine(camera_.get());*/
+	stage_->DrawLine(camera_.get());
 
 }
