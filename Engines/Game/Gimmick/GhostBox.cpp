@@ -19,6 +19,7 @@ GhostBox::~GhostBox()
 void GhostBox::Initialize() {
 
 	name_ = "ghostBox";
+	model_->SetMesh("./Resources/block/block_wire.obj");
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -34,9 +35,11 @@ void GhostBox::Update() {
 
 	if (colorNumber_ == Stage::stageColor_) {
 		collider_->SetIsActive(true);
+		model_->SetMesh("./Resources/block/block.obj");
 	}
 	else {
 		collider_->SetIsActive(false);
+		model_->SetMesh("./Resources/block/block_wire.obj");
 	}
 
 	collider_->collider_.center = transform_->translate_;
@@ -54,9 +57,7 @@ void GhostBox::Update() {
 
 void GhostBox::Draw(Camera* camera) {
 
-	if (collider_->GetIsActive()) {
-		model_->Draw(camera);
-	}
+	model_->Draw(camera);
 
 }
 

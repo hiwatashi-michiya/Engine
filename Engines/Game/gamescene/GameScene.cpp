@@ -147,11 +147,13 @@ void GameScene::Update() {
 
 			if (stageNumber_ < kMaxStage_) {
 				stageNumber_++;
+				SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
+				SceneChangeManager::GetInstance()->SceneChangeStart();
 			}
 
-			stage_->Initialize();
+			/*stage_->Initialize();
 			stage_->LoadStage(stageNumber_);
-			resetCount_ = 60;
+			resetCount_ = 60;*/
 
 		}
 
@@ -234,6 +236,9 @@ void GameScene::DrawSprite() {
 
 	if (isPause_) {
 		pauseSprite_->Draw();
+	}
+	else {
+
 	}
 
 }

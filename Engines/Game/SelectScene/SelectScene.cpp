@@ -66,6 +66,22 @@ void SelectScene::Update() {
 
 #endif // _DEBUG
 
+	if (input_->TriggerButton(Input::Button::LEFT) || input_->TriggerLStick(Input::StickArrow::S_LEFT)) {
+
+		if (stageNumber_ > 1) {
+			stageNumber_--;
+		}
+
+	}
+
+	if (input_->TriggerButton(Input::Button::RIGHT) || input_->TriggerLStick(Input::StickArrow::S_RIGHT)) {
+
+		if (stageNumber_ < kMaxStage_) {
+			stageNumber_++;
+		}
+
+	}
+
 	if (input_->TriggerButton(Input::Button::A) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
 		SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
 		SceneChangeManager::GetInstance()->SceneChangeStart();

@@ -22,6 +22,8 @@ Warp::~Warp()
 void Warp::Initialize() {
 
 	name_ = "warp";
+	modelA_->SetMesh("./Resources/warp/warp_wire.obj");
+	modelB_->SetMesh("./Resources/warp/warp_wire.obj");
 	colliderA_->SetGameObject(this);
 	colliderA_->collider_.center = transform_->translate_;
 	colliderA_->collider_.size = transform_->scale_;
@@ -42,10 +44,14 @@ void Warp::Update() {
 	if (colorNumber_ == Stage::stageColor_) {
 		colliderA_->SetIsActive(true);
 		colliderB_->SetIsActive(true);
+		modelA_->SetMesh("./Resources/warp/warp.obj");
+		modelB_->SetMesh("./Resources/warp/warp.obj");
 	}
 	else {
 		colliderA_->SetIsActive(false);
 		colliderB_->SetIsActive(false);
+		modelA_->SetMesh("./Resources/warp/warp_wire.obj");
+		modelB_->SetMesh("./Resources/warp/warp_wire.obj");
 	}
 
 	isPreActiveWarp_ = isActiveWarp_;

@@ -16,6 +16,7 @@ Switch::~Switch()
 void Switch::Initialize() {
 
 	name_ = "switch";
+	model_->SetMesh("./Resources/switch/switch_wire.obj");
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -31,11 +32,13 @@ void Switch::Update() {
 	//ステージの色と違ったらスイッチを使用できる
 	if (colorNumber_ != Stage::stageColor_) {
 		collider_->SetIsActive(true);
+		model_->SetMesh("./Resources/switch/switch.obj");
 		
 	}
 	//同じだったら効果なし
 	else {
 		collider_->SetIsActive(false);
+		model_->SetMesh("./Resources/switch/switch_wire.obj");
 	}
 
 	collider_->collider_.center = transform_->translate_;

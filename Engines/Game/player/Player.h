@@ -92,7 +92,7 @@ private:
 
 	Vector3 velocity_{};
 
-	float speed_ = 0.5f;
+	float speed_ = 0.25f;
 
 	float jumpVelocity_ = 1.5f;
 

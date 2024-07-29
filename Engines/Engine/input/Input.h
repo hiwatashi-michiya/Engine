@@ -36,6 +36,13 @@ public:
 		RY,
 	};
 
+	enum StickArrow {
+		S_UP,
+		S_DOWN,
+		S_LEFT,
+		S_RIGHT,
+	};
+
 	enum Mouse {
 		kLeft,
 		kRight,
@@ -74,6 +81,10 @@ public:
 	bool TriggerMouse(Mouse mouse);
 
 	bool ReleaseMouse(Mouse mouse);
+
+	bool TriggerLStick(StickArrow arrow);
+
+	bool TriggerRStick(StickArrow arrow);
 
 	Vector2 GetMouseMove();
 

@@ -161,6 +161,26 @@
                 ],
                 "tag": "block"
             },
+            "ghostBox": {
+                "color": 1,
+                "position": [
+                    -10.0,
+                    5.0,
+                    10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    10.0,
+                    1.0,
+                    10.0
+                ],
+                "tag": "ghostBox"
+            },
             "goal": {
                 "color": 1,
                 "position": [
