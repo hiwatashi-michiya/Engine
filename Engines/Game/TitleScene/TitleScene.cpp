@@ -57,9 +57,12 @@ void TitleScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
-	editor_->Edit();
-
 #endif // _DEBUG
+
+	if (input_->TriggerButton(Input::Button::A) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		SceneChangeManager::GetInstance()->SetNextScene("SELECT");
+		SceneChangeManager::GetInstance()->SceneChangeStart();
+	}
 
 	Quaternion cameraQuaternion = IdentityQuaternion();
 
@@ -72,7 +75,7 @@ void TitleScene::Update() {
 
 void TitleScene::DrawModel() {
 
-	editor_->Draw(camera_.get());
+	
 
 }
 

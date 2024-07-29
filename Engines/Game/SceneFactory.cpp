@@ -3,6 +3,7 @@
 #include "TitleScene/TitleScene.h"
 #include "SelectScene/SelectScene.h"
 #include "EditorScene/EditorScene.h"
+#include "TestScene/TestScene.h"
 
 BaseScene* SceneFactory::CreateScene(const std::string& sceneName) {
 
@@ -19,6 +20,9 @@ BaseScene* SceneFactory::CreateScene(const std::string& sceneName) {
 	}
 	else if (sceneName == "EDITOR") {
 		newScene = new EditorScene();
+	}
+	else if (sceneName == "TEST") {
+		newScene = new TestScene();
 	}
 
 	return newScene;

@@ -12,6 +12,7 @@
 #include "Tool/GlobalVariables.h"
 #include "Transform.h"
 #include <memory>
+#include "SceneChangeManager.h"
 
 class DefaultScene : public BaseScene
 {

@@ -109,6 +109,9 @@
     <Filter Include="Game\EditorScene">
       <UniqueIdentifier>{009a3271-bbab-4f70-87b9-c976f2a6aaae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\TestScene">
+      <UniqueIdentifier>{4f6925dd-8c9a-4dbb-aa3f-05fc2149e297}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -317,6 +320,12 @@
     </ClCompile>
     <ClCompile Include="Game\Gimmick\GhostBox.cpp">
       <Filter>Game\Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TestScene\TestScene.cpp">
+      <Filter>Game\TestScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\SceneChangeManager.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -545,6 +554,12 @@
     <ClInclude Include="Game\Gimmick\GhostBox.h">
       <Filter>Game\Gimmick</Filter>
     </ClInclude>
+    <ClInclude Include="Game\TestScene\TestScene.h">
+      <Filter>Game\TestScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\SceneChangeManager.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\Object3d.hlsli">
@@ -628,6 +643,9 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\HSVFilter.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Dissolve.PS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

@@ -57,6 +57,17 @@ void GameScene::Initialize() {
 	followCamera_->SetTarget(stage_->GetPlayer()->GetTransform());
 	stage_->GetPlayer()->SetCamera(camera_.get());
 
+	PostEffectDrawer::GetInstance()->SetCamera(camera_.get());
+	PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
+
+	stage_->Update();
+
+	skyDomeTransform_->UpdateMatrix();
+	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+	skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+	followCamera_->Update();
+
+
 }
 
 void GameScene::Update() {
@@ -117,10 +128,15 @@ void GameScene::Update() {
 			isPause_ = false;
 		}
 
+		if (input_->TriggerButton(Input::Button::A) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+			SceneChangeManager::GetInstance()->SetNextScene("SELECT");
+			SceneChangeManager::GetInstance()->SceneChangeStart();
+		}
+
 		PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
 
 	}
-	else {
+	else if(!SceneChangeManager::GetInstance()->IsSceneChange()) {
 
 		if (input_->TriggerButton(Input::Button::START)) {
 			isPause_ = true;
@@ -152,7 +168,7 @@ void GameScene::Update() {
 
 		}
 		else {
-			PostEffectDrawer::GetInstance()->SetType(kHSVFilter);
+			PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
 		}
 
 		stage_->Update();
@@ -224,6 +240,6 @@ void GameScene::DrawLine() {
 
 #endif // _DEBUG
 
-	stage_->DrawLine(camera_.get());
+	/*stage_->DrawLine(camera_.get());*/
 
 }
