@@ -5,7 +5,7 @@
                 "color": 0,
                 "position": [
                     0.0,
-                    0.0,
+                    -2.0,
                     -10.0
                 ],
                 "quaternion": [
@@ -16,7 +16,7 @@
                 ],
                 "scale": [
                     10.0,
-                    2.0,
+                    1.0,
                     10.0
                 ],
                 "tag": "block"
@@ -24,9 +24,29 @@
             "block1": {
                 "color": 0,
                 "position": [
-                    20.0,
-                    2.0,
-                    -10.0
+                    15.0,
+                    -2.0,
+                    -5.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block10": {
+                "color": 0,
+                "position": [
+                    30.0,
+                    8.0,
+                    -5.0
                 ],
                 "quaternion": [
                     0.0,
@@ -36,16 +56,216 @@
                 ],
                 "scale": [
                     10.0,
-                    2.0,
-                    10.0
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block11": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    8.0,
+                    5.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    3.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block12": {
+                "color": 0,
+                "position": [
+                    30.0,
+                    8.0,
+                    5.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    3.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block13": {
+                "color": 0,
+                "position": [
+                    30.0,
+                    8.0,
+                    15.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    10.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block14": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    8.0,
+                    15.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    10.0,
+                    1.0,
+                    5.0
                 ],
                 "tag": "block"
             },
             "block2": {
                 "color": 0,
                 "position": [
-                    40.0,
-                    6.0,
+                    15.0,
+                    -2.0,
+                    -15.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block3": {
+                "color": 0,
+                "position": [
+                    15.0,
+                    -2.0,
+                    5.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    3.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block4": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    -2.0,
+                    20.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    10.0,
+                    1.0,
+                    10.0
+                ],
+                "tag": "block"
+            },
+            "block5": {
+                "color": 0,
+                "position": [
+                    15.0,
+                    -2.0,
+                    15.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block6": {
+                "color": 0,
+                "position": [
+                    15.0,
+                    -2.0,
+                    25.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block7": {
+                "color": 0,
+                "position": [
+                    30.0,
+                    -2.0,
+                    20.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    10.0,
+                    1.0,
+                    10.0
+                ],
+                "tag": "block"
+            },
+            "block8": {
+                "color": 0,
+                "position": [
+                    30.0,
+                    -2.0,
                     -10.0
                 ],
                 "quaternion": [
@@ -56,16 +276,96 @@
                 ],
                 "scale": [
                     10.0,
-                    2.0,
+                    1.0,
                     10.0
                 ],
                 "tag": "block"
             },
+            "block9": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    8.0,
+                    -5.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    10.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "ghostBox": {
+                "color": 0,
+                "position": [
+                    15.0,
+                    4.0,
+                    -5.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox1": {
+                "color": 1,
+                "position": [
+                    9.0,
+                    2.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    5.0,
+                    10.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox2": {
+                "color": 2,
+                "position": [
+                    15.0,
+                    4.0,
+                    15.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ],
+                "tag": "ghostBox"
+            },
             "goal": {
                 "color": 0,
                 "position": [
-                    40.0,
-                    10.0,
+                    -8.0,
+                    0.0,
                     -10.0
                 ],
                 "quaternion": [
@@ -85,7 +385,7 @@
                 "color": 0,
                 "position": [
                     0.0,
-                    4.0,
+                    2.0,
                     -10.0
                 ],
                 "quaternion": [
@@ -102,11 +402,11 @@
                 "tag": "player"
             },
             "ring": {
-                "color": 0,
+                "color": 2,
                 "position": [
                     15.0,
-                    6.0,
-                    -10.0
+                    10.0,
+                    15.0
                 ],
                 "quaternion": [
                     0.0,
@@ -124,9 +424,9 @@
             "ring1": {
                 "color": 0,
                 "position": [
-                    20.0,
-                    6.0,
-                    -10.0
+                    15.0,
+                    10.0,
+                    -5.0
                 ],
                 "quaternion": [
                     0.0,
@@ -144,9 +444,9 @@
             "ring2": {
                 "color": 0,
                 "position": [
-                    25.0,
-                    6.0,
-                    -10.0
+                    15.0,
+                    0.0,
+                    5.0
                 ],
                 "quaternion": [
                     0.0,
@@ -162,11 +462,11 @@
                 "tag": "ring"
             },
             "ring3": {
-                "color": 0,
+                "color": 1,
                 "position": [
-                    35.0,
-                    10.0,
-                    -10.0
+                    0.0,
+                    0.0,
+                    -15.0
                 ],
                 "quaternion": [
                     0.0,
@@ -180,6 +480,149 @@
                     1.0
                 ],
                 "tag": "ring"
+            },
+            "switch": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    0.0,
+                    12.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "switch"
+            },
+            "switch1": {
+                "color": 1,
+                "position": [
+                    30.0,
+                    0.0,
+                    -2.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "switch"
+            },
+            "switch2": {
+                "color": 2,
+                "position": [
+                    30.0,
+                    0.0,
+                    12.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "switch"
+            },
+            "switch3": {
+                "color": 2,
+                "position": [
+                    2.0,
+                    0.0,
+                    -2.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "switch"
+            },
+            "switch4": {
+                "color": 0,
+                "position": [
+                    35.0,
+                    10.0,
+                    15.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "switch"
+            },
+            "switch5": {
+                "color": 1,
+                "position": [
+                    -5.0,
+                    10.0,
+                    15.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "switch"
+            },
+            "warp": {
+                "color": 2,
+                "position": [
+                    15.0,
+                    0.0,
+                    22.0,
+                    30.0,
+                    10.0,
+                    -5.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "warp"
             }
         }
     }
