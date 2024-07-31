@@ -43,4 +43,13 @@ private:
 
 	std::unique_ptr<Transform> transform_;
 
+	std::unique_ptr<Sprite> title_;
+	std::unique_ptr<Sprite> aButton_;
+
+	std::unique_ptr<Model> skyDome_;
+	std::unique_ptr<Transform> skyDomeTransform_;
+
+	Texture* titleTex_;
+	Texture* aTex_;
+
 };

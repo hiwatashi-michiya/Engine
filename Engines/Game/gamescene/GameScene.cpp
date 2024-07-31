@@ -15,9 +15,19 @@ GameScene::GameScene()
 
 	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
 	skybox_ = std::make_unique<Skybox>();
-	skybox_->LoadDss("./Resources/textures/rostock_laage_airport_4k.dds");
+	skybox_->LoadDds("./Resources/skydome/test.dds");
 	pauseTex_ = TextureManager::GetInstance()->Load("./Resources/UI/pause.png");
 	pauseSprite_.reset(Sprite::Create(pauseTex_, { 640.0f - 256.0f,360.0f - 64.0f }));
+	menuTex_ = TextureManager::GetInstance()->Load("./Resources/UI/start.png");
+	menuSprite_.reset(Sprite::Create(menuTex_, { 1240.0f - 32.0f,60.0f - 32.0f }));
+	leftTex_ = TextureManager::GetInstance()->Load("./Resources/UI/L_Stick.png");
+	leftSprite_.reset(Sprite::Create(leftTex_, { 140.0f - 128.0f,660.0f - 32.0f }));
+	rightTex_ = TextureManager::GetInstance()->Load("./Resources/UI/R_Stick.png");
+	rightSprite_.reset(Sprite::Create(rightTex_, { 1140.0f - 128.0f,660.0f - 32.0f }));
+	toGameTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toGame.png");
+	toGameSprite_.reset(Sprite::Create(toGameTex_, { 340.0f - 256.0f,560.0f - 32.0f }));
+	toSelectTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toSelect.png");
+	toSelectSprite_.reset(Sprite::Create(toSelectTex_, { 940.0f - 256.0f,560.0f - 32.0f }));
 
 }
 
@@ -47,7 +57,7 @@ void GameScene::Initialize() {
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
 	skyDome_->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
-	skyDome_->material_->dLightMap_->intensity = 5.0f;
+	skyDome_->material_->dLightMap_->intensity = 1.0f;
 	skyDome_->material_->pLightMap_->radius = 650.0f;
 	skyDome_->material_->pLightMap_->intensity = 0.15f;
 	skyDome_->material_->pLightMap_->decay = 0.5f;
@@ -123,9 +133,11 @@ void GameScene::Update() {
 
 	
 
-	if (isPause_) {
+	if (isPause_ && !SceneChangeManager::GetInstance()->IsSceneChange()) {
 
-		if (input_->TriggerButton(Input::Button::START)) {
+		PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
+
+		if (input_->TriggerButton(Input::Button::START) || input_->TriggerButton(Input::Button::B)) {
 			isPause_ = false;
 		}
 
@@ -133,8 +145,6 @@ void GameScene::Update() {
 			SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 			SceneChangeManager::GetInstance()->SceneChangeStart();
 		}
-
-		PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
 
 	}
 	else if(!SceneChangeManager::GetInstance()->IsSceneChange()) {
@@ -145,9 +155,13 @@ void GameScene::Update() {
 
 		if (stage_->GetPlayer()->GetIsGoal()) {
 
-			if (stageNumber_ < kMaxStage_) {
+			if (stageNumber_ < kMaxStage_ && stageNumber_ > 0) {
 				stageNumber_++;
 				SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
+				SceneChangeManager::GetInstance()->SceneChangeStart();
+			}
+			else {
+				SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 				SceneChangeManager::GetInstance()->SceneChangeStart();
 			}
 
@@ -162,9 +176,8 @@ void GameScene::Update() {
 			resetCount_--;
 
 			if (resetCount_ <= 0) {
-				stage_->Initialize();
-				stage_->LoadStage(stageNumber_);
-				resetCount_ = 60;
+				SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
+				SceneChangeManager::GetInstance()->SceneChangeStart();
 			}
 
 			PostEffectDrawer::GetInstance()->SetType(kGrayscale);
@@ -190,32 +203,23 @@ void GameScene::Update() {
 		}
 
 	}
-	
-	/*Vector3 mousePos3D = { input_->GetMousePosition().x, input_->GetMousePosition().y, 0.0f };
-
-	mousePos3D = CoordTransform(mousePos3D, Inverse(MakeViewportMatrix(
-		0, 0, 1280.0f, 720.0f, 0.0f, 1.0f)));
-	mousePos3D = CoordTransform(mousePos3D, Inverse(camera_->matProjection_));
-	mousePos3D = CoordTransform(mousePos3D, Inverse(camera_->matView_));
-
-	line_->start_ = camera_->position_;
-	line_->end_ = mousePos3D;*/
 
 }
 
 void GameScene::DrawModel() {
 
+
 	/*Model::PostDraw();
 
-	Skybox::PreDraw(dxSetter_->GetCommandList());
+	Skybox::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	skybox_->Draw(camera_.get());
 
-	Skybox::PostDraw();*/
+	Skybox::PostDraw();
+
+	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());*/
 
 	skyDome_->Draw(camera_.get());
-
-	/*Model::PreDraw(dxSetter_->GetCommandList());*/
 
 	stage_->Draw(camera_.get());
 
@@ -236,8 +240,14 @@ void GameScene::DrawSprite() {
 
 	if (isPause_) {
 		pauseSprite_->Draw();
+		toGameSprite_->Draw();
+		toSelectSprite_->Draw();
 	}
 	else {
+
+		menuSprite_->Draw();
+		leftSprite_->Draw();
+		rightSprite_->Draw();
 
 	}
 

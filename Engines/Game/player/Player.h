@@ -26,6 +26,8 @@ public:
 
 	void DrawParticle(Camera* camera);
 
+
+
 	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
 
 	void SetPosition(const Vector3& position) {

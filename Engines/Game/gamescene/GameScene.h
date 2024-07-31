@@ -51,12 +51,22 @@ private:
 	std::unique_ptr<Stage> stage_;
 
 	std::unique_ptr<Sprite> pauseSprite_;
+	std::unique_ptr<Sprite> menuSprite_;
+	std::unique_ptr<Sprite> leftSprite_;
+	std::unique_ptr<Sprite> rightSprite_;
+	std::unique_ptr<Sprite> toGameSprite_;
+	std::unique_ptr<Sprite> toSelectSprite_;
 
 	int32_t resetCount_ = 60;
 
 	uint32_t testSE_;
 
 	Texture* pauseTex_;
+	Texture* menuTex_;
+	Texture* leftTex_;
+	Texture* rightTex_;
+	Texture* toGameTex_;
+	Texture* toSelectTex_;
 
 	//ポーズ画面を開いているか
 	bool isPause_ = false;

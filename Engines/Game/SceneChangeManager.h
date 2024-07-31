@@ -3,7 +3,7 @@
 #include "TextureManager.h"
 #include <memory>
 #include <string>
-
+#include "PostEffectDrawer.h"
 
 class SceneChangeManager
 {
@@ -29,6 +29,8 @@ public:
 	bool IsSceneChange() { return isSceneChangeEnter_ || isSceneChangeExit_; }
 
 private:
+
+	PostEffectDrawer* postEffectDrawer_ = nullptr;
 
 	std::unique_ptr<Sprite> sprite_;
 

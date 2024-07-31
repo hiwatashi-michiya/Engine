@@ -1580,8 +1580,8 @@ void Dissolve::Create() {
 		buffer_->Map(0, nullptr, reinterpret_cast<void**>(&parameter_));
 
 		parameter_->edgeColor = { 1.0f,1.0f,1.0f };
-		parameter_->Threshold = 0.5f;
-		parameter_->edgeValue = 0.53f;
+		parameter_->Threshold = 0.0f;
+		parameter_->edgeValue = 0.0f;
 
 		buffer_->Unmap(0, nullptr);
 
@@ -1610,7 +1610,7 @@ void Dissolve::Debug() {
 
 	ImGui::ColorEdit3("hue", &parameter_->edgeColor.x);
 	ImGui::SliderFloat("saturation", &parameter_->Threshold, 0.0f, 1.0f);
-	ImGui::SliderFloat("value", &parameter_->edgeValue, 0.0f, 1.0f);
+	ImGui::SliderFloat("value", &parameter_->edgeValue, 0.0f, 10.0f);
 
 #endif // _DEBUG
 
