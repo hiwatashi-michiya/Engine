@@ -34,6 +34,8 @@ public:
 
 	BoxCollider* GetCollider() { return collider_.get(); }
 
+	void SetColor(int32_t color) { colorNumber_ = color; }
+
 private:
 
 	void OnCollision(Collider* collider);
@@ -48,10 +50,9 @@ private:
 
 	Vector3 preTranslate_{};
 
-	float pLightIntensity_ = 0.5f;
+	int32_t colorNumber_ = 0;
 
-	int32_t lightCount_ = 0;
-
-	int32_t setCount_;
+	Texture* circleTex_;
+	Texture* crossTex_;
 
 };

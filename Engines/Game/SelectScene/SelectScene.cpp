@@ -2,6 +2,7 @@
 #include "FrameWork/SceneManager.h"
 #include "PostEffectDrawer.h"
 #include <cmath>
+#include "UsefulFunc.h"
 
 #ifdef _DEBUG
 
@@ -11,6 +12,19 @@
 
 SelectScene::SelectScene()
 {
+	stageSelectTex_ = TextureManager::GetInstance()->Load("./Resources/UI/stageSelect.png");
+	toTitleTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toTitle.png");
+	Tex1_ = TextureManager::GetInstance()->Load("./Resources/UI/1.png");
+	Tex2_ = TextureManager::GetInstance()->Load("./Resources/UI/2.png");
+	Tex3_ = TextureManager::GetInstance()->Load("./Resources/UI/3.png");
+	buttonTex_ = TextureManager::GetInstance()->Load("./Resources/UI/a.png");
+	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
+	stageSelect_.reset(Sprite::Create(stageSelectTex_, { 640.0f - 256.0f,100.0f - 32.0f }));
+	toTitle_.reset(Sprite::Create(toTitleTex_, { 140.0f - 128.0f,60.0f - 32.0f }));
+	stage1_.reset(Sprite::Create(Tex1_, { 440.0f - 32.0f,360.0f - 32.0f }));
+	stage2_.reset(Sprite::Create(Tex2_, { 640.0f - 32.0f,360.0f - 32.0f }));
+	stage3_.reset(Sprite::Create(Tex3_, { 840.0f - 32.0f,360.0f - 32.0f }));
+	aButton_.reset(Sprite::Create(buttonTex_, { 640.0f - 32.0f,600.0f - 32.0f }));
 
 }
 
@@ -29,80 +43,27 @@ void SelectScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,2.0f, -20.0f };
-	camera_->rotation_.y = 0.0f;
-
-	loader_ = LevelDataLoader::GetInstance();
-	loader_->Load("./Resources/Levels/scene.json");
-
-	for (auto& object : loader_->levelData_->objects_) {
-
-		if (object.type.compare("MESH") == 0) {
-			std::shared_ptr<Model> newModel;
-
-			newModel.reset(Model::Create(object.fileName));
-
-			models_.push_back(newModel);
-
-			std::shared_ptr<Transform> newTransform = std::make_shared<Transform>();
-			newTransform->translate_ = object.translation;
-			newTransform->rotateQuaternion_ = ConvertFromEuler(object.rotation);
-			newTransform->scale_ = object.scaling;
-
-			transforms_.push_back(newTransform);
-		}
-		if (object.type.compare("CAMERA") == 0) {
-			camera_->position_ = object.translation;
-			camera_->rotation_ = object.rotation;
-		}
-
-	}
+	camera_->position_ = { 0.0f,65.0f, -60.0f };
+	camera_->rotation_.x = 0.9f;
 
 	editor_->SetCamera(camera_.get());
 
-	test_ = audioManager_->LoadInMF("./Resources/SE/test.mp3");
+	skyDomeTransform_ = std::make_unique<Transform>();
+	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
+	skyDome_->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
+	skyDome_->material_->dLightMap_->intensity = 1.0f;
+	skyDome_->material_->pLightMap_->radius = 650.0f;
+	skyDome_->material_->pLightMap_->intensity = 0.15f;
+	skyDome_->material_->pLightMap_->decay = 0.5f;
+	skyDomeTransform_->UpdateMatrix();
+	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 
-	line_ = std::make_unique<Line>();
-	line_->start_ = { 0.0f,0.0f,0.0f };
-	line_->end_ = { 0.0f,0.0f,0.0f };
 
 }
 
 void SelectScene::Update() {
 
 #ifdef _DEBUG
-
-	Vector3 moves{};
-
-	moves.x = input_->GetMouseMove().x;
-	moves.y = input_->GetMouseMove().y;
-	moves.z = float(input_->GetMouseWheel());
-
-	ImGui::Begin("mouse");
-	ImGui::Text("Pos x : %1.2f,  y : %1.2f", input_->GetMousePosition().x, input_->GetMousePosition().y);
-	ImGui::Text("move & wheel move x : %1.2f, y : %1.2f, wheel : %1.2f", moves.x, moves.y, moves.z);
-
-	if (input_->PushMouse(Input::kLeft)) {
-		ImGui::Text("Left Push");
-	}
-	if (input_->PushMouse(Input::kRight)) {
-		ImGui::Text("Right Push");
-	}
-	if (input_->PushMouse(Input::kCenter)) {
-		ImGui::Text("Center Push");
-	}
-
-	if (input_->TriggerMouse(Input::kLeft) || input_->TriggerMouse(Input::kRight)
-		|| input_->TriggerMouse(Input::kCenter)) {
-		ImGui::Text("Trigger");
-	}
-
-	if (input_->ReleaseMouse(Input::kLeft) || input_->ReleaseMouse(Input::kRight)
-		|| input_->ReleaseMouse(Input::kCenter)) {
-		ImGui::Text("Release");
-	}
-
-	ImGui::End();
 
 	ImGui::Begin("camera");
 	ImGui::DragFloat3("scale", &camera_->scale_.x, 0.1f);
@@ -130,32 +91,64 @@ void SelectScene::Update() {
 
 #endif // _DEBUG
 
-	for (int32_t i = 0; i < models_.size(); i++) {
-		transforms_[i]->UpdateMatrix();
-		models_[i]->SetWorldMatrix(transforms_[i]->worldMatrix_);
+	if (input_->TriggerButton(Input::Button::LEFT) || input_->TriggerLStick(Input::StickArrow::S_LEFT)) {
+
+		if (stageNumber_ > 1) {
+			stageNumber_--;
+		}
+
 	}
 
-	/*editor_->Edit();*/
+	if (input_->TriggerButton(Input::Button::RIGHT) || input_->TriggerLStick(Input::StickArrow::S_RIGHT)) {
+
+		if (stageNumber_ < kMaxStage_) {
+			stageNumber_++;
+		}
+
+	}
+
+	if (input_->TriggerButton(Input::Button::A) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
+		SceneChangeManager::GetInstance()->SceneChangeStart();
+	}
+
+	if (input_->TriggerButton(Input::Button::B) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		SceneChangeManager::GetInstance()->SetNextScene("TITLE");
+		SceneChangeManager::GetInstance()->SceneChangeStart();
+	}
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
 
+	if (stageNumber_ == 1) {
+		stage1_->position_ = { 440.0f - 32.0f,310.0f - 32.0f };
+		stage2_->position_ = { 640.0f - 32.0f,360.0f - 32.0f };
+		stage3_->position_ = { 840.0f - 32.0f,360.0f - 32.0f };
+	}
+	else if(stageNumber_ == 2) {
+		stage1_->position_ = { 440.0f - 32.0f,360.0f - 32.0f };
+		stage2_->position_ = { 640.0f - 32.0f,310.0f - 32.0f };
+		stage3_->position_ = { 840.0f - 32.0f,360.0f - 32.0f };
+	}
+	else if (stageNumber_ == 3) {
+		stage1_->position_ = { 440.0f - 32.0f,360.0f - 32.0f };
+		stage2_->position_ = { 640.0f - 32.0f,360.0f - 32.0f };
+		stage3_->position_ = { 840.0f - 32.0f,310.0f - 32.0f };
+	}
+
+	skyDome_->SetColor(CreateColor(stageNumber_));
 
 }
 
 void SelectScene::DrawModel() {
 
-	/*editor_->Draw(camera_.get());*/
-
-	for (int32_t i = 0; i < models_.size(); i++) {
-		models_[i]->Draw(camera_.get());
-	}
+	skyDome_->Draw(camera_.get());
 
 }
 
 void SelectScene::DrawSkinningModel() {
 
-
+	
 
 }
 
@@ -167,7 +160,12 @@ void SelectScene::DrawParticle() {
 
 void SelectScene::DrawSprite() {
 
-
+	stageSelect_->Draw();
+	toTitle_->Draw();
+	aButton_->Draw();
+	stage1_->Draw();
+	stage2_->Draw();
+	stage3_->Draw();
 
 }
 

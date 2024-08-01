@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <windows.h>
 #include "Menu.h"
+#include "UsefulFunc.h"
 
 void UniqueEditor::EditTransform()
 {
@@ -57,13 +58,35 @@ void UniqueEditor::EditTransform()
 
 	for (auto& object : mapObjData_) {
 		
-		Vector3 scale = object->transform_->scale_;
-		Quaternion rotate = object->transform_->rotateQuaternion_;
-		Vector3 translate = object->transform_->translate_;
+		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
 
-		Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
+			Vector3 scale = warpPtr->transform_->scale_;
+			Quaternion rotate = warpPtr->transform_->rotateQuaternion_;
+			Vector3 translate = warpPtr->transform_->translate_;
 
-		matrices.push_back(tmpMatrix);
+			//どちらを動かすかによって渡す行列を変更する
+			if (!warpPtr->isMoveA_) {
+				scale = warpPtr->transformB_->scale_;
+				rotate = warpPtr->transformB_->rotateQuaternion_;
+				translate = warpPtr->transformB_->translate_;
+			}
+
+			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
+
+			matrices.push_back(tmpMatrix);
+
+		}
+		else {
+
+			Vector3 scale = object->transform_->scale_;
+			Quaternion rotate = object->transform_->rotateQuaternion_;
+			Vector3 translate = object->transform_->translate_;
+
+			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
+
+			matrices.push_back(tmpMatrix);
+
+		}
 
 	}
 
@@ -81,11 +104,37 @@ void UniqueEditor::EditTransform()
 
 	for (auto& object : mapObjData_) {
 
-		object->transform_->UpdateMatrix();
+		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
 
-		object->transform_->scale_ = matrices[count].GetScale();
-		object->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
-		object->transform_->translate_ = matrices[count].GetTranslate();
+			if (warpPtr->isMoveA_) {
+
+				warpPtr->transform_->UpdateMatrix();
+
+				warpPtr->transform_->scale_ = matrices[count].GetScale();
+				warpPtr->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
+				warpPtr->transform_->translate_ = matrices[count].GetTranslate();
+
+			}
+			else {
+
+				warpPtr->transformB_->UpdateMatrix();
+
+				warpPtr->transformB_->scale_ = matrices[count].GetScale();
+				warpPtr->transformB_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
+				warpPtr->transformB_->translate_ = matrices[count].GetTranslate();
+
+			}
+
+		}
+		else {
+
+			object->transform_->UpdateMatrix();
+
+			object->transform_->scale_ = matrices[count].GetScale();
+			object->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
+			object->transform_->translate_ = matrices[count].GetTranslate();
+
+		}
 
 		count++;
 
@@ -111,6 +160,8 @@ void UniqueEditor::Initialize() {
 	}
 
 	LoadAllModelFile();
+
+	LoadAllMaps();
 
 }
 
@@ -149,6 +200,9 @@ void UniqueEditor::Edit() {
 
 				if (ImGui::BeginTabItem(objectName_[i].c_str())) {
 
+					ImGui::Text(objectName_[i].c_str());
+					ImGui::Separator();
+
 					if (objectName_[i] == "block") {
 
 						if (ImGui::Button("Add")) {
@@ -177,7 +231,21 @@ void UniqueEditor::Edit() {
 						}
 
 					}
-					else if (objectName_[i] == "wrap") {
+					else if (objectName_[i] == "warp") {
+
+						if (ImGui::Button("Add")) {
+							CreateObject(objectName_[i]);
+						}
+
+					}
+					else if (objectName_[i] == "ghostBox") {
+
+						if (ImGui::Button("Add")) {
+							CreateObject(objectName_[i]);
+						}
+
+					}
+					else if (objectName_[i] == "switch") {
 
 						if (ImGui::Button("Add")) {
 							CreateObject(objectName_[i]);
@@ -185,32 +253,58 @@ void UniqueEditor::Edit() {
 
 					}
 
-					for (auto& object : mapObjData_) {
+					for (int32_t k = 0; auto & object : mapObjData_) {
+
+						object->preOpen_ = object->isOpen_;
 
 						if (object->tag_ == objectName_[i]) {
 
 							if (ImGui::TreeNode(object->objName_.c_str())) {
 
-								object->Edit();
+								object->isOpen_ = true;
 
-								if (ImGui::Button("Copy")) {
-									CopyObject(object);
+								if (object->isOpen_ && !object->preOpen_) {
+									selectObject_ = k;
 								}
 
-								if (ImGui::Button("Delete")) {
+								object->Edit();
 
-									object->isDelete_ = true;
+								if (object->tag_ != "player") {
+
+									if (ImGui::Button("Copy")) {
+										CopyObject(object);
+									}
+
+									if (ImGui::Button("Delete")) {
+
+										object->isDelete_ = true;
+
+										if (selectObject_ > 0) {
+											selectObject_--;
+										}
+
+									}
 
 								}
 
 								ImGui::TreePop();
 
 							}
+							else {
+								object->isOpen_ = false;
+							}
 
 						}
 
 						object->transform_->UpdateMatrix();
 						object->model_->SetWorldMatrix(object->transform_->worldMatrix_);
+
+						if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
+							warpPtr->transformB_->UpdateMatrix();
+							warpPtr->modelB_->SetWorldMatrix(warpPtr->transformB_->worldMatrix_);
+						}
+
+						k++;
 
 					}
 
@@ -224,85 +318,9 @@ void UniqueEditor::Edit() {
 
 		}
 
-		/*ImGui::InputText("Object name", name_, sizeof(name_));
-
-		if (ImGui::Button("Add Object")) {
-
-			if (!CheckIsEmpty(name_)) {
-				AddObject(name_);
-				isSave_ = false;
-			}
-			else {
-				MessageBox(nullptr, L"オブジェクト名を入力してください。", L"Map Editor - Add Object", 0);
-			}
-		}*/
-
 		if (!mapObjData_.empty()) {
 			ImGui::SliderInt("Select Object", &selectObject_, 0, int(mapObjData_.size() - 1));
 		}
-
-		//for (int32_t i = 0; auto & object : mapObjData_) {
-
-		//	object->preOpen_ = object->isOpen_;
-
-		//	std::string showObjName = object->objName_.c_str();
-		//	showObjName += " ";
-
-		//	if (ImGui::TreeNode(showObjName.c_str())) {
-
-		//		object->isOpen_ = true;
-
-		//		if (object->isOpen_ && !object->preOpen_) {
-		//			selectObject_ = i;
-		//		}
-
-		//		if (ImGui::DragFloat3("position", &object->transform_->translate_.x, 0.1f)) {
-		//			isSave_ = false;
-		//		}
-
-		//		if (ImGui::DragFloat3("rotation", &object->transform_->rotate_.x, 0.01f)) {
-		//			isSave_ = false;
-		//			object->transform_->rotateQuaternion_ = ConvertFromEuler(object->transform_->rotate_);
-		//		}
-
-		//		if (ImGui::DragFloat3("scale", &object->transform_->scale_.x, 0.01f)) {
-		//			isSave_ = false;
-		//		}
-
-		//		{
-
-		//			//vectorを中間バッファとして利用
-		//			std::vector<char> bufferStr(object->tag_.begin(), object->tag_.end());
-		//			//リサイズする
-		//			bufferStr.resize(256);
-
-		//			//書き換えた文字列をtagに戻す
-		//			if (ImGui::InputText("tag", bufferStr.data(), bufferStr.size())) {
-		//				isSave_ = false;
-		//				auto endIt = std::find(bufferStr.begin(), bufferStr.end(), '\0');
-		//				object->tag_ = std::string(bufferStr.begin(), endIt);
-		//			}
-
-		//		}
-
-		//		if (ImGui::Button("Copy")) {
-		//			CopyObject(object);
-		//		}
-
-		//		if (ImGui::Button("Delete")) {
-		//			object->isDelete_ = true;
-		//			matrices_.erase(object);
-		//		}
-
-		//		ImGui::TreePop();
-		//	}
-		//	else {
-		//		object->isOpen_ = false;
-		//	}
-
-		//	i++;
-
-		//}
 
 	}
 	else {
@@ -329,6 +347,22 @@ void UniqueEditor::Edit() {
 			}
 			else {
 				MessageBox(nullptr, L"ファイル名を入力してください。", L"Map Editor - Load", 0);
+			}
+
+		}
+
+		ImGui::Separator();
+		ImGui::Text("Map List");
+
+		for (int32_t i = 0; i < mapNames_.size(); i++) {
+
+			if (ImGui::Button(mapNames_[i].c_str())) {
+				
+				for (int32_t k = 0; k < mapNames_[i].size(); k++) {
+					fileName_[k] = mapNames_[i][k];
+				}
+
+				Load(fileName_);
 			}
 
 		}
@@ -363,21 +397,29 @@ void UniqueEditor::Save(const std::string& filename) {
 
 		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
 
+			root[sceneName_]["objectData"][warpPtr->objName_]["position"] =
+				nlohmann::json::array({ warpPtr->transform_->translate_.x, warpPtr->transform_->translate_.y, warpPtr->transform_->translate_.z,
+					warpPtr->transformB_->translate_.x, warpPtr->transformB_->translate_.y, warpPtr->transformB_->translate_.z });
+			root[sceneName_]["objectData"][warpPtr->objName_]["quaternion"] =
+				nlohmann::json::array({ warpPtr->transform_->rotateQuaternion_.x,
+					warpPtr->transform_->rotateQuaternion_.y, warpPtr->transform_->rotateQuaternion_.z, warpPtr->transform_->rotateQuaternion_.w });
+			root[sceneName_]["objectData"][warpPtr->objName_]["scale"] =
+				nlohmann::json::array({ warpPtr->transform_->scale_.x, warpPtr->transform_->scale_.y, warpPtr->transform_->scale_.z });
+			root[sceneName_]["objectData"][warpPtr->objName_]["tag"] = warpPtr->tag_;
+			root[sceneName_]["objectData"][object->objName_]["color"] = object->colorNumber_;
+
 		}
 		else {
 
 			root[sceneName_]["objectData"][object->objName_]["position"] =
 				nlohmann::json::array({ object->transform_->translate_.x, object->transform_->translate_.y, object->transform_->translate_.z });
-			/*root[filename]["objectData"][object->objName_]["rotation"] =
-				nlohmann::json::array({ object->transform_->rotate_.x, object->transform_->rotate_.y, object->transform_->rotate_.z });*/
 			root[sceneName_]["objectData"][object->objName_]["quaternion"] =
 				nlohmann::json::array({ object->transform_->rotateQuaternion_.x,
 					object->transform_->rotateQuaternion_.y, object->transform_->rotateQuaternion_.z, object->transform_->rotateQuaternion_.w });
 			root[sceneName_]["objectData"][object->objName_]["scale"] =
 				nlohmann::json::array({ object->transform_->scale_.x, object->transform_->scale_.y, object->transform_->scale_.z });
-			/*object->tag = tags_[object->tagNumber];*/
 			root[sceneName_]["objectData"][object->objName_]["tag"] = object->tag_;
-			/*root[sceneName_]["objectData"][object->objName_]["meshNumber"] = object->meshNumber;*/
+			root[sceneName_]["objectData"][object->objName_]["color"] = object->colorNumber_;
 
 		}
 
@@ -436,6 +478,8 @@ void UniqueEditor::Close() {
 		}
 
 	}
+
+	std::memset(fileName_, 0, sizeof(fileName_));
 
 	mapObjData_.clear();
 
@@ -571,6 +615,19 @@ void UniqueEditor::Load(const std::string& filename) {
 
 						}
 
+						if (itemNameObject == "color") {
+							
+							object->colorNumber_ = itItemObject->get<int32_t>();
+							object->model_->SetColor(CreateColor(object->colorNumber_));
+
+							if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
+
+								warpPtr->modelB_->SetColor(CreateColor(warpPtr->colorNumber_));
+
+							}
+
+						}
+
 						//クォータニオン追加
 						if (itemNameObject == "quaternion") {
 							//float型のjson配列登録
@@ -625,16 +682,35 @@ void UniqueEditor::Create(const std::string& filename) {
 
 	}
 
+	//ディレクトリが無ければ作成する
+	std::filesystem::path dir(kDirectoryPath_);
+	if (!std::filesystem::exists(dir)) {
+		std::filesystem::create_directory(dir);
+	}
+
 	std::ofstream newFile(filePath);
 
 	//新規ファイル作成
 	if (newFile.is_open()) {
+
+		//jsonを読み込めるように空のシーン情報を記録
+		nlohmann::json root;
+
+		root = nlohmann::json::object();
+
+		root[sceneName_] = nlohmann::json::object();
+
+		//ファイルにjson文字列を書き込む(インデント幅4)
+		newFile << std::setw(4) << root << std::endl;
+		//ファイルを閉じる
 		newFile.close();
 	}
 	else {
 		MessageBox(nullptr, L"ファイルを作成できませんでした。", L"Map Editor - Create", 0);
 		return;
 	}
+
+	SetDefaultStage();
 
 	isOpenFile_ = true;
 
@@ -708,89 +784,29 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
-	else {
-
-	}
-
-}
-
-void UniqueEditor::AddObject(char* name) {
-
-	if (name == "player") {
+	else if (name == "ghostBox") {
 
 		std::string objectName = name;
 
 		objectName = CheckSameName(objectName);
 
-		std::shared_ptr<PlayerObject> object = std::make_shared<PlayerObject>();
+		std::shared_ptr<GhostBoxObject> object = std::make_shared<GhostBoxObject>();
 		object->Initialize(objectName);
 		mapObjData_.push_back(object);
 
 	}
-	else if (name == "block") {
+	else if (name == "switch") {
 
 		std::string objectName = name;
 
 		objectName = CheckSameName(objectName);
 
-		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
-	else if (name == "moveBox") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<MoveBoxObject> object = std::make_shared<MoveBoxObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
-	else if (name == "ring") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<RingObject> object = std::make_shared<RingObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
-	else if (name == "goal") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<GoalObject> object = std::make_shared<GoalObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
-	else if (name == "warp") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<WarpObject> object = std::make_shared<WarpObject>();
+		std::shared_ptr<SwitchObject> object = std::make_shared<SwitchObject>();
 		object->Initialize(objectName);
 		mapObjData_.push_back(object);
 
 	}
 	else {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<MapObject> object = std::make_shared<MapObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
 
 	}
 
@@ -798,7 +814,7 @@ void UniqueEditor::AddObject(char* name) {
 
 void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 
-	std::string objectName = object->objName_;
+	std::string objectName = object->tag_;
 
 	objectName = CheckSameName(objectName);
 
@@ -829,6 +845,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -839,6 +856,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -849,6 +867,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -866,9 +885,34 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 			tmpObject->transformB_->scale_ = warpPtr->transformB_->scale_;
 		}
 
+		tmpObject->colorNumber_ = object->colorNumber_;
+
 		mapObjData_.push_back(tmpObject);
 
 	}
+	else if (object->tag_ == "ghostBox") {
+
+		std::shared_ptr<GhostBoxObject> tmpObject = std::make_shared<GhostBoxObject>();
+		tmpObject->Initialize(objectName);
+		tmpObject->transform_->translate_ = tmpObject->transform_->translate_;
+		tmpObject->transform_->rotate_ = tmpObject->transform_->rotate_;
+		tmpObject->transform_->scale_ = tmpObject->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
+		mapObjData_.push_back(tmpObject);
+
+	}
+	else if (object->tag_ == "switch") {
+
+		std::shared_ptr<SwitchObject> tmpObject = std::make_shared<SwitchObject>();
+		tmpObject->Initialize(objectName);
+		tmpObject->transform_->translate_ = tmpObject->transform_->translate_;
+		tmpObject->transform_->rotate_ = tmpObject->transform_->rotate_;
+		tmpObject->transform_->scale_ = tmpObject->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
+		mapObjData_.push_back(tmpObject);
+
+	}
+
 	else {
 
 		std::shared_ptr<MapObject> tmpObject = std::make_shared<MapObject>();
@@ -876,6 +920,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -960,6 +1005,29 @@ void UniqueEditor::LoadAllModelFile() {
 
 }
 
+void UniqueEditor::LoadAllMaps() {
+
+	mapNames_.clear();
+
+	std::filesystem::recursive_directory_iterator itr("./Resources/Maps");
+
+	//検索する拡張子
+	std::string extension = ".json";
+
+	//マップ全検索
+	for (const auto& entry : itr) {
+
+		if (std::filesystem::is_regular_file(entry.path()) &&
+			entry.path().extension() == extension) {
+			std::string mapName = entry.path().stem().string();
+			//最後尾に追加
+			mapNames_.push_back(mapName);
+		}
+
+	}
+
+}
+
 bool UniqueEditor::CheckIsEmpty(const std::string& name) {
 
 	if (name.empty()) {
@@ -967,5 +1035,110 @@ bool UniqueEditor::CheckIsEmpty(const std::string& name) {
 	}
 
 	return false;
+
+}
+
+void UniqueEditor::SetDefaultStage() {
+
+	//プレイヤー生成
+	{
+		std::string objectName = "player";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<PlayerObject> object = std::make_shared<PlayerObject>();
+		object->Initialize(objectName);
+		mapObjData_.push_back(object);
+	}
+	//ブロック生成
+	{
+		std::string objectName = "block";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
+		object->Initialize(objectName);
+		object->transform_->translate_ = { 0.0f,-2.0f,0.0f };
+		object->transform_->scale_ = { 10.0f,1.0f,10.0f };
+		mapObjData_.push_back(object);
+	}
+	{
+		std::string objectName = "block";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
+		object->Initialize(objectName);
+		object->transform_->translate_ = { 0.0f,-2.0f,30.0f };
+		object->transform_->scale_ = { 10.0f,1.0f,10.0f };
+		mapObjData_.push_back(object);
+	}
+	{
+		std::string objectName = "block";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
+		object->Initialize(objectName);
+		object->transform_->translate_ = { 30.0f,-2.0f,30.0f };
+		object->transform_->scale_ = { 10.0f,1.0f,10.0f };
+		mapObjData_.push_back(object);
+	}
+	{
+		std::string objectName = "block";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
+		object->Initialize(objectName);
+		object->transform_->translate_ = { 30.0f,-2.0f,0.0f };
+		object->transform_->scale_ = { 10.0f,1.0f,10.0f };
+		mapObjData_.push_back(object);
+	}
+	//リング生成
+	{
+		std::string objectName = "ring";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<RingObject> object = std::make_shared<RingObject>();
+		object->Initialize(objectName);
+		object->transform_->translate_ = { 0.0f,0.0f,30.0f };
+		mapObjData_.push_back(object);
+	}
+	//動く箱生成
+	{
+		std::string objectName = "moveBox";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<MoveBoxObject> object = std::make_shared<MoveBoxObject>();
+		object->Initialize(objectName);
+		object->transform_->translate_ = { 30.0f,0.0f,0.0f };
+		mapObjData_.push_back(object);
+	}
+	//ゴール生成
+	{
+		std::string objectName = "goal";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<GoalObject> object = std::make_shared<GoalObject>();
+		object->Initialize(objectName);
+		object->transform_->translate_ = { 30.0f,0.0f,30.0f };
+		mapObjData_.push_back(object);
+	}
+	//ワープ生成
+	{
+		std::string objectName = "warp";
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<WarpObject> object = std::make_shared<WarpObject>();
+		object->Initialize(objectName);
+		object->transform_->translate_ = { 5.0f,0.0f,5.0f };
+		object->transformB_->translate_ = { 25.0f,0.0f,25.0f };
+		mapObjData_.push_back(object);
+	}
 
 }

@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Game/SceneFactory.h"
+#include "SceneChangeManager.h"
 
 void Game::Initialize() {
 
@@ -8,7 +9,8 @@ void Game::Initialize() {
 	//ゲームシーンのインスタンス生成
 	sceneFactory_ = std::make_unique<SceneFactory>();
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory_.get());
-	SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
+	SceneManager::GetInstance()->ChangeScene("TITLE");
+	SceneChangeManager::GetInstance()->Initialize();
 
 }
 
@@ -22,11 +24,15 @@ void Game::Update() {
 
 	sceneManager_->Update();
 
+	SceneChangeManager::GetInstance()->Update();
+
 }
 
 void Game::Draw() {
 
 	sceneManager_->Draw();
+
+	SceneChangeManager::GetInstance()->Draw();
 
 }
 

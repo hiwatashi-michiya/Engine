@@ -18,6 +18,7 @@ enum PostEffectType {
 	kDepthBasedOutline, //深度ベースアウトライン
 	kRadialBlur, //放射状ブラー
 	kHSVFilter, //HSV
+	kDissolve, //ディゾルブ
 
 	kMaxEffects, //エフェクト最大数
 
@@ -29,6 +30,8 @@ public:
 
 	PostEffects() = default;
 	~PostEffects() = default;
+
+	virtual void Initialize();
 
 	virtual void Create();
 
@@ -50,6 +53,8 @@ protected:
 	ID3D12RootSignature* rootSignature_;
 
 	ID3D12PipelineState* pipelineState_;
+
+	bool isInitialized_ = false;
 
 };
 
@@ -315,5 +320,40 @@ public:
 private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
+
+};
+
+class Dissolve : public PostEffects
+{
+
+public:
+
+	struct Parameter {
+		//色相
+		Vector3 edgeColor = { 1.0f,1.0f,1.0f };
+		//彩度
+		float Threshold = 0.5f;
+		//明度
+		float edgeValue = 0.53f;
+	};
+
+public:
+
+	Dissolve() = default;
+	~Dissolve() = default;
+
+	void Create() override;
+
+	void Render() override;
+
+	void Debug() override;
+
+	Parameter* parameter_ = nullptr;
+
+private:
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
+
+	Texture* maskTexture_ = nullptr;
 
 };

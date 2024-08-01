@@ -41,8 +41,6 @@ private:
 
 	void Load(const std::string& filename);
 
-	void AddObject(char* name);
-
 	void CopyObject(std::shared_ptr<MapObject> object);
 
 	bool CheckIsEmpty(const std::string& name);
@@ -54,17 +52,22 @@ private:
 
 	void LoadAllModelFile();
 
+	void LoadAllMaps();
+
 	void EditTransform();
 
 	void CreateObject(const std::string& name);
+
+	//初期ステージ配置をセット
+	void SetDefaultStage();
 
 //変数
 private:
 
 	//使用するオブジェクトの最大数
-	static const int32_t kMaxObjects_ = 6;
+	static const int32_t kMaxObjects_ = 8;
 
-	std::array<std::string, kMaxObjects_> objectName_ = { "player", "block", "moveBox", "ring", "goal", "warp" };
+	std::array<std::string, kMaxObjects_> objectName_ = { "player", "block", "moveBox", "ring", "goal", "warp", "ghostBox", "switch" };
 
 	Camera* camera_ = nullptr;
 
@@ -92,6 +95,8 @@ private:
 	std::unordered_map<std::string, std::string> meshMap_;
 
 	std::unordered_map<std::string, int32_t> meshNumMap_;
+
+	std::vector<std::string> mapNames_;
 
 	int32_t selectObject_ = 0;
 

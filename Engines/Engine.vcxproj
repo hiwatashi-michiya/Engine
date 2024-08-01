@@ -214,6 +214,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\EditorScene\EditorScene.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameScene\GameScene.cpp" />
+    <ClCompile Include="Game\Gimmick\GhostBox.cpp" />
     <ClCompile Include="Game\Gimmick\MoveBox.cpp" />
     <ClCompile Include="Game\Gimmick\Switch.cpp" />
     <ClCompile Include="Game\Gimmick\Warp.cpp" />
@@ -221,10 +222,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Item\Ring.cpp" />
     <ClCompile Include="Game\SceneFactory.cpp" />
     <ClCompile Include="Game\SelectScene\SelectScene.cpp" />
+    <ClCompile Include="Game\TestScene\TestScene.cpp" />
     <ClCompile Include="Game\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Game\Player\Player.cpp" />
     <ClCompile Include="Game\Stage\Stage.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Game\SceneChangeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\EditorObject.h" />
@@ -291,6 +294,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\EditorScene\EditorScene.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameScene\GameScene.h" />
+    <ClInclude Include="Game\Gimmick\GhostBox.h" />
     <ClInclude Include="Game\Gimmick\MoveBox.h" />
     <ClInclude Include="Game\Gimmick\Switch.h" />
     <ClInclude Include="Game\Gimmick\Warp.h" />
@@ -298,9 +302,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Item\Ring.h" />
     <ClInclude Include="Game\SceneFactory.h" />
     <ClInclude Include="Game\SelectScene\SelectScene.h" />
+    <ClInclude Include="Game\TestScene\TestScene.h" />
     <ClInclude Include="Game\TitleScene\TitleScene.h" />
     <ClInclude Include="Game\Player\Player.h" />
     <ClInclude Include="Game\Stage\Stage.h" />
+    <ClInclude Include="Game\SceneChangeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -333,6 +339,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\shaders\DepthBasedOutline.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Dissolve.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

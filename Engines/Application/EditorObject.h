@@ -40,6 +40,10 @@ public:
 
 	bool preOpen_ = false;
 
+	const int32_t  kMaxColor_ = 8;
+
+	int32_t colorNumber_ = 0;
+
 };
 
 class PlayerObject : public MapObject
@@ -105,5 +109,27 @@ public:
 	void Edit() override;
 
 	void Draw(Camera* camera) override;
+
+	bool isMoveA_ = true;
+
+};
+
+class GhostBoxObject : public MapObject
+{
+public:
+
+	void Initialize(const std::string& name) override;
+
+	void Edit() override;
+
+};
+
+class SwitchObject : public MapObject
+{
+public:
+
+	void Initialize(const std::string& name) override;
+
+	void Edit() override;
 
 };

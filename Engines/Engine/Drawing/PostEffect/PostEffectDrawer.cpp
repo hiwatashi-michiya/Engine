@@ -80,6 +80,8 @@ void PostEffectDrawer::Initialize() {
 
 	postEffects_.push_back(std::make_shared<HSVFilter>());
 
+	postEffects_.push_back(std::make_shared<Dissolve>());
+
 	for (int32_t i = 0; i < postEffects_.size(); i++) {
 
 		postEffects_[i]->Create();
@@ -170,21 +172,21 @@ void PostEffectDrawer::Debug() {
 		type_ = kGaussianFilter;
 	}
 
-	if (ImGui::BeginMenuBar()) {
+	if (ImGui::BeginTabBar("PostEffectsItem")) {
 
 		for (int32_t i = 0; i < postEffects_.size(); i++) {
 
-			if (ImGui::BeginMenu(postEffects_[i]->name_.c_str())) {
+			if (ImGui::BeginTabItem(postEffects_[i]->name_.c_str())) {
 
 				postEffects_[i]->Debug();
 
-				ImGui::EndMenu();
+				ImGui::EndTabItem();
 
 			}
 
 		}
 
-		ImGui::EndMenuBar();
+		ImGui::EndTabBar();
 
 	}
 

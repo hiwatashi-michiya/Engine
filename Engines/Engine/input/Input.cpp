@@ -230,6 +230,56 @@ void Input::CalcDeadZone() {
 
 }
 
+bool Input::TriggerLStick(StickArrow arrow) {
+
+	switch (arrow)
+	{
+	case Input::S_UP:
+		return joyState_.Gamepad.sThumbLY > 0 && !preJoyState_.Gamepad.sThumbLY;
+		break;
+	case Input::S_DOWN:
+		return joyState_.Gamepad.sThumbLY < 0 && !preJoyState_.Gamepad.sThumbLY;
+		break;
+	case Input::S_LEFT:
+		return joyState_.Gamepad.sThumbLX < 0 && !preJoyState_.Gamepad.sThumbLX;
+		break;
+	case Input::S_RIGHT:
+		return joyState_.Gamepad.sThumbLX > 0 && !preJoyState_.Gamepad.sThumbLX;
+		break;
+	default:
+		return false;
+		break;
+	}
+
+	return false;
+
+}
+
+bool Input::TriggerRStick(StickArrow arrow) {
+
+	switch (arrow)
+	{
+	case Input::S_UP:
+		return joyState_.Gamepad.sThumbRY > 0 && !preJoyState_.Gamepad.sThumbRY;
+		break;
+	case Input::S_DOWN:
+		return joyState_.Gamepad.sThumbRY < 0 && !preJoyState_.Gamepad.sThumbRY;
+		break;
+	case Input::S_LEFT:
+		return joyState_.Gamepad.sThumbRX < 0 && !preJoyState_.Gamepad.sThumbRX;
+		break;
+	case Input::S_RIGHT:
+		return joyState_.Gamepad.sThumbRX > 0 && !preJoyState_.Gamepad.sThumbRX;
+		break;
+	default:
+		return false;
+		break;
+	}
+
+	return false;
+
+}
+
 SHORT Input::GetStickValue(Stick stick) {
 
 	//いずれかのスティックの値を返す

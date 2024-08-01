@@ -12,6 +12,7 @@
 #include "Tool/GlobalVariables.h"
 #include "Transform.h"
 #include <memory>
+#include "SceneChangeManager.h"
 
 class DefaultScene : public BaseScene
 {
@@ -26,6 +27,6 @@ protected:
 
 	static uint32_t stageNumber_;
 
-	static const uint32_t kMaxStage_ = 2;
+	static const uint32_t kMaxStage_ = 3;
 
 };

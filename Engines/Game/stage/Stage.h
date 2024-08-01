@@ -8,12 +8,17 @@
 #include <string>
 #include "Game/Goal/Goal.h"
 #include "Game/Gimmick/MoveBox.h"
+#include "Game/Gimmick/Warp.h"
+#include "Game/Gimmick/GhostBox.h"
+#include "Game/Gimmick/Switch.h"
 
 class Stage
 {
 public:
 	Stage();
 	~Stage();
+
+	static int32_t stageColor_;
 
 	void Initialize();
 
@@ -60,6 +65,8 @@ private:
 
 		bool isSelect = false;
 
+		int32_t colorNumber = 0;
+
 	};
 
 	std::unique_ptr<Player> player_;
@@ -74,9 +81,13 @@ private:
 
 	std::list<std::shared_ptr<MoveBox>> moveBoxes_;
 
-	Segment line_{};
+	std::list<std::shared_ptr<Warp>> warps_;
 
-	std::unique_ptr<Line> drawLine_;
+	std::list<std::shared_ptr<GhostBox>> ghostBoxes_;
+
+	std::list<std::shared_ptr<Switch>> switches_;
+
+	Segment line_{};
 
 };
 

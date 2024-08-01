@@ -57,6 +57,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	dxSetter_ = DirectXSetter::GetInstance();
 	dxSetter_->Initialize(windowManager_, width, height);
 
+	TextureManager::GetInstance()->Initialize(dxSetter_->GetSrvHeap());
 	ShaderManager::GetInstance()->Initialize();
 	PipelineManager::GetInstance()->Initialize(dxSetter_->GetDevice());
 	RootSignatureManager::GetInstance()->Initialize(dxSetter_->GetDevice());
@@ -70,7 +71,6 @@ void Engine::Initialize(const char* title, int width, int height) {
 	Line::Initialize(dxSetter_->GetDevice());
 	PostEffectDrawer::GetInstance()->Initialize();
 
-	TextureManager::GetInstance()->Initialize(dxSetter_->GetSrvHeap());
 	Input::GetInstance()->Initialize();
 
 	//Engineクラスでインスタンス生成をしておく

@@ -1,9 +1,13 @@
 #include "MoveBox.h"
 #include "Rand.h"
+#include "Game/stage/Stage.h"
+#include "UsefulFunc.h"
 
 MoveBox::MoveBox()
 {
 	model_.reset(Model::Create("./Resources/block/block.obj"));
+	circleTex_ = TextureManager::GetInstance()->Load("./Resources/block/circle.png");
+	crossTex_ = TextureManager::GetInstance()->Load("./Resources/block/cross.png");
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 
@@ -14,8 +18,6 @@ MoveBox::~MoveBox()
 }
 
 void MoveBox::Initialize() {
-
-	setCount_ = (rand() % 10) * 5 + 10;
 
 	name_ = "moveBox";
 	collider_->SetGameObject(this);
@@ -29,18 +31,27 @@ void MoveBox::Initialize() {
 
 void MoveBox::Update() {
 
+	if (colorNumber_ == Stage::stageColor_) {
+		name_ = "moveBox";
+		model_->SetTexture(circleTex_);
+	}
+	else {
+		name_ = "block";
+		model_->SetTexture(crossTex_);
+	}
+
 	preTranslate_ = collider_->collider_.center;
 
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
-
-	model_->material_->pLightMap_->intensity = pLightIntensity_;
 
 	transform_->UpdateMatrix();
 
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+	model_->SetColor(CreateColor(colorNumber_));
 
 }
 

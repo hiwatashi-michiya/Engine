@@ -26,6 +26,8 @@ public:
 
 	void DrawParticle(Camera* camera);
 
+
+
 	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
 
 	void SetPosition(const Vector3& position) {
@@ -52,6 +54,10 @@ public:
 
 	bool GetIsGoal() const { return isGoal_; }
 
+	bool GetCanGoal() const { return canGoal_; }
+
+	void SetGoalCount(int32_t count) { goalCount_ = count; }
+
 private:
 
 	void OnCollision(Collider* collider);
@@ -71,6 +77,13 @@ private:
 	//ゴール判定
 	bool isGoal_ = false;
 
+	//ゴールに必要なアイテム数
+	int32_t goalCount_ = 0;
+
+	int32_t ringGetCount_ = 0;
+
+	bool canGoal_ = false;
+
 	bool canJump_ = true;
 
 	Quaternion rotation_;
@@ -81,7 +94,7 @@ private:
 
 	Vector3 velocity_{};
 
-	float speed_ = 0.5f;
+	float speed_ = 0.25f;
 
 	float jumpVelocity_ = 1.5f;
 

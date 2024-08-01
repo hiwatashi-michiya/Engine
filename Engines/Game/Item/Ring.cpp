@@ -1,5 +1,7 @@
 #include "Ring.h"
 #include "Audio/AudioManager.h"
+#include "Game/stage/Stage.h"
+#include "UsefulFunc.h"
 
 Ring::Ring()
 {
@@ -14,7 +16,9 @@ Ring::~Ring()
 
 void Ring::Initialize(const Vector3& position) {
 
+	name_ = "ring";
 	model_->LoadAnimation("./Resources/item/item.gltf");
+	model_->SetMesh("./Resources/item/wireRing.gltf");
 	transform_->translate_ = position;
 
 	collider_->SetGameObject(this);
@@ -61,6 +65,22 @@ void Ring::Update() {
 
 	}
 
+	//色が揃っていて取得されていない時
+	if (colorNumber_ == Stage::stageColor_ && !isObtained_) {
+		model_->SetMesh("./Resources/item/item.gltf");
+		collider_->SetIsActive(true);
+	}
+	//取得された時
+	else if (isObtained_) {
+		model_->SetMesh("./Resources/item/item.gltf");
+		collider_->SetIsActive(false);
+	}
+	//色が揃っていない時
+	else {
+		model_->SetMesh("./Resources/item/wireRing.gltf");
+		collider_->SetIsActive(false);
+	}
+
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
 	collider_->collider_.orientations[0] = transform_->worldMatrix_.GetXAxis();
@@ -72,6 +92,8 @@ void Ring::Update() {
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
+	model_->SetColor(CreateColor(colorNumber_));
+
 }
 
 void Ring::Draw(Camera* camera) {
@@ -82,7 +104,11 @@ void Ring::Draw(Camera* camera) {
 
 void Ring::DrawLine(Camera* camera) {
 
+#ifdef _DEBUG
+
 	lineBox_->Draw(camera);
+
+#endif // _DEBUG
 
 }
 

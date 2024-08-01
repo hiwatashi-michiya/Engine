@@ -289,9 +289,9 @@ void Skybox::Create() {
 
 }
 
-void Skybox::LoadDss(const std::string& dssFileName) {
+void Skybox::LoadDds(const std::string& ddsFileName) {
 
-	tex_ = TextureManager::GetInstance()->Load(dssFileName);
+	tex_ = TextureManager::GetInstance()->Load(ddsFileName);
 
 }
 

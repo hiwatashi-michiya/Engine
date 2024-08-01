@@ -23,7 +23,7 @@ public:
 
 	void Create();
 
-	void LoadDss(const std::string& dssFileName);
+	void LoadDds(const std::string& ddsFileName);
 
 	void Draw(Camera* camera);
 
