@@ -29,6 +29,8 @@ public:
 
 	void SetWorldMatrix(const Matrix4x4& worldMatrix) { worldMatrix_ = worldMatrix; }
 
+	void SetColor(const Vector4& color) { materialMap_->color = color; }
+
 private:
 
 	//デバイス

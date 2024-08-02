@@ -88,6 +88,7 @@ void Player::Update() {
 
 	ImGui::Begin("Player");
 	ImGui::Text("velocity \nx : %1.3f \ny : %1.3f \nz : %1.3f", velocity_.x, velocity_.y, velocity_.z);
+	ImGui::SliderFloat("environment", &model_->material_->constMap_->environmentValue, 0.0f, 1.0f);
 	ImGui::End();
 
 #endif // _DEBUG

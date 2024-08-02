@@ -6,6 +6,7 @@ struct Material {
     
 	int32_t enableLighting;
     float32_t shininess;
+    float32_t environmentValue;
     
     float32_t4x4 uvTransform;
     
@@ -36,6 +37,7 @@ ConstantBuffer<Camera> gCamera : register(b2);
 ConstantBuffer<PointLight> gPointLight : register(b3);
 
 Texture2D<float32_t4> gTexture : register(t0);
+TextureCube<float32_t4> gEnviromentTexture : register(t1);
 SamplerState gSampler : register(s0);
 
 struct PixelShaderOutput {
@@ -117,6 +119,13 @@ PixelShaderOutput main(VertexShaderOutput input) {
         
         //拡散反射+鏡面反射
         output.color.rgb = diffuseDirectionalLight + specularDirectionalLight + diffusePointLight + specularPointLight;
+        
+        //環境マップ
+        float32_t3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+        float32_t3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+        float32_t4 environmentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
+        
+        output.color.rgb += environmentColor.rgb * textureColor.rgb * gMaterial.environmentValue;
         output.color.a = gMaterial.color.a * textureColor.a;
     }
 	else { //Lightingしない場合

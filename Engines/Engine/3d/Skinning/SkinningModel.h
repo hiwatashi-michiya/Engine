@@ -188,6 +188,7 @@ private:
 
 	//テクスチャ
 	Texture* texture_;
+	Texture* environmentTexture_;
 
 };
 

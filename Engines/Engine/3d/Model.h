@@ -60,6 +60,10 @@ public:
 
 	void SetTexture(const std::string& name);
 
+	void SetEnvironmentTexture(Texture* texture) { environmentTexture_ = texture; }
+
+	void SetEnvironmentTexture(const std::string& name);
+
 	//メッシュ切り替え
 	void SetMesh(const std::string& objFileName);
 
@@ -169,6 +173,7 @@ private:
 
 	//テクスチャ
 	Texture* texture_;
+	Texture* environmentTexture_;
 
 };
 

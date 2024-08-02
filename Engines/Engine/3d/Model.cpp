@@ -59,21 +59,20 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	descriptionRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	//D3D12_ROOT_PARAMETER rootParameters[1];
-	//rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	//rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	//rootParameters[0].Descriptor.ShaderRegister = 0;
-	//descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
-	//descriptionRootSignature.NumParameters = 1; //ルートパラメータの長さ
-
 	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 	descriptorRange[0].BaseShaderRegister = 0;
 	descriptorRange[0].NumDescriptors = 1;
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForEnvironment[1] = {};
+	descriptorRangeForEnvironment[0].BaseShaderRegister = 1;
+	descriptorRangeForEnvironment[0].NumDescriptors = 1;
+	descriptorRangeForEnvironment[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRangeForEnvironment[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
 	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[6]{};
+	D3D12_ROOT_PARAMETER rootParameters[7]{};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
@@ -101,6 +100,12 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[5].Descriptor.ShaderRegister = 3;
+
+	//環境マップ
+	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
+	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+	rootParameters[6].DescriptorTable.pDescriptorRanges = descriptorRangeForEnvironment; //Tableの中身の配列を指定
+	rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForEnvironment); //Tableで利用する数
 
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
@@ -271,6 +276,7 @@ void Model::Initialize(const std::string& filename) {
 	meshFilePath_ = filename;
 
 	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
+	environmentTexture_ = TextureManager::GetInstance()->Load("./Resources/skydome/skydome.dds");
 
 	//transformMatrix
 	{
@@ -430,7 +436,7 @@ void Model::Draw(Camera* camera) {
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
-
+	commandList_->SetGraphicsRootDescriptorTable(6, environmentTexture_->srvHandleGPU);
 	//描画
 	material_->SetCommandMaterial(commandList_);
 
@@ -457,6 +463,7 @@ void Model::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(6, environmentTexture_->srvHandleGPU);
 
 	//描画
 	material_->SetCommandMaterial(commandList_);
@@ -506,6 +513,12 @@ void Model::SetMesh(const std::string& objFileName) {
 void Model::SetTexture(const std::string& name) {
 
 	texture_ = TextureManager::GetInstance()->Load(name);
+
+}
+
+void Model::SetEnvironmentTexture(const std::string& name) {
+
+	environmentTexture_ = TextureManager::GetInstance()->Load(name);
 
 }
 

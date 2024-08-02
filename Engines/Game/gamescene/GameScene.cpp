@@ -190,6 +190,7 @@ void GameScene::Update() {
 		stage_->Update();
 
 		skyDome_->SetColor(CreateColor(stage_->stageColor_));
+		skybox_->SetColor(CreateColor(stage_->stageColor_));
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 		skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
