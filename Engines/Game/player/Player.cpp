@@ -84,11 +84,27 @@ void Player::Initialize() {
 
 void Player::Update() {
 
+	Vector3 moveVector{};
+
 #ifdef _DEBUG
 
 	ImGui::Begin("Player");
 	ImGui::Text("velocity \nx : %1.3f \ny : %1.3f \nz : %1.3f", velocity_.x, velocity_.y, velocity_.z);
 	ImGui::End();
+
+	if (input_->PushKey(DIK_W)) {
+		moveVector.z = 1.0f;
+	}
+	else if(input_->PushKey(DIK_S)) {
+		moveVector.z = -1.0f;
+	}
+
+	if (input_->PushKey(DIK_A)) {
+		moveVector.x = -1.0f;
+	}
+	else if (input_->PushKey(DIK_D)) {
+		moveVector.x = 1.0f;
+	}
 
 #endif // _DEBUG
 
@@ -106,7 +122,7 @@ void Player::Update() {
 			canGoal_ = false;
 		}
 
-		Vector3 moveVector{};
+		
 
 		if (fabsf(input_->GetStickValue(Input::LX)) > 0) {
 

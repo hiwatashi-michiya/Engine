@@ -72,6 +72,11 @@ void TitleScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
+	if (input_->TriggerKey(DIK_SPACE) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		SceneChangeManager::GetInstance()->SetNextScene("SELECT");
+		SceneChangeManager::GetInstance()->SceneChangeStart();
+	}
+
 #endif // _DEBUG
 
 	if (input_->TriggerButton(Input::Button::A) && !SceneChangeManager::GetInstance()->IsSceneChange()) {

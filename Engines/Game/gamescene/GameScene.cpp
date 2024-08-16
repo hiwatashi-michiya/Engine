@@ -129,6 +129,28 @@ void GameScene::Update() {
 
 	/*mapEditor_->Edit();*/
 
+	if (isPause_ && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+
+
+		if (input_->TriggerKey(DIK_Q)) {
+			isPause_ = false;
+		}
+
+		if (input_->TriggerKey(DIK_SPACE) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+			SceneChangeManager::GetInstance()->SetNextScene("SELECT");
+			SceneChangeManager::GetInstance()->SceneChangeStart();
+		}
+
+	}
+	else if (!SceneChangeManager::GetInstance()->IsSceneChange()) {
+
+		if (input_->TriggerKey(DIK_P)) {
+			isPause_ = true;
+		}
+
+	}
+
+
 #endif // _DEBUG
 
 	

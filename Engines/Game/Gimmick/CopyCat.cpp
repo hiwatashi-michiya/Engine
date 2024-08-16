@@ -74,9 +74,7 @@ void CopyCat::Update() {
 
 #ifdef _DEBUG
 
-	ImGui::Begin("CopyCat");
-	ImGui::Text("velocity \nx : %1.3f \ny : %1.3f \nz : %1.3f", velocity_.x, velocity_.y, velocity_.z);
-	ImGui::End();
+	
 
 #endif // _DEBUG
 

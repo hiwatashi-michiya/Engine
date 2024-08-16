@@ -93,6 +93,32 @@ void SelectScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
+	if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
+
+		if (stageNumber_ > 1) {
+			stageNumber_--;
+		}
+
+	}
+
+	if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
+
+		if (stageNumber_ < kMaxStage_) {
+			stageNumber_++;
+		}
+
+	}
+
+	if (input_->TriggerKey(DIK_SPACE) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
+		SceneChangeManager::GetInstance()->SceneChangeStart();
+	}
+
+	if (input_->TriggerKey(DIK_Q) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		SceneChangeManager::GetInstance()->SetNextScene("TITLE");
+		SceneChangeManager::GetInstance()->SceneChangeStart();
+	}
+
 #endif // _DEBUG
 
 	if (input_->TriggerButton(Input::Button::LEFT) || input_->TriggerLStick(Input::StickArrow::S_LEFT)) {
