@@ -9,7 +9,7 @@ void Game::Initialize() {
 	//ゲームシーンのインスタンス生成
 	sceneFactory_ = std::make_unique<SceneFactory>();
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory_.get());
-	SceneManager::GetInstance()->ChangeScene("TITLE");
+	SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	SceneChangeManager::GetInstance()->Initialize();
 
 }

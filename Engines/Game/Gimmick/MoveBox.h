@@ -48,6 +48,8 @@ private:
 
 	std::unique_ptr<LineBox> lineBox_;
 
+	bool isMove_ = false;
+
 	Vector3 preTranslate_{};
 
 	int32_t colorNumber_ = 0;

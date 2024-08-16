@@ -60,6 +60,7 @@ void MapObject::Draw(Camera* camera) {
 void PlayerObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/human/walking.gltf");
+	transform_->rotateQuaternion_ = ConvertFromEuler(Vector3{ -1.57f, 0.0f, 0.0f });
 	objName_ = name;
 	tag_ = "player";
 
@@ -83,7 +84,6 @@ void PlayerObject::Edit() {
 void BlockObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
-	model_->SetColor(CreateColor(colorNumber_));
 	objName_ = name;
 	tag_ = "block";
 
@@ -103,6 +103,7 @@ void BlockObject::Edit() {
 
 #endif // _DEBUG
 
+	model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
@@ -285,6 +286,34 @@ void SwitchObject::Initialize(const std::string& name) {
 }
 
 void SwitchObject::Edit() {
+
+#ifdef _DEBUG
+
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+
+	}
+
+	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
+		model_->SetColor(CreateColor(colorNumber_));
+	}
+
+#endif // _DEBUG
+
+	transform_->UpdateMatrix();
+	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+}
+
+void CopyCatObject::Initialize(const std::string& name) {
+
+	model_->SetMesh("./Resources/human/walking.gltf");
+	transform_->rotateQuaternion_ = ConvertFromEuler(Vector3{ -1.57f, 0.0f, 0.0f });
+	objName_ = name;
+	tag_ = "copyCat";
+
+}
+
+void CopyCatObject::Edit() {
 
 #ifdef _DEBUG
 

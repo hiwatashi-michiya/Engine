@@ -69,7 +69,14 @@ void MoveBox::DrawLine(Camera* camera) {
 
 void MoveBox::OnCollision(Collider* collider) {
 
-	if (collider->GetGameObject()->GetName() == "block" || collider->GetGameObject()->GetName() == "moveBox") {
+	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
+		isMove_ = true;
+	}
+	else {
+		isMove_ = false;
+	}
+
+	if (isMove_ && (collider->GetGameObject()->GetName() == "block" || collider->GetGameObject()->GetName() == "moveBox")) {
 		
 		//上にいる時
 		if (preTranslate_.y > collider->GetPosition().y + collider->GetSize().y) {

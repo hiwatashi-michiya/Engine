@@ -55,6 +55,7 @@ private:
 	std::unique_ptr<Sprite> stage1_;
 	std::unique_ptr<Sprite> stage2_;
 	std::unique_ptr<Sprite> stage3_;
+	std::unique_ptr<Sprite> num_;
 
 	Texture* stageSelectTex_;
 	Texture* toTitleTex_;
@@ -62,5 +63,6 @@ private:
 	Texture* Tex1_;
 	Texture* Tex2_;
 	Texture* Tex3_;
+	Texture* numTex_;
 
 };

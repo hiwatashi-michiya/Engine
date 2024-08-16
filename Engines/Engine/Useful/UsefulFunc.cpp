@@ -31,28 +31,28 @@ Vector4 CreateColor(int32_t num) {
 	{
 	default:
 	case 0:
-		return { 1.0f,1.0f,1.0f,1.0f };
-		break;
-	case 1:
 		return { 0.0f,0.5f,1.0f,1.0f };
 		break;
-	case 2:
+	case 1:
 		return { 1.0f,0.3f,0.0f,1.0f };
 		break;
-	case 3:
+	case 2:
 		return { 0.2f,1.0f,0.3f,1.0f };
 		break;
-	case 4:
-		return { 0.9f,0.8f,0.1f,1.0f };
+	case 3:
+		return { 0.0f,0.8f,0.9f,1.0f };
 		break;
-	case 5:
+	case 4:
 		return { 0.9f,0.1f,0.9f,1.0f };
 		break;
-	case 6:
+	case 5:
 		return { 0.9f,0.9f,0.1f,1.0f };
 		break;
-	case 7:
+	case 6:
 		return { 0.0f,0.1f,0.9f,1.0f };
+		break;
+	case 7:
+		return { 0.9f,0.1f,0.1f,1.0f };
 		break;
 	}
 

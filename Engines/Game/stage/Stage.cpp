@@ -28,6 +28,7 @@ void Stage::Initialize() {
 	ghostBoxes_.clear();
 	switches_.clear();
 	warps_.clear();
+	copyCats_.clear();
 
 	stageColor_ = 0;
 
@@ -86,6 +87,10 @@ void Stage::Update() {
 		colorSwitch->Update();
 	}
 
+	for (auto& cat : copyCats_) {
+		cat->Update();
+	}
+
 	for (auto& goal : goals_) {
 		goal->Update();
 	}
@@ -135,6 +140,10 @@ void Stage::DrawSkinningModel(Camera* camera) {
 
 	player_->Draw(camera);
 
+	for (auto& cat : copyCats_) {
+		cat->Draw(camera);
+	}
+
 }
 
 void Stage::DrawParticle(Camera* camera) {
@@ -176,6 +185,10 @@ void Stage::DrawLine(Camera* camera) {
 
 	for (auto& colorSwitch : switches_) {
 		colorSwitch->DrawLine(camera);
+	}
+
+	for (auto& cat : copyCats_) {
+		cat->DrawLine(camera);
 	}
 
 	for (auto& ghostBox : ghostBoxes_) {
@@ -408,6 +421,16 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetColor(object->colorNumber);
 			switches_.push_back(newObject);
+		}
+
+		if (object->tag == "copyCat") {
+			std::shared_ptr<CopyCat> newObject = std::make_shared<CopyCat>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetRespawnPosition(object->transforms_[0]->translate_);
+			newObject->SetColor(object->colorNumber);
+			newObject->SetPlayer(player_.get());
+			copyCats_.push_back(newObject);
 		}
 
 	}

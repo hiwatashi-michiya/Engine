@@ -114,7 +114,7 @@ void Ring::DrawLine(Camera* camera) {
 
 void Ring::OnCollision(Collider* collider) {
 
-	if (collider->GetGameObject()->GetName() == "player") {
+	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 		Obtained();
 	}
 

@@ -31,6 +31,9 @@ void EditorScene::Initialize() {
 
 	editor_->SetCamera(camera_.get());
 
+	tex_ = TextureManager::GetInstance()->Load("./Resources/UI/num.png");
+	test_.reset(Sprite::Create(tex_, {}));
+
 }
 
 void EditorScene::Update() {
@@ -42,6 +45,8 @@ void EditorScene::Update() {
 	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
+
+	test_->ImGuiUpdate("test");
 
 	ImGui::Begin("Scene Change");
 	ImGui::Text("Key 2 or 3 + L_ctrl: Change Scene\n2 : select\n3 : game");
@@ -88,7 +93,7 @@ void EditorScene::DrawParticle() {
 
 void EditorScene::DrawSprite() {
 
-
+	test_->Draw();
 
 }
 

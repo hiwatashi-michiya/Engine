@@ -17,6 +17,7 @@ SelectScene::SelectScene()
 	Tex1_ = TextureManager::GetInstance()->Load("./Resources/UI/1.png");
 	Tex2_ = TextureManager::GetInstance()->Load("./Resources/UI/2.png");
 	Tex3_ = TextureManager::GetInstance()->Load("./Resources/UI/3.png");
+	numTex_ = TextureManager::GetInstance()->Load("./Resources/UI/num.png");
 	buttonTex_ = TextureManager::GetInstance()->Load("./Resources/UI/a.png");
 	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
 	stageSelect_.reset(Sprite::Create(stageSelectTex_, { 640.0f - 256.0f,100.0f - 32.0f }));
@@ -24,6 +25,9 @@ SelectScene::SelectScene()
 	stage1_.reset(Sprite::Create(Tex1_, { 440.0f - 32.0f,360.0f - 32.0f }));
 	stage2_.reset(Sprite::Create(Tex2_, { 640.0f - 32.0f,360.0f - 32.0f }));
 	stage3_.reset(Sprite::Create(Tex3_, { 840.0f - 32.0f,360.0f - 32.0f }));
+	num_.reset(Sprite::Create(numTex_, { 640.0f - 32.0f,360.0f - 32.0f }));
+	num_->size_ = { 64.0f,64.0f };
+	num_->viewRect_ = { 0.1f,1.0f };
 	aButton_.reset(Sprite::Create(buttonTex_, { 640.0f - 32.0f,600.0f - 32.0f }));
 
 }
@@ -136,6 +140,8 @@ void SelectScene::Update() {
 		stage3_->position_ = { 840.0f - 32.0f,310.0f - 32.0f };
 	}
 
+	num_->uvTranslate_.x = float(stageNumber_) * 0.1f;
+
 	skyDome_->SetColor(CreateColor(stageNumber_));
 
 }
@@ -163,9 +169,10 @@ void SelectScene::DrawSprite() {
 	stageSelect_->Draw();
 	toTitle_->Draw();
 	aButton_->Draw();
-	stage1_->Draw();
+	/*stage1_->Draw();
 	stage2_->Draw();
-	stage3_->Draw();
+	stage3_->Draw();*/
+	num_->Draw();
 
 }
 

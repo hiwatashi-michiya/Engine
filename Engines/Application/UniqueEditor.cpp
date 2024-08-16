@@ -252,6 +252,13 @@ void UniqueEditor::Edit() {
 						}
 
 					}
+					else if (objectName_[i] == "copyCat") {
+
+						if (ImGui::Button("Add")) {
+							CreateObject(objectName_[i]);
+						}
+
+					}
 
 					for (int32_t k = 0; auto & object : mapObjData_) {
 
@@ -620,6 +627,14 @@ void UniqueEditor::Load(const std::string& filename) {
 							object->colorNumber_ = itItemObject->get<int32_t>();
 							object->model_->SetColor(CreateColor(object->colorNumber_));
 
+							if (auto blockPtr = dynamic_cast<BlockObject*>(object.get())) {
+								blockPtr->model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+							}
+
+							if (auto playerPtr = dynamic_cast<PlayerObject*>(object.get())) {
+								playerPtr->model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+							}
+
 							if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
 
 								warpPtr->modelB_->SetColor(CreateColor(warpPtr->colorNumber_));
@@ -806,6 +821,17 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
+	else if (name == "copyCat") {
+
+		std::string objectName = name;
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<CopyCatObject> object = std::make_shared<CopyCatObject>();
+		object->Initialize(objectName);
+		mapObjData_.push_back(object);
+
+	}
 	else {
 
 	}
@@ -894,9 +920,9 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 
 		std::shared_ptr<GhostBoxObject> tmpObject = std::make_shared<GhostBoxObject>();
 		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = tmpObject->transform_->translate_;
-		tmpObject->transform_->rotate_ = tmpObject->transform_->rotate_;
-		tmpObject->transform_->scale_ = tmpObject->transform_->scale_;
+		tmpObject->transform_->translate_ = object->transform_->translate_;
+		tmpObject->transform_->rotate_ = object->transform_->rotate_;
+		tmpObject->transform_->scale_ = object->transform_->scale_;
 		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
@@ -905,9 +931,20 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 
 		std::shared_ptr<SwitchObject> tmpObject = std::make_shared<SwitchObject>();
 		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = tmpObject->transform_->translate_;
-		tmpObject->transform_->rotate_ = tmpObject->transform_->rotate_;
-		tmpObject->transform_->scale_ = tmpObject->transform_->scale_;
+		tmpObject->transform_->translate_ = object->transform_->translate_;
+		tmpObject->transform_->rotate_ = object->transform_->rotate_;
+		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
+		mapObjData_.push_back(tmpObject);
+
+	}
+	else if (object->tag_ == "copyCat") {
+
+		std::shared_ptr<CopyCatObject> tmpObject = std::make_shared<CopyCatObject>();
+		tmpObject->Initialize(objectName);
+		tmpObject->transform_->translate_ = object->transform_->translate_;
+		tmpObject->transform_->rotate_ = object->transform_->rotate_;
+		tmpObject->transform_->scale_ = object->transform_->scale_;
 		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 

@@ -133,3 +133,14 @@ public:
 	void Edit() override;
 
 };
+
+class CopyCatObject : public MapObject
+{
+public:
+
+	void Initialize(const std::string& name) override;
+
+	void Edit() override;
+
+};
+

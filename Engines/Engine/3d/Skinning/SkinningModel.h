@@ -69,6 +69,9 @@ public:
 	//ライト切り替え
 	void SetLight(bool flag) { material_->constMap_->enableLighting = flag; }
 
+	//色変更
+	void SetColor(const Vector4& color) { material_->constMap_->color = color; }
+
 	//ImGui表示
 	void ImGuiUpdate(const std::string& name);
 

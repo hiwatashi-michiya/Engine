@@ -68,7 +68,7 @@ void Switch::DrawLine(Camera* camera) {
 
 void Switch::OnCollision(Collider* collider) {
 
-	if (collider->GetGameObject()->GetName() == "player") {
+	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 		Stage::stageColor_ = colorNumber_;
 	}
 

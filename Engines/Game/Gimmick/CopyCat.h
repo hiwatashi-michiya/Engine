@@ -11,22 +11,19 @@
 #include "GameObject.h"
 #include "Collider.h"
 #include "LineDrawer.h"
+#include "Game/player/Player.h"
 
-class Player : public GameObject
+class CopyCat : public GameObject
 {
 public:
-	Player();
-	~Player();
+	CopyCat();
+	~CopyCat();
 
 	void Initialize();
 
 	void Update();
 
 	void Draw(Camera* camera);
-
-	void DrawParticle(Camera* camera);
-
-
 
 	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
 
@@ -35,6 +32,8 @@ public:
 		transform_->UpdateMatrix();
 		collider_->collider_.center = transform_->worldMatrix_.GetTranslate() + Vector3{ 0.0f, collider_->collider_.size.y, 0.0f };
 	}
+
+	void SetRespawnPosition(const Vector3& position) { respawnPosition_ = position; }
 
 	BoxCollider* GetCollider() const { return collider_.get(); }
 
@@ -60,9 +59,9 @@ public:
 
 	Vector3 GetVelocity() const { return velocity_; }
 
-	Quaternion GetRotate() const { return transform_->rotateQuaternion_; }
+	void SetPlayer(Player* player) { player_ = player; }
 
-	void AddRingCount() { ringGetCount_++; }
+	void SetColor(int32_t color) { colorNumber_ = color; }
 
 private:
 
@@ -74,9 +73,9 @@ private:
 
 	Camera* camera_ = nullptr;
 
-	std::unique_ptr<SkinningModel> model_;
+	Player* player_ = nullptr;
 
-	std::unique_ptr<Particle3D> particle_;
+	std::unique_ptr<SkinningModel> model_;
 
 	std::unique_ptr<LineBox> lineBox_;
 
@@ -100,6 +99,8 @@ private:
 
 	Vector3 velocity_{};
 
+	Vector3 respawnPosition_{};
+
 	float speed_ = 0.25f;
 
 	float jumpVelocity_ = 1.5f;
@@ -109,7 +110,7 @@ private:
 	//地面判定
 	bool onGround_ = false;
 
-	Texture* tex_ = nullptr;
+	int32_t colorNumber_ = 0;
 
 };
 

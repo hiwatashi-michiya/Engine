@@ -327,6 +327,9 @@
     <ClCompile Include="Game\SceneChangeManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Gimmick\CopyCat.cpp">
+      <Filter>Game\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -559,6 +562,9 @@
     </ClInclude>
     <ClInclude Include="Game\SceneChangeManager.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Gimmick\CopyCat.h">
+      <Filter>Game\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

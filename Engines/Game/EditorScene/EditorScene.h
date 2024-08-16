@@ -43,4 +43,8 @@ private:
 
 	std::unique_ptr<Transform> transform_;
 
+	std::unique_ptr<Sprite> test_;
+
+	Texture* tex_;
+
 };

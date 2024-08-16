@@ -16,7 +16,7 @@ public:
 	~Sprite() = default;
 
 	static void StaticInitialize(ID3D12Device* device, int window_width,
-		int window_hwight);
+		int window_height);
 
 	/// <summary>
 	/// 頂点データ構造体
