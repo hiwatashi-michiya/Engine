@@ -34,6 +34,10 @@ private:
 
 	int32_t colorNumber_ = 0;
 
+	int32_t coolTime_ = 30;
+
+	int32_t countTimer_ = 0;
+
 };
 
 

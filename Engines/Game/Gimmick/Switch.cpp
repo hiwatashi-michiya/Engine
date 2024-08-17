@@ -30,15 +30,17 @@ void Switch::Initialize() {
 void Switch::Update() {
 
 	//ステージの色と違ったらスイッチを使用できる
-	if (colorNumber_ != Stage::stageColor_) {
-		collider_->SetIsActive(true);
+	if (colorNumber_ != Stage::stageColor_ && countTimer_ <= 0) {
 		model_->SetMesh("./Resources/switch/switch.obj");
 		
 	}
 	//同じだったら効果なし
 	else {
-		collider_->SetIsActive(false);
 		model_->SetMesh("./Resources/switch/switch_wire.obj");
+	}
+
+	if (countTimer_ > 0) {
+		countTimer_--;
 	}
 
 	collider_->collider_.center = transform_->translate_;
@@ -69,7 +71,13 @@ void Switch::DrawLine(Camera* camera) {
 void Switch::OnCollision(Collider* collider) {
 
 	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
-		Stage::stageColor_ = colorNumber_;
+
+		if (countTimer_ <= 0) {
+			Stage::stageColor_ = colorNumber_;
+		}
+
+		countTimer_ = coolTime_;
+
 	}
 
 }
