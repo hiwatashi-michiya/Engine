@@ -30,6 +30,10 @@ public:
 
 	std::list<std::shared_ptr<MapObject>> GetObjects() const { return mapObjData_; }
 
+	bool GetIsMove() const { return isMove_; }
+
+	bool GetPreIsMove() const { return preIsMove_; }
+
 //関数,構造体
 private:
 
@@ -65,10 +69,10 @@ private:
 private:
 
 	//使用するオブジェクトの最大数
-	static const int32_t kMaxObjects_ = 9;
+	static const int32_t kMaxObjects_ = 10;
 
 	std::array<std::string, kMaxObjects_> objectName_ = 
-	{ "player", "block", "moveBox", "ring", "goal", "warp", "ghostBox", "switch", "copyCat"};
+	{ "player", "block", "moveBox", "ring", "goal", "warp", "ghostBox", "switch", "copyCat", "enemy"};
 
 	Camera* camera_ = nullptr;
 
@@ -90,6 +94,10 @@ private:
 	char fileName_[256];
 
 	bool isSave_ = true;
+
+	bool isMove_ = false;
+
+	bool preIsMove_ = false;
 
 	std::vector<std::string> meshNames_;
 

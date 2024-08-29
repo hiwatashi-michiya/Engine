@@ -1,5 +1,5 @@
 #pragma once
-#include "Application/Particle.h"
+#include "Particle.h"
 #include "Model.h"
 #include "Input.h"
 #include "Collision.h"

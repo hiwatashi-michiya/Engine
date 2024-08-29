@@ -29,7 +29,12 @@ void EditorScene::Initialize() {
 	camera_->position_ = { 0.0f,65.0f, -60.0f };
 	camera_->rotation_.x = 0.9f;
 
-	editor_->SetCamera(camera_.get());
+	debugCamera_ = std::make_unique<DebugCamera>();
+	debugCamera_->Initialize();
+	debugCamera_->SetPosition({ 0.0f,65.0f, -60.0f });
+	debugCamera_->SetRotate({ 0.9f,0.0f,0.0f });
+
+	editor_->SetCamera(debugCamera_->GetCamera());
 
 	tex_ = TextureManager::GetInstance()->Load("./Resources/UI/num.png");
 	test_.reset(Sprite::Create(tex_, {}));
@@ -73,11 +78,15 @@ void EditorScene::Update() {
 	camera_->matRotate_ = MakeRotateMatrix(cameraQuaternion);
 	camera_->Update();
 	
+	if (!editor_->GetIsMove() && !editor_->GetPreIsMove()) {
+		debugCamera_->Update();
+	}
+
 }
 
 void EditorScene::DrawModel() {
 
-	editor_->Draw(camera_.get());
+	editor_->Draw(debugCamera_->GetCamera());
 
 }
 

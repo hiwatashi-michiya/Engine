@@ -2,6 +2,7 @@
 #include "Audio/AudioManager.h"
 #include "Game/stage/Stage.h"
 #include "UsefulFunc.h"
+#include "ParticleManager.h"
 
 Ring::Ring()
 {
@@ -43,6 +44,23 @@ void Ring::Obtained() {
 	model_->SetAnimationSpeed(5.0f);
 	collider_->SetIsActive(false);
 	PlaySE();
+
+	std::shared_ptr<Particle> newParticle;
+	newParticle = std::make_shared<Particle>();
+	newParticle->Initialize();
+	newParticle->SetMinSpawnPoint(transform_->translate_ - transform_->scale_);
+	newParticle->SetMaxSpawnPoint(transform_->translate_ + transform_->scale_);
+	newParticle->SetMinLifeTime(30);
+	newParticle->SetMaxLifeTime(60);
+	newParticle->SetParticleLifeTime(90);
+	newParticle->SetMinSpeed({ -0.05f,0.02f,-0.05f });
+	newParticle->SetMaxSpeed({ 0.05f,0.07f,0.05f });
+	newParticle->SetMinScale(0.1f);
+	newParticle->SetMaxScale(0.5f);
+	newParticle->SetChangeScale(-0.02f);
+	newParticle->SetColor(CreateColor(colorNumber_));
+
+	ParticleManager::GetInstance()->AddParticle(newParticle);
 
 }
 

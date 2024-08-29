@@ -11,10 +11,10 @@
 Player::Player()
 {
 
-	tex_ = TextureManager::GetInstance()->Load("./Resources/plane/particle.png");
+	tex_ = TextureManager::GetInstance()->Load("./Resources/particle/particle.png");
 	model_.reset(SkinningModel::Create("./Resources/human/stay.gltf", 0));
 	model_->LoadAnimation("./Resources/human/walking.gltf", 1);
-	particle_.reset(Particle3D::Create("./Resources/plane/particle.obj", 128));
+	particle_.reset(Particle3D::Create("./Resources/particle/particle.obj", 128));
 	particle_->SetInstanceCount(32);
 	/*particle_->SetTexture(tex_);*/
 	transform_ = std::make_unique<Transform>();
@@ -213,6 +213,7 @@ void Player::Update() {
 				particle_->transforms_[i]->translate_ = tmpMatrix.GetTranslate();
 				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
 				particle_->transforms_[i]->scale_ = { 0.1f,0.1f,0.1f };
+				particle_->isActive_[i] = true;
 				break;
 			}
 
@@ -485,6 +486,12 @@ void Player::OnCollision(Collider* collider) {
 
 	if (collider->GetGameObject()->GetName() == "ring") {
 		ringGetCount_++;
+	}
+
+	if (collider->GetGameObject()->GetName() == "enemy") {
+
+		isDead_ = true;
+
 	}
 
 	//ゴールとの当たり判定

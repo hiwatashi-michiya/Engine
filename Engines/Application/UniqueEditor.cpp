@@ -93,9 +93,19 @@ void UniqueEditor::EditTransform()
 	//現在選択しているオブジェクトを動かすことが可能
 	if (selectObject_ < mapObjData_.size()) {
 
+		if (ImGuizmo::IsUsing()) {
+			isMove_ = true;
+		}
+		else {
+			isMove_ = false;
+		}
+
 		if (ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
 			reinterpret_cast<float*>(matrices[selectObject_].m), NULL, NULL, NULL, NULL)) {
-
+			
+		}
+		else {
+			
 		}
 
 	}
@@ -169,6 +179,8 @@ void UniqueEditor::Edit() {
 
 #ifdef _DEBUG
 
+	preIsMove_ = isMove_;
+
 	mapObjData_.remove_if([](auto& object) {
 
 		if (object->isDelete_) {
@@ -180,6 +192,8 @@ void UniqueEditor::Edit() {
 		});
 
 	EditTransform();
+
+	
 
 	ImGui::Begin("Unique Editor");
 
@@ -253,6 +267,13 @@ void UniqueEditor::Edit() {
 
 					}
 					else if (objectName_[i] == "copyCat") {
+
+						if (ImGui::Button("Add")) {
+							CreateObject(objectName_[i]);
+						}
+
+					}
+					else if (objectName_[i] == "enemy") {
 
 						if (ImGui::Button("Add")) {
 							CreateObject(objectName_[i]);
@@ -832,6 +853,17 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
+	else if (name == "enemy") {
+
+		std::string objectName = name;
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<EnemyObject> object = std::make_shared<EnemyObject>();
+		object->Initialize(objectName);
+		mapObjData_.push_back(object);
+
+	}
 	else {
 
 	}
@@ -949,6 +981,17 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		mapObjData_.push_back(tmpObject);
 
 	}
+	else if (object->tag_ == "enemy") {
+
+		std::shared_ptr<EnemyObject> tmpObject = std::make_shared<EnemyObject>();
+		tmpObject->Initialize(objectName);
+		tmpObject->transform_->translate_ = object->transform_->translate_;
+		tmpObject->transform_->rotate_ = object->transform_->rotate_;
+		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->colorNumber_ = object->colorNumber_;
+		mapObjData_.push_back(tmpObject);
+
+		}
 
 	else {
 

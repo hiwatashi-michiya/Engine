@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -172,6 +172,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Skybox.cpp" />
     <ClCompile Include="Engine\Audio\AudioManager.cpp" />
     <ClCompile Include="Engine\Drawing\Draw.cpp" />
+    <ClCompile Include="Engine\Drawing\ParticleManager.cpp" />
     <ClCompile Include="Engine\math\Camera.cpp" />
     <ClCompile Include="Engine\base\DescriptorHandle.cpp" />
     <ClCompile Include="Engine\base\DirectXSetter.cpp" />
@@ -197,6 +198,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\Leak.cpp" />
     <ClCompile Include="Engine\Collider\Collision.cpp" />
+    <ClCompile Include="Engine\math\DebugCamera.cpp" />
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\Quaternion.cpp" />
     <ClCompile Include="Engine\math\Rand.cpp" />
@@ -205,13 +207,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
     <ClCompile Include="Application\MapEditor.cpp" />
-    <ClCompile Include="Application\Particle.cpp" />
+    <ClCompile Include="Engine\Drawing\Particle.cpp" />
     <ClCompile Include="Engine\Tool\LevelDataLoader.cpp" />
     <ClCompile Include="Engine\Useful\UsefulFunc.cpp" />
     <ClCompile Include="Game\Block\Block.cpp" />
     <ClCompile Include="Game\Camera\FollowCamera.cpp" />
     <ClCompile Include="Game\DefaultScene.cpp" />
     <ClCompile Include="Game\EditorScene\EditorScene.cpp" />
+    <ClCompile Include="Game\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameScene\GameScene.cpp" />
     <ClCompile Include="Game\Gimmick\CopyCat.cpp" />
@@ -247,6 +250,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Skybox.h" />
     <ClInclude Include="Engine\Audio\AudioManager.h" />
     <ClInclude Include="Engine\Drawing\Draw.h" />
+    <ClInclude Include="Engine\Drawing\ParticleManager.h" />
     <ClInclude Include="Engine\math\Camera.h" />
     <ClInclude Include="Engine\base\DescriptorHandle.h" />
     <ClInclude Include="Engine\base\DirectXSetter.h" />
@@ -276,6 +280,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\Leak.h" />
     <ClInclude Include="Engine\Collider\Collision.h" />
+    <ClInclude Include="Engine\math\DebugCamera.h" />
     <ClInclude Include="Engine\math\Matrix4x4.h" />
     <ClInclude Include="Engine\math\Quaternion.h" />
     <ClInclude Include="Engine\math\Rand.h" />
@@ -286,13 +291,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Engine\Tool\GlobalVariables.h" />
     <ClInclude Include="Application\MapEditor.h" />
-    <ClInclude Include="Application\Particle.h" />
+    <ClInclude Include="Engine\Drawing\Particle.h" />
     <ClInclude Include="Engine\Tool\LevelDataLoader.h" />
     <ClInclude Include="Engine\Useful\UsefulFunc.h" />
     <ClInclude Include="Game\Block\Block.h" />
     <ClInclude Include="Game\Camera\FollowCamera.h" />
     <ClInclude Include="Game\DefaultScene.h" />
     <ClInclude Include="Game\EditorScene\EditorScene.h" />
+    <ClInclude Include="Game\Enemy\Enemy.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameScene\GameScene.h" />
     <ClInclude Include="Game\Gimmick\CopyCat.h" />

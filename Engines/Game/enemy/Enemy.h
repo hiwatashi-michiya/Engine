@@ -1,10 +1,13 @@
 #pragma once
 #include "Engine/3d/Model.h"
-#include "Engine/3d/WorldTransform.h"
-#include <memory>
-#include "Game/player/Player.h"
+#include "Collision.h"
+#include "Transform.h"
+#include "GameObject.h"
+#include "Collider.h"
+#include "LineDrawer.h"
+#include "Vector3.h"
 
-class Enemy
+class Enemy : public GameObject
 {
 public:
 	Enemy();
@@ -14,31 +17,30 @@ public:
 
 	void Update();
 
-	void Draw();
+	void Draw(Camera* camera);
 
-	void SetOBB();
+	void DrawLine(Camera* camera);
 
-	const OBB& GetOBB() { return this->obb_; }
+	void SetColor(int32_t color) { colorNumber_ = color; }
 
-	void SetPositionY(float pos) {
-		worldTransformBody_.translation_.y = pos;
-		velocity_.y = 0.0f;
-	}
-
-	void Collision(Player* player);
+	bool GetIsDead() const { return isDead_; }
 
 private:
 
-	std::unique_ptr<Model> modelBody_;
-	std::unique_ptr<Model> modelL_arm_;
-	std::unique_ptr<Model> modelR_arm_;
+	void OnCollision(Collider* collider);
 
-	WorldTransform worldTransformBody_;
-	WorldTransform worldTransformL_arm_;
-	WorldTransform worldTransformR_arm_;
+private:
 
-	Vector3 velocity_{};
+	std::unique_ptr<Model> model_;
 
-	OBB obb_;
+	std::unique_ptr<LineBox> lineBox_;
+
+	std::unique_ptr<BoxCollider> collider_;
+
+	bool isDead_ = false;
+
+	int32_t colorNumber_ = 0;
 
 };
+
+

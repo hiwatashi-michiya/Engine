@@ -5,7 +5,7 @@
 Goal::Goal()
 {
 	model_.reset(Model::Create("./Resources/goal/goal.obj"));
-	particle_.reset(Particle3D::Create("./Resources/plane/particle.obj", 128));
+	particle_.reset(Particle3D::Create("./Resources/particle/particle.obj", 128));
 	particle_->SetInstanceCount(32);
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
@@ -53,6 +53,7 @@ void Goal::Update() {
 				particle_->transforms_[i]->translate_ = transform_->translate_ + Vector3{ float((rand() % 3 - 1) * 0.5f),0.0f, float((rand() % 3 - 1) * 0.5f) };
 				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
 				particle_->transforms_[i]->scale_ = { 0.5f,0.5f,0.5f };
+				particle_->isActive_[i] = true;
 				break;
 			}
 

@@ -407,6 +407,12 @@ void CopyCat::OnCollision(Collider* collider) {
 
 	}
 
+	if (collider->GetGameObject()->GetName() == "enemy") {
+
+		isDead_ = true;
+
+	}
+
 	//ゴールとの当たり判定
 	//if (collider->GetGameObject()->GetName() == "goal") {
 

@@ -13,6 +13,7 @@
 #include "Transform.h"
 #include <memory>
 #include "SceneChangeManager.h"
+#include "ParticleManager.h"
 
 class DefaultScene : public BaseScene
 {
@@ -24,9 +25,10 @@ protected:
 	DirectXSetter* dxSetter_ = nullptr;
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
+	ParticleManager* particleManager_ = nullptr;
 
 	static uint32_t stageNumber_;
 
-	static const uint32_t kMaxStage_ = 5;
+	static const uint32_t kMaxStage_ = 7;
 
 };

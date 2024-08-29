@@ -273,6 +273,8 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 	colors_.resize(maxInstanceCount_);
 	worldMatrices.resize(maxInstanceCount_);
 	velocities_.resize(maxInstanceCount_);
+	isActive_.resize(maxInstanceCount_);
+	lifeTimes_.resize(maxInstanceCount_);
 
 	for (uint32_t i = 0; i < maxInstanceCount_; i++) {
 		transforms_[i] = std::make_shared<Transform>();
@@ -344,6 +346,11 @@ void Particle3D::Draw(Camera* camera) {
 
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 
+		//アクティブ状態でない場合、スケールを0にして表示しない
+		if (!isActive_[i]) {
+			transforms_[i]->scale_ = Vector3::Zero();
+		}
+
 		if (isBillboard_) {
 			worldMatrices[i] = MakeScaleMatrix(transforms_[i]->scale_) * matBillboard_ * MakeTranslateMatrix(transforms_[i]->translate_);
 		}
@@ -408,5 +415,19 @@ void Particle3D::StaticImGuiUpdate() {
 	ImGui::End();
 
 #endif // _DEBUG
+
+}
+
+bool Particle3D::IsAnyActive() {
+
+	for (uint32_t i = 0; i < instanceCount_; i++) {
+
+		if (isActive_[i]) {
+			return true;
+		}
+
+	}
+
+	return false;
 
 }

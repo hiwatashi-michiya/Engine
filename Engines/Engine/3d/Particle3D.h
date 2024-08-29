@@ -60,6 +60,8 @@ public:
 
 	void SetInstanceCount(uint32_t num) { instanceCount_ = num; }
 
+	bool IsAnyActive();
+
 	//ビルボードを使うかどうか
 	bool isBillboard_ = true;
 
@@ -70,6 +72,10 @@ public:
 	std::vector<Matrix4x4> worldMatrices{};
 
 	std::vector<Vector3> velocities_{};
+
+	std::vector<bool> isActive_{};
+
+	std::vector<int32_t> lifeTimes_{};
 
 	//インスタンシングの数
 	uint32_t maxInstanceCount_;

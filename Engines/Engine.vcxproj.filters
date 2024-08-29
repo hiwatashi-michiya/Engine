@@ -112,6 +112,9 @@
     <Filter Include="Game\TestScene">
       <UniqueIdentifier>{4f6925dd-8c9a-4dbb-aa3f-05fc2149e297}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Enemy">
+      <UniqueIdentifier>{7dcd99ac-32ef-4a7f-ac2a-e716a57461c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -169,9 +172,6 @@
       <Filter>Engine\Tool</Filter>
     </ClCompile>
     <ClCompile Include="Application\MapEditor.cpp">
-      <Filter>Application</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Particle.cpp">
       <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="Game\Game.cpp">
@@ -330,6 +330,18 @@
     <ClCompile Include="Game\Gimmick\CopyCat.cpp">
       <Filter>Game\Gimmick</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\DebugCamera.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Enemy\Enemy.cpp">
+      <Filter>Game\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\Particle.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Drawing\ParticleManager.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -393,9 +405,6 @@
       <Filter>Engine\Tool</Filter>
     </ClInclude>
     <ClInclude Include="Application\MapEditor.h">
-      <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Particle.h">
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="Game\Game.h">
@@ -565,6 +574,18 @@
     </ClInclude>
     <ClInclude Include="Game\Gimmick\CopyCat.h">
       <Filter>Game\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\DebugCamera.h">
+      <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy\Enemy.h">
+      <Filter>Game\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\Particle.h">
+      <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\ParticleManager.h">
+      <Filter>Engine\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -42,8 +42,10 @@ void GameScene::Initialize() {
 	gv_ = GlobalVariables::GetInstance();
 	mapEditor_ = MapEditor::GetInstance();
 	audioManager_ = AudioManager::GetInstance();
+	particleManager_ = ParticleManager::GetInstance();
 
 	mapEditor_->Initialize();
+	particleManager_->Initialize();
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
@@ -220,6 +222,8 @@ void GameScene::Update() {
 
 		CollisionManager::GetInstance()->CheckAllCollisions();
 
+		particleManager_->Update();
+
 		if (!stage_->GetPlayer()->GetIsDead()) {
 			followCamera_->Update();
 		}
@@ -256,6 +260,9 @@ void GameScene::DrawSkinningModel() {
 void GameScene::DrawParticle() {
 
 	stage_->DrawParticle(camera_.get());
+
+	particleManager_->Draw(camera_.get());
+
 }
 
 void GameScene::DrawSprite() {

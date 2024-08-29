@@ -12,6 +12,7 @@
 #include "Game/Gimmick/GhostBox.h"
 #include "Game/Gimmick/Switch.h"
 #include "Game/Gimmick/CopyCat.h"
+#include "Game/Enemy/Enemy.h"
 
 class Stage
 {
@@ -89,6 +90,8 @@ private:
 	std::list<std::shared_ptr<Switch>> switches_;
 
 	std::list<std::shared_ptr<CopyCat>> copyCats_;
+
+	std::list<std::shared_ptr<Enemy>> enemies_;
 
 	Segment line_{};
 

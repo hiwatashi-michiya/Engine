@@ -12,6 +12,7 @@
 #include "Tool/GlobalVariables.h"
 #include "Transform.h"
 #include <memory>
+#include "DebugCamera.h"
 
 class EditorScene : public DefaultScene
 {
@@ -38,6 +39,8 @@ private:
 	UniqueEditor* editor_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
+
+	std::unique_ptr<DebugCamera> debugCamera_;
 
 	std::unique_ptr<Model> model_;
 

@@ -29,6 +29,7 @@ void Stage::Initialize() {
 	switches_.clear();
 	warps_.clear();
 	copyCats_.clear();
+	enemies_.clear();
 
 	stageColor_ = 0;
 
@@ -52,6 +53,16 @@ void Stage::Update() {
 		return false;
 
 	});
+
+	enemies_.remove_if([](std::shared_ptr<Enemy> enemy) {
+
+		if (enemy->GetIsDead()) {
+			return true;
+		}
+
+		return false;
+
+		});
 
 	player_->Update();
 
@@ -91,6 +102,10 @@ void Stage::Update() {
 		cat->Update();
 	}
 
+	for (auto& enemy : enemies_) {
+		enemy->Update();
+	}
+
 	for (auto& goal : goals_) {
 		goal->Update();
 	}
@@ -128,6 +143,10 @@ void Stage::Draw(Camera* camera) {
 
 	for (auto& colorSwitch : switches_) {
 		colorSwitch->Draw(camera);
+	}
+
+	for (auto& enemy : enemies_) {
+		enemy->Draw(camera);
 	}
 
 	for (auto& goal : goals_) {
@@ -189,6 +208,10 @@ void Stage::DrawLine(Camera* camera) {
 
 	for (auto& cat : copyCats_) {
 		cat->DrawLine(camera);
+	}
+
+	for (auto& enemy : enemies_) {
+		enemy->DrawLine(camera);
 	}
 
 	for (auto& ghostBox : ghostBoxes_) {
@@ -431,6 +454,14 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->SetColor(object->colorNumber);
 			newObject->SetPlayer(player_.get());
 			copyCats_.push_back(newObject);
+		}
+
+		if (object->tag == "enemy") {
+			std::shared_ptr<Enemy> newObject = std::make_shared<Enemy>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetColor(object->colorNumber);
+			enemies_.push_back(newObject);
 		}
 
 	}
