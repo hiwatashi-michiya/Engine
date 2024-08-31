@@ -13,6 +13,8 @@
 #include "Game/Gimmick/Switch.h"
 #include "Game/Gimmick/CopyCat.h"
 #include "Game/Enemy/Enemy.h"
+#include "Game/Gimmick/ColorHolder.h"
+#include "Particle.h"
 
 class Stage
 {
@@ -73,6 +75,8 @@ private:
 
 	std::unique_ptr<Player> player_;
 
+	std::unique_ptr<Particle> stageParticle_;
+
 	std::list<std::shared_ptr<MapObject>> mapObjData_;
 
 	std::list<std::shared_ptr<Block>> blocks_;
@@ -92,6 +96,8 @@ private:
 	std::list<std::shared_ptr<CopyCat>> copyCats_;
 
 	std::list<std::shared_ptr<Enemy>> enemies_;
+
+	std::list<std::shared_ptr<ColorHolder>> holders_;
 
 	Segment line_{};
 

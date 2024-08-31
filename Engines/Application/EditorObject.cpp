@@ -359,3 +359,37 @@ void EnemyObject::Edit() {
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
+
+void HolderObject::Initialize(const std::string& name) {
+
+	model_->SetMesh("./Resources/colorHolder/colorHolder.obj");
+	modelB_.reset(Model::Create("./Resources/colorHolder/colorHolder_inner.obj"));
+	modelB_->SetWorldMatrix(transform_->worldMatrix_);
+	objName_ = name;
+	tag_ = "colorHolder";
+	colorNumber_ = -1;
+
+}
+
+void HolderObject::Edit() {
+
+#ifdef _DEBUG
+
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+
+	}
+
+#endif // _DEBUG
+
+	transform_->UpdateMatrix();
+	model_->SetWorldMatrix(transform_->worldMatrix_);
+	modelB_->SetWorldMatrix(transform_->worldMatrix_);
+
+}
+
+void HolderObject::Draw(Camera* camera) {
+
+	model_->Draw(camera);
+	modelB_->Draw(camera);
+
+}

@@ -2,6 +2,7 @@
 #include "Game/stage/Stage.h"
 #include "UsefulFunc.h"
 #include "ParticleManager.h"
+#include "Game/Gimmick/ColorHolder.h"
 
 Enemy::Enemy()
 {
@@ -31,7 +32,7 @@ void Enemy::Initialize() {
 void Enemy::Update() {
 
 	//ステージの色と同じなら起動
-	if (colorNumber_ == Stage::stageColor_) {
+	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
 		model_->SetMesh("./Resources/enemy/enemy.obj");
 		collider_->SetIsActive(true);
 

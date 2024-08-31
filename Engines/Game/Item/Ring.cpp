@@ -3,6 +3,7 @@
 #include "Game/stage/Stage.h"
 #include "UsefulFunc.h"
 #include "ParticleManager.h"
+#include "Game/Gimmick/ColorHolder.h"
 
 Ring::Ring()
 {
@@ -84,7 +85,7 @@ void Ring::Update() {
 	}
 
 	//色が揃っていて取得されていない時
-	if (colorNumber_ == Stage::stageColor_ && !isObtained_) {
+	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor()) && !isObtained_) {
 		model_->SetMesh("./Resources/item/item.gltf");
 		collider_->SetIsActive(true);
 	}

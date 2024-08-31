@@ -3,6 +3,7 @@
 #include "Collision.h"
 #include "Game/stage/Stage.h"
 #include "UsefulFunc.h"
+#include "ColorHolder.h"
 
 GhostBox::GhostBox()
 {
@@ -33,7 +34,7 @@ void GhostBox::Update() {
 
 	preTranslate_ = collider_->collider_.center;
 
-	if (colorNumber_ == Stage::stageColor_) {
+	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
 		collider_->SetIsActive(true);
 		model_->SetMesh("./Resources/block/block.obj");
 	}

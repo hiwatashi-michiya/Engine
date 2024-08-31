@@ -280,6 +280,13 @@ void UniqueEditor::Edit() {
 						}
 
 					}
+					else if (objectName_[i] == "colorHolder") {
+
+						if (ImGui::Button("Add")) {
+							CreateObject(objectName_[i]);
+						}
+
+					}
 
 					for (int32_t k = 0; auto & object : mapObjData_) {
 
@@ -326,6 +333,10 @@ void UniqueEditor::Edit() {
 
 						object->transform_->UpdateMatrix();
 						object->model_->SetWorldMatrix(object->transform_->worldMatrix_);
+
+						if (auto holderPtr = dynamic_cast<HolderObject*>(object.get())) {
+							holderPtr->modelB_->SetWorldMatrix(object->transform_->worldMatrix_);
+						}
 
 						if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
 							warpPtr->transformB_->UpdateMatrix();
@@ -652,6 +663,10 @@ void UniqueEditor::Load(const std::string& filename) {
 								blockPtr->model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 							}
 
+							if (auto holderPtr = dynamic_cast<HolderObject*>(object.get())) {
+								holderPtr->model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+							}
+
 							if (auto playerPtr = dynamic_cast<PlayerObject*>(object.get())) {
 								playerPtr->model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 							}
@@ -864,6 +879,17 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
+	else if (name == "colorHolder") {
+
+		std::string objectName = name;
+
+		objectName = CheckSameName(objectName);
+
+		std::shared_ptr<HolderObject> object = std::make_shared<HolderObject>();
+		object->Initialize(objectName);
+		mapObjData_.push_back(object);
+
+		}
 	else {
 
 	}
@@ -991,8 +1017,17 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->colorNumber_ = object->colorNumber_;
 		mapObjData_.push_back(tmpObject);
 
-		}
+	}
+	else if (object->tag_ == "colorHolder") {
 
+		std::shared_ptr<HolderObject> tmpObject = std::make_shared<HolderObject>();
+		tmpObject->Initialize(objectName);
+		tmpObject->transform_->translate_ = object->transform_->translate_;
+		tmpObject->transform_->rotate_ = object->transform_->rotate_;
+		tmpObject->transform_->scale_ = object->transform_->scale_;
+		mapObjData_.push_back(tmpObject);
+
+	}
 	else {
 
 		std::shared_ptr<MapObject> tmpObject = std::make_shared<MapObject>();

@@ -69,10 +69,10 @@ private:
 private:
 
 	//使用するオブジェクトの最大数
-	static const int32_t kMaxObjects_ = 10;
+	static const int32_t kMaxObjects_ = 11;
 
 	std::array<std::string, kMaxObjects_> objectName_ = 
-	{ "player", "block", "moveBox", "ring", "goal", "warp", "ghostBox", "switch", "copyCat", "enemy"};
+	{ "player", "block", "moveBox", "ring", "goal", "warp", "ghostBox", "switch", "copyCat", "enemy", "colorHolder"};
 
 	Camera* camera_ = nullptr;
 

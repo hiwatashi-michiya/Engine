@@ -81,6 +81,26 @@
                 ],
                 "tag": "block"
             },
+            "colorHolder": {
+                "color": -1,
+                "position": [
+                    0.0,
+                    0.0,
+                    6.883808612823486
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "colorHolder"
+            },
             "enemy": {
                 "color": 0,
                 "position": [

@@ -23,17 +23,35 @@ public:
 	//パーティクルのランダム速度最大設定
 	void SetMaxSpeed(const Vector3& speed) { maxSpeed_ = speed; }
 
+	//両方を同時設定
+	void SetMinMaxSpeed(const Vector3& minSpeed, const Vector3& maxSpeed) {
+		minSpeed_ = minSpeed;
+		maxSpeed_ = maxSpeed;
+	}
+
 	//パーティクルの発生時の最小スケール
 	void SetMinScale(float scale) { minScale_ = scale; }
 
 	//パーティクルの発生時の最大スケール
 	void SetMaxScale(float scale) { maxScale_ = scale; }
 
+	//両方を同時設定
+	void SetMinMaxScale(float minScale, float maxScale) {
+		minScale_ = minScale;
+		maxScale_ = maxScale;
+	}
+
 	//パーティクルの発生範囲最小
 	void SetMinSpawnPoint(const Vector3& point) { minSpawnPoint_ = point; }
 
 	//パーティクルの発生範囲最大
 	void SetMaxSpawnPoint(const Vector3& point) { maxSpawnPoint_ = point; }
+
+	//両方を同時設定
+	void SetMinMaxSpawnPoint(const Vector3& minPoint, const Vector3& maxPoint) {
+		minSpawnPoint_ = minPoint;
+		maxSpawnPoint_ = maxPoint;
+	}
 
 	//パーティクルの速度変化量(一定)
 	void SetChangeSpeed(const Vector3& speed) { changeSpeed_ = speed; }
@@ -46,6 +64,12 @@ public:
 
 	//パーティクルの最長生存時間
 	void SetMaxLifeTime(int32_t lifeTime) { maxLifeTime_ = lifeTime; }
+
+	//両方を同時設定
+	void SetMinMaxLifeTime(int32_t minTime, int32_t maxTime) {
+		minLifeTime_ = minTime;
+		maxLifeTime_ = maxTime;
+	}
 
 	//パーティクル全体の発生時間
 	void SetParticleLifeTime(int32_t lifeTime) { particleLifeTime_ = lifeTime; }
@@ -64,6 +88,8 @@ public:
 		particle_->SetInstanceCount(instanceCount_);
 
 	}
+
+	void SetIsLoop(bool flag) { isLoop_ = flag; }
 
 	bool IsEnd();
 
@@ -97,6 +123,8 @@ private:
 	uint32_t instanceCount_ = 32;
 
 	int32_t particleLifeTime_ = 120;
+
+	bool isLoop_ = false;
 
 	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 

@@ -2,6 +2,7 @@
 #include "Rand.h"
 #include "UsefulFunc.h"
 #include "Game/stage/Stage.h"
+#include "ColorHolder.h"
 
 Warp::Warp()
 {
@@ -41,7 +42,7 @@ void Warp::Initialize() {
 
 void Warp::Update() {
 
-	if (colorNumber_ == Stage::stageColor_) {
+	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
 		colliderA_->SetIsActive(true);
 		colliderB_->SetIsActive(true);
 		modelA_->SetMesh("./Resources/warp/warp.obj");

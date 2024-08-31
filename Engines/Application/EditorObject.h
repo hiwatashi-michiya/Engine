@@ -153,3 +153,17 @@ public:
 	void Edit() override;
 
 };
+
+class HolderObject : public MapObject
+{
+public:
+
+	std::unique_ptr<Model> modelB_;
+
+	void Initialize(const std::string& name) override;
+
+	void Edit() override;
+
+	void Draw(Camera* camera) override;
+
+};

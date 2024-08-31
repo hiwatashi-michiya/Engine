@@ -342,6 +342,9 @@
     <ClCompile Include="Engine\Drawing\ParticleManager.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Gimmick\ColorHolder.cpp">
+      <Filter>Game\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -586,6 +589,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\ParticleManager.h">
       <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Gimmick\ColorHolder.h">
+      <Filter>Game\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

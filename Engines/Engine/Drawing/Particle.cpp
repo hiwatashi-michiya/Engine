@@ -21,13 +21,13 @@ void Particle::Initialize() {
 void Particle::Update() {
 
 	//パーティクル全体の生存時間
-	if (particleLifeTime_ > 0) {
+	if (particleLifeTime_ > 0 && !isLoop_) {
 		particleLifeTime_--;
 	}
 
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 
-		if (particleLifeTime_ > 0 && !particle_->isActive_[i]) {
+		if ((isLoop_ || particleLifeTime_ > 0) && !particle_->isActive_[i]) {
 
 			particle_->transforms_[i]->translate_ = RandomVector3(minSpawnPoint_, maxSpawnPoint_);
 			particle_->transforms_[i]->rotateQuaternion_ = ConvertFromEuler(RandomVector3(-3.14f, 3.14f));
@@ -76,7 +76,7 @@ void Particle::Draw(Camera* camera) {
 
 bool Particle::IsEnd() {
 
-	if (particleLifeTime_ <= 0 && !particle_->IsAnyActive()) {
+	if (particleLifeTime_ <= 0 && !particle_->IsAnyActive() && !isLoop_) {
 		return true;
 	}
 

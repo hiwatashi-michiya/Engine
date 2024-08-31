@@ -5,12 +5,14 @@
 #include "Audio/AudioManager.h"
 #include "ImGuiManager.h"
 #include "PostEffectDrawer.h"
+#include "UsefulFunc.h"
 
 int32_t Stage::stageColor_ = 0;
 
 Stage::Stage()
 {
 	player_ = std::make_unique<Player>();
+	stageParticle_ = std::make_unique<Particle>();
 }
 
 Stage::~Stage()
@@ -30,8 +32,19 @@ void Stage::Initialize() {
 	warps_.clear();
 	copyCats_.clear();
 	enemies_.clear();
+	holders_.clear();
+	ColorHolder::ResetHolder();
 
 	stageColor_ = 0;
+	stageParticle_->Initialize();
+	stageParticle_->SetIsLoop(true);
+	stageParticle_->SetMinMaxLifeTime(45, 90);
+	stageParticle_->SetMinMaxSpeed({ -0.03f,0.05f,-0.03f }, { 0.03f,0.1f,0.03f });
+	stageParticle_->SetMinMaxScale(0.2f, 0.4f);
+	stageParticle_->SetChangeScale(-0.01f);
+	stageParticle_->SetInstanceCount(128);
+	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + Vector3{ -30.0f,-10.0f,-30.0f },
+		player_->GetPosition() + Vector3{ 30.0f,-5.0f,30.0f });
 
 }
 
@@ -106,9 +119,22 @@ void Stage::Update() {
 		enemy->Update();
 	}
 
+	for (auto& holder : holders_) {
+		holder->Update();
+	}
+
 	for (auto& goal : goals_) {
 		goal->Update();
 	}
+
+	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + Vector3{ -50.0f,-10.0f,-50.0f },
+		player_->GetPosition() + Vector3{ 50.0f,-5.0f,50.0f });
+	
+	if (ColorHolder::GetHolderColor() != -1) {
+		stageParticle_->SetColor(CreateColor(ColorHolder::GetHolderColor()));
+	}
+
+	stageParticle_->Update();
 
 }
 
@@ -149,6 +175,10 @@ void Stage::Draw(Camera* camera) {
 		enemy->Draw(camera);
 	}
 
+	for (auto& holder : holders_) {
+		holder->Draw(camera);
+	}
+
 	for (auto& goal : goals_) {
 		goal->Draw(camera);
 	}
@@ -172,6 +202,8 @@ void Stage::DrawParticle(Camera* camera) {
 	for (auto& goal : goals_) {
 		goal->DrawParticle(camera);
 	}
+
+	stageParticle_->Draw(camera);
 
 }
 
@@ -212,6 +244,10 @@ void Stage::DrawLine(Camera* camera) {
 
 	for (auto& enemy : enemies_) {
 		enemy->DrawLine(camera);
+	}
+
+	for (auto& holder : holders_) {
+		holder->DrawLine(camera);
 	}
 
 	for (auto& ghostBox : ghostBoxes_) {
@@ -462,6 +498,21 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetColor(object->colorNumber);
 			enemies_.push_back(newObject);
+		}
+
+		if (object->tag == "enemy") {
+			std::shared_ptr<Enemy> newObject = std::make_shared<Enemy>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetColor(object->colorNumber);
+			enemies_.push_back(newObject);
+		}
+
+		if (object->tag == "colorHolder") {
+			std::shared_ptr<ColorHolder> newObject = std::make_shared<ColorHolder>();
+			newObject->Initialize();
+			newObject->SetPosition(object->transforms_[0]->translate_);
+			holders_.push_back(newObject);
 		}
 
 	}

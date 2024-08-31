@@ -7,6 +7,7 @@
 #include <functional>
 #include "UsefulFunc.h"
 #include "Game/stage/Stage.h"
+#include "ColorHolder.h"
 
 CopyCat::CopyCat()
 {
@@ -92,7 +93,7 @@ void CopyCat::Update() {
 			canGoal_ = false;
 		}*/
 
-		if (player_ && colorNumber_ == Stage::stageColor_) {
+		if (player_ && (colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
 
 			model_->StartAnimation(true);
 

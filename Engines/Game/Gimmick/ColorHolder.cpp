@@ -1,23 +1,24 @@
-#include "Switch.h"
+#include "ColorHolder.h"
 #include "Game/stage/Stage.h"
 #include "UsefulFunc.h"
-#include "ColorHolder.h"
 
-Switch::Switch()
+int32_t ColorHolder::holderColor_ = -1;
+
+ColorHolder::ColorHolder()
 {
-	model_.reset(Model::Create("./Resources/switch/switch.obj"));
+	modelOuter_.reset(Model::Create("./Resources/colorHolder/colorHolder.obj"));
+	modelInner_.reset(Model::Create("./Resources/colorHolder/colorHolder_inner.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 }
 
-Switch::~Switch()
+ColorHolder::~ColorHolder()
 {
 }
 
-void Switch::Initialize() {
+void ColorHolder::Initialize() {
 
-	name_ = "switch";
-	model_->SetMesh("./Resources/switch/switch_wire.obj");
+	name_ = "colorHolder";
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -28,17 +29,7 @@ void Switch::Initialize() {
 
 }
 
-void Switch::Update() {
-
-	//ステージの色と違ったらスイッチを使用できる
-	if (colorNumber_ != Stage::stageColor_ && countTimer_ <= 0) {
-		model_->SetMesh("./Resources/switch/switch.obj");
-		
-	}
-	//同じだったら効果なし
-	else {
-		model_->SetMesh("./Resources/switch/switch_wire.obj");
-	}
+void ColorHolder::Update() {
 
 	if (countTimer_ > 0) {
 		countTimer_--;
@@ -51,30 +42,37 @@ void Switch::Update() {
 
 	lineBox_->Update();
 
-	model_->SetWorldMatrix(transform_->worldMatrix_);
+	if (holderColor_ != -1) {
+		modelInner_->SetColor(CreateColor(holderColor_));
+	}
+	else {
+		modelInner_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+	}
 
-	model_->SetColor(CreateColor(colorNumber_));
+	modelOuter_->SetWorldMatrix(transform_->worldMatrix_);
+	modelInner_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
 
-void Switch::Draw(Camera* camera) {
+void ColorHolder::Draw(Camera* camera) {
 
-	model_->Draw(camera);
+	modelOuter_->Draw(camera);
+	modelInner_->Draw(camera);
 
 }
 
-void Switch::DrawLine(Camera* camera) {
+void ColorHolder::DrawLine(Camera* camera) {
 
 	lineBox_->Draw(camera);
 
 }
 
-void Switch::OnCollision(Collider* collider) {
+void ColorHolder::OnCollision(Collider* collider) {
 
 	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 
 		if (countTimer_ <= 0) {
-			Stage::stageColor_ = colorNumber_;
+			holderColor_ = Stage::stageColor_;
 		}
 
 		countTimer_ = coolTime_;
