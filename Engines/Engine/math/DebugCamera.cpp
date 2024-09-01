@@ -42,13 +42,13 @@ void DebugCamera::Update() {
 
 		if (input_->GetMouseMove().x != 0.0f) {
 
-			camera_->position_.x -= input_->GetMouseMove().x * 0.01f;
+			camera_->position_.x -= input_->GetMouseMove().x * 0.05f;
 
 		}
 
 		if (input_->GetMouseMove().y != 0.0f) {
 
-			camera_->position_.y -= input_->GetMouseMove().y * 0.01f;
+			camera_->position_.y -= input_->GetMouseMove().y * 0.05f;
 
 		}
 
@@ -56,7 +56,7 @@ void DebugCamera::Update() {
 
 	if (input_->GetMouseWheel() != 0.0f) {
 
-		camera_->position_.z += float(input_->GetMouseWheel()) * 0.01f;
+		camera_->position_.z += float(input_->GetMouseWheel()) * 0.02f;
 
 	}
 

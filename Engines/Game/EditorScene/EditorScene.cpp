@@ -102,7 +102,7 @@ void EditorScene::DrawParticle() {
 
 void EditorScene::DrawSprite() {
 
-	test_->Draw();
+	/*test_->Draw();*/
 
 }
 
