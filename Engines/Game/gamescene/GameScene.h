@@ -71,6 +71,9 @@ private:
 	//ポーズ画面を開いているか
 	bool isPause_ = false;
 
+	//当たり判定表示するかどうか
+	bool isShowHitBox_ = false;
+
 };
 
 

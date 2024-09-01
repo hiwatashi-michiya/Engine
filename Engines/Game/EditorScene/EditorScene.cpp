@@ -69,6 +69,10 @@ void EditorScene::Update() {
 
 	editor_->Edit();
 
+	if (!editor_->GetIsMove() && !editor_->GetPreIsMove() && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) {
+		debugCamera_->Update();
+	}
+
 #endif // _DEBUG
 
 	Quaternion cameraQuaternion = IdentityQuaternion();
@@ -77,10 +81,6 @@ void EditorScene::Update() {
 
 	camera_->matRotate_ = MakeRotateMatrix(cameraQuaternion);
 	camera_->Update();
-	
-	if (!editor_->GetIsMove() && !editor_->GetPreIsMove()) {
-		debugCamera_->Update();
-	}
 
 }
 

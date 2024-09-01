@@ -321,7 +321,7 @@ void CopyCatObject::Edit() {
 
 	}
 
-	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
+	if (ImGui::SliderInt("color", &colorNumber_, -1, kMaxColor_ - 1)) {
 		model_->SetColor(CreateColor(colorNumber_));
 	}
 

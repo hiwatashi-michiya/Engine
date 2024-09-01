@@ -93,7 +93,8 @@ void CopyCat::Update() {
 			canGoal_ = false;
 		}*/
 
-		if (player_ && (colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
+		if (player_ && (colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor() ||
+			colorNumber_ == -1)) {
 
 			model_->StartAnimation(true);
 
@@ -141,7 +142,12 @@ void CopyCat::Update() {
 
 		model_->UpdateAnimation();
 
-		model_->SetColor(CreateColor(colorNumber_));
+		if (colorNumber_ != -1) {
+			model_->SetColor(CreateColor(colorNumber_));
+		}
+		else {
+			model_->SetColor({ 5.0f,5.0f,5.0f,5.0f });
+		}
 
 		//地面判定をfalseにする。ブロックとの判定時に切り替わる
 		onGround_ = false;

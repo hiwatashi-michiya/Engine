@@ -117,6 +117,12 @@ void GameScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
+	if (input_->TriggerKey(DIK_H) && input_->PushKey(DIK_LCONTROL)) {
+
+		isShowHitBox_ = !isShowHitBox_;
+
+	}
+
 	ImGui::Begin("Frame Late");
 	ImGui::Text("%1.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
@@ -288,6 +294,8 @@ void GameScene::DrawLine() {
 
 #endif // _DEBUG
 
-	stage_->DrawLine(camera_.get());
+	if (isShowHitBox_) {
+		stage_->DrawLine(camera_.get());
+	}
 
 }

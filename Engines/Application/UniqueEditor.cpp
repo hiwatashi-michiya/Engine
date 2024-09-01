@@ -1173,63 +1173,8 @@ void UniqueEditor::SetDefaultStage() {
 
 		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
 		object->Initialize(objectName);
-		object->transform_->translate_ = { 0.0f,-2.0f,0.0f };
-		object->transform_->scale_ = { 10.0f,1.0f,10.0f };
-		mapObjData_.push_back(object);
-	}
-	{
-		std::string objectName = "block";
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
-		object->Initialize(objectName);
-		object->transform_->translate_ = { 0.0f,-2.0f,30.0f };
-		object->transform_->scale_ = { 10.0f,1.0f,10.0f };
-		mapObjData_.push_back(object);
-	}
-	{
-		std::string objectName = "block";
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
-		object->Initialize(objectName);
-		object->transform_->translate_ = { 30.0f,-2.0f,30.0f };
-		object->transform_->scale_ = { 10.0f,1.0f,10.0f };
-		mapObjData_.push_back(object);
-	}
-	{
-		std::string objectName = "block";
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
-		object->Initialize(objectName);
-		object->transform_->translate_ = { 30.0f,-2.0f,0.0f };
-		object->transform_->scale_ = { 10.0f,1.0f,10.0f };
-		mapObjData_.push_back(object);
-	}
-	//リング生成
-	{
-		std::string objectName = "ring";
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<RingObject> object = std::make_shared<RingObject>();
-		object->Initialize(objectName);
-		object->transform_->translate_ = { 0.0f,0.0f,30.0f };
-		mapObjData_.push_back(object);
-	}
-	//動く箱生成
-	{
-		std::string objectName = "moveBox";
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<MoveBoxObject> object = std::make_shared<MoveBoxObject>();
-		object->Initialize(objectName);
-		object->transform_->translate_ = { 30.0f,0.0f,0.0f };
+		object->transform_->translate_ = { 15.0f,-2.0f,0.0f };
+		object->transform_->scale_ = { 20.0f,1.0f,10.0f };
 		mapObjData_.push_back(object);
 	}
 	//ゴール生成
@@ -1240,19 +1185,7 @@ void UniqueEditor::SetDefaultStage() {
 
 		std::shared_ptr<GoalObject> object = std::make_shared<GoalObject>();
 		object->Initialize(objectName);
-		object->transform_->translate_ = { 30.0f,0.0f,30.0f };
-		mapObjData_.push_back(object);
-	}
-	//ワープ生成
-	{
-		std::string objectName = "warp";
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<WarpObject> object = std::make_shared<WarpObject>();
-		object->Initialize(objectName);
-		object->transform_->translate_ = { 5.0f,0.0f,5.0f };
-		object->transformB_->translate_ = { 25.0f,0.0f,25.0f };
+		object->transform_->translate_ = { 30.0f,0.0f,00.0f };
 		mapObjData_.push_back(object);
 	}
 
