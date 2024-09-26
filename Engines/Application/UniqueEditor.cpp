@@ -103,6 +103,8 @@ void UniqueEditor::EditTransform()
 		if (ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
 			reinterpret_cast<float*>(matrices[selectObject_].m), NULL, NULL, NULL, NULL)) {
 			
+			
+
 		}
 		else {
 			
@@ -162,6 +164,8 @@ UniqueEditor* UniqueEditor::GetInstance() {
 void UniqueEditor::Initialize() {
 
 	camera_ = nullptr;
+
+	input_ = Input::GetInstance();
 
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
 
@@ -1190,3 +1194,30 @@ void UniqueEditor::SetDefaultStage() {
 	}
 
 }
+
+MapObject* UniqueEditor::GetNearObject(MapObject* self)
+{
+
+	MapObject* nearObject = nullptr;
+
+	float minLength = 99999.0f;
+
+	for (auto& object : mapObjData_) {
+
+		if (self == object.get()) {
+			continue;
+		}
+
+		if (Length(object->transform_->translate_ - self->transform_->translate_) < minLength) {
+
+			minLength = Length(object->transform_->translate_ - self->transform_->translate_);
+			nearObject = object.get();
+
+		}
+
+	}
+
+	return nearObject;
+
+}
+

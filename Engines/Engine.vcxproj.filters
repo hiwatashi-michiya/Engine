@@ -16,9 +16,6 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{1b09af22-3990-45f5-9cbc-893068b84a02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\base">
-      <UniqueIdentifier>{9c94228a-2e48-4af2-ba5f-db5ac31975da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\3d">
       <UniqueIdentifier>{ec1d671d-6bf0-4d3a-a0d8-4a32d5dfda48}</UniqueIdentifier>
     </Filter>
@@ -115,6 +112,9 @@
     <Filter Include="Game\Enemy">
       <UniqueIdentifier>{7dcd99ac-32ef-4a7f-ac2a-e716a57461c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core">
+      <UniqueIdentifier>{9c94228a-2e48-4af2-ba5f-db5ac31975da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -123,11 +123,11 @@
     <ClCompile Include="Engine\Engine.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\DirectXSetter.cpp">
-      <Filter>Engine\base</Filter>
+    <ClCompile Include="Engine\Core\DirectXSetter.cpp">
+      <Filter>Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\WindowManager.cpp">
-      <Filter>Engine\base</Filter>
+    <ClCompile Include="Engine\Core\WindowManager.cpp">
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2d\Sprite.cpp">
       <Filter>Engine\2d</Filter>
@@ -246,8 +246,8 @@
     <ClCompile Include="Game\Item\Ring.cpp">
       <Filter>Game\Item</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\DescriptorHandle.cpp">
-      <Filter>Engine\base</Filter>
+    <ClCompile Include="Engine\Core\DescriptorHandle.cpp">
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3d\Skinning\SkinCluster.cpp">
       <Filter>Engine\3d\Animation\Skinning</Filter>
@@ -350,14 +350,14 @@
     <ClInclude Include="Engine\Engine.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\DirectXSetter.h">
-      <Filter>Engine\base</Filter>
+    <ClInclude Include="Engine\Core\DirectXSetter.h">
+      <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\SafeDelete.h">
-      <Filter>Engine\base</Filter>
+    <ClInclude Include="Engine\Core\SafeDelete.h">
+      <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\WindowManager.h">
-      <Filter>Engine\base</Filter>
+    <ClInclude Include="Engine\Core\WindowManager.h">
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2d\Sprite.h">
       <Filter>Engine\2d</Filter>
@@ -491,8 +491,8 @@
     <ClInclude Include="Game\Item\Ring.h">
       <Filter>Game\Item</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\DescriptorHandle.h">
-      <Filter>Engine\base</Filter>
+    <ClInclude Include="Engine\Core\DescriptorHandle.h">
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3d\Skinning\SkinCluster.h">
       <Filter>Engine\3d\Animation\Skinning</Filter>

@@ -1,9 +1,9 @@
 #include "SkinCluster.h"
 #include "Buffer/BufferResource.h"
 #include "Drawing/TextureManager.h"
-#include "base/DescriptorHandle.h"
+#include "DescriptorHandle.h"
 #include <cassert>
-#include "base/DirectXSetter.h"
+#include "DirectXSetter.h"
 
 SkinCluster::SkinCluster()
 {

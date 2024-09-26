@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <vector>
 #include "EditorObject.h"
+#include "Input.h"
 
 class UniqueEditor
 {
@@ -65,6 +66,9 @@ private:
 	//初期ステージ配置をセット
 	void SetDefaultStage();
 
+	//リストから自分と一番近いオブジェクトを取り出す
+	MapObject* GetNearObject(MapObject* self);
+
 //変数
 private:
 
@@ -75,6 +79,8 @@ private:
 	{ "player", "block", "moveBox", "ring", "goal", "warp", "ghostBox", "switch", "copyCat", "enemy", "colorHolder"};
 
 	Camera* camera_ = nullptr;
+
+	Input* input_ = nullptr;
 
 	GlobalVariables* globalVariables_ = nullptr;
 

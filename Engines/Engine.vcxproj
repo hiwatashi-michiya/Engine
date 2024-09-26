@@ -80,7 +80,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\Useful</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Application;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Core;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\Useful</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
@@ -174,9 +174,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Drawing\Draw.cpp" />
     <ClCompile Include="Engine\Drawing\ParticleManager.cpp" />
     <ClCompile Include="Engine\math\Camera.cpp" />
-    <ClCompile Include="Engine\base\DescriptorHandle.cpp" />
-    <ClCompile Include="Engine\base\DirectXSetter.cpp" />
-    <ClCompile Include="Engine\base\WindowManager.cpp" />
+    <ClCompile Include="Engine\Core\DescriptorHandle.cpp" />
+    <ClCompile Include="Engine\Core\DirectXSetter.cpp" />
+    <ClCompile Include="Engine\Core\WindowManager.cpp" />
     <ClCompile Include="Engine\Buffer\BufferResource.cpp" />
     <ClCompile Include="Engine\Collider\Collider.cpp" />
     <ClCompile Include="Engine\Collider\CollisionManager.cpp" />
@@ -253,10 +253,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Drawing\Draw.h" />
     <ClInclude Include="Engine\Drawing\ParticleManager.h" />
     <ClInclude Include="Engine\math\Camera.h" />
-    <ClInclude Include="Engine\base\DescriptorHandle.h" />
-    <ClInclude Include="Engine\base\DirectXSetter.h" />
-    <ClInclude Include="Engine\base\SafeDelete.h" />
-    <ClInclude Include="Engine\base\WindowManager.h" />
+    <ClInclude Include="Engine\Core\DescriptorHandle.h" />
+    <ClInclude Include="Engine\Core\DirectXSetter.h" />
+    <ClInclude Include="Engine\Core\SafeDelete.h" />
+    <ClInclude Include="Engine\Core\WindowManager.h" />
     <ClInclude Include="Engine\Buffer\BufferResource.h" />
     <ClInclude Include="Engine\Collider\Collider.h" />
     <ClInclude Include="Engine\Collider\CollisionManager.h" />

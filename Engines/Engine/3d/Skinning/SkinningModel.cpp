@@ -9,7 +9,7 @@
 #include "Buffer/BufferResource.h"
 #include "Drawing/PipelineManager.h"
 #include "Drawing/MeshManager.h"
-#include "base/DirectXSetter.h"
+#include "DirectXSetter.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 

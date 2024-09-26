@@ -2,7 +2,7 @@
 #include <cassert>
 #include "Drawing/TextureManager.h"
 #include "DescriptorHeap/DescriptorHeapManager.h"
-#include "base/DescriptorHandle.h"
+#include "DescriptorHandle.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")

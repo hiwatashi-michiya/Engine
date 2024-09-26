@@ -1,6 +1,6 @@
 #pragma once
 #include "Audio/AudioManager.h"
-#include "base/DirectXSetter.h"
+#include "DirectXSetter.h"
 #include "Drawing/TextureManager.h"
 #include "Game/DefaultScene.h"
 #include "input/Input.h"
