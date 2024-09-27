@@ -60,14 +60,19 @@ void Model::StaticInitialize(ID3D12Device* device) {
 	descriptorRange.SetSize(1);
 	descriptorRange.SetDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND, 0);
 
+	ML_DescriptorRange descriptorRangeMask{};
+	descriptorRangeMask.SetSize(1);
+	descriptorRangeMask.SetDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND, 0);
+
 	ML_RootParameter rootParameter{};
-	rootParameter.SetSize(6);
+	rootParameter.SetSize(7);
 	rootParameter.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_CBV, D3D12_SHADER_VISIBILITY_PIXEL, 0, 0);
 	rootParameter.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_CBV, D3D12_SHADER_VISIBILITY_VERTEX, 0, 1);
 	rootParameter.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, D3D12_SHADER_VISIBILITY_PIXEL, descriptorRange.Get(), 2);
 	rootParameter.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_CBV, D3D12_SHADER_VISIBILITY_PIXEL, 1, 3);
 	rootParameter.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_CBV, D3D12_SHADER_VISIBILITY_PIXEL, 2, 4);
 	rootParameter.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_CBV, D3D12_SHADER_VISIBILITY_PIXEL, 3, 5);
+	rootParameter.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, D3D12_SHADER_VISIBILITY_PIXEL, descriptorRangeMask.Get(), 6);
 
 	rootSignatureDesc.SetRootParameter(rootParameter.Get());
 
@@ -232,6 +237,7 @@ void Model::Initialize(const std::string& filename) {
 	meshFilePath_ = filename;
 
 	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
+	maskTexture_ = TextureManager::GetInstance()->Load("./Resources/EngineResources/defaultMask.png");
 
 	//transformMatrix
 	{
@@ -391,6 +397,7 @@ void Model::Draw(Camera* camera) {
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(6, maskTexture_->srvHandleGPU);
 
 	//描画
 	material_->SetCommandMaterial(commandList_);

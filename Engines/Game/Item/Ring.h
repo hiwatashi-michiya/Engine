@@ -46,6 +46,7 @@ private:
 	std::unique_ptr<LineBox> lineBox_;
 
 	std::unique_ptr<Model> model_;
+	std::unique_ptr<Model> modelWire_;
 
 	//取得されたフラグ
 	bool isObtained_ = false;

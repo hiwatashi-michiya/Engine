@@ -8,6 +8,7 @@
 GhostBox::GhostBox()
 {
 	model_.reset(Model::Create("./Resources/block/block.obj"));
+	modelWire_.reset(Model::Create("./Resources/block/block_wire.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 
@@ -20,7 +21,6 @@ GhostBox::~GhostBox()
 void GhostBox::Initialize() {
 
 	name_ = "ghostBox";
-	model_->SetMesh("./Resources/block/block_wire.obj");
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -35,12 +35,32 @@ void GhostBox::Update() {
 	preTranslate_ = collider_->collider_.center;
 
 	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
+
+		if (model_->material_->constMap_->threshold > 0.0f) {
+
+			model_->material_->constMap_->threshold -= 0.05f;
+
+			if (model_->material_->constMap_->threshold < 0.0f) {
+				model_->material_->constMap_->threshold = 0.0f;
+			}
+
+		}
+
 		collider_->SetIsActive(true);
-		model_->SetMesh("./Resources/block/block.obj");
 	}
 	else {
+
+		if (model_->material_->constMap_->threshold < 1.0f) {
+
+			model_->material_->constMap_->threshold += 0.05f;
+
+			if (model_->material_->constMap_->threshold > 1.0f) {
+				model_->material_->constMap_->threshold = 1.0f;
+			}
+
+		}
+
 		collider_->SetIsActive(false);
-		model_->SetMesh("./Resources/block/block_wire.obj");
 	}
 
 	collider_->collider_.center = transform_->translate_;
@@ -51,14 +71,17 @@ void GhostBox::Update() {
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
 
 	model_->SetColor(CreateColor(colorNumber_));
+	modelWire_->SetColor(CreateColor(colorNumber_));
 
 }
 
 void GhostBox::Draw(Camera* camera) {
 
 	model_->Draw(camera);
+	modelWire_->Draw(camera);
 
 }
 

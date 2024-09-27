@@ -6,7 +6,8 @@
 
 Enemy::Enemy()
 {
-	model_.reset(Model::Create("./Resources/switch/switch.obj"));
+	model_.reset(Model::Create("./Resources/enemy/enemy.obj"));
+	modelWire_.reset(Model::Create("./Resources/enemy/enemy_wire.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 }
@@ -18,7 +19,6 @@ Enemy::~Enemy()
 void Enemy::Initialize() {
 
 	name_ = "enemy";
-	model_->SetMesh("./Resources/enemy/enemy_wire.obj");
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -33,7 +33,17 @@ void Enemy::Update() {
 
 	//ステージの色と同じなら起動
 	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
-		model_->SetMesh("./Resources/enemy/enemy.obj");
+		
+		if (model_->material_->constMap_->threshold > 0.0f) {
+
+			model_->material_->constMap_->threshold -= 0.05f;
+
+			if (model_->material_->constMap_->threshold < 0.0f) {
+				model_->material_->constMap_->threshold = 0.0f;
+			}
+
+		}
+		
 		collider_->SetIsActive(true);
 
 		transform_->rotate_.x += 0.05f;
@@ -52,7 +62,17 @@ void Enemy::Update() {
 	}
 	//違うなら判定を消す
 	else {
-		model_->SetMesh("./Resources/enemy/enemy_wire.obj");
+
+		if (model_->material_->constMap_->threshold < 1.0f) {
+
+			model_->material_->constMap_->threshold += 0.05f;
+
+			if (model_->material_->constMap_->threshold > 1.0f) {
+				model_->material_->constMap_->threshold = 1.0f;
+			}
+
+		}
+
 		collider_->SetIsActive(false);
 	}
 
@@ -64,14 +84,17 @@ void Enemy::Update() {
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
 
 	model_->SetColor(CreateColor(colorNumber_));
+	modelWire_->SetColor(CreateColor(colorNumber_));
 
 }
 
 void Enemy::Draw(Camera* camera) {
 
 	model_->Draw(camera);
+	modelWire_->Draw(camera);
 
 }
 

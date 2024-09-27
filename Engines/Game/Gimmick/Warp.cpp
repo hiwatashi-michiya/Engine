@@ -7,7 +7,9 @@
 Warp::Warp()
 {
 	modelA_.reset(Model::Create("./Resources/warp/warp.obj"));
+	modelAWire_.reset(Model::Create("./Resources/warp/warp_wire.obj"));
 	modelB_.reset(Model::Create("./Resources/warp/warp.obj"));
+	modelBWire_.reset(Model::Create("./Resources/warp/warp_wire.obj"));
 	colliderA_ = std::make_unique<BoxCollider>();
 	colliderB_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
@@ -23,8 +25,6 @@ Warp::~Warp()
 void Warp::Initialize() {
 
 	name_ = "warp";
-	modelA_->SetMesh("./Resources/warp/warp_wire.obj");
-	modelB_->SetMesh("./Resources/warp/warp_wire.obj");
 	colliderA_->SetGameObject(this);
 	colliderA_->collider_.center = transform_->translate_;
 	colliderA_->collider_.size = transform_->scale_;
@@ -43,16 +43,54 @@ void Warp::Initialize() {
 void Warp::Update() {
 
 	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
+		
+		if (modelA_->material_->constMap_->threshold > 0.0f) {
+
+			modelA_->material_->constMap_->threshold -= 0.05f;
+
+			if (modelA_->material_->constMap_->threshold < 0.0f) {
+				modelA_->material_->constMap_->threshold = 0.0f;
+			}
+
+		}
+
+		if (modelB_->material_->constMap_->threshold > 0.0f) {
+
+			modelB_->material_->constMap_->threshold -= 0.05f;
+
+			if (modelB_->material_->constMap_->threshold < 0.0f) {
+				modelB_->material_->constMap_->threshold = 0.0f;
+			}
+
+		}
+		
 		colliderA_->SetIsActive(true);
 		colliderB_->SetIsActive(true);
-		modelA_->SetMesh("./Resources/warp/warp.obj");
-		modelB_->SetMesh("./Resources/warp/warp.obj");
 	}
 	else {
+
+		if (modelA_->material_->constMap_->threshold < 1.0f) {
+
+			modelA_->material_->constMap_->threshold += 0.05f;
+
+			if (modelA_->material_->constMap_->threshold > 1.0f) {
+				modelA_->material_->constMap_->threshold = 1.0f;
+			}
+
+		}
+
+		if (modelB_->material_->constMap_->threshold < 1.0f) {
+
+			modelB_->material_->constMap_->threshold += 0.05f;
+
+			if (modelB_->material_->constMap_->threshold > 1.0f) {
+				modelB_->material_->constMap_->threshold = 1.0f;
+			}
+
+		}
+
 		colliderA_->SetIsActive(false);
 		colliderB_->SetIsActive(false);
-		modelA_->SetMesh("./Resources/warp/warp_wire.obj");
-		modelB_->SetMesh("./Resources/warp/warp_wire.obj");
 	}
 
 	isPreActiveWarp_ = isActiveWarp_;
@@ -95,17 +133,23 @@ void Warp::Update() {
 	lineBoxB_->Update();
 
 	modelA_->SetWorldMatrix(transform_->worldMatrix_);
+	modelAWire_->SetWorldMatrix(transform_->worldMatrix_);
 	modelB_->SetWorldMatrix(transformB_->worldMatrix_);
+	modelBWire_->SetWorldMatrix(transformB_->worldMatrix_);
 
 	modelA_->SetColor(CreateColor(colorNumber_));
+	modelAWire_->SetColor(CreateColor(colorNumber_));
 	modelB_->SetColor(CreateColor(colorNumber_));
+	modelBWire_->SetColor(CreateColor(colorNumber_));
 
 }
 
 void Warp::Draw(Camera* camera) {
 
 	modelA_->Draw(camera);
+	modelAWire_->Draw(camera);
 	modelB_->Draw(camera);
+	modelBWire_->Draw(camera);
 
 }
 

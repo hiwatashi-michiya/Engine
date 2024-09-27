@@ -6,6 +6,7 @@
 Switch::Switch()
 {
 	model_.reset(Model::Create("./Resources/switch/switch.obj"));
+	modelWire_.reset(Model::Create("./Resources/switch/switch_wire.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 }
@@ -17,7 +18,6 @@ Switch::~Switch()
 void Switch::Initialize() {
 
 	name_ = "switch";
-	model_->SetMesh("./Resources/switch/switch_wire.obj");
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -32,12 +32,31 @@ void Switch::Update() {
 
 	//ステージの色と違ったらスイッチを使用できる
 	if (colorNumber_ != Stage::stageColor_ && countTimer_ <= 0) {
-		model_->SetMesh("./Resources/switch/switch.obj");
+		
+		if (model_->material_->constMap_->threshold > 0.0f) {
+
+			model_->material_->constMap_->threshold -= 0.05f;
+
+			if (model_->material_->constMap_->threshold < 0.0f) {
+				model_->material_->constMap_->threshold = 0.0f;
+			}
+
+		}
 		
 	}
 	//同じだったら効果なし
 	else {
-		model_->SetMesh("./Resources/switch/switch_wire.obj");
+		
+		if (model_->material_->constMap_->threshold < 1.0f) {
+
+			model_->material_->constMap_->threshold += 0.05f;
+
+			if (model_->material_->constMap_->threshold > 1.0f) {
+				model_->material_->constMap_->threshold = 1.0f;
+			}
+
+		}
+
 	}
 
 	if (countTimer_ > 0) {
@@ -52,14 +71,17 @@ void Switch::Update() {
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
 
 	model_->SetColor(CreateColor(colorNumber_));
+	modelWire_->SetColor(CreateColor(colorNumber_));
 
 }
 
 void Switch::Draw(Camera* camera) {
 
 	model_->Draw(camera);
+	modelWire_->Draw(camera);
 
 }
 

@@ -8,6 +8,7 @@
 Ring::Ring()
 {
 	model_.reset(Model::Create("./Resources/item/item.gltf"));
+	modelWire_.reset(Model::Create("./Resources/item/wireRing.gltf"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 }
@@ -20,7 +21,7 @@ void Ring::Initialize(const Vector3& position) {
 
 	name_ = "ring";
 	model_->LoadAnimation("./Resources/item/item.gltf");
-	model_->SetMesh("./Resources/item/wireRing.gltf");
+	modelWire_->LoadAnimation("./Resources/item/item.gltf");
 	transform_->translate_ = position;
 
 	collider_->SetGameObject(this);
@@ -31,6 +32,7 @@ void Ring::Initialize(const Vector3& position) {
 	lineBox_->SetOBB(&collider_->collider_);
 
 	model_->StartAnimation(true);
+	modelWire_->StartAnimation(true);
 
 	getSE_ = AudioManager::GetInstance()->LoadInMF("./Resources/SE/ring_get.mp3");
 
@@ -43,6 +45,10 @@ void Ring::Obtained() {
 	model_->ResetAnimation();
 	model_->SetIsLoop(false);
 	model_->SetAnimationSpeed(5.0f);
+	modelWire_->LoadAnimation("./Resources/item/item_2.gltf");
+	modelWire_->ResetAnimation();
+	modelWire_->SetIsLoop(false);
+	modelWire_->SetAnimationSpeed(5.0f);
 	collider_->SetIsActive(false);
 	PlaySE();
 
@@ -74,6 +80,7 @@ void Ring::PlaySE() {
 void Ring::Update() {
 
 	model_->UpdateAnimation();
+	modelWire_->UpdateAnimation();
 
 	//ゲットした演出アニメーションを終えたら破壊
 	if (isObtained_ && model_->IsEndAnimation()) {
@@ -86,17 +93,47 @@ void Ring::Update() {
 
 	//色が揃っていて取得されていない時
 	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor()) && !isObtained_) {
-		model_->SetMesh("./Resources/item/item.gltf");
+
+		if (model_->material_->constMap_->threshold > 0.0f) {
+
+			model_->material_->constMap_->threshold -= 0.05f;
+
+			if (model_->material_->constMap_->threshold < 0.0f) {
+				model_->material_->constMap_->threshold = 0.0f;
+			}
+
+		}
+
 		collider_->SetIsActive(true);
 	}
 	//取得された時
 	else if (isObtained_) {
-		model_->SetMesh("./Resources/item/item.gltf");
+
+		if (model_->material_->constMap_->threshold > 0.0f) {
+
+			model_->material_->constMap_->threshold -= 0.05f;
+
+			if (model_->material_->constMap_->threshold < 0.0f) {
+				model_->material_->constMap_->threshold = 0.0f;
+			}
+
+		}
+
 		collider_->SetIsActive(false);
 	}
 	//色が揃っていない時
 	else {
-		model_->SetMesh("./Resources/item/wireRing.gltf");
+
+		if (model_->material_->constMap_->threshold < 1.0f) {
+
+			model_->material_->constMap_->threshold += 0.1f;
+
+			if (model_->material_->constMap_->threshold > 1.0f) {
+				model_->material_->constMap_->threshold = 1.0f;
+			}
+
+		}
+
 		collider_->SetIsActive(false);
 	}
 
@@ -110,14 +147,17 @@ void Ring::Update() {
 
 	transform_->UpdateMatrix();
 	model_->SetWorldMatrix(transform_->worldMatrix_);
+	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
 
 	model_->SetColor(CreateColor(colorNumber_));
+	modelWire_->SetColor(CreateColor(colorNumber_));
 
 }
 
 void Ring::Draw(Camera* camera) {
 
 	model_->Draw(camera);
+	modelWire_->Draw(camera);
 
 }
 

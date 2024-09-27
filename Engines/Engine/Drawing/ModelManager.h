@@ -24,7 +24,13 @@ struct MaterialData
 	
 	int32_t enableLighting;
 	float shininess; //光沢度
-	float padding[2];
+
+	//dissolve
+	float threshold;
+	float edgeValue;
+	Vector3 edgeColor;
+
+	float padding[1];
 
 	Matrix4x4 uvTransform;
 	

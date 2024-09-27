@@ -7,6 +7,11 @@ struct Material {
 	int32_t enableLighting;
     float32_t shininess;
     
+    //dissolve
+    float32_t Threshold;
+    float32_t edgeValue;
+    float32_t3 edgeColor;
+    
     float32_t4x4 uvTransform;
     
 };
@@ -36,6 +41,7 @@ ConstantBuffer<Camera> gCamera : register(b2);
 ConstantBuffer<PointLight> gPointLight : register(b3);
 
 Texture2D<float32_t4> gTexture : register(t0);
+Texture2D<float32_t> gMaskTexture : register(t1);
 SamplerState gSampler : register(s0);
 
 struct PixelShaderOutput {
@@ -49,6 +55,14 @@ PixelShaderOutput main(VertexShaderOutput input) {
     
 	//textureのα値が0.5以下のときにPixelを棄却
     if (textureColor.a <= 0.5)
+    {
+        discard;
+    }
+    
+    //dissolve : mask
+    float32_t mask = gMaskTexture.Sample(gSampler, input.texcoord);
+    
+    if (mask <= gMaterial.Threshold)
     {
         discard;
     }
@@ -122,6 +136,11 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	else { //Lightingしない場合
 		output.color = gMaterial.color * textureColor;
 	}
+    
+    //dissolve : edge
+    float32_t edge = 1.0f - smoothstep(gMaterial.Threshold, gMaterial.Threshold + 0.03f, mask);
+    //Edgeに近いほど指定した色を加算
+    output.color.rgb += edge * gMaterial.edgeColor;
     
 	//output.colorのα値が0のときにPixelを棄却
     if (output.color.a == 0.0)

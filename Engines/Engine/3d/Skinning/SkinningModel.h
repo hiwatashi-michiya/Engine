@@ -192,5 +192,8 @@ private:
 	//テクスチャ
 	Texture* texture_;
 
+	//ディゾルブ用のマスク画像
+	Texture* maskTexture_ = nullptr;
+
 };
 

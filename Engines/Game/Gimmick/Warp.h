@@ -61,8 +61,10 @@ private:
 	//二つ分のモデル、当たり判定を使う
 
 	std::unique_ptr<Model> modelA_;
+	std::unique_ptr<Model> modelAWire_;
 
 	std::unique_ptr<Model> modelB_;
+	std::unique_ptr<Model> modelBWire_;
 
 	std::unique_ptr<BoxCollider> colliderA_;
 

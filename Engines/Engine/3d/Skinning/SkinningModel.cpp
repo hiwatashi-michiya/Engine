@@ -84,6 +84,12 @@ void SkinningModel::StaticInitialize(ID3D12Device* device) {
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+	D3D12_DESCRIPTOR_RANGE descriptorRangeMask[1] = {};
+	descriptorRangeMask[0].BaseShaderRegister = 1;
+	descriptorRangeMask[0].NumDescriptors = 1;
+	descriptorRangeMask[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRangeMask[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
 	D3D12_DESCRIPTOR_RANGE descriptorRangeForMatrixPalette[1] = {};
 	descriptorRangeForMatrixPalette[0].BaseShaderRegister = 0;
 	descriptorRangeForMatrixPalette[0].NumDescriptors = 1;
@@ -91,7 +97,7 @@ void SkinningModel::StaticInitialize(ID3D12Device* device) {
 	descriptorRangeForMatrixPalette[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[7]{};
+	D3D12_ROOT_PARAMETER rootParameters[8]{};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
@@ -125,6 +131,12 @@ void SkinningModel::StaticInitialize(ID3D12Device* device) {
 	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters[6].DescriptorTable.pDescriptorRanges = descriptorRangeForMatrixPalette; //Tableの中身の配列を指定
 	rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForMatrixPalette); //Tableで利用する数
+
+	//MatrixPalette
+	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[7].DescriptorTable.pDescriptorRanges = descriptorRangeMask; //Tableの中身の配列を指定
+	rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeMask); //Tableで利用する数
 
 	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
@@ -295,6 +307,7 @@ void SkinningModel::Initialize(const std::string& filename, int32_t number) {
 	meshFilePath_ = filename;
 
 	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
+	maskTexture_ = TextureManager::GetInstance()->Load("./Resources/EngineResources/defaultMask.png");
 
 	//skeleton,skinCluster設定
 	{
@@ -485,6 +498,7 @@ void SkinningModel::Draw(Camera* camera) {
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(7, maskTexture_->srvHandleGPU);
 
 	commandList_->SetGraphicsRootDescriptorTable(6, skinCluster_->paletteSrvHandle_.second);
 

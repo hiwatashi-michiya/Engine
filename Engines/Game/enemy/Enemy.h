@@ -32,6 +32,7 @@ private:
 private:
 
 	std::unique_ptr<Model> model_;
+	std::unique_ptr<Model> modelWire_;
 
 	std::unique_ptr<LineBox> lineBox_;
 

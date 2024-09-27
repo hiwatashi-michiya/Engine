@@ -78,6 +78,9 @@ Material* Material::Create() {
 		constMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		constMap_->enableLighting = true;
 		constMap_->shininess = 50.0f;
+		constMap_->threshold = 0.0f;
+		constMap_->edgeValue = 0.0f;
+		constMap_->edgeColor = { 1.0f,1.0f,1.0f };
 		constMap_->uvTransform = MakeIdentity4x4();
 
 		//アンマップ

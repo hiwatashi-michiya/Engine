@@ -88,9 +88,6 @@
     <Filter Include="Engine\Drawing\PostEffect">
       <UniqueIdentifier>{c6695b30-b1ca-4839-9ed1-56b320c60a22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Collider">
-      <UniqueIdentifier>{d476ce19-a150-426e-a5a6-f40c9a0c0b0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Camera">
       <UniqueIdentifier>{936cbc72-1aae-48ee-88fe-f425ecab5333}</UniqueIdentifier>
     </Filter>
@@ -114,6 +111,9 @@
     </Filter>
     <Filter Include="Engine\Core">
       <UniqueIdentifier>{9c94228a-2e48-4af2-ba5f-db5ac31975da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Collider">
+      <UniqueIdentifier>{d476ce19-a150-426e-a5a6-f40c9a0c0b0a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -345,23 +345,23 @@
     <ClCompile Include="Game\Gimmick\ColorHolder.cpp">
       <Filter>Game\Gimmick</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\RootParameter.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\RootSignatureDesc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\InputLayout.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\Core\DescriptorRange.cpp">
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\InputElement.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\DescriptorRange.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\Core\InputLayout.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\RootParameter.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\RootSignatureDesc.cpp">
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\StaticSampler.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Engine\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -611,23 +611,23 @@
     <ClInclude Include="Game\Gimmick\ColorHolder.h">
       <Filter>Game\Gimmick</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\RootParameter.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\RootSignatureDesc.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\InputLayout.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\Core\DescriptorRange.h">
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\InputElement.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\DescriptorRange.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\Core\InputLayout.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\RootParameter.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\RootSignatureDesc.h">
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\StaticSampler.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
