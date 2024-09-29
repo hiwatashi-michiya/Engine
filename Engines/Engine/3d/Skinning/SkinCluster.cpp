@@ -1,7 +1,7 @@
 #include "SkinCluster.h"
 #include "Buffer/BufferResource.h"
 #include "Drawing/TextureManager.h"
-#include "DescriptorHandle.h"
+#include "Core/DescriptorHandle.h"
 #include <cassert>
 #include "Core/DirectXSetter.h"
 

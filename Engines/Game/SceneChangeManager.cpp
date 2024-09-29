@@ -1,6 +1,6 @@
 #include "SceneChangeManager.h"
 #include "SceneManager.h"
-#include "DirectXSetter.h"
+#include "Core/DirectXSetter.h"
 
 SceneChangeManager* SceneChangeManager::GetInstance() {
 	static SceneChangeManager instance;

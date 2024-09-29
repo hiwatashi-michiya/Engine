@@ -6,7 +6,7 @@
 #include "DescriptorHeap/DescriptorHeapManager.h"
 #include "Externals/DirectXTex/d3dx12.h"
 #include "Buffer/BufferResource.h"
-#include "DescriptorHandle.h"
+#include "Core/DescriptorHandle.h"
 
 //DirectXTexを使ってTextureを読み込むためのLoadTexture関数
 DirectX::ScratchImage LoadTexture(const std::string& filePath) {
