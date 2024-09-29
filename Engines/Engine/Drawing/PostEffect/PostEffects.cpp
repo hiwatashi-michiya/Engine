@@ -6,7 +6,7 @@
 #include <cassert>
 #include "Core/DirectXSetter.h"
 #include "BufferResource.h"
-#include "DescriptorHandle.h"
+#include "Core/DescriptorHandle.h"
 #include "TextureManager.h"
 
 #ifdef _DEBUG
