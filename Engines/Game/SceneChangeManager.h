@@ -42,7 +42,7 @@ private:
 
 	float sceneChangeValue_ = 0.0f;
 
-	float sceneChangeSpeed_ = 0.02f;
+	float sceneChangeSpeed_ = 0.05f;
 
 	Texture* texture_ = nullptr;
 
