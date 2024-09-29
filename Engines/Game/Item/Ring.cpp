@@ -80,6 +80,7 @@ void Ring::PlaySE() {
 void Ring::Update() {
 
 	model_->UpdateAnimation();
+	model_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
 	modelWire_->UpdateAnimation();
 
 	//ゲットした演出アニメーションを終えたら破壊

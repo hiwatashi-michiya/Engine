@@ -32,6 +32,8 @@ void GhostBox::Initialize() {
 
 void GhostBox::Update() {
 
+	model_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
+
 	preTranslate_ = collider_->collider_.center;
 
 	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {

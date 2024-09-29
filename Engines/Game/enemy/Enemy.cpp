@@ -31,6 +31,8 @@ void Enemy::Initialize() {
 
 void Enemy::Update() {
 
+	model_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
+
 	//ステージの色と同じなら起動
 	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
 		

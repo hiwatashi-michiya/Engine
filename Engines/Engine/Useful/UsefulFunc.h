@@ -12,3 +12,5 @@ std::string SearchResourceFile(const std::string& name, const std::string& exten
 
 //数字から色を作る
 Vector4 CreateColor(int32_t num);
+
+Vector3 CreateVector3Color(int32_t num);

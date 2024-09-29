@@ -58,3 +58,35 @@ Vector4 CreateColor(int32_t num) {
 
 
 }
+
+Vector3 CreateVector3Color(int32_t num)
+{
+	switch (num % 8)
+	{
+	default:
+	case 0:
+		return { 0.0f,0.5f,1.0f};
+		break;
+	case 1:
+		return { 1.0f,0.3f,0.0f };
+		break;
+	case 2:
+		return { 0.2f,1.0f,0.3f };
+		break;
+	case 3:
+		return { 0.0f,0.8f,0.9f };
+		break;
+	case 4:
+		return { 0.9f,0.1f,0.9f };
+		break;
+	case 5:
+		return { 0.9f,0.9f,0.1f };
+		break;
+	case 6:
+		return { 0.0f,0.1f,0.9f };
+		break;
+	case 7:
+		return { 0.9f,0.1f,0.1f };
+		break;
+	}
+}
