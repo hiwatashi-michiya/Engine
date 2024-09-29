@@ -5,11 +5,31 @@
 MapObject::MapObject() {
 	model_.reset(Model::Create("./Resources/cube/cube.obj"));
 	transform_ = std::make_unique<Transform>();
+	obb_ = std::make_unique<OBB>();
+	lineBox_ = std::make_unique<LineBox>();
+	lineBox_->SetOBB(obb_.get());
 }
 
 void MapObject::Initialize(const std::string& name) {
 
 	objName_ = name;
+
+}
+
+void MapObject::Update()
+{
+
+	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
+	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
 
@@ -47,6 +67,15 @@ void MapObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -54,6 +83,13 @@ void MapObject::Edit() {
 void MapObject::Draw(Camera* camera) {
 
 	model_->Draw(camera);
+
+}
+
+void MapObject::DrawLine(Camera* camera)
+{
+
+	lineBox_->Draw(camera);
 
 }
 
@@ -77,6 +113,15 @@ void PlayerObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -105,6 +150,15 @@ void BlockObject::Edit() {
 
 	model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -138,6 +192,15 @@ void MoveBoxObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -166,6 +229,15 @@ void RingObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -190,6 +262,15 @@ void GoalObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -231,6 +312,15 @@ void WarpObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 	transformB_->UpdateMatrix();
 	model_->SetWorldMatrix(transformB_->worldMatrix_);
@@ -272,6 +362,15 @@ void GhostBoxObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -300,6 +399,15 @@ void SwitchObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -328,6 +436,15 @@ void CopyCatObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -356,6 +473,15 @@ void EnemyObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
@@ -382,6 +508,15 @@ void HolderObject::Edit() {
 #endif // _DEBUG
 
 	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 	modelB_->SetWorldMatrix(transform_->worldMatrix_);
 

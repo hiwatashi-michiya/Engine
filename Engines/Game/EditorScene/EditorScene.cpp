@@ -24,10 +24,20 @@ void EditorScene::Initialize() {
 	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
 
-	camera_ = std::make_unique<Camera>();
-	camera_->Initialize();
-	camera_->position_ = { 0.0f,65.0f, -60.0f };
-	camera_->rotation_.x = 0.9f;
+	cameraX_ = std::make_unique<Camera>();
+	cameraX_->Initialize();
+	cameraX_->position_ = { 60.0f,0.0f, 0.0f };
+	cameraX_->rotation_.y = -1.57f;
+
+	cameraY_ = std::make_unique<Camera>();
+	cameraY_->Initialize();
+	cameraY_->position_ = { 0.0f, 60.0f, 0.0f };
+	cameraY_->rotation_.x = 1.57f;
+
+	cameraZ_ = std::make_unique<Camera>();
+	cameraZ_->Initialize();
+	cameraZ_->position_ = { 0.0f,0.0f, 60.0f };
+	cameraZ_->rotation_.y = -3.14f;
 
 	debugCamera_ = std::make_unique<DebugCamera>();
 	debugCamera_->Initialize();
@@ -39,6 +49,8 @@ void EditorScene::Initialize() {
 	tex_ = TextureManager::GetInstance()->Load("./Resources/UI/num.png");
 	test_.reset(Sprite::Create(tex_, {}));
 
+	currentCamera_ = debugCamera_->GetCamera();
+
 }
 
 void EditorScene::Update() {
@@ -46,9 +58,9 @@ void EditorScene::Update() {
 #ifdef _DEBUG
 
 	ImGui::Begin("camera");
-	ImGui::DragFloat3("scale", &camera_->scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
+	ImGui::DragFloat3("scale", &debugCamera_->GetCamera()->scale_.x, 0.1f);
+	ImGui::DragFloat3("rotation", &debugCamera_->GetCamera()->rotation_.x, 0.1f);
+	ImGui::DragFloat3("translation", &debugCamera_->GetCamera()->position_.x, 0.1f);
 	ImGui::End();
 
 	test_->ImGuiUpdate("test");
@@ -73,20 +85,48 @@ void EditorScene::Update() {
 		debugCamera_->Update();
 	}
 
+	if (input_->TriggerKey(DIK_Q) and input_->PushKey(DIK_LCONTROL)) {
+
+		cameraIndex_++;
+
+		if (cameraIndex_ > 3) {
+			cameraIndex_ = 0;
+		}
+
+		switch (cameraIndex_)
+		{
+		default:
+		case 0:
+			currentCamera_ = debugCamera_->GetCamera();
+			break;
+		case 1:
+			currentCamera_ = cameraX_.get();
+			break;
+		case 2:
+			currentCamera_ = cameraY_.get();
+			break;
+		case 3:
+			currentCamera_ = cameraZ_.get();
+			break;
+		}
+
+	}
+
 #endif // _DEBUG
 
-	Quaternion cameraQuaternion = IdentityQuaternion();
+	cameraX_->position_ = debugCamera_->GetCamera()->position_ + Vector3{60.0f, -65.0f,60.0f};
+	cameraY_->position_ = debugCamera_->GetCamera()->position_ + Vector3{ 0.0f, -5.0f,60.0f };
+	cameraZ_->position_ = debugCamera_->GetCamera()->position_ + Vector3{ 0.0f, -65.0f,120.0f };
 
-	cameraQuaternion = cameraQuaternion.ConvertFromEuler(camera_->rotation_);
-
-	camera_->matRotate_ = MakeRotateMatrix(cameraQuaternion);
-	camera_->Update();
+	cameraX_->Update();
+	cameraY_->Update();
+	cameraZ_->Update();
 
 }
 
 void EditorScene::DrawModel() {
 
-	editor_->Draw(debugCamera_->GetCamera());
+	editor_->Draw(currentCamera_);
 
 }
 
@@ -108,6 +148,6 @@ void EditorScene::DrawSprite() {
 
 void EditorScene::DrawLine() {
 
-
+	editor_->DrawLine(currentCamera_);
 
 }

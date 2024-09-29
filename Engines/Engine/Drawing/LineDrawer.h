@@ -73,6 +73,8 @@ public:
 
 	void Update();
 
+	void SetColor(Vector4 color);
+
 	void Draw(Camera* camera, const Matrix4x4& matrix = MakeIdentity4x4());
 
 private:

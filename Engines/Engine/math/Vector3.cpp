@@ -1,4 +1,5 @@
 #include "Vector3.h"
+#include "Vector2.h"
 #include <math.h>
 #include "Matrix4x4.h"
 #include <cassert>
@@ -97,6 +98,23 @@ Vector3 CoordTransform(const Vector3& vector, const Matrix4x4& matrix) {
 	result.x /= w;
 	result.y /= w;
 	result.z /= w;
+	return result;
+
+}
+
+Vector3 ScreenToWorld(const Vector2& position, float zValue, const Matrix4x4& matView, const Matrix4x4& matProjection)
+{
+
+	zValue = std::clamp(zValue, 0.0f, 1.0f);
+
+	Vector3 result = { position.x, position.y, zValue };
+
+	Matrix4x4 viewPort = MakeViewportMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 1.0f);
+
+	result = CoordTransform(result, Inverse(viewPort));
+	result = CoordTransform(result, Inverse(matProjection));
+	result = CoordTransform(result, Inverse(matView));
+
 	return result;
 
 }

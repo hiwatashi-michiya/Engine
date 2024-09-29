@@ -120,6 +120,8 @@ struct Capsule {
 	float radius;
 };
 
+struct Vector2;
+
 class Matrix4x4;
 
 class Quaternion;
@@ -138,6 +140,9 @@ Vector3 Normalize(const Vector3& v);
 
 //座標変換
 Vector3 CoordTransform(const Vector3& vector, const Matrix4x4& matrix);
+
+//スクリーン座標からワールド座標への変換
+Vector3 ScreenToWorld(const Vector2& position, float zValue, const Matrix4x4& matView, const Matrix4x4& matProjection);
 
 //ベクトル変換(スケールと回転)
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);

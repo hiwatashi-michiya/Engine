@@ -10,6 +10,7 @@
 #include <windows.h>
 #include "Menu.h"
 #include "UsefulFunc.h"
+#include "Collision.h"
 
 void UniqueEditor::EditTransform()
 {
@@ -56,8 +57,20 @@ void UniqueEditor::EditTransform()
 
 	std::vector<Matrix4x4> matrices;
 
+	//一番近いオブジェクトとの距離
+	float nearLength = 99999.0f;
+	//切り替え先の番号
+	int32_t changeNum = -1;
+	//オブジェクトに触れているかどうかの判定
+	bool isHit = false;
+
+	//番号把握用の変数
+	uint32_t count = 0;
+
 	for (auto& object : mapObjData_) {
 		
+		OBB tmpObb{};
+
 		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
 
 			Vector3 scale = warpPtr->transform_->scale_;
@@ -73,6 +86,22 @@ void UniqueEditor::EditTransform()
 
 			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
 
+			tmpObb.center = translate;
+			tmpObb.size = scale;
+			tmpObb.orientations[0] = Normalize(tmpMatrix.GetXAxis());
+			tmpObb.orientations[1] = Normalize(tmpMatrix.GetYAxis());
+			tmpObb.orientations[2] = Normalize(tmpMatrix.GetZAxis());
+
+			if (IsCollision(mouseSegment_, tmpObb)) {
+
+				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
+					nearLength = Length(tmpObb.center - mouseSegment_.origin);
+					changeNum = count;
+					isHit = true;
+				}
+
+			}
+
 			matrices.push_back(tmpMatrix);
 
 		}
@@ -84,8 +113,47 @@ void UniqueEditor::EditTransform()
 
 			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
 
+			tmpObb.center = translate;
+			tmpObb.size = scale;
+			tmpObb.orientations[0] = Normalize(tmpMatrix.GetXAxis());
+			tmpObb.orientations[1] = Normalize(tmpMatrix.GetYAxis());
+			tmpObb.orientations[2] = Normalize(tmpMatrix.GetZAxis());
+
+			if (IsCollision(mouseSegment_, tmpObb)) {
+
+				object->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
+				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
+					nearLength = Length(tmpObb.center - mouseSegment_.origin);
+					changeNum = count;
+					isHit = true;
+				}
+
+			}
+			else {
+				object->lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+			}
+
 			matrices.push_back(tmpMatrix);
 
+		}
+
+		count++;
+
+	}
+
+	if (isHit) {
+		mouseLine_->color_ = { 1.0f,0.0f,0.0f,1.0f };
+	}
+	else {
+		mouseLine_->color_ = { 1.0f,1.0f,1.0f,1.0f };
+	}
+
+	//マウスをクリックしていたら選択を切り替える
+	if (changeNum != -1) {
+
+		if (input_->TriggerMouse(Input::Mouse::kLeft)) {
+			selectObject_ = changeNum;
 		}
 
 	}
@@ -112,7 +180,7 @@ void UniqueEditor::EditTransform()
 
 	}
 
-	uint32_t count = 0;
+	count = 0;
 
 	for (auto& object : mapObjData_) {
 
@@ -169,6 +237,8 @@ void UniqueEditor::Initialize() {
 
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
 
+	mouseLine_ = std::make_unique<Line>();
+
 	if (isOpenFile_) {
 		Close();
 	}
@@ -194,6 +264,12 @@ void UniqueEditor::Edit() {
 		return false;
 
 		});
+
+	//マウスの位置をワールド座標に変換し、線を作成
+	mouseSegment_.origin = ScreenToWorld(input_->GetMousePosition(), 0.9f, camera_->matView_, camera_->matProjection_);
+	mouseSegment_.diff = ScreenToWorld(input_->GetMousePosition(), 1.0f, camera_->matView_, camera_->matProjection_);
+	mouseLine_->start_ = mouseSegment_.origin;
+	mouseLine_->end_ = mouseSegment_.diff;
 
 	EditTransform();
 
@@ -347,6 +423,8 @@ void UniqueEditor::Edit() {
 							warpPtr->modelB_->SetWorldMatrix(warpPtr->transformB_->worldMatrix_);
 						}
 
+						object->Update();
+
 						k++;
 
 					}
@@ -423,6 +501,19 @@ void UniqueEditor::Draw(Camera* camera) {
 	for (auto& object : mapObjData_) {
 
 		object->Draw(camera);
+
+	}
+
+}
+
+void UniqueEditor::DrawLine(Camera* camera)
+{
+
+	mouseLine_->Draw(camera);
+
+	for (auto& object : mapObjData_) {
+
+		object->DrawLine(camera);
 
 	}
 

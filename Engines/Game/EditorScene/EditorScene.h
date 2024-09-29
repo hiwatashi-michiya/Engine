@@ -38,7 +38,9 @@ private:
 
 	UniqueEditor* editor_ = nullptr;
 
-	std::unique_ptr<Camera> camera_;
+	std::unique_ptr<Camera> cameraX_;
+	std::unique_ptr<Camera> cameraY_;
+	std::unique_ptr<Camera> cameraZ_;
 
 	std::unique_ptr<DebugCamera> debugCamera_;
 
@@ -47,6 +49,10 @@ private:
 	std::unique_ptr<Transform> transform_;
 
 	std::unique_ptr<Sprite> test_;
+
+	Camera* currentCamera_ = nullptr;
+
+	int32_t cameraIndex_ = 0;
 
 	Texture* tex_;
 

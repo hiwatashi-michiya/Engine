@@ -6,6 +6,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "Vector3.h"
+#include "LineDrawer.h"
 
 //マップに配置されているオブジェクトの構造体
 class MapObject {
@@ -16,9 +18,13 @@ public:
 
 	virtual void Initialize(const std::string& name);
 
+	virtual void Update();
+
 	virtual void Edit();
 
 	virtual void Draw(Camera* camera);
+
+	virtual void DrawLine(Camera* camera);
 
 	std::string objName_;
 
@@ -43,6 +49,9 @@ public:
 	const int32_t  kMaxColor_ = 8;
 
 	int32_t colorNumber_ = 0;
+
+	std::unique_ptr<OBB> obb_;
+	std::unique_ptr<LineBox> lineBox_;
 
 };
 

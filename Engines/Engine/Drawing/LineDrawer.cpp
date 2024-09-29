@@ -292,6 +292,15 @@ void LineBox::Update() {
 
 }
 
+void LineBox::SetColor(Vector4 color)
+{
+
+	for (int32_t i = 0; i < kMaxLine_; i++) {
+		lines_[i]->color_ = color;
+	}
+
+}
+
 void LineBox::Draw(Camera* camera, const Matrix4x4& matrix) {
 
 #ifdef _DEBUG

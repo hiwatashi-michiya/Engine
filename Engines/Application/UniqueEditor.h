@@ -9,6 +9,7 @@
 #include <vector>
 #include "EditorObject.h"
 #include "Input.h"
+#include "LineDrawer.h"
 
 class UniqueEditor
 {
@@ -24,6 +25,8 @@ public:
 	void Edit();
 
 	void Draw(Camera* camera);
+
+	void DrawLine(Camera* camera);
 
 	const std::string& kDirectoryPath_ = "./Resources/Maps/";
 
@@ -113,7 +116,11 @@ private:
 
 	std::vector<std::string> mapNames_;
 
+	std::unique_ptr<Line> mouseLine_;
+
 	int32_t selectObject_ = 0;
+
+	Segment mouseSegment_{};
 
 private:
 
