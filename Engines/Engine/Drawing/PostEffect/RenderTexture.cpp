@@ -2,7 +2,7 @@
 #include "PipelineManager.h"
 #include "RootSignatureManager.h"
 #include "ShaderManager.h"
-#include "DirectXSetter.h"
+#include "Core/DirectXSetter.h"
 #include <cassert>
 #include "Convert.h"
 

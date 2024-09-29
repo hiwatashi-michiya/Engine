@@ -9,12 +9,12 @@
 #include "Buffer/BufferResource.h"
 #include "Drawing/PipelineManager.h"
 #include "Drawing/MeshManager.h"
-#include "RootSignatureDesc.h"
-#include "RootParameter.h"
-#include "StaticSampler.h"
-#include "InputElement.h"
-#include "InputLayout.h"
-#include "DescriptorRange.h"
+#include "Core/RootSignatureDesc.h"
+#include "Core/RootParameter.h"
+#include "Core/StaticSampler.h"
+#include "Core/InputElement.h"
+#include "Core/InputLayout.h"
+#include "Core/DescriptorRange.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 

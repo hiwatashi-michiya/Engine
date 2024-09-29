@@ -1,5 +1,5 @@
 #include "TextureManager.h"
-#include "DirectXSetter.h"
+#include "Core/DirectXSetter.h"
 #include "externals/DirectXTex/DirectXTex.h"
 #include"Engine/Convert.h"
 #include "Engine/math/Matrix4x4.h"

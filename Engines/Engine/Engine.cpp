@@ -2,7 +2,7 @@
 #include "Model.h"
 #include "Particle3D.h"
 #include "AudioManager.h"
-#include "DirectXSetter.h"
+#include "Core/DirectXSetter.h"
 #include "SafeDelete.h"
 #include "WindowManager.h"
 #include "Convert.h"

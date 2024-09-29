@@ -4,7 +4,7 @@
 #include "PipelineManager.h"
 #include "Convert.h"
 #include <cassert>
-#include "DirectXSetter.h"
+#include "Core/DirectXSetter.h"
 #include "BufferResource.h"
 #include "DescriptorHandle.h"
 #include "TextureManager.h"

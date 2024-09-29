@@ -1,5 +1,5 @@
 #include "Input.h"
-#include "WindowManager.h"
+#include "Core/WindowManager.h"
 #include <cassert>
 
 #pragma comment(lib, "dinput8.lib")

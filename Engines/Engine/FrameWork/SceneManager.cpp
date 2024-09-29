@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 #include <cassert>
-#include "DirectXSetter.h"
+#include "Core/DirectXSetter.h"
 #include "Model.h"
 #include "Particle3D.h"
 #include "Sprite.h"
