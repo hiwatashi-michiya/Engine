@@ -152,8 +152,13 @@ void UniqueEditor::EditTransform()
 	//マウスをクリックしていたら選択を切り替える
 	if (changeNum != -1) {
 
-		if (input_->TriggerMouse(Input::Mouse::kLeft)) {
-			selectObject_ = changeNum;
+		if (not isMove_ and not preIsMove_ and not ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) and
+			not ImGuizmo::IsOver()) {
+
+			if (input_->TriggerMouse(Input::Mouse::kLeft)) {
+				selectObject_ = changeNum;
+			}
+
 		}
 
 	}
