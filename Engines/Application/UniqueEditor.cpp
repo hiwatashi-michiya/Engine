@@ -272,9 +272,10 @@ void UniqueEditor::Edit() {
 
 	//マウスの位置をワールド座標に変換し、線を作成
 	mouseSegment_.origin = ScreenToWorld(input_->GetMousePosition(), 0.9f, camera_->matView_, camera_->matProjection_);
-	mouseSegment_.diff = ScreenToWorld(input_->GetMousePosition(), 1.0f, camera_->matView_, camera_->matProjection_);
+	mouseSegment_.diff = ScreenToWorld(input_->GetMousePosition(), 1.0f, camera_->matView_, camera_->matProjection_) - 
+		ScreenToWorld(input_->GetMousePosition(), 0.9f, camera_->matView_, camera_->matProjection_);
 	mouseLine_->start_ = mouseSegment_.origin;
-	mouseLine_->end_ = mouseSegment_.diff;
+	mouseLine_->end_ = mouseSegment_.origin + mouseSegment_.diff;
 
 	EditTransform();
 
