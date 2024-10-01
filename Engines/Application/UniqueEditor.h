@@ -10,6 +10,7 @@
 #include "EditorObject.h"
 #include "Input.h"
 #include "LineDrawer.h"
+#include <algorithm>
 
 class UniqueEditor
 {
@@ -32,7 +33,7 @@ public:
 
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
-	std::list<std::shared_ptr<MapObject>> GetObjects() const { return mapObjData_; }
+	std::vector<std::shared_ptr<MapObject>> GetObjects() const { return mapObjData_; }
 
 	bool GetIsMove() const { return isMove_; }
 
@@ -87,10 +88,7 @@ private:
 
 	GlobalVariables* globalVariables_ = nullptr;
 
-	std::list<std::shared_ptr<MapObject>> mapObjData_;
-
-	//オブジェクトのトランスフォームのポインタを格納するマップ
-	std::unordered_map<std::shared_ptr<MapObject>, float*> matrices_;
+	std::vector<std::shared_ptr<MapObject>> mapObjData_;
 
 	std::string currentObject_;
 

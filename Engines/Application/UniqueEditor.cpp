@@ -67,11 +67,11 @@ void UniqueEditor::EditTransform()
 	//番号把握用の変数
 	uint32_t count = 0;
 
-	for (auto& object : mapObjData_) {
+	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 		
 		OBB tmpObb{};
 
-		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
+		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
 
 			Vector3 scale = warpPtr->transform_->scale_;
 			Quaternion rotate = warpPtr->transform_->rotateQuaternion_;
@@ -107,9 +107,9 @@ void UniqueEditor::EditTransform()
 		}
 		else {
 
-			Vector3 scale = object->transform_->scale_;
-			Quaternion rotate = object->transform_->rotateQuaternion_;
-			Vector3 translate = object->transform_->translate_;
+			Vector3 scale = mapObjData_[i]->transform_->scale_;
+			Quaternion rotate = mapObjData_[i]->transform_->rotateQuaternion_;
+			Vector3 translate = mapObjData_[i]->transform_->translate_;
 
 			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
 
@@ -121,7 +121,7 @@ void UniqueEditor::EditTransform()
 
 			if (IsCollision(mouseSegment_, tmpObb)) {
 
-				object->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+				mapObjData_[i]->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
 				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
 					nearLength = Length(tmpObb.center - mouseSegment_.origin);
@@ -131,7 +131,7 @@ void UniqueEditor::EditTransform()
 
 			}
 			else {
-				object->lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+				mapObjData_[i]->lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 			}
 
 			matrices.push_back(tmpMatrix);
@@ -187,9 +187,9 @@ void UniqueEditor::EditTransform()
 
 	count = 0;
 
-	for (auto& object : mapObjData_) {
+	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
+		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
 
 			if (warpPtr->isMoveA_) {
 
@@ -213,11 +213,11 @@ void UniqueEditor::EditTransform()
 		}
 		else {
 
-			object->transform_->UpdateMatrix();
+			mapObjData_[i]->transform_->UpdateMatrix();
 
-			object->transform_->scale_ = matrices[count].GetScale();
-			object->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
-			object->transform_->translate_ = matrices[count].GetTranslate();
+			mapObjData_[i]->transform_->scale_ = matrices[count].GetScale();
+			mapObjData_[i]->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
+			mapObjData_[i]->transform_->translate_ = matrices[count].GetTranslate();
 
 		}
 
@@ -260,15 +260,16 @@ void UniqueEditor::Edit() {
 
 	preIsMove_ = isMove_;
 
-	mapObjData_.remove_if([](auto& object) {
+	mapObjData_.erase(std::remove_if(mapObjData_.begin(), mapObjData_.end(),
+		[](auto& object) {
 
-		if (object->isDelete_) {
-			return true;
-		}
+			if (object->isDelete_) {
+				return true;
+			}
 
-		return false;
+			return false;
 
-		});
+		}), mapObjData_.end());
 
 	//マウスの位置をワールド座標に変換し、線を作成
 	mouseSegment_.origin = ScreenToWorld(input_->GetMousePosition(), 0.9f, camera_->matView_, camera_->matProjection_);
@@ -504,9 +505,9 @@ void UniqueEditor::Edit() {
 
 void UniqueEditor::Draw(Camera* camera) {
 
-	for (auto& object : mapObjData_) {
+	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		object->Draw(camera);
+		mapObjData_[i]->Draw(camera);
 
 	}
 
@@ -517,9 +518,9 @@ void UniqueEditor::DrawLine(Camera* camera)
 
 	mouseLine_->Draw(camera);
 
-	for (auto& object : mapObjData_) {
+	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		object->DrawLine(camera);
+		mapObjData_[i]->DrawLine(camera);
 
 	}
 
@@ -533,9 +534,9 @@ void UniqueEditor::Save(const std::string& filename) {
 
 	root[sceneName_] = nlohmann::json::object();
 
-	for (auto& object : mapObjData_) {
+	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
+		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
 
 			root[sceneName_]["objectData"][warpPtr->objName_]["position"] =
 				nlohmann::json::array({ warpPtr->transform_->translate_.x, warpPtr->transform_->translate_.y, warpPtr->transform_->translate_.z,
@@ -546,20 +547,20 @@ void UniqueEditor::Save(const std::string& filename) {
 			root[sceneName_]["objectData"][warpPtr->objName_]["scale"] =
 				nlohmann::json::array({ warpPtr->transform_->scale_.x, warpPtr->transform_->scale_.y, warpPtr->transform_->scale_.z });
 			root[sceneName_]["objectData"][warpPtr->objName_]["tag"] = warpPtr->tag_;
-			root[sceneName_]["objectData"][object->objName_]["color"] = object->colorNumber_;
+			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = mapObjData_[i]->colorNumber_;
 
 		}
 		else {
 
-			root[sceneName_]["objectData"][object->objName_]["position"] =
-				nlohmann::json::array({ object->transform_->translate_.x, object->transform_->translate_.y, object->transform_->translate_.z });
-			root[sceneName_]["objectData"][object->objName_]["quaternion"] =
-				nlohmann::json::array({ object->transform_->rotateQuaternion_.x,
-					object->transform_->rotateQuaternion_.y, object->transform_->rotateQuaternion_.z, object->transform_->rotateQuaternion_.w });
-			root[sceneName_]["objectData"][object->objName_]["scale"] =
-				nlohmann::json::array({ object->transform_->scale_.x, object->transform_->scale_.y, object->transform_->scale_.z });
-			root[sceneName_]["objectData"][object->objName_]["tag"] = object->tag_;
-			root[sceneName_]["objectData"][object->objName_]["color"] = object->colorNumber_;
+			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["position"] =
+				nlohmann::json::array({ mapObjData_[i]->transform_->translate_.x, mapObjData_[i]->transform_->translate_.y, mapObjData_[i]->transform_->translate_.z });
+			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["quaternion"] =
+				nlohmann::json::array({ mapObjData_[i]->transform_->rotateQuaternion_.x,
+					mapObjData_[i]->transform_->rotateQuaternion_.y, mapObjData_[i]->transform_->rotateQuaternion_.z, mapObjData_[i]->transform_->rotateQuaternion_.w });
+			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["scale"] =
+				nlohmann::json::array({ mapObjData_[i]->transform_->scale_.x, mapObjData_[i]->transform_->scale_.y, mapObjData_[i]->transform_->scale_.z });
+			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["tag"] = mapObjData_[i]->tag_;
+			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = mapObjData_[i]->colorNumber_;
 
 		}
 
@@ -1299,16 +1300,16 @@ MapObject* UniqueEditor::GetNearObject(MapObject* self)
 
 	float minLength = 99999.0f;
 
-	for (auto& object : mapObjData_) {
+	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		if (self == object.get()) {
+		if (self == mapObjData_[i].get()) {
 			continue;
 		}
 
-		if (Length(object->transform_->translate_ - self->transform_->translate_) < minLength) {
+		if (Length(mapObjData_[i]->transform_->translate_ - self->transform_->translate_) < minLength) {
 
-			minLength = Length(object->transform_->translate_ - self->transform_->translate_);
-			nearObject = object.get();
+			minLength = Length(mapObjData_[i]->transform_->translate_ - self->transform_->translate_);
+			nearObject = mapObjData_[i].get();
 
 		}
 
