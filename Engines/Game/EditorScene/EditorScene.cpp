@@ -81,7 +81,8 @@ void EditorScene::Update() {
 
 	editor_->Edit();
 
-	if (!editor_->GetIsMove() && !editor_->GetPreIsMove() && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) {
+	if (not editor_->GetIsMove() and not editor_->GetPreIsMove() and not ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) and
+		not ImGui::IsAnyItemHovered()) {
 		debugCamera_->Update();
 	}
 

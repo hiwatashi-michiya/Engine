@@ -287,6 +287,39 @@ void WarpObject::Initialize(const std::string& name) {
 	model_->SetColor(CreateColor(colorNumber_));
 	modelB_->SetColor(CreateColor(colorNumber_));
 
+	obbB_ = std::make_unique<OBB>();
+	lineBoxB_ = std::make_unique<LineBox>();
+	lineBoxB_->SetOBB(obbB_.get());
+
+}
+
+void WarpObject::Update()
+{
+
+	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
+	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+	transformB_->UpdateMatrix();
+
+	obbB_->center = transformB_->translate_;
+	obbB_->size = transformB_->scale_;
+	obbB_->orientations[0] = Normalize(transformB_->worldMatrix_.GetXAxis());
+	obbB_->orientations[1] = Normalize(transformB_->worldMatrix_.GetYAxis());
+	obbB_->orientations[2] = Normalize(transformB_->worldMatrix_.GetZAxis());
+
+	lineBoxB_->Update();
+
+	modelB_->SetWorldMatrix(transformB_->worldMatrix_);
+
 }
 
 void WarpObject::Edit() {
@@ -331,6 +364,14 @@ void WarpObject::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 	modelB_->Draw(camera);
+
+}
+
+void WarpObject::DrawLine(Camera* camera)
+{
+
+	lineBox_->Draw(camera);
+	lineBoxB_->Draw(camera);
 
 }
 

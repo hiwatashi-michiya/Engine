@@ -115,11 +115,18 @@ public:
 
 	void Initialize(const std::string& name) override;
 
+	void Update() override;
+
 	void Edit() override;
 
 	void Draw(Camera* camera) override;
 
+	void DrawLine(Camera* camera) override;
+
 	bool isMoveA_ = true;
+
+	std::unique_ptr<OBB> obbB_;
+	std::unique_ptr<LineBox> lineBoxB_;
 
 };
 

@@ -64,43 +64,64 @@ void UniqueEditor::EditTransform()
 	//オブジェクトに触れているかどうかの判定
 	bool isHit = false;
 
-	//番号把握用の変数
-	uint32_t count = 0;
-
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 		
 		OBB tmpObb{};
 
 		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
 
+			tmpObb = *warpPtr->obb_.get();
+
+			OBB tmpObbB = *warpPtr->obbB_.get();
+
+			if (IsCollision(mouseSegment_, tmpObb)) {
+
+				warpPtr->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
+				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
+					nearLength = Length(tmpObb.center - mouseSegment_.origin);
+					changeNum = i;
+					if (input_->TriggerMouse(Input::Mouse::kLeft)) {
+						warpPtr->isMoveA_ = true;
+					}
+					isHit = true;
+				}
+
+			}
+			else {
+				warpPtr->lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+			}
+
+			if (IsCollision(mouseSegment_, tmpObbB)) {
+
+				warpPtr->lineBoxB_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
+				if (Length(tmpObbB.center - mouseSegment_.origin) < nearLength) {
+					nearLength = Length(tmpObbB.center - mouseSegment_.origin);
+					changeNum = i;
+					if (input_->TriggerMouse(Input::Mouse::kLeft)) {
+						warpPtr->isMoveA_ = false;
+					}
+					isHit = true;
+				}
+
+			}
+			else {
+				warpPtr->lineBoxB_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+			}
+
 			Vector3 scale = warpPtr->transform_->scale_;
 			Quaternion rotate = warpPtr->transform_->rotateQuaternion_;
 			Vector3 translate = warpPtr->transform_->translate_;
 
 			//どちらを動かすかによって渡す行列を変更する
-			if (!warpPtr->isMoveA_) {
+			if (not warpPtr->isMoveA_) {
 				scale = warpPtr->transformB_->scale_;
 				rotate = warpPtr->transformB_->rotateQuaternion_;
 				translate = warpPtr->transformB_->translate_;
 			}
 
 			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
-
-			tmpObb.center = translate;
-			tmpObb.size = scale;
-			tmpObb.orientations[0] = Normalize(tmpMatrix.GetXAxis());
-			tmpObb.orientations[1] = Normalize(tmpMatrix.GetYAxis());
-			tmpObb.orientations[2] = Normalize(tmpMatrix.GetZAxis());
-
-			if (IsCollision(mouseSegment_, tmpObb)) {
-
-				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
-					nearLength = Length(tmpObb.center - mouseSegment_.origin);
-					changeNum = count;
-					isHit = true;
-				}
-
-			}
 
 			matrices.push_back(tmpMatrix);
 
@@ -113,11 +134,7 @@ void UniqueEditor::EditTransform()
 
 			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
 
-			tmpObb.center = translate;
-			tmpObb.size = scale;
-			tmpObb.orientations[0] = Normalize(tmpMatrix.GetXAxis());
-			tmpObb.orientations[1] = Normalize(tmpMatrix.GetYAxis());
-			tmpObb.orientations[2] = Normalize(tmpMatrix.GetZAxis());
+			tmpObb = *mapObjData_[i]->obb_.get();
 
 			if (IsCollision(mouseSegment_, tmpObb)) {
 
@@ -125,7 +142,7 @@ void UniqueEditor::EditTransform()
 
 				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
 					nearLength = Length(tmpObb.center - mouseSegment_.origin);
-					changeNum = count;
+					changeNum = i;
 					isHit = true;
 				}
 
@@ -137,8 +154,6 @@ void UniqueEditor::EditTransform()
 			matrices.push_back(tmpMatrix);
 
 		}
-
-		count++;
 
 	}
 
@@ -185,8 +200,6 @@ void UniqueEditor::EditTransform()
 
 	}
 
-	count = 0;
-
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
 		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
@@ -195,18 +208,18 @@ void UniqueEditor::EditTransform()
 
 				warpPtr->transform_->UpdateMatrix();
 
-				warpPtr->transform_->scale_ = matrices[count].GetScale();
-				warpPtr->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
-				warpPtr->transform_->translate_ = matrices[count].GetTranslate();
+				warpPtr->transform_->scale_ = matrices[i].GetScale();
+				warpPtr->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[i].GetRotateMatrix());
+				warpPtr->transform_->translate_ = matrices[i].GetTranslate();
 
 			}
 			else {
 
 				warpPtr->transformB_->UpdateMatrix();
 
-				warpPtr->transformB_->scale_ = matrices[count].GetScale();
-				warpPtr->transformB_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
-				warpPtr->transformB_->translate_ = matrices[count].GetTranslate();
+				warpPtr->transformB_->scale_ = matrices[i].GetScale();
+				warpPtr->transformB_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[i].GetRotateMatrix());
+				warpPtr->transformB_->translate_ = matrices[i].GetTranslate();
 
 			}
 
@@ -215,13 +228,11 @@ void UniqueEditor::EditTransform()
 
 			mapObjData_[i]->transform_->UpdateMatrix();
 
-			mapObjData_[i]->transform_->scale_ = matrices[count].GetScale();
-			mapObjData_[i]->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[count].GetRotateMatrix());
-			mapObjData_[i]->transform_->translate_ = matrices[count].GetTranslate();
+			mapObjData_[i]->transform_->scale_ = matrices[i].GetScale();
+			mapObjData_[i]->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[i].GetRotateMatrix());
+			mapObjData_[i]->transform_->translate_ = matrices[i].GetTranslate();
 
 		}
-
-		count++;
 
 	}
 
