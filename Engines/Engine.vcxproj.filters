@@ -315,9 +315,6 @@
     <ClCompile Include="Game\EditorScene\EditorScene.cpp">
       <Filter>Game\EditorScene</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Menu.cpp">
-      <Filter>Application</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Gimmick\GhostBox.cpp">
       <Filter>Game\Gimmick</Filter>
     </ClCompile>
@@ -581,9 +578,6 @@
     <ClInclude Include="Game\EditorScene\EditorScene.h">
       <Filter>Game\EditorScene</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Menu.h">
-      <Filter>Application</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Gimmick\GhostBox.h">
       <Filter>Game\Gimmick</Filter>
     </ClInclude>
@@ -628,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\StaticSampler.h">
       <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\EditorCommand.h">
+      <Filter>Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

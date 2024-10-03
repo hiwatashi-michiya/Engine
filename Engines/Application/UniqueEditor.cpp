@@ -8,7 +8,6 @@
 #include <cassert>
 #include <filesystem>
 #include <windows.h>
-#include "Menu.h"
 #include "UsefulFunc.h"
 #include "Collision.h"
 
@@ -188,14 +187,34 @@ void UniqueEditor::EditTransform()
 			isMove_ = false;
 		}
 
+		//操作している間
 		if (ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
 			reinterpret_cast<float*>(matrices[selectObject_].m), NULL, NULL, NULL, NULL)) {
 			
-			
+			//操作した瞬間に状態を保存
+			if (not isRecordMove_) {
+				oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->scale_;
+				oldTransform_->rotateQuaternion_ = mapObjData_[selectObject_]->transform_->rotateQuaternion_;
+				oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->translate_;
+				isRecordMove_ = true;
+			}
 
 		}
-		else {
+		else if(not ImGuizmo::IsUsing()) {
 			
+			//操作が終わったらUndoリストに追加
+			if (isRecordMove_) {
+
+				std::shared_ptr<MoveCommand> newMoveCommand = 
+					std::make_shared<MoveCommand>(*mapObjData_[selectObject_]->transform_,
+						*oldTransform_, *mapObjData_[selectObject_]->transform_);
+				undoCommands_.push_back(newMoveCommand);
+				//新しい要素が作成された時点でRedoのコマンドをクリア
+				redoCommands_.clear();
+
+				isRecordMove_ = false;
+			}
+
 		}
 
 	}
@@ -254,6 +273,8 @@ void UniqueEditor::Initialize() {
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
 
 	mouseLine_ = std::make_unique<Line>();
+
+	oldTransform_ = std::make_unique<Transform>();
 
 	if (isOpenFile_) {
 		Close();
@@ -459,6 +480,26 @@ void UniqueEditor::Edit() {
 
 		if (!mapObjData_.empty()) {
 			ImGui::SliderInt("Select Object", &selectObject_, 0, int(mapObjData_.size() - 1));
+		}
+
+		if (input_->TriggerKey(DIK_Z) and input_->PushKey(DIK_LCONTROL)) {
+			
+			if (not undoCommands_.empty()) {
+				undoCommands_[undoCommands_.size() - 1]->Undo();
+				redoCommands_.push_back(undoCommands_[undoCommands_.size() - 1]);
+				undoCommands_.pop_back();
+			}
+
+		}
+
+		if (input_->TriggerKey(DIK_Y) and input_->PushKey(DIK_LCONTROL)) {
+
+			if (not redoCommands_.empty()) {
+				redoCommands_[redoCommands_.size() - 1]->Execute();
+				undoCommands_.push_back(redoCommands_[redoCommands_.size() - 1]);
+				redoCommands_.pop_back();
+			}
+
 		}
 
 	}

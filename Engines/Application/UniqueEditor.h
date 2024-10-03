@@ -11,6 +11,7 @@
 #include "Input.h"
 #include "LineDrawer.h"
 #include <algorithm>
+#include "EditorCommand.h"
 
 class UniqueEditor
 {
@@ -119,6 +120,15 @@ private:
 	int32_t selectObject_ = 0;
 
 	Segment mouseSegment_{};
+
+	//Undoできるコマンドリスト
+	std::vector<std::shared_ptr<ICommand>> undoCommands_;
+	//Redoできるコマンドリスト
+	std::vector<std::shared_ptr<ICommand>> redoCommands_;
+	//オブジェクトの動きを記録するフラグ
+	bool isRecordMove_ = false;
+	//古いトランスフォームの記録
+	std::unique_ptr<Transform> oldTransform_;
 
 private:
 

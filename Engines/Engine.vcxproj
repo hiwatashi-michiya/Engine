@@ -158,7 +158,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\EditorObject.cpp" />
-    <ClCompile Include="Application\Menu.cpp" />
     <ClCompile Include="Application\UniqueEditor.cpp" />
     <ClCompile Include="Engine\2d\Sprite.cpp" />
     <ClCompile Include="Engine\3d\Material.cpp" />
@@ -241,8 +240,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\SceneChangeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application\EditorCommand.h" />
     <ClInclude Include="Application\EditorObject.h" />
-    <ClInclude Include="Application\Menu.h" />
     <ClInclude Include="Application\UniqueEditor.h" />
     <ClInclude Include="Engine\2d\Sprite.h" />
     <ClInclude Include="Engine\3d\GameObject.h" />
