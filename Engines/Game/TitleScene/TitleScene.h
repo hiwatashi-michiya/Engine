@@ -4,7 +4,7 @@
 #include "Drawing/TextureManager.h"
 #include "Game/DefaultScene.h"
 #include "input/Input.h"
-#include "MapEditor.h"
+#include "Editor/MapEditor.h"
 #include "Model.h"
 #include "Particle.h"
 #include "Particle3D.h"

@@ -135,8 +135,6 @@ void GameScene::Update() {
 		resetCount_ = 60;
 	}
 
-	/*mapEditor_->Edit();*/
-
 	if (isPause_ && !SceneChangeManager::GetInstance()->IsSceneChange()) {
 
 

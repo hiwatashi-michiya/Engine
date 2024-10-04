@@ -37,9 +37,6 @@
     <Filter Include="Engine\Tool">
       <UniqueIdentifier>{8e837e6d-46fc-4c8d-8c49-3bd19f5bf5cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Application">
-      <UniqueIdentifier>{195999bf-2b06-4818-bbf1-668bb7eeaac7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\FrameWork">
       <UniqueIdentifier>{1c02f3b4-90c7-4268-9dd8-0836fc579426}</UniqueIdentifier>
     </Filter>
@@ -115,6 +112,9 @@
     <Filter Include="Engine\Collider">
       <UniqueIdentifier>{d476ce19-a150-426e-a5a6-f40c9a0c0b0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{195999bf-2b06-4818-bbf1-668bb7eeaac7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -171,8 +171,8 @@
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp">
       <Filter>Engine\Tool</Filter>
     </ClCompile>
-    <ClCompile Include="Application\MapEditor.cpp">
-      <Filter>Application</Filter>
+    <ClCompile Include="Editor\MapEditor.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="Game\Game.cpp">
       <Filter>Game</Filter>
@@ -306,11 +306,11 @@
     <ClCompile Include="Game\Gimmick\Warp.cpp">
       <Filter>Game\Gimmick</Filter>
     </ClCompile>
-    <ClCompile Include="Application\UniqueEditor.cpp">
-      <Filter>Application</Filter>
+    <ClCompile Include="Editor\UniqueEditor.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Application\EditorObject.cpp">
-      <Filter>Application</Filter>
+    <ClCompile Include="Editor\EditorObject.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="Game\EditorScene\EditorScene.cpp">
       <Filter>Game\EditorScene</Filter>
@@ -422,8 +422,8 @@
     <ClInclude Include="Engine\Tool\GlobalVariables.h">
       <Filter>Engine\Tool</Filter>
     </ClInclude>
-    <ClInclude Include="Application\MapEditor.h">
-      <Filter>Application</Filter>
+    <ClInclude Include="Editor\MapEditor.h">
+      <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Game\Game.h">
       <Filter>Game</Filter>
@@ -569,11 +569,11 @@
     <ClInclude Include="Game\Gimmick\Warp.h">
       <Filter>Game\Gimmick</Filter>
     </ClInclude>
-    <ClInclude Include="Application\UniqueEditor.h">
-      <Filter>Application</Filter>
+    <ClInclude Include="Editor\UniqueEditor.h">
+      <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Application\EditorObject.h">
-      <Filter>Application</Filter>
+    <ClInclude Include="Editor\EditorObject.h">
+      <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Game\EditorScene\EditorScene.h">
       <Filter>Game\EditorScene</Filter>
@@ -623,8 +623,8 @@
     <ClInclude Include="Engine\Core\StaticSampler.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Application\EditorCommand.h">
-      <Filter>Application</Filter>
+    <ClInclude Include="Editor\EditorCommand.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
