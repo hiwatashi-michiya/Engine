@@ -92,6 +92,8 @@ void MapObject::Edit() {
 void MapObject::RecordMove()
 {
 
+#ifdef _DEBUG
+
 	//動かした瞬間に古い値を記録
 	if (isUsing_ and not preIsUsing_) {
 
@@ -114,6 +116,8 @@ void MapObject::RecordMove()
 	}
 
 	preIsUsing_ = isUsing_;
+
+#endif // _DEBUG
 
 }
 
@@ -414,6 +418,8 @@ void WarpObject::Edit() {
 void WarpObject::RecordMove()
 {
 
+#ifdef _DEBUG
+
 	//動かした瞬間に古い値を記録
 	if (isUsing_ and not preIsUsing_) {
 
@@ -434,8 +440,8 @@ void WarpObject::RecordMove()
 	if (isUsing_ and not ImGui::IsAnyItemActive()) {
 
 		isUsing_ = false;
-		
-		
+
+
 		if (isMoveA_) {
 			std::shared_ptr<MoveCommand> newMoveCommand =
 				std::make_shared<MoveCommand>(*transform_,
@@ -454,6 +460,8 @@ void WarpObject::RecordMove()
 	}
 
 	preIsUsing_ = isUsing_;
+
+#endif // _DEBUG
 
 }
 
