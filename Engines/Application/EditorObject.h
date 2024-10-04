@@ -8,6 +8,7 @@
 #include <vector>
 #include "Vector3.h"
 #include "LineDrawer.h"
+#include "EditorCommand.h"
 
 //マップに配置されているオブジェクトの構造体
 class MapObject {
@@ -22,6 +23,8 @@ public:
 
 	virtual void Edit();
 
+	virtual void RecordMove();
+
 	virtual void Draw(Camera* camera);
 
 	virtual void DrawLine(Camera* camera);
@@ -31,6 +34,8 @@ public:
 	std::unique_ptr<Model> model_;
 
 	std::unique_ptr<Transform> transform_;
+
+	std::unique_ptr<Transform> oldTransform_;
 
 	float* matrix_;
 
@@ -52,6 +57,12 @@ public:
 
 	std::unique_ptr<OBB> obb_;
 	std::unique_ptr<LineBox> lineBox_;
+
+	bool isUsing_ = false;
+	bool preIsUsing_ = false;
+
+	static std::vector<std::shared_ptr<ICommand>>& undoCommands_;
+	static std::vector<std::shared_ptr<ICommand>>& redoCommands_;
 
 };
 
@@ -118,6 +129,8 @@ public:
 	void Update() override;
 
 	void Edit() override;
+
+	void RecordMove() override;
 
 	void Draw(Camera* camera) override;
 

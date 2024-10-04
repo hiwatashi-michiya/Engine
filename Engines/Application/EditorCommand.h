@@ -47,8 +47,13 @@ template <class T>
 class AddCommand : public ICommand
 {
 public:
-	AddCommand(std::vector<T>& container, std::shared_ptr<T> object) : 
+	AddCommand(std::vector<T>& container, T object) :
 	container_(container), object_(object){}
+
+	void Set(std::vector<T>& container, T object) {
+		container_ = container;
+		object_ = object;
+	}
 
 	void Execute() override {
 		container_.push_back(object_);
@@ -61,7 +66,7 @@ public:
 private:
 
 	std::vector<T>& container_;
-	std::shared_ptr<T> object_;
+	T object_;
 
 };
 
@@ -69,16 +74,33 @@ template <class T>
 class RemoveCommand : public ICommand
 {
 public:
-	RemoveCommand(std::vector<T>& container, std::shared_ptr<T> object) :
-		container_(container), object_(object) {}
+	RemoveCommand(std::vector<T>& container, T object) :
+		container_(container), object_(object), index_(0) {}
 
-	void Execute() override {}
+	void Set(std::vector<T>& container, T object) {
+		container_ = container;
+		object_ = object;
+	}
 
-	void Undo() override {}
+	void Execute() override {
+
+		auto it = std::find(container_.begin(), container_.end(), object_);
+
+		if (it != container_.end()) {
+			index_ = int32_t(std::distance(container_.begin(), it));
+			container_.erase(it);
+		}
+
+	}
+
+	void Undo() override {
+		container_.insert(container_.begin() + index_, object_);
+	}
 
 private:
 
 	std::vector<T>& container_;
-	std::shared_ptr<T> object_;
+	T object_;
+	int32_t index_;
 
 };

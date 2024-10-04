@@ -1,10 +1,15 @@
 #include "EditorObject.h"
 #include "Drawing/ImGuiManager.h"
 #include "UsefulFunc.h"
+#include "UniqueEditor.h"
+
+std::vector<std::shared_ptr<ICommand>>& MapObject::undoCommands_ = UniqueEditor::GetInstance()->GetUndoCommands();
+std::vector<std::shared_ptr<ICommand>>& MapObject::redoCommands_ = UniqueEditor::GetInstance()->GetRedoCommands();
 
 MapObject::MapObject() {
 	model_.reset(Model::Create("./Resources/cube/cube.obj"));
 	transform_ = std::make_unique<Transform>();
+	oldTransform_ = std::make_unique<Transform>();
 	obb_ = std::make_unique<OBB>();
 	lineBox_ = std::make_unique<LineBox>();
 	lineBox_->SetOBB(obb_.get());
@@ -38,16 +43,20 @@ void MapObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
+
 
 	if (ImGui::DragFloat3("rotation", &transform_->rotate_.x, 0.01f)) {
 		transform_->rotateQuaternion_ = ConvertFromEuler(transform_->rotate_);
+		isUsing_ = true;
 	}
 
 	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
-		
+		isUsing_ = true;
 	}
+
+	RecordMove();
 
 	{
 
@@ -80,6 +89,34 @@ void MapObject::Edit() {
 
 }
 
+void MapObject::RecordMove()
+{
+
+	//動かした瞬間に古い値を記録
+	if (isUsing_ and not preIsUsing_) {
+
+		oldTransform_->scale_ = transform_->worldMatrix_.GetScale();
+		oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(transform_->worldMatrix_.GetRotateMatrix());
+		oldTransform_->translate_ = transform_->worldMatrix_.GetTranslate();
+
+	}
+
+	//動かし終わった瞬間にコマンド追加
+	if (isUsing_ and not ImGui::IsAnyItemActive()) {
+
+		isUsing_ = false;
+		std::shared_ptr<MoveCommand> newMoveCommand =
+			std::make_shared<MoveCommand>(*transform_,
+				*oldTransform_, *transform_);
+		undoCommands_.push_back(newMoveCommand);
+		redoCommands_.clear();
+
+	}
+
+	preIsUsing_ = isUsing_;
+
+}
+
 void MapObject::Draw(Camera* camera) {
 
 	model_->Draw(camera);
@@ -107,8 +144,10 @@ void PlayerObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -139,12 +178,14 @@ void BlockObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
-
+		isUsing_ = true;
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -178,16 +219,18 @@ void MoveBoxObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
 		model_->SetColor(CreateColor(colorNumber_));
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -219,12 +262,14 @@ void RingObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
 		model_->SetColor(CreateColor(colorNumber_));
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -256,8 +301,10 @@ void GoalObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -328,10 +375,12 @@ void WarpObject::Edit() {
 
 	if (ImGui::DragFloat3("positionA", &transform_->translate_.x, 0.1f)) {
 		isMoveA_ = true;
+		isUsing_ = true;
 	}
 
 	if (ImGui::DragFloat3("positionB", &transformB_->translate_.x, 0.1f)) {
 		isMoveA_ = false;
+		isUsing_ = true;
 	}
 
 	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
@@ -341,6 +390,8 @@ void WarpObject::Edit() {
 
 	//どちらを動かすか選択
 	ImGui::Checkbox("move A", &isMoveA_);
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -357,6 +408,52 @@ void WarpObject::Edit() {
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 	transformB_->UpdateMatrix();
 	model_->SetWorldMatrix(transformB_->worldMatrix_);
+
+}
+
+void WarpObject::RecordMove()
+{
+
+	//動かした瞬間に古い値を記録
+	if (isUsing_ and not preIsUsing_) {
+
+		if (isMoveA_) {
+			oldTransform_->scale_ = transform_->worldMatrix_.GetScale();
+			oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(transform_->worldMatrix_.GetRotateMatrix());
+			oldTransform_->translate_ = transform_->worldMatrix_.GetTranslate();
+		}
+		else {
+			oldTransform_->scale_ = transformB_->worldMatrix_.GetScale();
+			oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(transformB_->worldMatrix_.GetRotateMatrix());
+			oldTransform_->translate_ = transformB_->worldMatrix_.GetTranslate();
+		}
+
+	}
+
+	//動かし終わった瞬間にコマンド追加
+	if (isUsing_ and not ImGui::IsAnyItemActive()) {
+
+		isUsing_ = false;
+		
+		
+		if (isMoveA_) {
+			std::shared_ptr<MoveCommand> newMoveCommand =
+				std::make_shared<MoveCommand>(*transform_,
+					*oldTransform_, *transform_);
+			undoCommands_.push_back(newMoveCommand);
+		}
+		else {
+			std::shared_ptr<MoveCommand> newMoveCommand =
+				std::make_shared<MoveCommand>(*transformB_,
+					*oldTransform_, *transformB_);
+			undoCommands_.push_back(newMoveCommand);
+		}
+
+		redoCommands_.clear();
+
+	}
+
+	preIsUsing_ = isUsing_;
 
 }
 
@@ -389,16 +486,18 @@ void GhostBoxObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
 		model_->SetColor(CreateColor(colorNumber_));
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -430,12 +529,14 @@ void SwitchObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
 		model_->SetColor(CreateColor(colorNumber_));
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -467,12 +568,14 @@ void CopyCatObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::SliderInt("color", &colorNumber_, -1, kMaxColor_ - 1)) {
 		model_->SetColor(CreateColor(colorNumber_));
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -504,12 +607,14 @@ void EnemyObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
 
 	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
 		model_->SetColor(CreateColor(colorNumber_));
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 
@@ -543,8 +648,10 @@ void HolderObject::Edit() {
 #ifdef _DEBUG
 
 	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
-
+		isUsing_ = true;
 	}
+
+	RecordMove();
 
 #endif // _DEBUG
 

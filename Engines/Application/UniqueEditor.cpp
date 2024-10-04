@@ -193,9 +193,14 @@ void UniqueEditor::EditTransform()
 			
 			//操作した瞬間に状態を保存
 			if (not isRecordMove_) {
-				oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->scale_;
+
+				oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetScale();
+				oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(mapObjData_[selectObject_]->transform_->worldMatrix_.GetRotateMatrix());
+				oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetTranslate();
+
+				/*oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->scale_;
 				oldTransform_->rotateQuaternion_ = mapObjData_[selectObject_]->transform_->rotateQuaternion_;
-				oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->translate_;
+				oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->translate_;*/
 				isRecordMove_ = true;
 			}
 
@@ -205,10 +210,29 @@ void UniqueEditor::EditTransform()
 			//操作が終わったらUndoリストに追加
 			if (isRecordMove_) {
 
-				std::shared_ptr<MoveCommand> newMoveCommand = 
-					std::make_shared<MoveCommand>(*mapObjData_[selectObject_]->transform_,
-						*oldTransform_, *mapObjData_[selectObject_]->transform_);
-				undoCommands_.push_back(newMoveCommand);
+				if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[selectObject_].get())) {
+
+					if (warpPtr->isMoveA_) {
+						std::shared_ptr<MoveCommand> newMoveCommand =
+							std::make_shared<MoveCommand>(*warpPtr->transform_,
+								*oldTransform_, *warpPtr->transform_);
+						undoCommands_.push_back(newMoveCommand);
+					}
+					else {
+						std::shared_ptr<MoveCommand> newMoveCommand =
+							std::make_shared<MoveCommand>(*warpPtr->transformB_,
+								*oldTransform_, *warpPtr->transformB_);
+						undoCommands_.push_back(newMoveCommand);
+					}
+
+				}
+				else {
+					std::shared_ptr<MoveCommand> newMoveCommand =
+						std::make_shared<MoveCommand>(*mapObjData_[selectObject_]->transform_,
+							*oldTransform_, *mapObjData_[selectObject_]->transform_);
+					undoCommands_.push_back(newMoveCommand);
+				}
+
 				//新しい要素が作成された時点でRedoのコマンドをクリア
 				redoCommands_.clear();
 
@@ -276,6 +300,9 @@ void UniqueEditor::Initialize() {
 
 	oldTransform_ = std::make_unique<Transform>();
 
+	//あらかじめ容量を確保
+	mapObjData_.reserve(999);
+
 	if (isOpenFile_) {
 		Close();
 	}
@@ -293,9 +320,17 @@ void UniqueEditor::Edit() {
 	preIsMove_ = isMove_;
 
 	mapObjData_.erase(std::remove_if(mapObjData_.begin(), mapObjData_.end(),
-		[](auto& object) {
+		[&](auto& object) {
 
 			if (object->isDelete_) {
+
+				//削除前にUndoリストに保存し、復活用に死亡フラグを戻しておく
+				object->isDelete_ = false;
+				std::shared_ptr<RemoveCommand<std::shared_ptr<MapObject>>> newAddCommand =
+					std::make_shared<RemoveCommand<std::shared_ptr<MapObject>>>(mapObjData_, object);
+				undoCommands_.push_back(newAddCommand);
+				redoCommands_.clear();
+
 				return true;
 			}
 
@@ -675,12 +710,20 @@ void UniqueEditor::Close() {
 	std::memset(fileName_, 0, sizeof(fileName_));
 
 	mapObjData_.clear();
+	undoCommands_.clear();
+	redoCommands_.clear();
 
 	isOpenFile_ = false;
 
 }
 
 void UniqueEditor::Load(const std::string& filename) {
+
+	isLoading_ = true;
+
+	mapObjData_.clear();
+	undoCommands_.clear();
+	redoCommands_.clear();
 
 	//読み込むJSONファイルのフルパスを合成する
 	std::string filePath = kDirectoryPath_ + filename + ".json";
@@ -867,6 +910,8 @@ void UniqueEditor::Load(const std::string& filename) {
 
 	isOpenFile_ = true;
 
+	isLoading_ = false;
+
 }
 
 void UniqueEditor::Create(const std::string& filename) {
@@ -1048,6 +1093,16 @@ void UniqueEditor::CreateObject(const std::string& name) {
 
 	}
 
+	//ロード以外で作成したオブジェクトをUndoコマンドに追加
+	if (not isLoading_) {
+
+		std::shared_ptr<AddCommand<std::shared_ptr<MapObject>>> newAddCommand = 
+			std::make_shared<AddCommand<std::shared_ptr<MapObject>>>(mapObjData_, mapObjData_[mapObjData_.size() - 1]);
+		undoCommands_.push_back(newAddCommand);
+		redoCommands_.clear();
+
+	}
+
 }
 
 void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
@@ -1194,6 +1249,15 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 
 	}
 
+	if (not isLoading_) {
+
+		std::shared_ptr<AddCommand<std::shared_ptr<MapObject>>> newAddCommand =
+			std::make_shared<AddCommand<std::shared_ptr<MapObject>>>(mapObjData_, mapObjData_[mapObjData_.size() - 1]);
+		undoCommands_.push_back(newAddCommand);
+		redoCommands_.clear();
+
+	}
+
 }
 
 std::string UniqueEditor::CheckSameName(std::string name, uint32_t addNumber) {
@@ -1308,6 +1372,10 @@ bool UniqueEditor::CheckIsEmpty(const std::string& name) {
 }
 
 void UniqueEditor::SetDefaultStage() {
+
+	mapObjData_.clear();
+	undoCommands_.clear();
+	redoCommands_.clear();
 
 	//プレイヤー生成
 	{

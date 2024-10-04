@@ -40,6 +40,9 @@ public:
 
 	bool GetPreIsMove() const { return preIsMove_; }
 
+	std::vector<std::shared_ptr<ICommand>>& GetUndoCommands() { return undoCommands_; }
+	std::vector<std::shared_ptr<ICommand>>& GetRedoCommands() { return redoCommands_; }
+
 //関数,構造体
 private:
 
@@ -102,6 +105,8 @@ private:
 	char fileName_[256];
 
 	bool isSave_ = true;
+
+	bool isLoading_ = false;
 
 	bool isMove_ = false;
 
