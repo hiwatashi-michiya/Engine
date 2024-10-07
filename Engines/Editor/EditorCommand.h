@@ -74,8 +74,8 @@ template <class T>
 class RemoveCommand : public ICommand
 {
 public:
-	RemoveCommand(std::vector<T>& container, T object) :
-		container_(container), object_(object), index_(0) {}
+	RemoveCommand(std::vector<T>& container, T object, int32_t index) :
+		container_(container), object_(object), index_(index) {}
 
 	void Set(std::vector<T>& container, T object) {
 		container_ = container;

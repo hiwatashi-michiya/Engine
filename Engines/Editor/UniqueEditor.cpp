@@ -342,10 +342,13 @@ void UniqueEditor::Edit() {
 
 			if (object->isDelete_) {
 
+				auto it = std::find(mapObjData_.begin(), mapObjData_.end(), object);
+
 				//削除前にUndoリストに保存し、復活用に死亡フラグを戻しておく
 				object->isDelete_ = false;
 				std::shared_ptr<RemoveCommand<std::shared_ptr<MapObject>>> newAddCommand =
-					std::make_shared<RemoveCommand<std::shared_ptr<MapObject>>>(mapObjData_, object);
+					std::make_shared<RemoveCommand<std::shared_ptr<MapObject>>>(mapObjData_, object,
+						int32_t(std::distance(mapObjData_.begin(), it)));
 				undoCommands_.push_back(newAddCommand);
 				redoCommands_.clear();
 
