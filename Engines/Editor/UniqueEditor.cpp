@@ -194,9 +194,27 @@ void UniqueEditor::EditTransform()
 			//操作した瞬間に状態を保存
 			if (not isRecordMove_) {
 
-				oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetScale();
-				oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(mapObjData_[selectObject_]->transform_->worldMatrix_.GetRotateMatrix());
-				oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetTranslate();
+				if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[selectObject_].get())) {
+
+					if (warpPtr->isMoveA_) {
+						oldTransform_->scale_ = warpPtr->transform_->worldMatrix_.GetScale();
+						oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(warpPtr->transform_->worldMatrix_.GetRotateMatrix());
+						oldTransform_->translate_ = warpPtr->transform_->worldMatrix_.GetTranslate();
+					}
+					else {
+						oldTransform_->scale_ = warpPtr->transformB_->worldMatrix_.GetScale();
+						oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(warpPtr->transformB_->worldMatrix_.GetRotateMatrix());
+						oldTransform_->translate_ = warpPtr->transformB_->worldMatrix_.GetTranslate();
+					}
+
+				}
+				else {
+
+					oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetScale();
+					oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(mapObjData_[selectObject_]->transform_->worldMatrix_.GetRotateMatrix());
+					oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetTranslate();
+
+				}
 
 				/*oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->scale_;
 				oldTransform_->rotateQuaternion_ = mapObjData_[selectObject_]->transform_->rotateQuaternion_;
