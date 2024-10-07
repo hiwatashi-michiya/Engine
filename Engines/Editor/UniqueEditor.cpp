@@ -535,6 +535,18 @@ void UniqueEditor::Edit() {
 			ImGui::SliderInt("Select Object", &selectObject_, 0, int(mapObjData_.size() - 1));
 		}
 
+		if (not undoCommands_.empty() and ImGui::Button("Undo")) {
+			undoCommands_[undoCommands_.size() - 1]->Undo();
+			redoCommands_.push_back(undoCommands_[undoCommands_.size() - 1]);
+			undoCommands_.pop_back();
+		}
+
+		if (not redoCommands_.empty() and ImGui::Button("Redo")) {
+			redoCommands_[redoCommands_.size() - 1]->Execute();
+			undoCommands_.push_back(redoCommands_[redoCommands_.size() - 1]);
+			redoCommands_.pop_back();
+		}
+
 		if (input_->TriggerKey(DIK_Z) and input_->PushKey(DIK_LCONTROL)) {
 			
 			if (not undoCommands_.empty()) {
