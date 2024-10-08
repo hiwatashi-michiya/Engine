@@ -229,7 +229,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Gimmick\Switch.cpp" />
     <ClCompile Include="Game\Gimmick\Warp.cpp" />
     <ClCompile Include="Game\Goal\Goal.cpp" />
-    <ClCompile Include="Game\Item\Ring.cpp" />
+    <ClCompile Include="Game\Item\Paint.cpp" />
     <ClCompile Include="Game\SceneFactory.cpp" />
     <ClCompile Include="Game\SelectScene\SelectScene.cpp" />
     <ClCompile Include="Game\TestScene\TestScene.cpp" />
@@ -320,7 +320,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Gimmick\Switch.h" />
     <ClInclude Include="Game\Gimmick\Warp.h" />
     <ClInclude Include="Game\Goal\Goal.h" />
-    <ClInclude Include="Game\Item\Ring.h" />
+    <ClInclude Include="Game\Item\Paint.h" />
     <ClInclude Include="Game\SceneFactory.h" />
     <ClInclude Include="Game\SelectScene\SelectScene.h" />
     <ClInclude Include="Game\TestScene\TestScene.h" />

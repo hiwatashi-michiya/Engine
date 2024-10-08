@@ -221,7 +221,7 @@
                 ],
                 "tag": "player"
             },
-            "ring": {
+            "paint": {
                 "color": 0,
                 "position": [
                     16.012266159057617,
@@ -239,9 +239,9 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
-            "ring1": {
+            "paint1": {
                 "color": 0,
                 "position": [
                     8.098243713378906,
@@ -259,9 +259,9 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
-            "ring2": {
+            "paint2": {
                 "color": 0,
                 "position": [
                     22.081470489501953,
@@ -279,7 +279,7 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             }
         }
     }

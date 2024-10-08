@@ -181,7 +181,7 @@
                 ],
                 "tag": "player"
             },
-            "ring": {
+            "paint": {
                 "color": 1,
                 "position": [
                     16.01126480102539,
@@ -199,9 +199,9 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
-            "ring1": {
+            "paint1": {
                 "color": 2,
                 "position": [
                     33.0,
@@ -219,7 +219,7 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
             "switch": {
                 "color": 1,

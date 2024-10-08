@@ -252,16 +252,16 @@ void MoveBoxObject::Edit() {
 
 }
 
-void RingObject::Initialize(const std::string& name) {
+void PaintObject::Initialize(const std::string& name) {
 
-	model_->SetMesh("./Resources/item/item.gltf");
+	model_->SetMesh("./Resources/paint/paint.gltf");
 	model_->SetColor(CreateColor(colorNumber_));
 	objName_ = name;
-	tag_ = "ring";
+	tag_ = "paint";
 
 }
 
-void RingObject::Edit() {
+void PaintObject::Edit() {
 
 #ifdef _DEBUG
 

@@ -8,11 +8,13 @@
 #include "Collider.h"
 #include "LineDrawer.h"
 
-class Ring : public GameObject
+class Paint : public GameObject
 {
 public:
-	Ring();
-	~Ring();
+	Paint();
+	~Paint();
+
+	static const std::string objectName_;
 
 	void Initialize(const Vector3& position);
 

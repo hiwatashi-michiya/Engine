@@ -57,7 +57,7 @@ void Stage::Update() {
 #endif // _DEBUG
 
 
-	rings_.remove_if([](std::shared_ptr<Ring> ring) {
+	rings_.remove_if([](std::shared_ptr<Paint> ring) {
 
 		if (ring->GetIsVanish()) {
 			return true;
@@ -430,8 +430,8 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			blocks_.push_back(newObject);
 		}
 
-		if (object->tag == "item" || object->tag == "ring") {
-			std::shared_ptr<Ring> newObject = std::make_shared<Ring>();
+		if (object->tag == "item" || object->tag == Paint::objectName_) {
+			std::shared_ptr<Paint> newObject = std::make_shared<Paint>();
 			newObject->Initialize(object->transforms_[0]->translate_);
 			newObject->SetColor(object->colorNumber);
 			rings_.push_back(newObject);

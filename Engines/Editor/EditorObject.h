@@ -96,7 +96,7 @@ public:
 
 };
 
-class RingObject : public MapObject
+class PaintObject : public MapObject
 {
 public:
 

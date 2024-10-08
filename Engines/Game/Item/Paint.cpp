@@ -1,27 +1,29 @@
-#include "Ring.h"
+#include "Paint.h"
 #include "Audio/AudioManager.h"
 #include "Game/stage/Stage.h"
 #include "UsefulFunc.h"
 #include "ParticleManager.h"
 #include "Game/Gimmick/ColorHolder.h"
 
-Ring::Ring()
+const std::string Paint::objectName_ = "paint";
+
+Paint::Paint()
 {
-	model_.reset(Model::Create("./Resources/item/item.gltf"));
-	modelWire_.reset(Model::Create("./Resources/item/wireRing.gltf"));
+	model_.reset(Model::Create("./Resources/paint/paint.gltf"));
+	modelWire_.reset(Model::Create("./Resources/paint/paint_wire.gltf"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 }
 
-Ring::~Ring()
+Paint::~Paint()
 {
 }
 
-void Ring::Initialize(const Vector3& position) {
+void Paint::Initialize(const Vector3& position) {
 
-	name_ = "ring";
-	model_->LoadAnimation("./Resources/item/item.gltf");
-	modelWire_->LoadAnimation("./Resources/item/item.gltf");
+	name_ = "paint";
+	model_->LoadAnimation("./Resources/paint/paint.gltf");
+	modelWire_->LoadAnimation("./Resources/paint/paint.gltf");
 	transform_->translate_ = position;
 
 	collider_->SetGameObject(this);
@@ -38,14 +40,14 @@ void Ring::Initialize(const Vector3& position) {
 
 }
 
-void Ring::Obtained() {
+void Paint::Obtained() {
 
 	isObtained_ = true;
-	model_->LoadAnimation("./Resources/item/item_2.gltf");
+	model_->LoadAnimation("./Resources/paint/paint_2.gltf");
 	model_->ResetAnimation();
 	model_->SetIsLoop(false);
 	model_->SetAnimationSpeed(5.0f);
-	modelWire_->LoadAnimation("./Resources/item/item_2.gltf");
+	modelWire_->LoadAnimation("./Resources/paint/paint_2.gltf");
 	modelWire_->ResetAnimation();
 	modelWire_->SetIsLoop(false);
 	modelWire_->SetAnimationSpeed(5.0f);
@@ -71,13 +73,13 @@ void Ring::Obtained() {
 
 }
 
-void Ring::PlaySE() {
+void Paint::PlaySE() {
 
 	AudioManager::GetInstance()->Play(getSE_, 0.8f);
 
 }
 
-void Ring::Update() {
+void Paint::Update() {
 
 	model_->UpdateAnimation();
 	model_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
@@ -155,14 +157,14 @@ void Ring::Update() {
 
 }
 
-void Ring::Draw(Camera* camera) {
+void Paint::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 	modelWire_->Draw(camera);
 
 }
 
-void Ring::DrawLine(Camera* camera) {
+void Paint::DrawLine(Camera* camera) {
 
 #ifdef _DEBUG
 
@@ -172,7 +174,7 @@ void Ring::DrawLine(Camera* camera) {
 
 }
 
-void Ring::OnCollision(Collider* collider) {
+void Paint::OnCollision(Collider* collider) {
 
 	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 		Obtained();

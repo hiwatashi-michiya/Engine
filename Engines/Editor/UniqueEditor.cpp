@@ -406,7 +406,7 @@ void UniqueEditor::Edit() {
 						}
 
 					}
-					else if (objectName_[i] == "ring") {
+					else if (objectName_[i] == "paint") {
 
 						if (ImGui::Button("Add")) {
 							CreateObject(objectName_[i]);
@@ -916,9 +916,9 @@ void UniqueEditor::Load(const std::string& filename) {
 						}
 
 						//タグを登録
-						else if (itemNameObject == "tag") {
+						/*else if (itemNameObject == "tag") {
 							object->tag_ = itItemObject.value();
-						}
+						}*/
 						//メッシュを登録
 						else if (itemNameObject == "mesh") {
 
@@ -1034,13 +1034,13 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
-	else if (name == "ring") {
+	else if (name == "paint" or name == "ring") {
 
 		std::string objectName = name;
 
 		objectName = CheckSameName(objectName);
 
-		std::shared_ptr<RingObject> object = std::make_shared<RingObject>();
+		std::shared_ptr<PaintObject> object = std::make_shared<PaintObject>();
 		object->Initialize(objectName);
 		mapObjData_.push_back(object);
 
@@ -1175,9 +1175,9 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		mapObjData_.push_back(tmpObject);
 
 	}
-	else if (object->tag_ == "ring") {
+	else if (object->tag_ == "paint" or object->tag_ == "ring") {
 
-		std::shared_ptr<RingObject> tmpObject = std::make_shared<RingObject>();
+		std::shared_ptr<PaintObject> tmpObject = std::make_shared<PaintObject>();
 		tmpObject->Initialize(objectName);
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;

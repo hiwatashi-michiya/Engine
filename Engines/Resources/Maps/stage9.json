@@ -301,7 +301,7 @@
                 ],
                 "tag": "player"
             },
-            "ring": {
+            "paint": {
                 "color": 0,
                 "position": [
                     7.0,
@@ -319,9 +319,9 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
-            "ring1": {
+            "paint1": {
                 "color": 0,
                 "position": [
                     11.0,
@@ -339,9 +339,9 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
-            "ring2": {
+            "paint2": {
                 "color": 2,
                 "position": [
                     15.0,
@@ -359,9 +359,9 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
-            "ring3": {
+            "paint3": {
                 "color": 1,
                 "position": [
                     11.0,
@@ -379,9 +379,9 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
-            "ring4": {
+            "paint4": {
                 "color": 0,
                 "position": [
                     25.0,
@@ -399,9 +399,9 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
-            "ring5": {
+            "paint5": {
                 "color": 1,
                 "position": [
                     23.0,
@@ -419,7 +419,7 @@
                     1.0,
                     1.0
                 ],
-                "tag": "ring"
+                "tag": "paint"
             },
             "switch": {
                 "color": 0,

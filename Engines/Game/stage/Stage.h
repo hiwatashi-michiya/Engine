@@ -2,7 +2,7 @@
 #include "Drawing/LineDrawer.h"
 #include "Engine/3d/Model.h"
 #include "Game/Block/Block.h"
-#include "Game/Item/Ring.h"
+#include "Game/Item/Paint.h"
 #include "Game/Player/Player.h"
 #include <memory>
 #include <string>
@@ -81,7 +81,7 @@ private:
 
 	std::list<std::shared_ptr<Block>> blocks_;
 
-	std::list<std::shared_ptr<Ring>> rings_;
+	std::list<std::shared_ptr<Paint>> rings_;
 
 	std::list<std::shared_ptr<Goal>> goals_;
 

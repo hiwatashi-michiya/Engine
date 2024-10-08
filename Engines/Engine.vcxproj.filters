@@ -243,7 +243,7 @@
     <ClCompile Include="Engine\3d\Animation\Animation.cpp">
       <Filter>Engine\3d\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Item\Ring.cpp">
+    <ClCompile Include="Game\Item\Paint.cpp">
       <Filter>Game\Item</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\DescriptorHandle.cpp">
@@ -503,7 +503,7 @@
     <ClInclude Include="Engine\3d\Animation\Animation.h">
       <Filter>Engine\3d\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Item\Ring.h">
+    <ClInclude Include="Game\Item\Paint.h">
       <Filter>Game\Item</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\DescriptorHandle.h">

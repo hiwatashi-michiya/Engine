@@ -406,7 +406,7 @@ void CopyCat::OnCollision(Collider* collider) {
 
 	}
 
-	if (collider->GetGameObject()->GetName() == "ring") {
+	if (collider->GetGameObject()->GetName() == "paint") {
 		
 		if (player_) {
 			player_->AddRingCount();

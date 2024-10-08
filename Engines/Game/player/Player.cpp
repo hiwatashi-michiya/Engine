@@ -484,7 +484,7 @@ void Player::OnCollision(Collider* collider) {
 
 	}
 
-	if (collider->GetGameObject()->GetName() == "ring") {
+	if (collider->GetGameObject()->GetName() == "paint") {
 		ringGetCount_++;
 	}
 
