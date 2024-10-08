@@ -1,11 +1,11 @@
 #include <Windows.h>
 #include "Game/Game.h"
+#include <memory>
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	MolFrameWork* game = new Game();
+	std::unique_ptr<MolFrameWork> game = std::make_unique<Game>();
 	game->Run();
-	delete game;
 
 	return 0;
 
