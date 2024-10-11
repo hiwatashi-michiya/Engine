@@ -115,6 +115,9 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{195999bf-2b06-4818-bbf1-668bb7eeaac7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Bullet">
+      <UniqueIdentifier>{445430c3-dd91-43e9-9781-caec7c360501}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -359,6 +362,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\StaticSampler.cpp">
       <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Bullet\Bullet.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -625,6 +631,9 @@
     </ClInclude>
     <ClInclude Include="Editor\EditorCommand.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Bullet\Bullet.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

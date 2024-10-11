@@ -216,6 +216,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Tool\LevelDataLoader.cpp" />
     <ClCompile Include="Engine\Useful\UsefulFunc.cpp" />
     <ClCompile Include="Game\Block\Block.cpp" />
+    <ClCompile Include="Game\Bullet\Bullet.cpp" />
     <ClCompile Include="Game\Camera\FollowCamera.cpp" />
     <ClCompile Include="Game\DefaultScene.cpp" />
     <ClCompile Include="Game\EditorScene\EditorScene.cpp" />
@@ -307,6 +308,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Tool\LevelDataLoader.h" />
     <ClInclude Include="Engine\Useful\UsefulFunc.h" />
     <ClInclude Include="Game\Block\Block.h" />
+    <ClInclude Include="Game\Bullet\Bullet.h" />
     <ClInclude Include="Game\Camera\FollowCamera.h" />
     <ClInclude Include="Game\DefaultScene.h" />
     <ClInclude Include="Game\EditorScene\EditorScene.h" />

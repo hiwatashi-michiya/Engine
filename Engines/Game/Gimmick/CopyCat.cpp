@@ -12,8 +12,8 @@
 CopyCat::CopyCat()
 {
 
-	model_.reset(SkinningModel::Create("./Resources/human/stay.gltf", 0));
-	model_->LoadAnimation("./Resources/human/walking.gltf", 1);
+	model_.reset(SkinningModel::Create("./Resources/player/brush_stay.gltf", 0));
+	model_->LoadAnimation("./Resources/player/brush_walk.gltf", 1);
 	transform_ = std::make_unique<Transform>();
 	collider_ = std::make_unique<BoxCollider>();
 
@@ -36,7 +36,7 @@ void CopyCat::Initialize() {
 	model_->ResetAnimation();
 	model_->SetAnimation(0);
 	model_->StartAnimation(true);
-	model_->SetAnimationSpeed(1.0f);
+	model_->SetAnimationSpeed(2.0f);
 
 	transform_->translate_ = { 0.0f,5.0f,0.0f };
 	transform_->UpdateMatrix();
