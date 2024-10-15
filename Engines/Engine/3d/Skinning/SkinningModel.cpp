@@ -417,7 +417,7 @@ void SkinningModel::UpdateAnimation() {
 	isEndAnimation_ = false;
 
 	//アニメーションが存在していて、再生フラグが立っている時
-	if (animations_[currentFileName_] && isStartAnimation_ && animations_[currentFileName_]->nodeAnimations.size() != 0) {
+	if (animations_[currentFileName_] and isStartAnimation_ and animations_[currentFileName_]->nodeAnimations.size() != 0) {
 
 		//現在のアニメーションタイムをアニメーション速度分加算
 		animationTime_ += animationSpeed_ / 60.0f;

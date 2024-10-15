@@ -107,17 +107,17 @@ void GameScene::Update() {
 	ImGui::Text("Key 1 or 2 + L_ctrl: Change Scene\n1 : title\n2 : select");
 	ImGui::End();
 
-	if (input_->TriggerKey(DIK_1) && input_->PushKey(DIK_LCONTROL)) {
+	if (input_->TriggerKey(DIK_1) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 	}
-	else if (input_->TriggerKey(DIK_2) && input_->PushKey(DIK_LCONTROL)) {
+	else if (input_->TriggerKey(DIK_2) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("SELECT");
 	}
-	else if (input_->TriggerKey(DIK_4) && input_->PushKey(DIK_LCONTROL)) {
+	else if (input_->TriggerKey(DIK_4) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
-	if (input_->TriggerKey(DIK_H) && input_->PushKey(DIK_LCONTROL)) {
+	if (input_->TriggerKey(DIK_H) and input_->PushKey(DIK_LCONTROL)) {
 
 		isShowHitBox_ = !isShowHitBox_;
 
@@ -135,14 +135,14 @@ void GameScene::Update() {
 		resetCount_ = 60;
 	}
 
-	if (isPause_ && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+	if (isPause_ and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 
 
 		if (input_->TriggerKey(DIK_Q)) {
 			isPause_ = false;
 		}
 
-		if (input_->TriggerKey(DIK_SPACE) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		if (input_->TriggerKey(DIK_SPACE) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 			SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 			SceneChangeManager::GetInstance()->SceneChangeStart();
 		}
@@ -161,7 +161,7 @@ void GameScene::Update() {
 
 	
 
-	if (isPause_ && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+	if (isPause_ and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 
 		PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
 
@@ -169,7 +169,7 @@ void GameScene::Update() {
 			isPause_ = false;
 		}
 
-		if (input_->TriggerButton(Input::Button::A) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		if (input_->TriggerButton(Input::Button::A) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 			SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 			SceneChangeManager::GetInstance()->SceneChangeStart();
 		}
@@ -183,7 +183,7 @@ void GameScene::Update() {
 
 		if (stage_->GetPlayer()->GetIsGoal()) {
 
-			if (stageNumber_ < kMaxStage_ && stageNumber_ > 0) {
+			if (stageNumber_ < kMaxStage_ and stageNumber_ > 0) {
 				stageNumber_++;
 				SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
 				SceneChangeManager::GetInstance()->SceneChangeStart();

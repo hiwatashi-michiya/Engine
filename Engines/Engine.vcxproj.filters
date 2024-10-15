@@ -364,7 +364,10 @@
       <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Game\Bullet\Bullet.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Game\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\player\PlayerState.cpp">
+      <Filter>Game\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -632,8 +635,11 @@
     <ClInclude Include="Editor\EditorCommand.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Game\player\PlayerState.h">
+      <Filter>Game\Player</Filter>
+    </ClInclude>
     <ClInclude Include="Game\Bullet\Bullet.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Game\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

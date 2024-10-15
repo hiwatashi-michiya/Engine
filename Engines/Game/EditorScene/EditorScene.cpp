@@ -69,13 +69,13 @@ void EditorScene::Update() {
 	ImGui::Text("Key 2 or 3 + L_ctrl: Change Scene\n2 : select\n3 : game");
 	ImGui::End();
 
-	if (input_->TriggerKey(DIK_1) && input_->PushKey(DIK_LCONTROL)) {
+	if (input_->TriggerKey(DIK_1) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 	}
-	else if (input_->TriggerKey(DIK_2) && input_->PushKey(DIK_LCONTROL)) {
+	else if (input_->TriggerKey(DIK_2) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("SELECT");
 	}
-	else if (input_->TriggerKey(DIK_3) && input_->PushKey(DIK_LCONTROL)) {
+	else if (input_->TriggerKey(DIK_3) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	}
 

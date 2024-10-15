@@ -20,6 +20,9 @@ Player::Player()
 	/*particle_->SetTexture(tex_);*/
 	transform_ = std::make_unique<Transform>();
 	collider_ = std::make_unique<BoxCollider>();
+	playerStay_ = std::make_unique<PlayerStay>();
+	playerMove_ = std::make_unique<PlayerMove>();
+	playerShot_ = std::make_unique<PlayerShot>();
 
 #ifdef _DEBUG
 
@@ -123,80 +126,67 @@ void Player::Update() {
 			canGoal_ = false;
 		}
 
-		
+		//切り替えの受付があったら状態遷移
+		if (behaviorRequest_) {
 
-		if (fabsf(input_->GetStickValue(Input::LX)) > 0) {
+			behavior_ = behaviorRequest_.value();
 
-			moveVector.x = input_->GetStickValue(Input::LX);
+			//状態に応じて初期化処理を変更
+			switch (behavior_)
+			{
+			default:
+			case Player::Behavior::kStay:
+				playerStay_->InitializeStay(*this);
+				break;
+			case Player::Behavior::kMove:
+				playerMove_->InitializeMove(*this);
+				break;
+			case Player::Behavior::kShot:
+				playerShot_->InitializeShot(*this);
+				break;
+			}
 
-		}
-
-		if (fabsf(input_->GetStickValue(Input::LY)) > 0) {
-
-			moveVector.z = input_->GetStickValue(Input::LY);
-
-		}
-
-		if (fabsf(moveVector.x) + fabsf(moveVector.z) > 0.001f) {
-			model_->SetAnimation(1, false);
-		}
-		else {
-			model_->SetAnimation(0, false);
-		}
-
-		if (camera_) {
-			moveVector = TransformNormal(Normalize(moveVector), camera_->matRotate_);
-		}
-		
-
-		moveVector = Normalize(Vector3{ moveVector.x,0.0f,moveVector.z });
-
-		moveVector *= speed_;
-
-		Vector3 moveXZ = { moveVector.x, 0.0f, moveVector.z };
-
-		//回転処理
-		if (fabsf(Length(moveXZ)) > 0.00001f) {
-
-			//一旦正規化
-			moveXZ = Normalize(moveXZ);
-
-			Vector3 tmp = ConjuGate(transform_->rotateQuaternion_) * moveXZ;
-
-			Quaternion diff = MakeRotateAxisAngleQuaternion(Normalize(Cross({ 0.0f,0.0f,1.0f }, Normalize(tmp))), std::acos(Dot({ 0.0f,0.0f,1.0f }, Normalize(tmp))));
-
-			transform_->rotateQuaternion_ = Slerp(IdentityQuaternion(), diff, 0.5f) * transform_->rotateQuaternion_;
+			behaviorRequest_ = std::nullopt;
 
 		}
 
-		//ジャンプ処理。地面にいたらジャンプ
-		/*if (onGround_ && input_->TriggerButton(Input::Button::A)) {
-			velocity_.y = jumpVelocity_;
-			onGround_ = false;
-		}*/
+		//状態に応じた更新処理
+		switch (behavior_)
+		{
+		default:
+		case Player::Behavior::kStay:
+			playerStay_->UpdateStay(*this);
+			break;
+		case Player::Behavior::kMove:
+			playerMove_->UpdateMove(*this);
+			break;
+		case Player::Behavior::kShot:
+			playerShot_->UpdateShot(*this);
+			break;
+		}
 
-		velocity_.x = moveVector.x;
-		velocity_.z = moveVector.z;
+		//落下速度更新
+		velocity_.y += fallSpeed_;
 
-		velocity_.y -= 0.1f;
-
-		if (velocity_.y < -2.0f) {
-			velocity_.y = -2.0f;
+		if (velocity_.y < fallSpeedLimit_) {
+			velocity_.y = fallSpeedLimit_;
 		}
 
 		//速度加算
 		transform_->translate_ += velocity_;
 
-		if (transform_->translate_.y < -20.0f) {
+		//デッドラインまで落ちたら死亡
+		if (transform_->translate_.y < deadHeight_) {
 			isDead_ = true;
 		}
 
+		//行列更新
 		transform_->UpdateMatrix();
-
+		//当たり判定更新
 		collider_->collider_.center = transform_->worldMatrix_.GetTranslate() + Vector3{0.0f, collider_->collider_.size.y, 0.0f};
-
+		//モデルに更新した行列をセット
 		model_->SetWorldMatrix(transform_->worldMatrix_);
-
+		//モデルのアニメーション更新
 		model_->UpdateAnimation();
 
 		//パーティクル更新
@@ -259,9 +249,9 @@ void Player::OnCollision(Collider* collider) {
 		if (preTranslate_.y >= collider->GetPosition().y + collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら上に留まる
-			if (transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x &&
-				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x &&
-				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z &&
+			if (transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x and
+				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x and
+				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z and
 				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
 
 				preTranslate_ = collider_->collider_.center;
@@ -283,9 +273,9 @@ void Player::OnCollision(Collider* collider) {
 		else if (preTranslate_.y <= collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x &&
-				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x &&
-				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z &&
+			if (transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x and
+				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x and
+				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z and
 				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
 
 				preTranslate_ = collider_->collider_.center;
@@ -306,14 +296,14 @@ void Player::OnCollision(Collider* collider) {
 		}
 
 		//左にいる時
-		if (preTranslate_.x <= collider->GetPosition().x - collider->GetSize().x &&
-			preTranslate_.y < collider->GetPosition().y + collider->GetSize().y &&
+		if (preTranslate_.x <= collider->GetPosition().x - collider->GetSize().x and
+			preTranslate_.y < collider->GetPosition().y + collider->GetSize().y and
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y &&
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y &&
-				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z &&
+			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
+				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
+				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z and
 				transform_->translate_.z + transform_->scale_.z * 0.99f > collider->GetPosition().z - collider->GetSize().z) {
 
 				if (collider->GetGameObject()->GetName() == "moveBox") {
@@ -348,14 +338,14 @@ void Player::OnCollision(Collider* collider) {
 
 		}
 		//右にいる時
-		else if(preTranslate_.x >= collider->GetPosition().x + collider->GetSize().x &&
-			preTranslate_.y < collider->GetPosition().y + collider->GetSize().y &&
+		else if(preTranslate_.x >= collider->GetPosition().x + collider->GetSize().x and
+			preTranslate_.y < collider->GetPosition().y + collider->GetSize().y and
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y &&
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y &&
-				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z &&
+			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
+				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
+				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z and
 				transform_->translate_.z + transform_->scale_.z * 0.99f > collider->GetPosition().z - collider->GetSize().z) {
 
 				if (collider->GetGameObject()->GetName() == "moveBox") {
@@ -391,14 +381,14 @@ void Player::OnCollision(Collider* collider) {
 		}
 
 		//手前にいる時
-		if (preTranslate_.z <= collider->GetPosition().z - collider->GetSize().z &&
-			preTranslate_.y < collider->GetPosition().y + collider->GetSize().y &&
+		if (preTranslate_.z <= collider->GetPosition().z - collider->GetSize().z and
+			preTranslate_.y < collider->GetPosition().y + collider->GetSize().y and
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y &&
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y &&
-				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x &&
+			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
+				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
+				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x and
 				transform_->translate_.x + transform_->scale_.x * 0.99f > collider->GetPosition().x - collider->GetSize().x) {
 
 				if (collider->GetGameObject()->GetName() == "moveBox") {
@@ -433,14 +423,14 @@ void Player::OnCollision(Collider* collider) {
 
 		}
 		//奥にいる時
-		else if (preTranslate_.z >= collider->GetPosition().z + collider->GetSize().z &&
-			preTranslate_.y < collider->GetPosition().y + collider->GetSize().y &&
+		else if (preTranslate_.z >= collider->GetPosition().z + collider->GetSize().z and
+			preTranslate_.y < collider->GetPosition().y + collider->GetSize().y and
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y &&
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y &&
-				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x &&
+			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
+				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
+				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x and
 				transform_->translate_.x + transform_->scale_.x * 0.99f > collider->GetPosition().x - collider->GetSize().x) {
 
 				if (collider->GetGameObject()->GetName() == "moveBox") {

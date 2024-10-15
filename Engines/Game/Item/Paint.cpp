@@ -86,7 +86,7 @@ void Paint::Update() {
 	modelWire_->UpdateAnimation();
 
 	//ゲットした演出アニメーションを終えたら破壊
-	if (isObtained_ && model_->IsEndAnimation()) {
+	if (isObtained_ and model_->IsEndAnimation()) {
 
 		transform_->scale_ = Vector3::Zero();
 
@@ -95,7 +95,7 @@ void Paint::Update() {
 	}
 
 	//色が揃っていて取得されていない時
-	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor()) && !isObtained_) {
+	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor()) and !isObtained_) {
 
 		if (model_->material_->constMap_->threshold > 0.0f) {
 

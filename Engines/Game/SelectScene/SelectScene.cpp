@@ -83,13 +83,13 @@ void SelectScene::Update() {
 	ImGui::Text("Key 1 or 3 + L_ctrl: Change Scene\n1 : title\n3 : game");
 	ImGui::End();
 
-	if (input_->TriggerKey(DIK_1) && input_->PushKey(DIK_LCONTROL)) {
+	if (input_->TriggerKey(DIK_1) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 	}
-	else if (input_->TriggerKey(DIK_3) && input_->PushKey(DIK_LCONTROL)) {
+	else if (input_->TriggerKey(DIK_3) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	}
-	else if (input_->TriggerKey(DIK_4) && input_->PushKey(DIK_LCONTROL)) {
+	else if (input_->TriggerKey(DIK_4) and input_->PushKey(DIK_LCONTROL)) {
 		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
@@ -109,12 +109,12 @@ void SelectScene::Update() {
 
 	}
 
-	if (input_->TriggerKey(DIK_SPACE) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+	if (input_->TriggerKey(DIK_SPACE) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 		SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
 		SceneChangeManager::GetInstance()->SceneChangeStart();
 	}
 
-	if (input_->TriggerKey(DIK_Q) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+	if (input_->TriggerKey(DIK_Q) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 		SceneChangeManager::GetInstance()->SetNextScene("TITLE");
 		SceneChangeManager::GetInstance()->SceneChangeStart();
 	}
@@ -137,12 +137,12 @@ void SelectScene::Update() {
 
 	}
 
-	if (input_->TriggerButton(Input::Button::A) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+	if (input_->TriggerButton(Input::Button::A) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 		SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
 		SceneChangeManager::GetInstance()->SceneChangeStart();
 	}
 
-	if (input_->TriggerButton(Input::Button::B) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
+	if (input_->TriggerButton(Input::Button::B) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 		SceneChangeManager::GetInstance()->SetNextScene("TITLE");
 		SceneChangeManager::GetInstance()->SceneChangeStart();
 	}

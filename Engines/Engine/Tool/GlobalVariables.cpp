@@ -431,7 +431,7 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 		}
 
 		//要素数3の配列であれば
-		else if (itItem->is_array() && itItem->size() == 3) {
+		else if (itItem->is_array() and itItem->size() == 3) {
 			//float型のjson配列登録
 			Vector3 value = {itItem->at(0), itItem->at(1), itItem->at(2)};
 			SetValue(groupName, itemName, value);
@@ -455,7 +455,7 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 				const std::string& itemNameObject = itItemObject.key();
 
 				//要素数3の配列であれば
-				if (itItemObject->is_array() && itItemObject->size() == 3) {
+				if (itItemObject->is_array() and itItemObject->size() == 3) {
 
 					if (roopCount == 1) {
 						//float型のjson配列登録

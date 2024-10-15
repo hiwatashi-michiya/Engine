@@ -170,7 +170,7 @@ void MapEditor::Edit() {
 
 				object->isOpen_ = true;
 
-				if (object->isOpen_ && !object->preOpen_) {
+				if (object->isOpen_ and !object->preOpen_) {
 					selectObject_ = i;
 				}
 
@@ -454,7 +454,7 @@ void MapEditor::Load(const std::string& filename) {
 					const std::string& itemNameObject = itItemObject.key();
 
 					//要素数3の配列であれば
-					if (itItemObject->is_array() && itItemObject->size() == 3) {
+					if (itItemObject->is_array() and itItemObject->size() == 3) {
 
 						//名前がpositionだった場合、positionを登録
 						if (itemNameObject == "position") {
@@ -631,7 +631,7 @@ void MapEditor::LoadAllModelFile() {
 	//ファイル内の.objのファイルを全検索
 	for (const auto& entry : itr) {
 
-		if (std::filesystem::is_regular_file(entry.path()) &&
+		if (std::filesystem::is_regular_file(entry.path()) and
 			entry.path().extension() == extension) {
 			std::string meshName = entry.path().stem().string();
 			//名前と番号を紐づけ
@@ -653,7 +653,7 @@ void MapEditor::LoadAllModelFile() {
 	//ファイル内の.gltfのファイルを全検索
 	for (const auto& entry : itr) {
 
-		if (std::filesystem::is_regular_file(entry.path()) &&
+		if (std::filesystem::is_regular_file(entry.path()) and
 			entry.path().extension() == extension) {
 			std::string meshName = entry.path().stem().string();
 			//名前と番号を紐づけ

@@ -105,7 +105,7 @@ bool Input::PushKey(BYTE keyNumber) {
 
 bool Input::TriggerKey(BYTE keyNumber) {
 
-	if (key_[keyNumber] && preKey_[keyNumber] == false) {
+	if (key_[keyNumber] and preKey_[keyNumber] == false) {
 		return true;
 	}
 
@@ -115,7 +115,7 @@ bool Input::TriggerKey(BYTE keyNumber) {
 
 bool Input::ReleaseKey(BYTE keyNumber) {
 
-	if (key_[keyNumber] == false && preKey_[keyNumber]) {
+	if (key_[keyNumber] == false and preKey_[keyNumber]) {
 		return true;
 	}
 
@@ -131,14 +131,14 @@ bool Input::PushMouse(Mouse mouse) {
 
 bool Input::TriggerMouse(Mouse mouse) {
 
-	return (mouse_.rgbButtons[mouse] & 0x80) != 0 &&
+	return (mouse_.rgbButtons[mouse] & 0x80) != 0 and
 		(preMouse_.rgbButtons[mouse] & 0x80) == 0;
 
 }
 
 bool Input::ReleaseMouse(Mouse mouse) {
 
-	return (mouse_.rgbButtons[mouse] & 0x80) == 0 &&
+	return (mouse_.rgbButtons[mouse] & 0x80) == 0 and
 		(preMouse_.rgbButtons[mouse] & 0x80) != 0;
 
 }
@@ -189,7 +189,7 @@ bool Input::TriggerButton(Button button) {
 
 	if (isGetController_) {
 
-		if ((joyState_.Gamepad.wButtons & button) && (preJoyState_.Gamepad.wButtons & button) == 0) {
+		if ((joyState_.Gamepad.wButtons & button) and (preJoyState_.Gamepad.wButtons & button) == 0) {
 			return true;
 		}
 
@@ -203,7 +203,7 @@ bool Input::ReleaseButton(Button button) {
 
 	if (isGetController_) {
 
-		if ((joyState_.Gamepad.wButtons & button) == 0 && (preJoyState_.Gamepad.wButtons & button)) {
+		if ((joyState_.Gamepad.wButtons & button) == 0 and (preJoyState_.Gamepad.wButtons & button)) {
 			return true;
 		}
 
@@ -235,16 +235,16 @@ bool Input::TriggerLStick(StickArrow arrow) {
 	switch (arrow)
 	{
 	case Input::S_UP:
-		return joyState_.Gamepad.sThumbLY > 0 && !preJoyState_.Gamepad.sThumbLY;
+		return joyState_.Gamepad.sThumbLY > 0 and !preJoyState_.Gamepad.sThumbLY;
 		break;
 	case Input::S_DOWN:
-		return joyState_.Gamepad.sThumbLY < 0 && !preJoyState_.Gamepad.sThumbLY;
+		return joyState_.Gamepad.sThumbLY < 0 and !preJoyState_.Gamepad.sThumbLY;
 		break;
 	case Input::S_LEFT:
-		return joyState_.Gamepad.sThumbLX < 0 && !preJoyState_.Gamepad.sThumbLX;
+		return joyState_.Gamepad.sThumbLX < 0 and !preJoyState_.Gamepad.sThumbLX;
 		break;
 	case Input::S_RIGHT:
-		return joyState_.Gamepad.sThumbLX > 0 && !preJoyState_.Gamepad.sThumbLX;
+		return joyState_.Gamepad.sThumbLX > 0 and !preJoyState_.Gamepad.sThumbLX;
 		break;
 	default:
 		return false;
@@ -260,16 +260,16 @@ bool Input::TriggerRStick(StickArrow arrow) {
 	switch (arrow)
 	{
 	case Input::S_UP:
-		return joyState_.Gamepad.sThumbRY > 0 && !preJoyState_.Gamepad.sThumbRY;
+		return joyState_.Gamepad.sThumbRY > 0 and !preJoyState_.Gamepad.sThumbRY;
 		break;
 	case Input::S_DOWN:
-		return joyState_.Gamepad.sThumbRY < 0 && !preJoyState_.Gamepad.sThumbRY;
+		return joyState_.Gamepad.sThumbRY < 0 and !preJoyState_.Gamepad.sThumbRY;
 		break;
 	case Input::S_LEFT:
-		return joyState_.Gamepad.sThumbRX < 0 && !preJoyState_.Gamepad.sThumbRX;
+		return joyState_.Gamepad.sThumbRX < 0 and !preJoyState_.Gamepad.sThumbRX;
 		break;
 	case Input::S_RIGHT:
-		return joyState_.Gamepad.sThumbRX > 0 && !preJoyState_.Gamepad.sThumbRX;
+		return joyState_.Gamepad.sThumbRX > 0 and !preJoyState_.Gamepad.sThumbRX;
 		break;
 	default:
 		return false;

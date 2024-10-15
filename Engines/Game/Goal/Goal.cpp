@@ -37,7 +37,7 @@ void Goal::Initialize() {
 
 void Goal::Update() {
 
-	if (!isActiveEffect_ && player_ && player_->GetCanGoal()) {
+	if (!isActiveEffect_ and player_ and player_->GetCanGoal()) {
 		isActiveEffect_ = true;
 	}
 

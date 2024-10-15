@@ -98,7 +98,7 @@ void Warp::Update() {
 
 	isPreActiveWarp_ = isActiveWarp_;
 
-	if (isPreActiveWarp_ && countCoolTimer_ > 0) {
+	if (isPreActiveWarp_ and countCoolTimer_ > 0) {
 
 		countCoolTimer_--;
 
@@ -106,7 +106,7 @@ void Warp::Update() {
 
 	isActiveWarp_ = true;
 
-	if (countCoolTimer_ <= 0 && colliderA_->GetIsActive() && colliderB_->GetIsActive()) {
+	if (countCoolTimer_ <= 0 and colliderA_->GetIsActive() and colliderB_->GetIsActive()) {
 
 		transform_->rotate_.y += 0.02f;
 		transformB_->rotate_.y += 0.02f;
@@ -172,7 +172,7 @@ void Warp::OnCollisionA(Collider* collider) {
 	//直前までワープが使われていなければ移動
 	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 
-		if (isActiveWarp_ && isPreActiveWarp_ && countCoolTimer_ <= 0) {
+		if (isActiveWarp_ and isPreActiveWarp_ and countCoolTimer_ <= 0) {
 			collider->GetGameObject()->SetPosition(transformB_->translate_);
 		}
 
@@ -189,7 +189,7 @@ void Warp::OnCollisionB(Collider* collider) {
 	//直前までワープが使われていなければ移動
 	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 
-		if (isActiveWarp_ && isPreActiveWarp_ && countCoolTimer_ <= 0) {
+		if (isActiveWarp_ and isPreActiveWarp_ and countCoolTimer_ <= 0) {
 			collider->GetGameObject()->SetPosition(transform_->translate_);
 		}
 

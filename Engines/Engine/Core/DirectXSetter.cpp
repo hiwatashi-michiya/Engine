@@ -20,8 +20,8 @@ void DirectXSetter::Initialize(WindowManager* winApp, int32_t backBufferWidth, i
 
 	//nullptrチェック
 	assert(winApp);
-	assert(4 <= backBufferWidth && backBufferWidth <= 4096);
-	assert(4 <= backBufferHeight && backBufferHeight <= 4096);
+	assert(4 <= backBufferWidth and backBufferWidth <= 4096);
+	assert(4 <= backBufferHeight and backBufferHeight <= 4096);
 
 	windowManager_ = winApp;
 	backBufferWidth_ = backBufferWidth;

@@ -81,7 +81,7 @@ Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time
 	}
 
 	//キーが1つか、時刻がキーフレーム前なら最初の値とする
-	if (keyframes.size() == 1 || time <= keyframes[0].time) {
+	if (keyframes.size() == 1 or time <= keyframes[0].time) {
 		return keyframes[0].value;
 	}
 
@@ -89,7 +89,7 @@ Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time
 	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
 		size_t nextIndex = index + 1;
 		//indexとnextIndexの2つのkeyframeを取得して範囲内に時刻があるかを判定
-		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
+		if (keyframes[index].time <= time and time <= keyframes[nextIndex].time) {
 			//範囲内を補間する
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
 			return Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
@@ -117,7 +117,7 @@ Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, floa
 	}
 
 	//キーが1つか、時刻がキーフレーム前なら最初の値とする
-	if (keyframes.size() == 1 || time <= keyframes[0].time) {
+	if (keyframes.size() == 1 or time <= keyframes[0].time) {
 		return keyframes[0].value;
 	}
 
@@ -125,7 +125,7 @@ Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, floa
 	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
 		size_t nextIndex = index + 1;
 		//indexとnextIndexの2つのkeyframeを取得して範囲内に時刻があるかを判定
-		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
+		if (keyframes[index].time <= time and time <= keyframes[nextIndex].time) {
 			//範囲内を補間する
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
 			return Slerp(keyframes[index].value, keyframes[nextIndex].value, t);

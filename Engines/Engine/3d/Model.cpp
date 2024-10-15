@@ -299,7 +299,7 @@ void Model::LoadAnimation(const std::string& filename) {
 void Model::ResetAnimation() {
 
 	//アニメーションが存在している時のみリセットを行う
-	if (animation_ && animation_->nodeAnimations.size() != 0) {
+	if (animation_ and animation_->nodeAnimations.size() != 0) {
 
 		animationTime_ = 0.0f;
 		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[mesh_->modelData_.rootNode.name]; //rootNodeのanimationを取得
@@ -317,7 +317,7 @@ void Model::UpdateAnimation() {
 	isEndAnimation_ = false;
 
 	//アニメーションが存在していて、再生フラグが立っている時
-	if (animation_ && isStartAnimation_ && animation_->nodeAnimations.size() != 0) {
+	if (animation_ and isStartAnimation_ and animation_->nodeAnimations.size() != 0) {
 
 		//現在のアニメーションタイムをアニメーション速度分加算
 		animationTime_ += animationSpeed_ / 60.0f;

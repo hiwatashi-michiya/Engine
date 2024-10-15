@@ -11,10 +11,22 @@
 #include "GameObject.h"
 #include "Collider.h"
 #include "LineDrawer.h"
+#include "PlayerState.h"
+#include <optional>
 
 class Player : public GameObject
 {
+	friend class PlayerStay;
+	friend class PlayerMove;
+	friend class PlayerShot;
 public:
+
+	enum class Behavior {
+		kStay,
+		kMove,
+		kShot,
+	};
+
 	Player();
 	~Player();
 
@@ -74,11 +86,19 @@ private:
 
 	Camera* camera_ = nullptr;
 
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
+
+	Behavior behavior_ = Behavior::kStay;
+
 	std::unique_ptr<SkinningModel> model_;
 
 	std::unique_ptr<Particle3D> particle_;
 
 	std::unique_ptr<LineBox> lineBox_;
+
+	std::unique_ptr<PlayerStay> playerStay_;
+	std::unique_ptr<PlayerMove> playerMove_;
+	std::unique_ptr<PlayerShot> playerShot_;
 
 	//ゴール判定
 	bool isGoal_ = false;
@@ -99,16 +119,19 @@ private:
 	Vector3 preTranslate_{};
 
 	Vector3 velocity_{};
-
+	//移動速度
 	float speed_ = 0.25f;
-
-	float jumpVelocity_ = 1.5f;
-
+	//落下速度
+	float fallSpeed_ = -0.1f;
+	//落下速度上限
+	float fallSpeedLimit_ = -2.0f;
+	//死亡フラグ
 	bool isDead_ = false;
-
+	//死亡する高さ
+	float deadHeight_ = -20.0f;
 	//地面判定
 	bool onGround_ = false;
-
+	//テクスチャ
 	Texture* tex_ = nullptr;
 
 };

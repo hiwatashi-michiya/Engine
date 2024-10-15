@@ -44,7 +44,7 @@ bool IsCollision(const Segment& segment, const Plane& plane) {
 	float t = (plane.distance - Dot(segment.origin, plane.normal)) / dot;
 
 	//tが定義域内なら衝突している
-	if (t >= 0.0f && t <= 1.0f) {
+	if (t >= 0.0f and t <= 1.0f) {
 		return true;
 	}
 
@@ -97,8 +97,8 @@ bool IsCollision(const Segment& segment, const Triangle& triangle) {
 	Vector3 cross02 = Cross(v3, vp3);
 
 	//全ての小三角形のクロス積と法線が同じ方向を向いていたら衝突
-	if (Dot(cross10, normal) >= 0.0f &&
-		Dot(cross21, normal) >= 0.0f &&
+	if (Dot(cross10, normal) >= 0.0f and
+		Dot(cross21, normal) >= 0.0f and
 		Dot(cross02, normal) >= 0.0f) {
 		return true;
 	}
@@ -109,9 +109,9 @@ bool IsCollision(const Segment& segment, const Triangle& triangle) {
 
 bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
 
-	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
-		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
-		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
+	if ((aabb1.min.x <= aabb2.max.x and aabb1.max.x >= aabb2.min.x) and
+		(aabb1.min.y <= aabb2.max.y and aabb1.max.y >= aabb2.min.y) and
+		(aabb1.min.z <= aabb2.max.z and aabb1.max.z >= aabb2.min.z)) {
 		return true;
 	}
 
@@ -166,9 +166,9 @@ bool IsCollision(const AABB& aabb, const Segment& segment) {
 	float tMax = std::min(std::min(tFarX, tFarY), tFarZ);
 
 	//衝突しているかどうか判定
-	if (tMin <= tMax &&
-		((tMin >= 0.0f && tMin <= 1.0f) ||
-			(tMax >= 0.0f && tMax <= 1.0f))) {
+	if (tMin <= tMax and
+		((tMin >= 0.0f and tMin <= 1.0f) ||
+			(tMax >= 0.0f and tMax <= 1.0f))) {
 		return true;
 	}
 

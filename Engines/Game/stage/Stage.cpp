@@ -347,7 +347,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 					const std::string& itemNameObject = itItemObject.key();
 
 					//要素数3の配列であれば
-					if (itItemObject->is_array() && itItemObject->size() == 3) {
+					if (itItemObject->is_array() and itItemObject->size() == 3) {
 
 						//名前がpositionだった場合、positionを登録
 						if (itemNameObject == "position") {

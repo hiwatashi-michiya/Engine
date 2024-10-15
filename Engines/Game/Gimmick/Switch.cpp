@@ -33,7 +33,7 @@ void Switch::Update() {
 	model_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
 
 	//ステージの色と違ったらスイッチを使用できる
-	if (colorNumber_ != Stage::stageColor_ && countTimer_ <= 0) {
+	if (colorNumber_ != Stage::stageColor_ and countTimer_ <= 0) {
 		
 		if (model_->material_->constMap_->threshold > 0.0f) {
 
