@@ -1,7 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "Drawing/LineDrawer.h"
-#include "Drawing/ModelManager.h"
+#include "Drawing/RenderingData.h"
 #include "Keyframe/Keyframe.h"
 #include "Quaternion.h"
 #include "Vector3.h"

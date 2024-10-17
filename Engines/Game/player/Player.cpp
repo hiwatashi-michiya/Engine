@@ -72,9 +72,8 @@ void Player::Initialize() {
 
 	isGoal_ = false;
 	isDead_ = false;
-	canJump_ = true;
 	onGround_ = false;
-	ringGetCount_ = 0;
+	itemGetCount_ = 0;
 	canGoal_ = false;
 
 #ifdef _DEBUG
@@ -115,11 +114,22 @@ void Player::Update() {
 	//前フレーム当たり判定座標記録
 	preTranslate_ = collider_->collider_.center;
 
+	//弾が生存していない場合は削除
+	bullets_.erase(std::remove_if(bullets_.begin(), bullets_.end(), [](auto bullet) {
+
+		if (bullet->GetIsDead()) {
+			return true;
+		}
+
+		return false;
+
+		}), bullets_.end());
+
 	//死んでいない時の処理
 	if (!isDead_) {
 
 		//リングを規定数集めていたらゴール可能
-		if (ringGetCount_ >= goalCount_) {
+		if (itemGetCount_ >= goalCount_) {
 			canGoal_ = true;
 		}
 		else {
@@ -188,6 +198,11 @@ void Player::Update() {
 		model_->SetWorldMatrix(transform_->worldMatrix_);
 		//モデルのアニメーション更新
 		model_->UpdateAnimation();
+
+		//弾更新
+		for (int32_t i = 0; i < bullets_.size(); i++) {
+			bullets_[i]->Update();
+		}
 
 		//パーティクル更新
 		for (int32_t i = 0; i < 32; i++) {
@@ -476,7 +491,7 @@ void Player::OnCollision(Collider* collider) {
 	}
 
 	if (collider->GetGameObject()->GetName() == "paint") {
-		ringGetCount_++;
+		itemGetCount_++;
 	}
 
 	if (collider->GetGameObject()->GetName() == "enemy") {
@@ -497,7 +512,16 @@ void Player::OnCollision(Collider* collider) {
 
 }
 
-void Player::Draw(Camera* camera) {
+void Player::Draw(Camera* camera)
+{
+
+	for (int32_t i = 0; i < bullets_.size(); i++) {
+		bullets_[i]->Draw(camera);
+	}
+
+}
+
+void Player::DrawSkinningModel(Camera* camera) {
 
 	if (!isDead_) {
 		model_->Draw(camera);

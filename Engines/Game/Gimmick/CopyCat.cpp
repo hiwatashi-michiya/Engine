@@ -57,9 +57,7 @@ void CopyCat::Initialize() {
 
 	isGoal_ = false;
 	isDead_ = false;
-	canJump_ = true;
 	onGround_ = false;
-	ringGetCount_ = 0;
 	canGoal_ = false;
 
 #ifdef _DEBUG

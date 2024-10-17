@@ -240,9 +240,6 @@
     <ClCompile Include="Game\DefaultScene.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\Animation\Keyframe\Keyframe.cpp">
-      <Filter>Engine\3d\Animation\Keyframe</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3d\Animation\Animation.cpp">
       <Filter>Engine\3d\Animation</Filter>
     </ClCompile>
@@ -470,7 +467,7 @@
     <ClInclude Include="Engine\Drawing\ImGuiManager.h">
       <Filter>Engine\Drawing</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Drawing\ModelManager.h">
+    <ClInclude Include="Engine\Drawing\RenderingData.h">
       <Filter>Engine\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Drawing\TextureManager.h">
@@ -640,6 +637,9 @@
     </ClInclude>
     <ClInclude Include="Game\Bullet\Bullet.h">
       <Filter>Game\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\ModelManager.h">
+      <Filter>Engine\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

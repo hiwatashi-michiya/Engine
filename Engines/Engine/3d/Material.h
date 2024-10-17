@@ -1,5 +1,5 @@
 #pragma once
-#include "Drawing/ModelManager.h"
+#include "Drawing/RenderingData.h"
 #include <d3d12.h>
 #include <wrl.h>
 

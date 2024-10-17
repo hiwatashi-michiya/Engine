@@ -165,7 +165,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Model.cpp" />
     <ClCompile Include="Engine\3d\Particle3D.cpp" />
     <ClCompile Include="Engine\3d\Animation\Animation.cpp" />
-    <ClCompile Include="Engine\3d\Animation\Keyframe\Keyframe.cpp" />
     <ClCompile Include="Engine\3d\Skinning\SkinCluster.cpp" />
     <ClCompile Include="Engine\3d\Skinning\SkinningModel.cpp" />
     <ClCompile Include="Engine\3d\Skybox.cpp" />
@@ -264,6 +263,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Core\RootSignatureDesc.h" />
     <ClInclude Include="Engine\Core\StaticSampler.h" />
     <ClInclude Include="Engine\Drawing\Draw.h" />
+    <ClInclude Include="Engine\Drawing\ModelManager.h" />
     <ClInclude Include="Engine\Drawing\ParticleManager.h" />
     <ClInclude Include="Engine\math\Camera.h" />
     <ClInclude Include="Engine\Core\DescriptorHandle.h" />
@@ -279,7 +279,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Drawing\ImGuiManager.h" />
     <ClInclude Include="Engine\Drawing\LineDrawer.h" />
     <ClInclude Include="Engine\Drawing\MeshManager.h" />
-    <ClInclude Include="Engine\Drawing\ModelManager.h" />
+    <ClInclude Include="Engine\Drawing\RenderingData.h" />
     <ClInclude Include="Engine\Drawing\PipelineManager.h" />
     <ClInclude Include="Engine\Drawing\PostEffect\PostEffectDrawer.h" />
     <ClInclude Include="Engine\Drawing\PostEffect\PostEffects.h" />

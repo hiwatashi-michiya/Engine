@@ -4,6 +4,7 @@
 #include "Game/stage/Stage.h"
 #include "UsefulFunc.h"
 #include "ColorHolder.h"
+#include "Game/Bullet/Bullet.h"
 
 GhostBox::GhostBox()
 {
@@ -97,6 +98,14 @@ void GhostBox::DrawLine(Camera* camera) {
 
 void GhostBox::OnCollision(Collider* collider) {
 
-	
+	//プレイヤーの弾に当たったら
+	if (collider->GetGameObject()->GetName() == "P_Bullet") {
+
+		//弾の色に変わる
+		if (auto pBullet = dynamic_cast<PlayerBullet*>(collider->GetGameObject())) {
+			colorNumber_ = pBullet->GetBulletColor();
+		}
+
+	}
 
 }

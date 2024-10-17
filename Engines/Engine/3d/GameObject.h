@@ -7,7 +7,7 @@ class GameObject
 {
 public:
 	GameObject() : transform_(std::make_unique<Transform>()) {};
-	~GameObject() = default;
+	virtual ~GameObject() = default;
 
 	const std::string& GetName() { return name_; }
 

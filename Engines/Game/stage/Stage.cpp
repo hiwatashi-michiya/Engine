@@ -183,11 +183,13 @@ void Stage::Draw(Camera* camera) {
 		goal->Draw(camera);
 	}
 
+	player_->Draw(camera);
+
 }
 
 void Stage::DrawSkinningModel(Camera* camera) {
 
-	player_->Draw(camera);
+	player_->DrawSkinningModel(camera);
 
 	for (auto& cat : copyCats_) {
 		cat->Draw(camera);

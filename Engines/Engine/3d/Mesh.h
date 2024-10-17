@@ -1,5 +1,5 @@
 #pragma once
-#include "Drawing/ModelManager.h"
+#include "Drawing/RenderingData.h"
 #include "Material.h"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>

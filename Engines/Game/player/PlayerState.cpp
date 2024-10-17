@@ -14,6 +14,7 @@ void PlayerStay::InitializeStay(Player& player)
 {
 
 	player.model_->SetAnimation(0, true);
+	player.model_->SetAnimationSpeed(2.0f);
 	player.velocity_.x = 0.0f;
 	player.velocity_.z = 0.0f;
 
@@ -28,6 +29,9 @@ void PlayerStay::UpdateStay(Player& player)
 		player.input_->PushKey(DIK_S) or player.input_->PushKey(DIK_D)) {
 		player.behaviorRequest_ = Player::Behavior::kMove;
 	}
+	else if (player.input_->TriggerKey(DIK_SPACE)) {
+		player.behaviorRequest_ = Player::Behavior::kShot;
+	}
 	
 #endif // _DEBUG
 
@@ -37,9 +41,11 @@ void PlayerStay::UpdateStay(Player& player)
 		player.behaviorRequest_ = Player::Behavior::kMove;
 
 	}
-	else if (player.input_->TriggerKey(DIK_SPACE)) {
+	//Aボタンで弾発射
+	else if (player.input_->TriggerButton(Input::Button::A)) {
 		player.behaviorRequest_ = Player::Behavior::kShot;
 	}
+	
 
 }
 
@@ -55,6 +61,7 @@ void PlayerMove::InitializeMove(Player& player)
 {
 
 	player.model_->SetAnimation(1, true);
+	player.model_->SetAnimationSpeed(2.0f);
 
 }
 
@@ -83,6 +90,11 @@ void PlayerMove::UpdateMove(Player& player)
 
 	if (fabsf(player.input_->GetStickValue(Input::LX)) > 0 or fabsf(player.input_->GetStickValue(Input::LY)) > 0 or
 		fabsf(moveVector.x) > 0.0f or fabsf(moveVector.z) > 0.0f) {
+
+		//Aボタンで弾発射
+		if (player.input_->TriggerButton(Input::Button::A)) {
+			player.behaviorRequest_ = Player::Behavior::kShot;
+		}
 
 		if (fabsf(player.input_->GetStickValue(Input::LX)) > 0) {
 
@@ -143,9 +155,20 @@ PlayerShot::~PlayerShot()
 void PlayerShot::InitializeShot(Player& player)
 {
 
+	//アニメーション、移動速度リセット
 	player.model_->SetAnimation(2, true);
+	player.model_->SetAnimationSpeed(4.0f);
 	player.velocity_.x = 0.0f;
 	player.velocity_.z = 0.0f;
+
+	//プレイヤーの向きに弾の移動方向を設定
+	Vector3 bulletVelocity = Normalize(player.transform_->worldMatrix_.GetZAxis());
+
+	//弾を生成し、発射
+	std::shared_ptr<PlayerBullet> newBullet;
+	newBullet = std::make_shared<PlayerBullet>();
+	newBullet->Initialize(bulletVelocity, player.GetPosition(), 60);
+	player.bullets_.push_back(newBullet);
 
 }
 
@@ -166,5 +189,7 @@ void PlayerShot::UpdateShot(Player& player)
 		}
 
 	}
+
+
 
 }

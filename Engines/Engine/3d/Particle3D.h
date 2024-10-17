@@ -1,6 +1,6 @@
 #pragma once
 #include "Camera.h"
-#include "Drawing/ModelManager.h"
+#include "Drawing/RenderingData.h"
 #include "Mesh.h"
 #include <d3d12.h>
 #include <dxcapi.h>

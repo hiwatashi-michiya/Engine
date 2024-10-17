@@ -85,11 +85,7 @@ private:
 	//ゴールに必要なアイテム数
 	int32_t goalCount_ = 0;
 
-	int32_t ringGetCount_ = 0;
-
 	bool canGoal_ = false;
-
-	bool canJump_ = true;
 
 	Quaternion rotation_;
 

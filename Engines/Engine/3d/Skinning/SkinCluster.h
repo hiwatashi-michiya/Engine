@@ -1,6 +1,6 @@
 #pragma once
 #include "Animation/Animation.h"
-#include "Drawing/ModelManager.h"
+#include "Drawing/RenderingData.h"
 #include "Matrix4x4.h"
 #include <algorithm>
 #include <array>

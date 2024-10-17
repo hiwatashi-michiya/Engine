@@ -13,6 +13,8 @@
 #include "LineDrawer.h"
 #include "PlayerState.h"
 #include <optional>
+#include "Game/Bullet/Bullet.h"
+#include <vector>
 
 class Player : public GameObject
 {
@@ -36,9 +38,9 @@ public:
 
 	void Draw(Camera* camera);
 
+	void DrawSkinningModel(Camera* camera);
+
 	void DrawParticle(Camera* camera);
-
-
 
 	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
 
@@ -74,7 +76,7 @@ public:
 
 	Quaternion GetRotate() const { return transform_->rotateQuaternion_; }
 
-	void AddRingCount() { ringGetCount_++; }
+	void AddRingCount() { itemGetCount_++; }
 
 private:
 
@@ -100,17 +102,18 @@ private:
 	std::unique_ptr<PlayerMove> playerMove_;
 	std::unique_ptr<PlayerShot> playerShot_;
 
+	//弾リスト
+	std::vector<std::shared_ptr<PlayerBullet>> bullets_;
+
 	//ゴール判定
 	bool isGoal_ = false;
 
 	//ゴールに必要なアイテム数
 	int32_t goalCount_ = 0;
-
-	int32_t ringGetCount_ = 0;
-
+	//アイテムの取得数
+	int32_t itemGetCount_ = 0;
+	//ゴール可能かどうか
 	bool canGoal_ = false;
-
-	bool canJump_ = true;
 
 	Quaternion rotation_;
 
