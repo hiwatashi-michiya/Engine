@@ -22,7 +22,7 @@ public:
 	Stage();
 	~Stage();
 
-	static int32_t stageColor_;
+	static GameColor::Color stageColor_;
 
 	void Initialize();
 
@@ -69,7 +69,7 @@ private:
 
 		bool isSelect = false;
 
-		int32_t colorNumber = 0;
+		GameColor::Color color = GameColor::kWhite;
 
 	};
 

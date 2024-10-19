@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Collider.h"
 #include "LineDrawer.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 class Paint : public GameObject
 {
@@ -35,7 +36,7 @@ public:
 
 	void PlaySE();
 
-	void SetColor(int32_t color) { colorNumber_ = color; }
+	void SetColor(GameColor::Color color) { color_ = color; }
 
 private:
 
@@ -56,7 +57,7 @@ private:
 	//リングが消えるフラグ
 	bool isVanish_ = false;
 
-	int32_t colorNumber_ = 0;
+	GameColor::Color color_ = GameColor::kWhite;
 
 	uint32_t getSE_;
 

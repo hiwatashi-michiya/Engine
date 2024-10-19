@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Collider.h"
 #include "LineDrawer.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 class Switch : public GameObject
 {
@@ -18,7 +19,7 @@ public:
 
 	void DrawLine(Camera* camera);
 
-	void SetColor(int32_t color) { colorNumber_ = color; }
+	void SetColor(GameColor::Color color) { color_ = color; }
 
 private:
 
@@ -33,7 +34,7 @@ private:
 
 	std::unique_ptr<LineBox> lineBox_;
 
-	int32_t colorNumber_ = 0;
+	GameColor::Color color_ = GameColor::kWhite;
 
 	int32_t coolTime_ = 30;
 

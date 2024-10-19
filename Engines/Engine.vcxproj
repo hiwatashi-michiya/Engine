@@ -217,6 +217,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Block\Block.cpp" />
     <ClCompile Include="Game\Bullet\Bullet.cpp" />
     <ClCompile Include="Game\Camera\FollowCamera.cpp" />
+    <ClCompile Include="Game\ColorSetter\ColorSetter.cpp" />
     <ClCompile Include="Game\DefaultScene.cpp" />
     <ClCompile Include="Game\EditorScene\EditorScene.cpp" />
     <ClCompile Include="Game\Enemy\Enemy.cpp" />
@@ -311,6 +312,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Block\Block.h" />
     <ClInclude Include="Game\Bullet\Bullet.h" />
     <ClInclude Include="Game\Camera\FollowCamera.h" />
+    <ClInclude Include="Game\ColorSetter\ColorSetter.h" />
     <ClInclude Include="Game\DefaultScene.h" />
     <ClInclude Include="Game\EditorScene\EditorScene.h" />
     <ClInclude Include="Game\Enemy\Enemy.h" />

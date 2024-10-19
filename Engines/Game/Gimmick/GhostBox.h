@@ -6,6 +6,7 @@
 #include "Collider.h"
 #include "LineDrawer.h"
 #include "Vector3.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 class GhostBox : public GameObject
 {
@@ -35,7 +36,7 @@ public:
 
 	BoxCollider* GetCollider() { return collider_.get(); }
 
-	void SetColor(int32_t color) { colorNumber_ = color; }
+	void SetColor(GameColor::Color color) { color_ = color; }
 
 private:
 
@@ -52,6 +53,6 @@ private:
 
 	Vector3 preTranslate_{};
 
-	int32_t colorNumber_ = 0;
+	GameColor::Color color_ = GameColor::kWhite;
 
 };

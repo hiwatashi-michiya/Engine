@@ -161,26 +161,6 @@
                 ],
                 "tag": "goal"
             },
-            "player": {
-                "color": 0,
-                "position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "player"
-            },
             "paint": {
                 "color": 1,
                 "position": [
@@ -220,6 +200,26 @@
                     1.0
                 ],
                 "tag": "paint"
+            },
+            "player": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "player"
             },
             "switch": {
                 "color": 1,

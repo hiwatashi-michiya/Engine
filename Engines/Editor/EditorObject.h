@@ -9,6 +9,7 @@
 #include "Vector3.h"
 #include "LineDrawer.h"
 #include "EditorCommand.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 //マップに配置されているオブジェクトの構造体
 class MapObject {
@@ -51,15 +52,15 @@ public:
 
 	bool preOpen_ = false;
 
-	const int32_t  kMaxColor_ = 8;
-
-	int32_t colorNumber_ = 0;
+	GameColor::Color color_ = GameColor::kWhite;
 
 	std::unique_ptr<OBB> obb_;
 	std::unique_ptr<LineBox> lineBox_;
 
 	bool isUsing_ = false;
 	bool preIsUsing_ = false;
+
+protected:
 
 	static std::vector<std::shared_ptr<ICommand>>& undoCommands_;
 	static std::vector<std::shared_ptr<ICommand>>& redoCommands_;

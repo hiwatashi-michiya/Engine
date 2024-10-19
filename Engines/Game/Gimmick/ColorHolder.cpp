@@ -1,8 +1,8 @@
 #include "ColorHolder.h"
 #include "Game/stage/Stage.h"
-#include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
-int32_t ColorHolder::holderColor_ = -1;
+GameColor::Color ColorHolder::holderColor_ = GameColor::kWhite;
 
 ColorHolder::ColorHolder()
 {

@@ -1,6 +1,5 @@
 #include "EditorObject.h"
 #include "Drawing/ImGuiManager.h"
-#include "UsefulFunc.h"
 #include "UniqueEditor.h"
 
 std::vector<std::shared_ptr<ICommand>>& MapObject::undoCommands_ = UniqueEditor::GetInstance()->GetUndoCommands();
@@ -212,7 +211,7 @@ void MoveBoxObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
 	model_->SetTexture("./Resources/block/circle.png");
-	model_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(GameColor::CreateColor(color_));
 	objName_ = name;
 	tag_ = "moveBox";
 
@@ -230,10 +229,11 @@ void MoveBoxObject::Edit() {
 		isUsing_ = true;
 	}
 
-	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
-		model_->SetColor(CreateColor(colorNumber_));
+	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
+		model_->SetColor(GameColor::CreateColor(color_));
 	}
 
+	
 	RecordMove();
 
 #endif // _DEBUG
@@ -255,7 +255,7 @@ void MoveBoxObject::Edit() {
 void PaintObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/paint/paint.gltf");
-	model_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(GameColor::CreateColor(color_));
 	objName_ = name;
 	tag_ = "paint";
 
@@ -269,8 +269,8 @@ void PaintObject::Edit() {
 		isUsing_ = true;
 	}
 
-	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
-		model_->SetColor(CreateColor(colorNumber_));
+	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
+		model_->SetColor(CreateColor(color_));
 	}
 
 	RecordMove();
@@ -294,7 +294,7 @@ void PaintObject::Edit() {
 void GoalObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/goal/goal.obj");
-	model_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(GameColor::CreateColor(color_));
 	objName_ = name;
 	tag_ = "goal";
 
@@ -335,8 +335,8 @@ void WarpObject::Initialize(const std::string& name) {
 	objName_ = name;
 	tag_ = "warp";
 
-	model_->SetColor(CreateColor(colorNumber_));
-	modelB_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(GameColor::CreateColor(color_));
+	modelB_->SetColor(GameColor::CreateColor(color_));
 
 	obbB_ = std::make_unique<OBB>();
 	lineBoxB_ = std::make_unique<LineBox>();
@@ -387,9 +387,9 @@ void WarpObject::Edit() {
 		isUsing_ = true;
 	}
 
-	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
-		model_->SetColor(CreateColor(colorNumber_));
-		modelB_->SetColor(CreateColor(colorNumber_));
+	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
+		model_->SetColor(GameColor::CreateColor(color_));
+		modelB_->SetColor(GameColor::CreateColor(color_));
 	}
 
 	//どちらを動かすか選択
@@ -483,7 +483,7 @@ void WarpObject::DrawLine(Camera* camera)
 void GhostBoxObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
-	model_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(CreateColor(color_));
 	objName_ = name;
 	tag_ = "ghostBox";
 
@@ -501,8 +501,8 @@ void GhostBoxObject::Edit() {
 		isUsing_ = true;
 	}
 
-	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
-		model_->SetColor(CreateColor(colorNumber_));
+	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
+		model_->SetColor(GameColor::CreateColor(color_));
 	}
 
 	RecordMove();
@@ -526,7 +526,7 @@ void GhostBoxObject::Edit() {
 void SwitchObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/switch/switch.obj");
-	model_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(CreateColor(color_));
 	objName_ = name;
 	tag_ = "switch";
 
@@ -540,8 +540,8 @@ void SwitchObject::Edit() {
 		isUsing_ = true;
 	}
 
-	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
-		model_->SetColor(CreateColor(colorNumber_));
+	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
+		model_->SetColor(GameColor::CreateColor(color_));
 	}
 
 	RecordMove();
@@ -579,8 +579,8 @@ void CopyCatObject::Edit() {
 		isUsing_ = true;
 	}
 
-	if (ImGui::SliderInt("color", &colorNumber_, -1, kMaxColor_ - 1)) {
-		model_->SetColor(CreateColor(colorNumber_));
+	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
+		model_->SetColor(GameColor::CreateColor(color_));
 	}
 
 	RecordMove();
@@ -604,7 +604,7 @@ void CopyCatObject::Edit() {
 void EnemyObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/enemy/enemy.obj");
-	model_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(CreateColor(color_));
 	objName_ = name;
 	tag_ = "enemy";
 
@@ -618,8 +618,8 @@ void EnemyObject::Edit() {
 		isUsing_ = true;
 	}
 
-	if (ImGui::SliderInt("color", &colorNumber_, 0, kMaxColor_ - 1)) {
-		model_->SetColor(CreateColor(colorNumber_));
+	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
+		model_->SetColor(GameColor::CreateColor(color_));
 	}
 
 	RecordMove();
@@ -647,7 +647,7 @@ void HolderObject::Initialize(const std::string& name) {
 	modelB_->SetWorldMatrix(transform_->worldMatrix_);
 	objName_ = name;
 	tag_ = "colorHolder";
-	colorNumber_ = -1;
+	color_ = GameColor::kWhite;
 
 }
 

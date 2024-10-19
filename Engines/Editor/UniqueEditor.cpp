@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <windows.h>
 #include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 #include "Collision.h"
 
 void UniqueEditor::EditTransform()
@@ -667,7 +668,7 @@ void UniqueEditor::Save(const std::string& filename) {
 			root[sceneName_]["objectData"][warpPtr->objName_]["scale"] =
 				nlohmann::json::array({ warpPtr->transform_->scale_.x, warpPtr->transform_->scale_.y, warpPtr->transform_->scale_.z });
 			root[sceneName_]["objectData"][warpPtr->objName_]["tag"] = warpPtr->tag_;
-			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = mapObjData_[i]->colorNumber_;
+			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
 
 		}
 		else {
@@ -680,7 +681,7 @@ void UniqueEditor::Save(const std::string& filename) {
 			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["scale"] =
 				nlohmann::json::array({ mapObjData_[i]->transform_->scale_.x, mapObjData_[i]->transform_->scale_.y, mapObjData_[i]->transform_->scale_.z });
 			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["tag"] = mapObjData_[i]->tag_;
-			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = mapObjData_[i]->colorNumber_;
+			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
 
 		}
 
@@ -886,8 +887,8 @@ void UniqueEditor::Load(const std::string& filename) {
 
 						if (itemNameObject == "color") {
 							
-							object->colorNumber_ = itItemObject->get<int32_t>();
-							object->model_->SetColor(CreateColor(object->colorNumber_));
+							object->color_ = GameColor::Color(itItemObject->get<int32_t>());
+							object->model_->SetColor(CreateColor(object->color_));
 
 							if (auto blockPtr = dynamic_cast<BlockObject*>(object.get())) {
 								blockPtr->model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -903,7 +904,7 @@ void UniqueEditor::Load(const std::string& filename) {
 
 							if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
 
-								warpPtr->modelB_->SetColor(CreateColor(warpPtr->colorNumber_));
+								warpPtr->modelB_->SetColor(CreateColor(warpPtr->color_));
 
 							}
 
@@ -1171,7 +1172,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1182,7 +1183,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1193,7 +1194,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1211,7 +1212,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 			tmpObject->transformB_->scale_ = warpPtr->transformB_->scale_;
 		}
 
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 
 		mapObjData_.push_back(tmpObject);
 
@@ -1223,7 +1224,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1234,7 +1235,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1245,7 +1246,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1256,7 +1257,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1277,7 +1278,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->colorNumber_ = object->colorNumber_;
+		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}

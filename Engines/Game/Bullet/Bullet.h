@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "Collider.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 class IBullet : public GameObject
 {
@@ -54,11 +55,11 @@ public:
 
 	void OnCollision(Collider* collider) override;
 
-	int32_t GetBulletColor() const { return bulletColor_; }
+	GameColor::Color GetBulletColor() const { return bulletColor_; }
 
 private:
 
-	int32_t bulletColor_ = 0;
+	GameColor::Color bulletColor_ = GameColor::kWhite;
 
 };
 

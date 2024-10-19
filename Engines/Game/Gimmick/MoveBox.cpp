@@ -1,7 +1,7 @@
 #include "MoveBox.h"
 #include "Rand.h"
 #include "Game/stage/Stage.h"
-#include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 #include "ColorHolder.h"
 
 MoveBox::MoveBox()
@@ -32,7 +32,7 @@ void MoveBox::Initialize() {
 
 void MoveBox::Update() {
 
-	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
+	if ((color_ == Stage::stageColor_ || color_ == ColorHolder::GetHolderColor())) {
 		name_ = "moveBox";
 		model_->SetTexture(circleTex_);
 	}
@@ -52,7 +52,7 @@ void MoveBox::Update() {
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 
-	model_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(CreateColor(color_));
 
 }
 

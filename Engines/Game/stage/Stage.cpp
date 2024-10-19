@@ -7,7 +7,7 @@
 #include "PostEffectDrawer.h"
 #include "UsefulFunc.h"
 
-int32_t Stage::stageColor_ = 0;
+GameColor::Color Stage::stageColor_ = GameColor::kWhite;
 
 Stage::Stage()
 {
@@ -35,7 +35,7 @@ void Stage::Initialize() {
 	holders_.clear();
 	ColorHolder::ResetHolder();
 
-	stageColor_ = 0;
+	stageColor_ = GameColor::kWhite;
 	stageParticle_->Initialize();
 	stageParticle_->SetIsLoop(true);
 	stageParticle_->SetMinMaxLifeTime(45, 90);
@@ -130,9 +130,7 @@ void Stage::Update() {
 	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + Vector3{ -50.0f,-10.0f,-50.0f },
 		player_->GetPosition() + Vector3{ 50.0f,-5.0f,50.0f });
 	
-	if (ColorHolder::GetHolderColor() != -1) {
-		stageParticle_->SetColor(CreateColor(ColorHolder::GetHolderColor()));
-	}
+	stageParticle_->SetColor(CreateColor(ColorHolder::GetHolderColor()));
 
 	stageParticle_->Update();
 
@@ -380,7 +378,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 						}
 
 						if (itemNameObject == "color") {
-							mapObject->colorNumber = itItemObject->get<int32_t>();
+							mapObject->color = GameColor::Color(itItemObject->get<int32_t>());
 						}
 
 						//クォータニオン追加
@@ -435,7 +433,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 		if (object->tag == "item" || object->tag == Paint::objectName_) {
 			std::shared_ptr<Paint> newObject = std::make_shared<Paint>();
 			newObject->Initialize(object->transforms_[0]->translate_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetColor(object->color);
 			rings_.push_back(newObject);
 		}
 
@@ -452,7 +450,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetColor(object->color);
 			moveBoxes_.push_back(newObject);
 		}
 
@@ -463,7 +461,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->SetScale(object->transforms_[0]->scale_);
 			newObject->SetPositionB(object->transforms_[1]->translate_);
 			newObject->SetScaleB(object->transforms_[1]->scale_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetColor(object->color);
 			warps_.push_back(newObject);
 		}
 
@@ -472,7 +470,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetColor(object->color);
 			ghostBoxes_.push_back(newObject);
 		}
 
@@ -480,7 +478,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			std::shared_ptr<Switch> newObject = std::make_shared<Switch>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetColor(object->color);
 			switches_.push_back(newObject);
 		}
 
@@ -489,7 +487,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetRespawnPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetColor(object->color);
 			newObject->SetPlayer(player_.get());
 			copyCats_.push_back(newObject);
 		}
@@ -498,7 +496,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			std::shared_ptr<Enemy> newObject = std::make_shared<Enemy>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetColor(object->color);
 			enemies_.push_back(newObject);
 		}
 
@@ -506,7 +504,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			std::shared_ptr<Enemy> newObject = std::make_shared<Enemy>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->colorNumber);
+			newObject->SetColor(object->color);
 			enemies_.push_back(newObject);
 		}
 

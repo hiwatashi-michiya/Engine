@@ -5,7 +5,7 @@
 #include "Audio/AudioManager.h"
 #include "PostEffectDrawer.h"
 #include <functional>
-#include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 #include "Game/stage/Stage.h"
 #include "ColorHolder.h"
 
@@ -91,8 +91,8 @@ void CopyCat::Update() {
 			canGoal_ = false;
 		}*/
 
-		if (player_ and (colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor() ||
-			colorNumber_ == -1)) {
+		if (player_ and (color_ == Stage::stageColor_ || color_ == ColorHolder::GetHolderColor() ||
+			color_ == -1)) {
 
 			model_->StartAnimation(true);
 
@@ -140,8 +140,8 @@ void CopyCat::Update() {
 
 		model_->UpdateAnimation();
 
-		if (colorNumber_ != -1) {
-			model_->SetColor(CreateColor(colorNumber_));
+		if (color_ != -1) {
+			model_->SetColor(CreateColor(color_));
 		}
 		else {
 			model_->SetColor({ 5.0f,5.0f,5.0f,5.0f });

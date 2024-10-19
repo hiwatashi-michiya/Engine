@@ -21,6 +21,7 @@ void PlayerBullet::Initialize(const Vector3& velocity, const Vector3& startPosit
 	transform_->translate_ = startPosition;
 	lifeTime_ = lifeTime;
 	bulletColor_ = Stage::stageColor_;
+	model_->SetColor(GameColor::CreateColor(bulletColor_));
 
 	name_ = "P_Bullet";
 	collider_->collider_.center = transform_->translate_;

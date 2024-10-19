@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Collider.h"
 #include "LineDrawer.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 class ColorHolder : public GameObject
 {
@@ -10,9 +11,9 @@ public:
 	ColorHolder();
 	~ColorHolder();
 
-	static void ResetHolder() { holderColor_ = -1; }
+	static void ResetHolder() { holderColor_ = GameColor::kWhite; }
 
-	static int32_t GetHolderColor() { return holderColor_; }
+	static GameColor::Color GetHolderColor() { return holderColor_; }
 
 	void Initialize();
 
@@ -28,7 +29,7 @@ private:
 
 private:
 
-	static int32_t holderColor_;
+	static GameColor::Color holderColor_;
 
 	std::unique_ptr<Model> modelOuter_;
 	std::unique_ptr<Model> modelInner_;

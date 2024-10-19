@@ -118,6 +118,9 @@
     <Filter Include="Game\Bullet">
       <UniqueIdentifier>{445430c3-dd91-43e9-9781-caec7c360501}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\ColorSetter">
+      <UniqueIdentifier>{86a6ee48-f5ad-4cfb-8980-5ebe00a209f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -365,6 +368,9 @@
     </ClCompile>
     <ClCompile Include="Game\player\PlayerState.cpp">
       <Filter>Game\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\ColorSetter\ColorSetter.cpp">
+      <Filter>Game\ColorSetter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -640,6 +646,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\ModelManager.h">
       <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ColorSetter\ColorSetter.h">
+      <Filter>Game\ColorSetter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

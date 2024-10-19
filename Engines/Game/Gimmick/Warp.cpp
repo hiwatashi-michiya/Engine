@@ -1,6 +1,6 @@
 #include "Warp.h"
 #include "Rand.h"
-#include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 #include "Game/stage/Stage.h"
 #include "ColorHolder.h"
 
@@ -35,17 +35,17 @@ void Warp::Initialize() {
 	colliderB_->collider_.size = transformB_->scale_;
 	colliderB_->SetFunction([this](Collider* collider) {OnCollisionB(collider); });
 	lineBoxB_->SetOBB(&colliderB_->collider_);
-	modelA_->SetColor(CreateColor(colorNumber_));
-	modelB_->SetColor(CreateColor(colorNumber_));
+	modelA_->SetColor(CreateColor(color_));
+	modelB_->SetColor(CreateColor(color_));
 
 }
 
 void Warp::Update() {
 
-	modelA_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
-	modelB_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
+	modelA_->material_->constMap_->edgeColor = CreateVector3Color(color_);
+	modelB_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 
-	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
+	if ((color_ == Stage::stageColor_ || color_ == ColorHolder::GetHolderColor())) {
 		
 		if (modelA_->material_->constMap_->threshold > 0.0f) {
 
@@ -140,10 +140,10 @@ void Warp::Update() {
 	modelB_->SetWorldMatrix(transformB_->worldMatrix_);
 	modelBWire_->SetWorldMatrix(transformB_->worldMatrix_);
 
-	modelA_->SetColor(CreateColor(colorNumber_));
-	modelAWire_->SetColor(CreateColor(colorNumber_));
-	modelB_->SetColor(CreateColor(colorNumber_));
-	modelBWire_->SetColor(CreateColor(colorNumber_));
+	modelA_->SetColor(CreateColor(color_));
+	modelAWire_->SetColor(CreateColor(color_));
+	modelB_->SetColor(CreateColor(color_));
+	modelBWire_->SetColor(CreateColor(color_));
 
 }
 

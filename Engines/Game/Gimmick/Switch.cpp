@@ -1,6 +1,6 @@
 #include "Switch.h"
 #include "Game/stage/Stage.h"
-#include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 #include "ColorHolder.h"
 
 Switch::Switch()
@@ -30,10 +30,10 @@ void Switch::Initialize() {
 
 void Switch::Update() {
 
-	model_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
+	model_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 
 	//ステージの色と違ったらスイッチを使用できる
-	if (colorNumber_ != Stage::stageColor_ and countTimer_ <= 0) {
+	if (color_ != Stage::stageColor_ and countTimer_ <= 0) {
 		
 		if (model_->material_->constMap_->threshold > 0.0f) {
 
@@ -75,8 +75,8 @@ void Switch::Update() {
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
 
-	model_->SetColor(CreateColor(colorNumber_));
-	modelWire_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(CreateColor(color_));
+	modelWire_->SetColor(CreateColor(color_));
 
 }
 
@@ -98,7 +98,7 @@ void Switch::OnCollision(Collider* collider) {
 	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 
 		if (countTimer_ <= 0) {
-			Stage::stageColor_ = colorNumber_;
+			Stage::stageColor_ = color_;
 		}
 
 		countTimer_ = coolTime_;

@@ -1,6 +1,6 @@
 #include "Enemy.h"
 #include "Game/stage/Stage.h"
-#include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 #include "ParticleManager.h"
 #include "Game/Gimmick/ColorHolder.h"
 
@@ -31,10 +31,10 @@ void Enemy::Initialize() {
 
 void Enemy::Update() {
 
-	model_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
+	model_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 
 	//ステージの色と同じなら起動
-	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
+	if ((color_ == Stage::stageColor_ || color_ == ColorHolder::GetHolderColor())) {
 		
 		if (model_->material_->constMap_->threshold > 0.0f) {
 
@@ -88,8 +88,8 @@ void Enemy::Update() {
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
 
-	model_->SetColor(CreateColor(colorNumber_));
-	modelWire_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(CreateColor(color_));
+	modelWire_->SetColor(CreateColor(color_));
 
 }
 
@@ -125,7 +125,7 @@ void Enemy::OnCollision(Collider* collider) {
 		newParticle->SetMinScale(0.1f);
 		newParticle->SetMaxScale(0.5f);
 		newParticle->SetChangeScale(-0.02f);
-		newParticle->SetColor(CreateColor(colorNumber_));
+		newParticle->SetColor(CreateColor(color_));
 
 		ParticleManager::GetInstance()->AddParticle(newParticle);
 

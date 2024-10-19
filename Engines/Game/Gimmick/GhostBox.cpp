@@ -2,7 +2,7 @@
 #include "Rand.h"
 #include "Collision.h"
 #include "Game/stage/Stage.h"
-#include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 #include "ColorHolder.h"
 #include "Game/Bullet/Bullet.h"
 
@@ -33,11 +33,11 @@ void GhostBox::Initialize() {
 
 void GhostBox::Update() {
 
-	model_->material_->constMap_->edgeColor = CreateVector3Color(colorNumber_);
+	model_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 
 	preTranslate_ = collider_->collider_.center;
 
-	if ((colorNumber_ == Stage::stageColor_ || colorNumber_ == ColorHolder::GetHolderColor())) {
+	if ((color_ == Stage::stageColor_ || color_ == ColorHolder::GetHolderColor())) {
 
 		if (model_->material_->constMap_->threshold > 0.0f) {
 
@@ -76,8 +76,8 @@ void GhostBox::Update() {
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
 
-	model_->SetColor(CreateColor(colorNumber_));
-	modelWire_->SetColor(CreateColor(colorNumber_));
+	model_->SetColor(CreateColor(color_));
+	modelWire_->SetColor(CreateColor(color_));
 
 }
 
@@ -103,7 +103,7 @@ void GhostBox::OnCollision(Collider* collider) {
 
 		//弾の色に変わる
 		if (auto pBullet = dynamic_cast<PlayerBullet*>(collider->GetGameObject())) {
-			colorNumber_ = pBullet->GetBulletColor();
+			color_ = pBullet->GetBulletColor();
 		}
 
 	}

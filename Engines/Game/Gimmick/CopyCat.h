@@ -12,6 +12,7 @@
 #include "Collider.h"
 #include "LineDrawer.h"
 #include "Game/player/Player.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 class CopyCat : public GameObject
 {
@@ -61,7 +62,7 @@ public:
 
 	void SetPlayer(Player* player) { player_ = player; }
 
-	void SetColor(int32_t color) { colorNumber_ = color; }
+	void SetColor(GameColor::Color color) { color_ = color; }
 
 private:
 
@@ -106,7 +107,7 @@ private:
 	//地面判定
 	bool onGround_ = false;
 
-	int32_t colorNumber_ = 0;
+	GameColor::Color color_ = GameColor::kWhite;
 
 };
 

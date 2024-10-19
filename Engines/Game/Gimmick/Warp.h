@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Collider.h"
 #include "LineDrawer.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 class Warp : public GameObject
 {
@@ -36,7 +37,7 @@ public:
 
 	void SetScaleB(const Vector3& scale) { transformB_->scale_ = scale; }
 
-	void SetColor(int32_t color) { colorNumber_ = color; }
+	void SetColor(GameColor::Color color) { color_ = color; }
 
 	const Vector3& GetPosition() { return transform_->translate_; }
 
@@ -84,6 +85,6 @@ private:
 
 	int32_t coolTime_ = 60;
 
-	int32_t colorNumber_ = 0;
+	GameColor::Color color_ = GameColor::kWhite;
 
 };

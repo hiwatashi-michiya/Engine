@@ -6,6 +6,7 @@
 #include "Collider.h"
 #include "LineDrawer.h"
 #include "Vector3.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 class Enemy : public GameObject
 {
@@ -21,7 +22,7 @@ public:
 
 	void DrawLine(Camera* camera);
 
-	void SetColor(int32_t color) { colorNumber_ = color; }
+	void SetColor(GameColor::Color color) { color_ = color; }
 
 	bool GetIsDead() const { return isDead_; }
 
@@ -40,7 +41,7 @@ private:
 
 	bool isDead_ = false;
 
-	int32_t colorNumber_ = 0;
+	GameColor::Color color_ = GameColor::kWhite;
 
 };
 

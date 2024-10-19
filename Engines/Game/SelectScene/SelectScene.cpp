@@ -2,7 +2,7 @@
 #include "FrameWork/SceneManager.h"
 #include "PostEffectDrawer.h"
 #include <cmath>
-#include "UsefulFunc.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 #ifdef _DEBUG
 
@@ -168,7 +168,7 @@ void SelectScene::Update() {
 
 	num_->uvTranslate_.x = float(stageNumber_) * 0.1f;
 
-	skyDome_->SetColor(CreateColor(stageNumber_));
+	skyDome_->SetColor(CreateColor(GameColor::Color(stageNumber_)));
 
 }
 
