@@ -60,3 +60,94 @@ Vector3 GameColor::CreateVector3Color(GameColor::Color color)
 	}
 
 }
+
+bool GameColor::IsActiveColor(GameColor::Color color, GameColor::Color stageColor, GameColor::Color holderColor)
+{
+
+	//色が白色ならtrue
+	if (color == kWhite) {
+		return true;
+	}
+
+	//どちらかの色と一致しているならtrue
+	if (color == stageColor or color == holderColor) {
+		return true;
+	}
+
+	//二色とも色がついている場合
+	if (stageColor != kWhite and holderColor != kWhite) {
+
+		//二色を合わせた色と同じ場合もtrue
+		switch (stageColor)
+		{
+		case GameColor::kRed:
+
+			if (holderColor == kBlue and color == kMagenta) {
+				return true;
+			}
+			else if (holderColor == kGreen and color == kYellow) {
+				return true;
+			}
+
+			break;
+		case GameColor::kBlue:
+
+			if (holderColor == kRed and color == kMagenta) {
+				return true;
+			}
+			else if (holderColor == kGreen and color == kCyan) {
+				return true;
+			}
+
+			break;
+		case GameColor::kGreen:
+
+			if (holderColor == kBlue and color == kCyan) {
+				return true;
+			}
+			else if (holderColor == kRed and color == kYellow) {
+				return true;
+			}
+
+			break;
+		}
+		//逆の組み合わせでも同様の処理を行う
+		switch (holderColor)
+		{
+		case GameColor::kRed:
+
+			if (stageColor == kBlue and color == kMagenta) {
+				return true;
+			}
+			else if (stageColor == kGreen and color == kYellow) {
+				return true;
+			}
+
+			break;
+		case GameColor::kBlue:
+
+			if (stageColor == kRed and color == kMagenta) {
+				return true;
+			}
+			else if (stageColor == kGreen and color == kCyan) {
+				return true;
+			}
+
+			break;
+		case GameColor::kGreen:
+
+			if (stageColor == kBlue and color == kCyan) {
+				return true;
+			}
+			else if (stageColor == kRed and color == kYellow) {
+				return true;
+			}
+
+			break;
+		}
+
+	}
+
+	return false;
+
+}

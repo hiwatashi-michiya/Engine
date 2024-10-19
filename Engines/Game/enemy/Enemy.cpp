@@ -34,7 +34,7 @@ void Enemy::Update() {
 	model_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 
 	//ステージの色と同じなら起動
-	if ((color_ == Stage::stageColor_ || color_ == ColorHolder::GetHolderColor())) {
+	if (GameColor::IsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
 		
 		if (model_->material_->constMap_->threshold > 0.0f) {
 

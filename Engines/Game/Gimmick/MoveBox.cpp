@@ -32,7 +32,7 @@ void MoveBox::Initialize() {
 
 void MoveBox::Update() {
 
-	if ((color_ == Stage::stageColor_ || color_ == ColorHolder::GetHolderColor())) {
+	if (GameColor::IsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
 		name_ = "moveBox";
 		model_->SetTexture(circleTex_);
 	}
