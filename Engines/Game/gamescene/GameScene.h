@@ -48,6 +48,9 @@ private:
 	std::unique_ptr<Model> skyDome_;
 	std::unique_ptr<Transform> skyDomeTransform_;
 
+	std::unique_ptr<Model> skyDomeNet_;
+	std::unique_ptr<Transform> skyDomeNetTransform_;
+
 	std::unique_ptr<Stage> stage_;
 
 	std::unique_ptr<Sprite> pauseSprite_;

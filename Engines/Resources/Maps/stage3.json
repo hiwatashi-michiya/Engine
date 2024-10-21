@@ -1,8 +1,48 @@
 {
     "marScene": {
         "objectData": {
-            "block": {
+            "colorHolder": {
                 "color": 0,
+                "position": [
+                    -4.0,
+                    0.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "colorHolder"
+            },
+            "ghostBox": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    -2.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox1": {
+                "color": 1,
                 "position": [
                     10.0,
                     -2.0,
@@ -19,93 +59,13 @@
                     1.0,
                     5.0
                 ],
-                "tag": "block"
+                "tag": "ghostBox"
             },
-            "block1": {
-                "color": 0,
-                "position": [
-                    0.0,
-                    -11.0,
-                    0.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    5.0,
-                    20.0,
-                    5.0
-                ],
-                "tag": "block"
-            },
-            "block2": {
-                "color": 0,
-                "position": [
-                    10.0,
-                    -15.0,
-                    -10.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    5.0,
-                    20.0,
-                    5.0
-                ],
-                "tag": "block"
-            },
-            "block3": {
-                "color": 0,
+            "ghostBox2": {
+                "color": 6,
                 "position": [
                     20.0,
-                    -17.0,
-                    0.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    5.0,
-                    20.0,
-                    5.0
-                ],
-                "tag": "block"
-            },
-            "block4": {
-                "color": 0,
-                "position": [
-                    10.0,
-                    -13.0,
-                    10.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    5.0,
-                    20.0,
-                    5.0
-                ],
-                "tag": "block"
-            },
-            "ghostBox": {
-                "color": 0,
-                "position": [
-                    20.0,
-                    4.0,
+                    -2.0,
                     0.0
                 ],
                 "quaternion": [
@@ -117,16 +77,116 @@
                 "scale": [
                     5.0,
                     1.0,
+                    5.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox3": {
+                "color": 2,
+                "position": [
+                    30.0,
+                    -2.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
                     1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox4": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    -2.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox5": {
+                "color": 3,
+                "position": [
+                    20.0,
+                    -2.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox6": {
+                "color": 4,
+                "position": [
+                    10.0,
+                    -2.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox7": {
+                "color": 5,
+                "position": [
+                    30.0,
+                    -2.0,
+                    -10.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
                 ],
                 "tag": "ghostBox"
             },
             "goal": {
                 "color": 0,
                 "position": [
-                    0.0,
-                    10.0,
-                    0.0
+                    30.00043487548828,
+                    0.033298492431640625,
+                    0.03701399266719818
                 ],
                 "quaternion": [
                     0.0,
@@ -141,10 +201,70 @@
                 ],
                 "tag": "goal"
             },
+            "paint": {
+                "color": 1,
+                "position": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "paint"
+            },
+            "paint1": {
+                "color": 6,
+                "position": [
+                    20.0,
+                    0.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "paint"
+            },
+            "paint2": {
+                "color": 2,
+                "position": [
+                    26.0,
+                    0.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "tag": "paint"
+            },
             "player": {
                 "color": 0,
                 "position": [
-                    10.0,
+                    0.0,
                     0.0,
                     0.0
                 ],
@@ -161,72 +281,12 @@
                 ],
                 "tag": "player"
             },
-            "paint1": {
-                "color": 1,
-                "position": [
-                    10.0,
-                    8.0,
-                    10.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "paint"
-            },
-            "paint2": {
-                "color": 0,
-                "position": [
-                    20.1025333404541,
-                    4.0,
-                    4.030277252197266
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "paint"
-            },
-            "paint3": {
-                "color": 1,
-                "position": [
-                    10.0,
-                    6.0,
-                    -10.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "paint"
-            },
             "switch": {
-                "color": 0,
+                "color": 1,
                 "position": [
-                    14.0,
-                    1.0,
-                    -4.0
+                    4.0,
+                    0.0,
+                    0.0
                 ],
                 "quaternion": [
                     0.0,
@@ -242,11 +302,11 @@
                 "tag": "switch"
             },
             "switch1": {
-                "color": 1,
+                "color": 2,
                 "position": [
-                    6.0,
+                    -3.727651596069336,
                     0.0,
-                    -4.0
+                    5.960464477539063e-08
                 ],
                 "quaternion": [
                     0.0,
@@ -261,15 +321,12 @@
                 ],
                 "tag": "switch"
             },
-            "warp": {
-                "color": 0,
+            "switch2": {
+                "color": 3,
                 "position": [
-                    6.0,
-                    6.0,
-                    -14.0,
-                    14.0,
-                    8.0,
-                    6.0
+                    4.0,
+                    0.0,
+                    -10.0
                 ],
                 "quaternion": [
                     0.0,
@@ -282,76 +339,7 @@
                     1.0,
                     1.0
                 ],
-                "tag": "warp"
-            },
-            "warp1": {
-                "color": 0,
-                "position": [
-                    14.0,
-                    6.0,
-                    -14.0,
-                    14.0,
-                    0.0,
-                    4.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "warp"
-            },
-            "warp2": {
-                "color": 1,
-                "position": [
-                    16.0,
-                    4.0,
-                    -4.0,
-                    6.0,
-                    0.0,
-                    4.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "warp"
-            },
-            "warp3": {
-                "color": 1,
-                "position": [
-                    16.0,
-                    4.0,
-                    4.0,
-                    4.0,
-                    10.0,
-                    4.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "warp"
+                "tag": "switch"
             }
         }
     }

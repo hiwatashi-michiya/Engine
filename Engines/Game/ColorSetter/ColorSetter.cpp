@@ -61,7 +61,7 @@ Vector3 GameColor::CreateVector3Color(GameColor::Color color)
 
 }
 
-bool GameColor::IsActiveColor(GameColor::Color color, GameColor::Color stageColor, GameColor::Color holderColor)
+bool GameColor::CheckIsActiveColor(GameColor::Color color, GameColor::Color stageColor, GameColor::Color holderColor)
 {
 
 	//色が白色ならtrue

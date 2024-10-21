@@ -37,7 +37,7 @@ void GhostBox::Update() {
 
 	preTranslate_ = collider_->collider_.center;
 
-	if (GameColor::IsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
+	if (GameColor::CheckIsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
 
 		if (model_->material_->constMap_->threshold > 0.0f) {
 

@@ -84,8 +84,7 @@ void CopyCat::Update() {
 	if (!isDead_) {
 
 		//リングを規定数集めていたらゴール可能
-		
-		if (player_ and (GameColor::IsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor()) or
+		if (player_ and (GameColor::CheckIsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor()) or
 			color_ == -1)) {
 
 			model_->StartAnimation(true);

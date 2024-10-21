@@ -14,6 +14,7 @@ GameScene::GameScene()
 {
 
 	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
+	skyDomeNet_.reset(Model::Create("./Resources/skydome/skydome_net.obj"));
 	skybox_ = std::make_unique<Skybox>();
 	skybox_->LoadDds("./Resources/skydome/test.dds");
 	pauseTex_ = TextureManager::GetInstance()->Load("./Resources/UI/pause.png");
@@ -64,6 +65,14 @@ void GameScene::Initialize() {
 	skyDome_->material_->pLightMap_->intensity = 0.15f;
 	skyDome_->material_->pLightMap_->decay = 0.5f;
 
+	skyDomeNetTransform_ = std::make_unique<Transform>();
+	skyDomeNetTransform_->scale_ = { 450.0f,450.0f,450.0f };
+	skyDomeNet_->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
+	skyDomeNet_->material_->dLightMap_->intensity = 1.0f;
+	skyDomeNet_->material_->pLightMap_->radius = 650.0f;
+	skyDomeNet_->material_->pLightMap_->intensity = 0.15f;
+	skyDomeNet_->material_->pLightMap_->decay = 0.5f;
+
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
 	stage_->LoadStage(stageNumber_);
@@ -77,6 +86,8 @@ void GameScene::Initialize() {
 
 	skyDomeTransform_->UpdateMatrix();
 	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+	skyDomeNetTransform_->UpdateMatrix();
+	skyDomeNet_->SetWorldMatrix(skyDomeNetTransform_->worldMatrix_);
 	skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 	followCamera_->Update();
 
@@ -220,6 +231,9 @@ void GameScene::Update() {
 		skyDome_->SetColor(CreateColor(stage_->stageColor_));
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
+		skyDomeNet_->SetColor(CreateColor(ColorHolder::GetHolderColor()));
+		skyDomeNetTransform_->UpdateMatrix();
+		skyDomeNet_->SetWorldMatrix(skyDomeNetTransform_->worldMatrix_);
 		skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 
 		PostEffectDrawer::GetInstance()->SetCamera(camera_.get());
@@ -250,6 +264,7 @@ void GameScene::DrawModel() {
 	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());*/
 
 	skyDome_->Draw(camera_.get());
+	skyDomeNet_->Draw(camera_.get());
 
 	stage_->Draw(camera_.get());
 

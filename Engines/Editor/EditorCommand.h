@@ -4,6 +4,19 @@
 #include <memory>
 #include "Transform.h"
 
+/// <summary>
+/// 何のコマンドか判断するためのタイプ
+/// </summary>
+enum CommandType {
+
+	kMove, //移動
+	kAdd, //追加
+	kRemove, //削除
+
+	kMaxCount,
+
+};
+
 class ICommand
 {
 public:
@@ -13,13 +26,21 @@ public:
 
 	virtual void Undo() = 0;
 
+	const CommandType& GetType() const { return type_; }
+
+protected:
+
+	CommandType type_;
+
 };
 
 class MoveCommand : public ICommand
 {
 public:
 	MoveCommand(Transform& target, const Transform& oldValue, const Transform& newValue) :
-		target_(target), oldValue_(oldValue), newValue_(newValue){}
+		target_(target), oldValue_(oldValue), newValue_(newValue) {
+		type_ = kMove;
+	}
 
 	void Set(Transform& target, const Transform& oldValue, const Transform& newValue) {
 		target_ = target;
@@ -48,7 +69,9 @@ class AddCommand : public ICommand
 {
 public:
 	AddCommand(std::vector<T>& container, T object) :
-	container_(container), object_(object){}
+		container_(container), object_(object) {
+		type_ = kAdd;
+	}
 
 	void Set(std::vector<T>& container, T object) {
 		container_ = container;
@@ -75,7 +98,9 @@ class RemoveCommand : public ICommand
 {
 public:
 	RemoveCommand(std::vector<T>& container, T object, int32_t index) :
-		container_(container), object_(object), index_(index) {}
+		container_(container), object_(object), index_(index) {
+		type_ = kRemove;
+	}
 
 	void Set(std::vector<T>& container, T object) {
 		container_ = container;

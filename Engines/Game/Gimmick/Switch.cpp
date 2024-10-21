@@ -5,8 +5,8 @@
 
 Switch::Switch()
 {
-	model_.reset(Model::Create("./Resources/switch/switch.obj"));
-	modelWire_.reset(Model::Create("./Resources/switch/switch_wire.obj"));
+	model_.reset(Model::Create("./Resources/bucket/bucket.obj"));
+	modelWire_.reset(Model::Create("./Resources/bucket/bucket_wire.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 }

@@ -525,7 +525,7 @@ void GhostBoxObject::Edit() {
 
 void SwitchObject::Initialize(const std::string& name) {
 
-	model_->SetMesh("./Resources/switch/switch.obj");
+	model_->SetMesh("./Resources/bucket/bucket.obj");
 	model_->SetColor(CreateColor(color_));
 	objName_ = name;
 	tag_ = "switch";

@@ -95,7 +95,7 @@ void Paint::Update() {
 	}
 
 	//色が揃っていて取得されていない時
-	if (GameColor::IsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor()) and !isObtained_) {
+	if (GameColor::CheckIsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor()) and !isObtained_) {
 
 		if (model_->material_->constMap_->threshold > 0.0f) {
 

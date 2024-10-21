@@ -45,7 +45,7 @@ void Warp::Update() {
 	modelA_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 	modelB_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 
-	if (GameColor::IsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
+	if (GameColor::CheckIsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
 		
 		if (modelA_->material_->constMap_->threshold > 0.0f) {
 
