@@ -6,7 +6,7 @@ GameColor::Color ColorHolder::holderColor_ = GameColor::kWhite;
 
 ColorHolder::ColorHolder()
 {
-	modelOuter_.reset(Model::Create("./Resources/colorHolder/colorHolder.obj"));
+	modelOuter_.reset(Model::Create("./Resources/bottle/bottle.obj"));
 	modelInner_.reset(Model::Create("./Resources/colorHolder/colorHolder_inner.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
