@@ -35,7 +35,7 @@ void TestScene::Initialize() {
 	loader_ = LevelDataLoader::GetInstance();
 	loader_->Load("./Resources/Levels/scene.json");
 
-	for (auto& object : loader_->levelData_->objects_) {
+	/*for (auto& object : loader_->levelData_->objects_) {
 
 		if (object.type.compare("MESH") == 0) {
 			std::shared_ptr<Model> newModel;
@@ -56,11 +56,18 @@ void TestScene::Initialize() {
 			camera_->rotation_ = object.rotation;
 		}
 
-	}
+	}*/
 
 	editor_->SetCamera(camera_.get());
 
 	test_ = audioManager_->LoadInMF("./Resources/SE/test.mp3");
+
+	ground_.reset(Model::Create("./Resources/plane/plane.obj"));
+	groundTransform_ = std::make_shared<Transform>();
+	groundTransform_->scale_ = { 10.0f,10.0f,1.0f };
+	groundTransform_->rotateQuaternion_ = ConvertFromEuler({ 1.57f,0.0f,0.0f });
+	groundTransform_->UpdateMatrix();
+	ground_->SetWorldMatrix(groundTransform_->worldMatrix_);
 
 	line_ = std::make_unique<Line>();
 	line_->start_ = { 0.0f,0.0f,0.0f };
@@ -147,9 +154,7 @@ void TestScene::DrawModel() {
 
 	/*editor_->Draw(camera_.get());*/
 
-	for (int32_t i = 0; i < models_.size(); i++) {
-		models_[i]->Draw(camera_.get());
-	}
+	ground_->Draw(camera_.get());
 
 }
 

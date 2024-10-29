@@ -52,6 +52,9 @@ private:
 	std::vector<std::shared_ptr<Model>> models_;
 	std::vector<std::shared_ptr<Transform>> transforms_;
 
+	std::shared_ptr<Model> ground_;
+	std::shared_ptr<Transform> groundTransform_;
+
 	float speed_ = 1.0f;
 
 	uint32_t test_;
