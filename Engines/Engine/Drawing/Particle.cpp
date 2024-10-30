@@ -27,7 +27,7 @@ void Particle::Update() {
 
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 
-		if ((isLoop_ || particleLifeTime_ > 0) and !particle_->isActive_[i]) {
+		if ((isLoop_ or particleLifeTime_ > 0) and !particle_->isActive_[i]) {
 
 			particle_->transforms_[i]->translate_ = RandomVector3(minSpawnPoint_, maxSpawnPoint_);
 			particle_->transforms_[i]->rotateQuaternion_ = ConvertFromEuler(RandomVector3(-3.14f, 3.14f));
@@ -52,9 +52,9 @@ void Particle::Update() {
 			particle_->transforms_[i]->translate_ += particle_->velocities_[i];
 			particle_->transforms_[i]->scale_ += {changeScale_, changeScale_, changeScale_};
 
-			if (particle_->transforms_[i]->scale_.x <= 0.0f || 
-				particle_->transforms_[i]->scale_.y <= 0.0f || 
-				particle_->transforms_[i]->scale_.z <= 0.0f ||
+			if (particle_->transforms_[i]->scale_.x <= 0.0f or 
+				particle_->transforms_[i]->scale_.y <= 0.0f or 
+				particle_->transforms_[i]->scale_.z <= 0.0f or
 				particle_->lifeTimes_[i] <= 0) {
 				particle_->transforms_[i]->scale_ = Vector3::Zero();
 
