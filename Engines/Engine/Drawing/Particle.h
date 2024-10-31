@@ -80,8 +80,8 @@ public:
 	//パーティクルの最大発生数
 	void SetInstanceCount(uint32_t count) {
 
-		if (count > 128) {
-			count = 128;
+		if (count > kMaxParticle_) {
+			count = kMaxParticle_;
 		}
 
 		instanceCount_ = count;
@@ -96,6 +96,8 @@ public:
 private:
 
 	std::shared_ptr<Particle3D> particle_;
+
+	static const uint32_t kMaxParticle_ = 128;
 
 	//速度の最低値
 	Vector3 minSpeed_{};

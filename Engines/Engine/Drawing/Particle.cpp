@@ -12,9 +12,8 @@ Particle::~Particle()
 
 void Particle::Initialize() {
 
-	particle_.reset(Particle3D::Create("./Resources/particle/particle.obj", 128));
+	particle_.reset(Particle3D::Create("./Resources/particle/particle.obj", kMaxParticle_));
 	particle_->SetInstanceCount(instanceCount_);
-
 
 }
 
