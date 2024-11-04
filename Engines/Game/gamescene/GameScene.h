@@ -57,6 +57,7 @@ private:
 	std::unique_ptr<Sprite> menuSprite_;
 	std::unique_ptr<Sprite> leftSprite_;
 	std::unique_ptr<Sprite> rightSprite_;
+	std::unique_ptr<Sprite> rbSprite_;
 	std::unique_ptr<Sprite> toGameSprite_;
 	std::unique_ptr<Sprite> toSelectSprite_;
 
@@ -68,6 +69,7 @@ private:
 	Texture* menuTex_;
 	Texture* leftTex_;
 	Texture* rightTex_;
+	Texture* rbTex_;
 	Texture* toGameTex_;
 	Texture* toSelectTex_;
 

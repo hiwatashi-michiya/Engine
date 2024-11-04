@@ -42,7 +42,7 @@ void PlayerStay::UpdateStay(Player& player)
 
 	}
 	//Aボタンで弾発射
-	else if (player.input_->TriggerButton(Input::Button::A)) {
+	else if (player.input_->TriggerButton(Input::Button::RB)) {
 		player.behaviorRequest_ = Player::Behavior::kShot;
 	}
 	
@@ -86,13 +86,17 @@ void PlayerMove::UpdateMove(Player& player)
 		moveVector.x = 1.0f;
 	}
 
+	if (player.input_->TriggerKey(DIK_SPACE)) {
+		player.behaviorRequest_ = Player::Behavior::kShot;
+	}
+
 #endif // _DEBUG
 
 	if (fabsf(player.input_->GetStickValue(Input::LX)) > 0 or fabsf(player.input_->GetStickValue(Input::LY)) > 0 or
 		fabsf(moveVector.x) > 0.0f or fabsf(moveVector.z) > 0.0f) {
 
 		//Aボタンで弾発射
-		if (player.input_->TriggerButton(Input::Button::A)) {
+		if (player.input_->TriggerButton(Input::Button::RB)) {
 			player.behaviorRequest_ = Player::Behavior::kShot;
 		}
 
