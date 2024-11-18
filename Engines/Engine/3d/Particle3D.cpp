@@ -170,7 +170,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	//DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthEnable = false;
 	//書き込み
 	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	//近ければ描画
@@ -230,7 +230,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 
 	particlePipelineStates_[kScreen] = PipelineManager::GetInstance()->GetPipeline("PipelineScreenParticle3D");
 
-	currentBlendMode_ = BlendMode::kNormal;
+	currentBlendMode_ = BlendMode::kAdd;
 
 }
 
@@ -265,6 +265,7 @@ void Particle3D::Initialize(const std::string& filename, uint32_t instanceCount)
 	material_->Create();
 
 	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
+	texturePath_ = mesh_->textureFilePath_;
 
 	maxInstanceCount_ = instanceCount;
 
@@ -403,6 +404,12 @@ void Particle3D::ImGuiUpdate() {
 
 	//modelNumber_++;
 
+}
+
+void Particle3D::SetTexture(const std::string& name)
+{
+	texture_ = TextureManager::GetInstance()->Load(name);
+	texturePath_ = name;
 }
 
 //デバッグ時に使用

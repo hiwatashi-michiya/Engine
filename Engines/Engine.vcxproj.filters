@@ -372,6 +372,12 @@
     <ClCompile Include="Game\ColorSetter\ColorSetter.cpp">
       <Filter>Game\ColorSetter</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\ParticleEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector4.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -649,6 +655,9 @@
     </ClInclude>
     <ClInclude Include="Game\ColorSetter\ColorSetter.h">
       <Filter>Game\ColorSetter</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ParticleEditor.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,9 @@ struct Material {
     float32_t edgeValue;
     float32_t3 edgeColor;
     
+    //ノイズ
+    int32_t isActiveNoise;
+    
     float32_t4x4 uvTransform;
     
 };
@@ -48,10 +51,75 @@ struct PixelShaderOutput {
 	float32_t4 color : SV_TARGET0;
 };
 
+float32_t random(float32_t2 value)
+{
+    
+    return frac(sin(dot(value, float32_t2(12.9898f, 78.233f))) * 143758.5453f);
+    
+}
+
+float32_t2 randomVec(float32_t2 fact)
+{
+    
+    float32_t2 angle = float32_t2(
+    dot(fact, float32_t2(127.1f, 311.7f)),
+    dot(fact, float32_t2(269.5f, 183.3f))
+    );
+    
+    return frac(sin(angle) * 43758.545313f) * 2 - 1;
+    
+}
+
+float32_t PerlinNoise(float32_t density, float32_t2 uv)
+{
+    
+    float32_t2 uvFloor = floor(uv * density);
+    float32_t2 uvFrac = frac(uv * density);
+    
+    //各頂点のランダムなベクトルを取得
+    float32_t2 v00 = randomVec(uvFloor + float32_t2(0, 0));
+    float32_t2 v01 = randomVec(uvFloor + float32_t2(0, 1));
+    float32_t2 v10 = randomVec(uvFloor + float32_t2(1, 0));
+    float32_t2 v11 = randomVec(uvFloor + float32_t2(1, 1));
+    
+    //内積を取る
+    float32_t c00 = dot(v00, uvFrac - float32_t2(0, 0));
+    float32_t c01 = dot(v01, uvFrac - float32_t2(0, 1));
+    float32_t c10 = dot(v10, uvFrac - float32_t2(1, 0));
+    float32_t c11 = dot(v11, uvFrac - float32_t2(1, 1));
+    
+    float32_t2 u = uvFrac * uvFrac * (3 - 2 * uvFrac);
+    
+    float32_t v0010 = lerp(c00, c10, u.x);
+    float32_t v0111 = lerp(c01, c11, u.x);
+    
+    return lerp(v0010, v0111, u.y) / 2 + 0.5f;
+    
+}
+
+float32_t FractalSumNoise(float32_t density, float32_t2 uv)
+{
+    float32_t fn;
+    fn = PerlinNoise(density * 1, uv) * 1.0f / 2;
+    fn += PerlinNoise(density * 2, uv) * 1.0f / 4;
+    fn += PerlinNoise(density * 4, uv) * 1.0f / 8;
+    fn += PerlinNoise(density * 8, uv) * 1.0f / 16;
+    return fn;
+}
+
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
 	float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 	float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+    
+    float32_t density = 20.0f;
+    float32_t pn = 1.0f;
+    
+    //ノイズを利用する場合
+    if (gMaterial.isActiveNoise != 0)
+    {
+        pn = FractalSumNoise(density, input.texcoord);
+    }
     
 	//textureのα値が0.5以下のときにPixelを棄却
     if (textureColor.a <= 0.5)
@@ -130,7 +198,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
         }
         
         //拡散反射+鏡面反射
-        output.color.rgb = diffuseDirectionalLight + specularDirectionalLight + diffusePointLight + specularPointLight;
+        output.color.rgb = (diffuseDirectionalLight + specularDirectionalLight + diffusePointLight + specularPointLight) * pn;
         output.color.a = gMaterial.color.a * textureColor.a;
     }
 	else { //Lightingしない場合

@@ -12,6 +12,7 @@
 #include "LineDrawer.h"
 #include <algorithm>
 #include "EditorCommand.h"
+#include <stack>
 
 class UniqueEditor
 {
@@ -20,7 +21,7 @@ public:
 	static UniqueEditor* GetInstance();
 
 	//このエディターを使って出力したシーンに付けるrootNode名
-	static inline const std::string sceneName_ = "marScene";
+	static inline const std::string kSceneName_ = "marScene";
 
 	void Initialize();
 
@@ -40,8 +41,10 @@ public:
 
 	bool GetPreIsMove() const { return preIsMove_; }
 
-	std::vector<std::shared_ptr<ICommand>>& GetUndoCommands() { return undoCommands_; }
-	std::vector<std::shared_ptr<ICommand>>& GetRedoCommands() { return redoCommands_; }
+	bool GetIsOpenFile() const { return isOpenFile_; }
+
+	std::stack<std::shared_ptr<ICommand>>& GetUndoCommands() { return undoCommands_; }
+	std::stack<std::shared_ptr<ICommand>>& GetRedoCommands() { return redoCommands_; }
 
 //関数,構造体
 private:
@@ -127,9 +130,9 @@ private:
 	Segment mouseSegment_{};
 
 	//Undoできるコマンドリスト
-	std::vector<std::shared_ptr<ICommand>> undoCommands_;
+	std::stack<std::shared_ptr<ICommand>> undoCommands_;
 	//Redoできるコマンドリスト
-	std::vector<std::shared_ptr<ICommand>> redoCommands_;
+	std::stack<std::shared_ptr<ICommand>> redoCommands_;
 	//オブジェクトの動きを記録するフラグ
 	bool isRecordMove_ = false;
 	//古いトランスフォームの記録

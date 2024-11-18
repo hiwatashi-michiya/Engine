@@ -5,6 +5,7 @@
 #include "Game/DefaultScene.h"
 #include "input/Input.h"
 #include "Editor/UniqueEditor.h"
+#include "Editor/ParticleEditor.h"
 #include "Model.h"
 #include "Particle.h"
 #include "Particle3D.h"
@@ -37,6 +38,7 @@ public:
 private:
 
 	UniqueEditor* editor_ = nullptr;
+	ParticleEditor* particleEditor_ = nullptr;
 
 	std::unique_ptr<Camera> cameraX_;
 	std::unique_ptr<Camera> cameraY_;

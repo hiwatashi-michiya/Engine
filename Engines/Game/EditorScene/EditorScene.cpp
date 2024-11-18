@@ -20,6 +20,8 @@ void EditorScene::Initialize() {
 
 	editor_ = UniqueEditor::GetInstance();
 	editor_->Initialize();
+	particleEditor_ = ParticleEditor::GetInstance();
+	particleEditor_->Initialize();
 
 	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
@@ -51,6 +53,8 @@ void EditorScene::Initialize() {
 
 	currentCamera_ = debugCamera_->GetCamera();
 
+	PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
+
 }
 
 void EditorScene::Update() {
@@ -64,6 +68,10 @@ void EditorScene::Update() {
 	ImGui::End();
 
 	test_->ImGuiUpdate("test");
+
+	ImGui::Begin("Frame Late");
+	ImGui::Text("%1.2f", ImGui::GetIO().Framerate);
+	ImGui::End();
 
 	ImGui::Begin("Scene Change");
 	ImGui::Text("Key 2 or 3 + L_ctrl: Change Scene\n2 : select\n3 : game");
@@ -79,7 +87,13 @@ void EditorScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
 	}
 
-	editor_->Edit();
+	if (not particleEditor_->GetIsOpenFile()) {
+		editor_->Edit();
+	}
+
+	if (not editor_->GetIsOpenFile()) {
+		particleEditor_->Update();
+	}
 
 	if (not editor_->GetIsMove() and not editor_->GetPreIsMove() and not ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) and
 		not ImGui::IsAnyItemHovered() and not ImGui::IsAnyItemActive()) {
@@ -137,7 +151,7 @@ void EditorScene::DrawSkinningModel() {
 
 void EditorScene::DrawParticle() {
 
-
+	particleEditor_->Draw(currentCamera_);
 
 }
 

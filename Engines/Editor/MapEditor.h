@@ -15,7 +15,7 @@ public:
 	static MapEditor* GetInstance();
 
 	//このエディターを使って出力したシーンに付けるrootNode名
-	static inline const std::string sceneName_ = "marScene";
+	static inline const std::string kSceneName_ = "marScene";
 
 	void Initialize();
 

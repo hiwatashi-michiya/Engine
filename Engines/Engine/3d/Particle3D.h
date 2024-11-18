@@ -58,6 +58,10 @@ public:
 
 	void SetTexture(Texture* texture) { texture_ = texture; }
 
+	void SetTexture(const std::string& name);
+
+	const std::string& GetTexturePath() { return texturePath_; }
+
 	void SetInstanceCount(uint32_t num) { instanceCount_ = num; }
 
 	bool IsAnyActive();
@@ -124,6 +128,8 @@ private:
 
 	//テクスチャ
 	Texture* texture_;
+
+	std::string texturePath_;
 
 	//ビルボード行列
 	Matrix4x4 matBillboard_;

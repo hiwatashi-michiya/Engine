@@ -6,3 +6,6 @@ struct Vector4 {
 	float z;
 	float w;
 };
+
+// 線形補間
+Vector4 Lerp(const Vector4& v1, const Vector4& v2, float t);

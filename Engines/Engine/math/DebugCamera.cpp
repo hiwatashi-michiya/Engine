@@ -22,7 +22,7 @@ void DebugCamera::Initialize() {
 
 void DebugCamera::Update() {
 
-	if (input_->PushMouse(Input::Mouse::kLeft)) {
+	if (input_->PushMouse(Input::Mouse::kCenter)) {
 
 		if (input_->GetMouseMove().x != 0.0f) {
 

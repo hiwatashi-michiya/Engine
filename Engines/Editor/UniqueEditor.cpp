@@ -17,9 +17,6 @@ void UniqueEditor::EditTransform()
 
 #ifdef _DEBUG
 
-
-
-
 	//カメラが無い場合、処理をしない
 	if (!camera_) {
 		return;
@@ -235,13 +232,13 @@ void UniqueEditor::EditTransform()
 						std::shared_ptr<MoveCommand> newMoveCommand =
 							std::make_shared<MoveCommand>(*warpPtr->transform_,
 								*oldTransform_, *warpPtr->transform_);
-						undoCommands_.push_back(newMoveCommand);
+						undoCommands_.push(newMoveCommand);
 					}
 					else {
 						std::shared_ptr<MoveCommand> newMoveCommand =
 							std::make_shared<MoveCommand>(*warpPtr->transformB_,
 								*oldTransform_, *warpPtr->transformB_);
-						undoCommands_.push_back(newMoveCommand);
+						undoCommands_.push(newMoveCommand);
 					}
 
 				}
@@ -249,11 +246,14 @@ void UniqueEditor::EditTransform()
 					std::shared_ptr<MoveCommand> newMoveCommand =
 						std::make_shared<MoveCommand>(*mapObjData_[selectObject_]->transform_,
 							*oldTransform_, *mapObjData_[selectObject_]->transform_);
-					undoCommands_.push_back(newMoveCommand);
+					undoCommands_.push(newMoveCommand);
 				}
 
 				//新しい要素が作成された時点でRedoのコマンドをクリア
-				redoCommands_.clear();
+				while (not redoCommands_.empty())
+				{
+					redoCommands_.pop();
+				}
 
 				isRecordMove_ = false;
 			}
@@ -350,8 +350,13 @@ void UniqueEditor::Edit() {
 				std::shared_ptr<RemoveCommand<std::shared_ptr<MapObject>>> newAddCommand =
 					std::make_shared<RemoveCommand<std::shared_ptr<MapObject>>>(mapObjData_, object,
 						int32_t(std::distance(mapObjData_.begin(), it)));
-				undoCommands_.push_back(newAddCommand);
-				redoCommands_.clear();
+				undoCommands_.push(newAddCommand);
+				
+				//新しい要素が作成された時点でRedoのコマンドをクリア
+				while (not redoCommands_.empty())
+				{
+					redoCommands_.pop();
+				}
 
 				return true;
 			}
@@ -540,23 +545,23 @@ void UniqueEditor::Edit() {
 		}
 
 		if (not undoCommands_.empty() and ImGui::Button("Undo")) {
-			undoCommands_[undoCommands_.size() - 1]->Undo();
-			redoCommands_.push_back(undoCommands_[undoCommands_.size() - 1]);
-			undoCommands_.pop_back();
+			undoCommands_.top()->Undo();
+			redoCommands_.push(undoCommands_.top());
+			undoCommands_.pop();
 		}
 
 		if (not redoCommands_.empty() and ImGui::Button("Redo")) {
-			redoCommands_[redoCommands_.size() - 1]->Execute();
-			undoCommands_.push_back(redoCommands_[redoCommands_.size() - 1]);
-			redoCommands_.pop_back();
+			redoCommands_.top()->Execute();
+			undoCommands_.push(redoCommands_.top());
+			redoCommands_.pop();
 		}
 
 		if (input_->TriggerKey(DIK_Z) and input_->PushKey(DIK_LCONTROL)) {
 			
 			if (not undoCommands_.empty()) {
-				undoCommands_[undoCommands_.size() - 1]->Undo();
-				redoCommands_.push_back(undoCommands_[undoCommands_.size() - 1]);
-				undoCommands_.pop_back();
+				undoCommands_.top()->Undo();
+				redoCommands_.push(undoCommands_.top());
+				undoCommands_.pop();
 			}
 
 		}
@@ -564,9 +569,9 @@ void UniqueEditor::Edit() {
 		if (input_->TriggerKey(DIK_Y) and input_->PushKey(DIK_LCONTROL)) {
 
 			if (not redoCommands_.empty()) {
-				redoCommands_[redoCommands_.size() - 1]->Execute();
-				undoCommands_.push_back(redoCommands_[redoCommands_.size() - 1]);
-				redoCommands_.pop_back();
+				redoCommands_.top()->Execute();
+				undoCommands_.push(redoCommands_.top());
+				redoCommands_.pop();
 			}
 
 		}
@@ -653,35 +658,35 @@ void UniqueEditor::Save(const std::string& filename) {
 
 	root = nlohmann::json::object();
 
-	root[sceneName_] = nlohmann::json::object();
+	root[kSceneName_] = nlohmann::json::object();
 
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
 		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
 
-			root[sceneName_]["objectData"][warpPtr->objName_]["position"] =
+			root[kSceneName_]["objectData"][warpPtr->objName_]["position"] =
 				nlohmann::json::array({ warpPtr->transform_->translate_.x, warpPtr->transform_->translate_.y, warpPtr->transform_->translate_.z,
 					warpPtr->transformB_->translate_.x, warpPtr->transformB_->translate_.y, warpPtr->transformB_->translate_.z });
-			root[sceneName_]["objectData"][warpPtr->objName_]["quaternion"] =
+			root[kSceneName_]["objectData"][warpPtr->objName_]["quaternion"] =
 				nlohmann::json::array({ warpPtr->transform_->rotateQuaternion_.x,
 					warpPtr->transform_->rotateQuaternion_.y, warpPtr->transform_->rotateQuaternion_.z, warpPtr->transform_->rotateQuaternion_.w });
-			root[sceneName_]["objectData"][warpPtr->objName_]["scale"] =
+			root[kSceneName_]["objectData"][warpPtr->objName_]["scale"] =
 				nlohmann::json::array({ warpPtr->transform_->scale_.x, warpPtr->transform_->scale_.y, warpPtr->transform_->scale_.z });
-			root[sceneName_]["objectData"][warpPtr->objName_]["tag"] = warpPtr->tag_;
-			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
+			root[kSceneName_]["objectData"][warpPtr->objName_]["tag"] = warpPtr->tag_;
+			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
 
 		}
 		else {
 
-			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["position"] =
+			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["position"] =
 				nlohmann::json::array({ mapObjData_[i]->transform_->translate_.x, mapObjData_[i]->transform_->translate_.y, mapObjData_[i]->transform_->translate_.z });
-			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["quaternion"] =
+			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["quaternion"] =
 				nlohmann::json::array({ mapObjData_[i]->transform_->rotateQuaternion_.x,
 					mapObjData_[i]->transform_->rotateQuaternion_.y, mapObjData_[i]->transform_->rotateQuaternion_.z, mapObjData_[i]->transform_->rotateQuaternion_.w });
-			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["scale"] =
+			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["scale"] =
 				nlohmann::json::array({ mapObjData_[i]->transform_->scale_.x, mapObjData_[i]->transform_->scale_.y, mapObjData_[i]->transform_->scale_.z });
-			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["tag"] = mapObjData_[i]->tag_;
-			root[sceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
+			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["tag"] = mapObjData_[i]->tag_;
+			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
 
 		}
 
@@ -744,8 +749,17 @@ void UniqueEditor::Close() {
 	std::memset(fileName_, 0, sizeof(fileName_));
 
 	mapObjData_.clear();
-	undoCommands_.clear();
-	redoCommands_.clear();
+
+	//コマンドをクリア
+	while (not undoCommands_.empty())
+	{
+		undoCommands_.pop();
+	}
+
+	while (not redoCommands_.empty())
+	{
+		redoCommands_.pop();
+	}
 
 	isOpenFile_ = false;
 
@@ -756,8 +770,17 @@ void UniqueEditor::Load(const std::string& filename) {
 	isLoading_ = true;
 
 	mapObjData_.clear();
-	undoCommands_.clear();
-	redoCommands_.clear();
+	
+	//コマンドをクリア
+	while (not undoCommands_.empty())
+	{
+		undoCommands_.pop();
+	}
+
+	while (not redoCommands_.empty())
+	{
+		redoCommands_.pop();
+	}
 
 	//読み込むJSONファイルのフルパスを合成する
 	std::string filePath = kDirectoryPath_ + filename + ".json";
@@ -779,7 +802,7 @@ void UniqueEditor::Load(const std::string& filename) {
 	//ファイルを閉じる
 	ifs.close();
 	//グループを検索
-	nlohmann::json::iterator itGroup = root.find(sceneName_);
+	nlohmann::json::iterator itGroup = root.find(kSceneName_);
 	//未登録チェック
 	if (itGroup == root.end()) {
 		MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);
@@ -982,7 +1005,7 @@ void UniqueEditor::Create(const std::string& filename) {
 
 		root = nlohmann::json::object();
 
-		root[sceneName_] = nlohmann::json::object();
+		root[kSceneName_] = nlohmann::json::object();
 
 		//ファイルにjson文字列を書き込む(インデント幅4)
 		newFile << std::setw(4) << root << std::endl;
@@ -1132,8 +1155,12 @@ void UniqueEditor::CreateObject(const std::string& name) {
 
 		std::shared_ptr<AddCommand<std::shared_ptr<MapObject>>> newAddCommand = 
 			std::make_shared<AddCommand<std::shared_ptr<MapObject>>>(mapObjData_, mapObjData_[mapObjData_.size() - 1]);
-		undoCommands_.push_back(newAddCommand);
-		redoCommands_.clear();
+		undoCommands_.push(newAddCommand);
+		//コマンドをクリア
+		while (not redoCommands_.empty())
+		{
+			redoCommands_.pop();
+		}
 
 	}
 
@@ -1287,8 +1314,12 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 
 		std::shared_ptr<AddCommand<std::shared_ptr<MapObject>>> newAddCommand =
 			std::make_shared<AddCommand<std::shared_ptr<MapObject>>>(mapObjData_, mapObjData_[mapObjData_.size() - 1]);
-		undoCommands_.push_back(newAddCommand);
-		redoCommands_.clear();
+		undoCommands_.push(newAddCommand);
+		//コマンドをクリア
+		while (not redoCommands_.empty())
+		{
+			redoCommands_.pop();
+		}
 
 	}
 
@@ -1408,8 +1439,16 @@ bool UniqueEditor::CheckIsEmpty(const std::string& name) {
 void UniqueEditor::SetDefaultStage() {
 
 	mapObjData_.clear();
-	undoCommands_.clear();
-	redoCommands_.clear();
+	//コマンドをクリア
+	while (not undoCommands_.empty())
+	{
+		undoCommands_.pop();
+	}
+
+	while (not redoCommands_.empty())
+	{
+		redoCommands_.pop();
+	}
 
 	//プレイヤー生成
 	{

@@ -5,8 +5,11 @@
 #include "Camera.h"
 #include "Vector4.h"
 
+class ParticleEditor;
+
 class Particle
 {
+	friend class ParticleEditor;
 public:
 	Particle();
 	~Particle();
@@ -75,10 +78,10 @@ public:
 	void SetParticleLifeTime(int32_t lifeTime) { particleLifeTime_ = lifeTime; }
 
 	//色変更
-	void SetColor(const Vector4& color) { color_ = color; }
+	void SetColor(const Vector4& color) { startColor_ = color; }
 
 	//パーティクルの最大発生数
-	void SetInstanceCount(uint32_t count) {
+	void SetInstanceCount(int32_t count) {
 
 		if (count > kMaxParticle_) {
 			count = kMaxParticle_;
@@ -93,11 +96,19 @@ public:
 
 	bool IsEnd();
 
+	const std::string& GetName() { return name_; }
+
+	void SetTexture(const std::string& texture) { particle_->SetTexture(texture); }
+
+	void Load(const std::string& filePath);
+
 private:
 
 	std::shared_ptr<Particle3D> particle_;
 
 	static const uint32_t kMaxParticle_ = 128;
+
+	std::string name_;
 
 	//速度の最低値
 	Vector3 minSpeed_{};
@@ -122,12 +133,17 @@ private:
 
 	int32_t maxLifeTime_ = 60;
 
-	uint32_t instanceCount_ = 32;
+	int32_t instanceCount_ = 32;
 
 	int32_t particleLifeTime_ = 120;
 
+	int32_t maxParticleLifeTime_ = 120;
+
 	bool isLoop_ = false;
 
-	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+	Vector4 startColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	Vector4 endColor_ = { 1.0f,1.0f,1.0f,1.0f };
+
+	bool isActive_ = true;
 
 };

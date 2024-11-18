@@ -39,7 +39,7 @@ private:
 
 	RenderTexture renderTexture_;
 
-	PostEffectType type_ = kNone;
+	PostEffectType type_ = kDepthBasedOutline;
 
 	//最初に一回だけ描画
 	bool isUsedAllEffects_ = false;

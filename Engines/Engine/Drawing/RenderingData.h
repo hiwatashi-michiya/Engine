@@ -30,7 +30,8 @@ struct MaterialData
 	float edgeValue;
 	Vector3 edgeColor;
 
-	float padding[1];
+	//ノイズ
+	int32_t isActiveNoise;
 
 	Matrix4x4 uvTransform;
 	

@@ -2,8 +2,8 @@
 #include "Drawing/ImGuiManager.h"
 #include "UniqueEditor.h"
 
-std::vector<std::shared_ptr<ICommand>>& MapObject::undoCommands_ = UniqueEditor::GetInstance()->GetUndoCommands();
-std::vector<std::shared_ptr<ICommand>>& MapObject::redoCommands_ = UniqueEditor::GetInstance()->GetRedoCommands();
+std::stack<std::shared_ptr<ICommand>>& MapObject::undoCommands_ = UniqueEditor::GetInstance()->GetUndoCommands();
+std::stack<std::shared_ptr<ICommand>>& MapObject::redoCommands_ = UniqueEditor::GetInstance()->GetRedoCommands();
 
 MapObject::MapObject() {
 	model_.reset(Model::Create("./Resources/cube/cube.obj"));
@@ -109,8 +109,12 @@ void MapObject::RecordMove()
 		std::shared_ptr<MoveCommand> newMoveCommand =
 			std::make_shared<MoveCommand>(*transform_,
 				*oldTransform_, *transform_);
-		undoCommands_.push_back(newMoveCommand);
-		redoCommands_.clear();
+		undoCommands_.push(newMoveCommand);
+		
+		while (not redoCommands_.empty())
+		{
+			redoCommands_.pop();
+		}
 
 	}
 
@@ -446,16 +450,19 @@ void WarpObject::RecordMove()
 			std::shared_ptr<MoveCommand> newMoveCommand =
 				std::make_shared<MoveCommand>(*transform_,
 					*oldTransform_, *transform_);
-			undoCommands_.push_back(newMoveCommand);
+			undoCommands_.push(newMoveCommand);
 		}
 		else {
 			std::shared_ptr<MoveCommand> newMoveCommand =
 				std::make_shared<MoveCommand>(*transformB_,
 					*oldTransform_, *transformB_);
-			undoCommands_.push_back(newMoveCommand);
+			undoCommands_.push(newMoveCommand);
 		}
 
-		redoCommands_.clear();
+		while (not redoCommands_.empty())
+		{
+			redoCommands_.pop();
+		}
 
 	}
 

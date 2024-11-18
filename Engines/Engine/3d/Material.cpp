@@ -81,6 +81,7 @@ Material* Material::Create() {
 		constMap_->threshold = 0.0f;
 		constMap_->edgeValue = 0.0f;
 		constMap_->edgeColor = { 1.0f,1.0f,1.0f };
+		constMap_->isActiveNoise = true;
 		constMap_->uvTransform = MakeIdentity4x4();
 
 		//アンマップ

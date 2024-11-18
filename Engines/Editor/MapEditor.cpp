@@ -290,23 +290,23 @@ void MapEditor::Save(const std::string& filename) {
 
 	root = nlohmann::json::object();
 
-	root[sceneName_] = nlohmann::json::object();
+	root[kSceneName_] = nlohmann::json::object();
 
 	for (auto& object : mapObjData_) {
 
-		root[sceneName_]["objectData"][object->objName]["position"] =
+		root[kSceneName_]["objectData"][object->objName]["position"] =
 			nlohmann::json::array({ object->transform->translate_.x, object->transform->translate_.y, object->transform->translate_.z });
 		/*root[filename]["objectData"][object->objName]["rotation"] =
 			nlohmann::json::array({ object->transform->rotate_.x, object->transform->rotate_.y, object->transform->rotate_.z });*/
-		root[sceneName_]["objectData"][object->objName]["quaternion"] =
+		root[kSceneName_]["objectData"][object->objName]["quaternion"] =
 			nlohmann::json::array({ object->transform->rotateQuaternion_.x,
 				object->transform->rotateQuaternion_.y, object->transform->rotateQuaternion_.z, object->transform->rotateQuaternion_.w });
-		root[sceneName_]["objectData"][object->objName]["scale"] =
+		root[kSceneName_]["objectData"][object->objName]["scale"] =
 			nlohmann::json::array({ object->transform->scale_.x, object->transform->scale_.y, object->transform->scale_.z });
 		/*object->tag = tags_[object->tagNumber];*/
-		root[sceneName_]["objectData"][object->objName]["tag"] = object->tag;
+		root[kSceneName_]["objectData"][object->objName]["tag"] = object->tag;
 		object->meshName = meshNames_[object->meshNumber];
-		root[sceneName_]["objectData"][object->objName]["mesh"] = object->meshName;
+		root[kSceneName_]["objectData"][object->objName]["mesh"] = object->meshName;
 		/*root[sceneName_]["objectData"][object->objName]["meshNumber"] = object->meshNumber;*/
 
 	}
@@ -393,7 +393,7 @@ void MapEditor::Load(const std::string& filename) {
 	//ファイルを閉じる
 	ifs.close();
 	//グループを検索
-	nlohmann::json::iterator itGroup = root.find(sceneName_);
+	nlohmann::json::iterator itGroup = root.find(kSceneName_);
 	//未登録チェック
 	if (itGroup == root.end()) {
 		MessageBox(nullptr, L"ファイルの構造が正しくありません。", L"Map Editor - Load", 0);

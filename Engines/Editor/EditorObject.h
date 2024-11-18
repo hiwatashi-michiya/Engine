@@ -10,6 +10,7 @@
 #include "LineDrawer.h"
 #include "EditorCommand.h"
 #include "Game/ColorSetter/ColorSetter.h"
+#include <stack>
 
 //マップに配置されているオブジェクトの構造体
 class MapObject {
@@ -62,8 +63,8 @@ public:
 
 protected:
 
-	static std::vector<std::shared_ptr<ICommand>>& undoCommands_;
-	static std::vector<std::shared_ptr<ICommand>>& redoCommands_;
+	static std::stack<std::shared_ptr<ICommand>>& undoCommands_;
+	static std::stack<std::shared_ptr<ICommand>>& redoCommands_;
 
 };
 

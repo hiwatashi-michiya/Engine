@@ -118,16 +118,6 @@ void TestScene::Update() {
 	ImGui::Text("Key 1 or 3 + L_ctrl: Change Scene\n1 : title\n3 : game");
 	ImGui::End();
 
-	if (input_->TriggerKey(DIK_1) and input_->PushKey(DIK_LCONTROL)) {
-		SceneManager::GetInstance()->ChangeScene("TITLE");
-	}
-	else if (input_->TriggerKey(DIK_3) and input_->PushKey(DIK_LCONTROL)) {
-		SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
-	}
-	else if (input_->TriggerKey(DIK_4) and input_->PushKey(DIK_LCONTROL)) {
-		SceneManager::GetInstance()->ChangeScene("EDITOR");
-	}
-
 #endif // _DEBUG
 
 	for (int32_t i = 0; i < models_.size(); i++) {
