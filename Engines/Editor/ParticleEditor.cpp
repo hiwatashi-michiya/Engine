@@ -511,7 +511,7 @@ void ParticleEditor::SaveParticle(nlohmann::json& jsonData, Particle& particle)
 		nlohmann::json::array({ particle.maxSpawnPoint_.x, particle.maxSpawnPoint_.y, particle.maxSpawnPoint_.z });
 	jsonData["ParticleData"]["LifeTime"]["Min"] = particle.minLifeTime_;
 	jsonData["ParticleData"]["LifeTime"]["Max"] = particle.maxLifeTime_;
-	jsonData["ParticleData"]["LifeTime"]["All"] = particle.particleLifeTime_;
+	jsonData["ParticleData"]["LifeTime"]["All"] = particle.maxParticleLifeTime_;
 	jsonData["ParticleData"]["Color"]["Start"] =
 		nlohmann::json::array({ particle.startColor_.x,particle.startColor_.y ,particle.startColor_.z ,particle.startColor_.w });
 	jsonData["ParticleData"]["Color"]["End"] =
@@ -524,6 +524,50 @@ void ParticleEditor::SaveParticle(nlohmann::json& jsonData, Particle& particle)
 
 void ParticleEditor::Create()
 {
+
+	//読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath_ + fileName_ + ".json";
+
+	std::filesystem::path path(filePath);
+
+	//ファイルパスが存在するか確認
+	if (std::filesystem::exists(path)) {
+
+		if (MessageBox(nullptr, L"同名ファイルが既にあります。上書きしますか？", L"Particle Editor - Create", MB_OKCANCEL) == IDCANCEL) {
+
+			return;
+
+		}
+
+	}
+
+	//ディレクトリが無ければ作成する
+	std::filesystem::path dir(kDirectoryPath_);
+	if (!std::filesystem::exists(dir)) {
+		std::filesystem::create_directory(dir);
+	}
+
+	std::ofstream newFile(filePath);
+
+	//新規ファイル作成
+	if (newFile.is_open()) {
+
+		//jsonを読み込めるように空のシーン情報を記録
+		nlohmann::json root;
+
+		root = nlohmann::json::object();
+
+		root[kParticleName_] = nlohmann::json::object();
+
+		//ファイルにjson文字列を書き込む(インデント幅4)
+		newFile << std::setw(4) << root << std::endl;
+		//ファイルを閉じる
+		newFile.close();
+	}
+	else {
+		MessageBox(nullptr, L"ファイルを作成できませんでした。", L"Map Editor - Create", 0);
+		return;
+	}
 
 	std::shared_ptr<Particle> newParticle;
 	newParticle = std::make_shared<Particle>();
@@ -574,6 +618,8 @@ void ParticleEditor::Close()
 	std::memset(fileName_, 0, sizeof(fileName_));
 
 	demoParticles_.clear();
+
+	LoadAllData();
 
 	isOpenFile_ = false;
 

@@ -15,8 +15,11 @@ Player::Player()
 	model_.reset(SkinningModel::Create("./Resources/player/brush_stay.gltf", 0));
 	model_->LoadAnimation("./Resources/player/brush_walk.gltf", 1);
 	model_->LoadAnimation("./Resources/player/brush_shot.gltf", 2);
-	particle_.reset(Particle3D::Create("./Resources/particle/particle.obj", 128));
-	particle_->SetInstanceCount(32);
+
+	particle_ = std::make_shared<Particle>();
+	particle_->Initialize();
+	particle_->Load("./Resources/ParticleData/player.json");
+
 	/*particle_->SetTexture(tex_);*/
 	transform_ = std::make_unique<Transform>();
 	collider_ = std::make_unique<BoxCollider>();
@@ -55,13 +58,7 @@ void Player::Initialize() {
 	collider_->SetCollisionAttribute(0x00000001);
 	collider_->SetCollisionMask(0xfffffffe);
 
-	for (int32_t i = 0; i < 32; i++) {
-
-		particle_->colors_[i] = CreateColor(Stage::stageColor_);
-		particle_->velocities_[i] = { 0.0f,1.0f,0.0f };
-		particle_->transforms_[i]->scale_ = { 0.0f,0.0f,0.0f };
-
-	}
+	particle_->SetColor(CreateColor(Stage::stageColor_));
 
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = { 0.5f,1.5f,0.5f };
@@ -204,42 +201,11 @@ void Player::Update() {
 			bullets_[i]->Update();
 		}
 
-		//パーティクル更新
-		for (int32_t i = 0; i < 32; i++) {
-			
-			if (particle_->transforms_[i]->scale_.y <= 0.0f) {
+		particle_->SetMinMaxSpawnPoint(transform_->translate_ - transform_->scale_ * 0.5f, transform_->translate_ + transform_->scale_ * 0.5f);
+		particle_->SetColor(CreateColor(Stage::stageColor_));
 
-				Matrix4x4 tmpMatrix{};
-
-				tmpMatrix = model_->GetSkeletonSpaceMatrix("mixamorig:LeftHand") *
-					model_->worldMatrix_;
-
-				particle_->colors_[i] = CreateColor(Stage::stageColor_);
-				particle_->velocities_[i] = { float((rand() % 40 - 20) * 0.001f),float((rand() % 40 - 20) * 0.001f), float((rand() % 40 - 20) * 0.001f) };
-				particle_->transforms_[i]->translate_ = tmpMatrix.GetTranslate();
-				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
-				particle_->transforms_[i]->scale_ = { 0.1f,0.1f,0.1f };
-				particle_->isActive_[i] = true;
-				break;
-			}
-
-
-
-		}
-
-		for (int32_t i = 0; i < 32; i++) {
-
-			if (particle_->transforms_[i]->scale_.y > 0.0f) {
-				particle_->colors_[i] = CreateColor(Stage::stageColor_);
-				particle_->transforms_[i]->translate_ += particle_->velocities_[i];
-				particle_->transforms_[i]->rotateQuaternion_ = particle_->transforms_[i]->rotateQuaternion_ * ConvertFromEuler(particle_->velocities_[i]);
-				particle_->transforms_[i]->scale_ -= {0.002f, 0.002f, 0.002f};
-			}
-			else {
-				particle_->colors_[i].w = 0.0f;
-			}
-
-		}
+		particle_->Update();
+		
 
 		//地面判定をfalseにする。ブロックとの判定時に切り替わる
 		onGround_ = false;
@@ -531,7 +497,7 @@ void Player::DrawSkinningModel(Camera* camera) {
 
 void Player::DrawParticle(Camera* camera) {
 
-	if (!isDead_) {
+	if (not isDead_) {
 		particle_->Draw(camera);
 	}
 

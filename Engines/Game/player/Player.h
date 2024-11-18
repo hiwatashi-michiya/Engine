@@ -94,7 +94,7 @@ private:
 
 	std::unique_ptr<SkinningModel> model_;
 
-	std::unique_ptr<Particle3D> particle_;
+	std::shared_ptr<Particle> particle_;
 
 	std::unique_ptr<LineBox> lineBox_;
 

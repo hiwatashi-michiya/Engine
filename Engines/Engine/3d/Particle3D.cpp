@@ -230,7 +230,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 
 	particlePipelineStates_[kScreen] = PipelineManager::GetInstance()->GetPipeline("PipelineScreenParticle3D");
 
-	currentBlendMode_ = BlendMode::kAdd;
+	currentBlendMode_ = BlendMode::kNormal;
 
 }
 

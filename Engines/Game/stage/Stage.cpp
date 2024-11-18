@@ -37,11 +37,7 @@ void Stage::Initialize() {
 
 	stageColor_ = GameColor::kWhite;
 	stageParticle_->Initialize();
-	stageParticle_->SetIsLoop(true);
-	stageParticle_->SetMinMaxLifeTime(45, 90);
-	stageParticle_->SetMinMaxSpeed({ -0.03f,0.05f,-0.03f }, { 0.03f,0.1f,0.03f });
-	stageParticle_->SetMinMaxScale(0.2f, 0.4f);
-	stageParticle_->SetChangeScale(-0.01f);
+	stageParticle_->Load("./Resources/ParticleData/stage.json");
 	stageParticle_->SetInstanceCount(128);
 	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + Vector3{ -30.0f,-10.0f,-30.0f },
 		player_->GetPosition() + Vector3{ 30.0f,-5.0f,30.0f });

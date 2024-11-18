@@ -78,7 +78,16 @@ public:
 	void SetParticleLifeTime(int32_t lifeTime) { particleLifeTime_ = lifeTime; }
 
 	//色変更
-	void SetColor(const Vector4& color) { startColor_ = color; }
+	void SetColor(const Vector4& color) { 
+		startColor_ = color;
+		endColor_ = color;
+	}
+
+	//色変更
+	void SetStartColor(const Vector4& color) { startColor_ = color; }
+
+	//色変更
+	void SetEndColor(const Vector4& color) { endColor_ = color; }
 
 	//パーティクルの最大発生数
 	void SetInstanceCount(int32_t count) {

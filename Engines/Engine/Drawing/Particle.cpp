@@ -54,7 +54,9 @@ void Particle::Update() {
 
 			particle_->transforms_[i]->translate_ += particle_->velocities_[i];
 			particle_->transforms_[i]->scale_ += {changeScale_, changeScale_, changeScale_};
-			particle_->colors_[i] = Lerp(startColor_, endColor_, float(particle_->transforms_[i]->scale_.x) / maxScale_);
+			particle_->colors_[i] = Lerp(endColor_, startColor_, float(particle_->transforms_[i]->scale_.x) / maxScale_);
+
+			particle_->velocities_[i] += changeSpeed_;
 
 			if (particle_->transforms_[i]->scale_.x <= 0.0f or 
 				particle_->transforms_[i]->scale_.y <= 0.0f or 
