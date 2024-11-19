@@ -111,9 +111,6 @@ private:
 	static IDxcBlob* vs3dParticleBlob_;
 	static IDxcBlob* ps3dParticleBlob_;
 
-	//モデル識別用変数(ImGuiで使用)
-	static int modelNumber_;
-
 	static BlendMode currentBlendMode_;
 
 	static std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes_;

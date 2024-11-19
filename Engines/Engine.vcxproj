@@ -178,6 +178,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Core\StaticSampler.cpp" />
     <ClCompile Include="Engine\Drawing\Draw.cpp" />
     <ClCompile Include="Engine\Drawing\ParticleManager.cpp" />
+    <ClCompile Include="Engine\Drawing\RenderManager.cpp" />
     <ClCompile Include="Engine\math\Camera.cpp" />
     <ClCompile Include="Engine\Core\DescriptorHandle.cpp" />
     <ClCompile Include="Engine\Core\DirectXSetter.cpp" />
@@ -269,6 +270,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Drawing\Draw.h" />
     <ClInclude Include="Engine\Drawing\ModelManager.h" />
     <ClInclude Include="Engine\Drawing\ParticleManager.h" />
+    <ClInclude Include="Engine\Drawing\RenderManager.h" />
     <ClInclude Include="Engine\math\Camera.h" />
     <ClInclude Include="Engine\Core\DescriptorHandle.h" />
     <ClInclude Include="Engine\Core\DirectXSetter.h" />

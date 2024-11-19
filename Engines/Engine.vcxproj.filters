@@ -378,6 +378,9 @@
     <ClCompile Include="Engine\math\Vector4.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Drawing\RenderManager.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -658,6 +661,9 @@
     </ClInclude>
     <ClInclude Include="Editor\ParticleEditor.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing\RenderManager.h">
+      <Filter>Engine\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

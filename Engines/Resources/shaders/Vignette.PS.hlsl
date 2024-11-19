@@ -33,6 +33,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     output.color.r *= vignette + (gParameter.color.r - vignette) * gParameter.colorPower;
     output.color.g *= vignette + (gParameter.color.g - vignette) * gParameter.colorPower;
     output.color.b *= vignette + (gParameter.color.b - vignette) * gParameter.colorPower;
+    output.color.a = 1.0f;
     
     return output;
 }

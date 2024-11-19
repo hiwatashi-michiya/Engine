@@ -19,7 +19,6 @@ ID3D12PipelineState* Particle3D::particlePipelineStates_[Particle3D::BlendMode::
 //ID3D12PipelineState* Particle3D::pipelineState_ = nullptr;
 IDxcBlob* Particle3D::vs3dParticleBlob_ = nullptr;
 IDxcBlob* Particle3D::ps3dParticleBlob_ = nullptr;
-int Particle3D::modelNumber_ = 0;
 Particle3D::BlendMode Particle3D::currentBlendMode_ = Particle3D::BlendMode::kNormal;
 std::unordered_map<std::string, std::shared_ptr<Mesh>> Particle3D::meshes_;
 const char* Particle3D::BlendTexts[Particle3D::BlendMode::kCountBlend] = { "Normal", "Add", "Subtract", "Multiply", "Screen" };
@@ -170,7 +169,7 @@ void Particle3D::StaticInitialize(ID3D12Device* device) {
 	//DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = false;
+	depthStencilDesc.DepthEnable = true;
 	//書き込み
 	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	//近ければ描画
@@ -330,8 +329,6 @@ void Particle3D::PreDraw(ID3D12GraphicsCommandList* commandList) {
 void Particle3D::PostDraw() {
 
 	commandList_ = nullptr;
-
-	modelNumber_ = 0;
 
 }
 

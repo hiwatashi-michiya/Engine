@@ -32,5 +32,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     output.color = gTexture.Sample(gSampler, input.texcoord);
     //Edgeに近いほど指定した色を加算
     output.color.rgb += edge * gParameter.edgeColor;
+    output.color.a = 1.0f;
     return output;
 }
