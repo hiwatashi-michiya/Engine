@@ -210,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\math\Transform.cpp" />
     <ClCompile Include="Engine\math\Vector3.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\math\Vector4.cpp" />
     <ClCompile Include="Engine\Tool\GlobalVariables.cpp" />
     <ClCompile Include="Editor\MapEditor.cpp" />
     <ClCompile Include="Engine\Drawing\Particle.cpp" />
@@ -241,7 +242,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Stage\Stage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game\SceneChangeManager.cpp" />
-    <ClCompile Include="Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorCommand.h" />

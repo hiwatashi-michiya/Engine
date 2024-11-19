@@ -375,7 +375,7 @@
     <ClCompile Include="Editor\ParticleEditor.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Vector4.cpp">
+    <ClCompile Include="Engine\math\Vector4.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
   </ItemGroup>

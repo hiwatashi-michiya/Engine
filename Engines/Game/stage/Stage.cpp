@@ -126,7 +126,7 @@ void Stage::Update() {
 	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + Vector3{ -50.0f,-10.0f,-50.0f },
 		player_->GetPosition() + Vector3{ 50.0f,-5.0f,50.0f });
 	
-	stageParticle_->SetColor(CreateColor(ColorHolder::GetHolderColor()));
+	stageParticle_->SetEndColor(CreateColor(stageColor_));
 
 	stageParticle_->Update();
 
