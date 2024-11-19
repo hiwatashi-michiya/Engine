@@ -9,8 +9,12 @@ void SetRandom() {
 float RandomFloat(float min, float max) {
 
 	//ランダムエンジン
-	std::random_device seed;
-	std::default_random_engine engine(seed());
+	static std::random_device seed;
+	static std::default_random_engine engine(seed());
+
+	if (min > max) {
+		std::swap(min, max);
+	}
 
 	std::uniform_real_distribution<float> dist(min, max);
 
@@ -23,8 +27,12 @@ float RandomFloat(float min, float max) {
 int RandomInt(int min, int max) {
 
 	//ランダムエンジン
-	std::random_device seed;
-	std::default_random_engine engine(seed());
+	static std::random_device seed;
+	static std::default_random_engine engine(seed());
+
+	if (min > max) {
+		std::swap(min, max);
+	}
 
 	std::uniform_int_distribution<int> dist(min, max);
 
@@ -37,8 +45,12 @@ int RandomInt(int min, int max) {
 Vector3 RandomVector3(float min, float max) {
 
 	//ランダムエンジン
-	std::random_device seed;
-	std::default_random_engine engine(seed());
+	static std::random_device seed;
+	static std::default_random_engine engine(seed());
+
+	if (min > max) {
+		std::swap(min, max);
+	}
 
 	std::uniform_real_distribution<float> dist(min, max);
 
@@ -55,8 +67,20 @@ Vector3 RandomVector3(float min, float max) {
 Vector3 RandomVector3(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
 
 	//ランダムエンジン
-	std::random_device seed;
-	std::default_random_engine engine(seed());
+	static std::random_device seed;
+	static std::default_random_engine engine(seed());
+
+	if (minX > maxX) {
+		std::swap(minX, maxX);
+	}
+
+	if (minY > maxY) {
+		std::swap(minY, maxY);
+	}
+
+	if (minZ > maxZ) {
+		std::swap(minZ, maxZ);
+	}
 
 	std::uniform_real_distribution<float> distX(minX, maxX);
 	std::uniform_real_distribution<float> distY(minY, maxY);
@@ -75,8 +99,20 @@ Vector3 RandomVector3(float minX, float maxX, float minY, float maxY, float minZ
 Vector3 RandomVector3(Vector3 min, Vector3 max) {
 
 	//ランダムエンジン
-	std::random_device seed;
-	std::default_random_engine engine(seed());
+	static std::random_device seed;
+	static std::default_random_engine engine(seed());
+
+	if (min.x > max.x) {
+		std::swap(min.x, max.x);
+	}
+
+	if (min.y > max.y) {
+		std::swap(min.y, max.y);
+	}
+
+	if (min.z > max.z) {
+		std::swap(min.z, max.z);
+	}
 
 	std::uniform_real_distribution<float> distX(min.x, max.x);
 	std::uniform_real_distribution<float> distY(min.y, max.y);

@@ -57,6 +57,14 @@ void EditorScene::Initialize() {
 
 }
 
+void EditorScene::Finalize()
+{
+
+	editor_->Finalize();
+	particleEditor_->Finalize();
+
+}
+
 void EditorScene::Update() {
 
 #ifdef _DEBUG

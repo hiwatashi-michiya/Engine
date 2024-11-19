@@ -19,6 +19,7 @@ void SceneManager::Update() {
 
 		//旧シーンの終了
 		if (scene_) {
+			scene_->Finalize();
 			scene_.reset();
 		}
 
@@ -32,6 +33,13 @@ void SceneManager::Update() {
 	}
 
 	scene_->Update();
+
+}
+
+void SceneManager::Finalize()
+{
+
+	scene_->Finalize();
 
 }
 

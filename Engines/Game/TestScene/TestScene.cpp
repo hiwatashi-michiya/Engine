@@ -68,6 +68,10 @@ void TestScene::Initialize() {
 
 }
 
+void TestScene::Finalize()
+{
+}
+
 void TestScene::Update() {
 
 #ifdef _DEBUG

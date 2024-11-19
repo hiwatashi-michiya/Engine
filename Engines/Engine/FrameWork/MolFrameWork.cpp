@@ -28,7 +28,7 @@ void MolFrameWork::Run() {
 
 	Initialize();
 
-	while (Engine::ProcessMessage() == 0)
+	while (true)
 	{
 
 		//フレーム開始
@@ -37,7 +37,8 @@ void MolFrameWork::Run() {
 		//ゲームシーン更新
 		Update();
 
-		if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
+		if (Input::GetInstance()->TriggerKey(DIK_ESCAPE) or Engine::ProcessMessage() != 0) {
+			sceneManager_->Finalize();
 			break;
 		}
 

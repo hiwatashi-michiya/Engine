@@ -16,6 +16,8 @@ public:
 
 	void Initialize() override;
 
+	void Finalize() override;
+
 	void Update() override;
 
 	void DrawModel() override;

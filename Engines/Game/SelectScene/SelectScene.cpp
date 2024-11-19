@@ -65,6 +65,10 @@ void SelectScene::Initialize() {
 
 }
 
+void SelectScene::Finalize()
+{
+}
+
 void SelectScene::Update() {
 
 #ifdef _DEBUG

@@ -351,6 +351,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <None Include="Resources\shaders\FullScreen.hlsli" />
     <None Include="Resources\shaders\Line.hlsli" />
+    <None Include="Resources\shaders\Material3d.hlsli" />
     <None Include="resources\shaders\Object3d.hlsli" />
     <None Include="resources\shaders\Particle3d.hlsli" />
     <None Include="Resources\shaders\Skybox.hlsli" />

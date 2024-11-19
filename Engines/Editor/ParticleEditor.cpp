@@ -20,9 +20,18 @@ void ParticleEditor::Initialize()
 
 	demoParticles_.clear();
 
+	isOpenFile_ = false;
+
 	LoadPngFile();
 
 	LoadAllData();
+
+}
+
+void ParticleEditor::Finalize()
+{
+
+	demoParticles_.clear();
 
 }
 

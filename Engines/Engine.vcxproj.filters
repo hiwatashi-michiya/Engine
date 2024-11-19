@@ -685,6 +685,9 @@
     <None Include="Resources\shaders\Skybox.hlsli">
       <Filter>shader</Filter>
     </None>
+    <None Include="Resources\shaders\Material3d.hlsli">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shaders\Object3d.PS.hlsl">

@@ -332,6 +332,14 @@ void UniqueEditor::Initialize() {
 
 }
 
+void UniqueEditor::Finalize()
+{
+
+	mouseLine_.reset();
+	mapObjData_.clear();
+
+}
+
 void UniqueEditor::Edit() {
 
 #ifdef _DEBUG

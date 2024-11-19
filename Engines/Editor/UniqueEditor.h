@@ -25,6 +25,8 @@ public:
 
 	void Initialize();
 
+	void Finalize();
+
 	void Edit();
 
 	void Draw(Camera* camera);

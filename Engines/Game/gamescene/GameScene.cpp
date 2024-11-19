@@ -96,6 +96,10 @@ void GameScene::Initialize() {
 
 }
 
+void GameScene::Finalize()
+{
+}
+
 void GameScene::Update() {
 
 #ifdef _DEBUG
