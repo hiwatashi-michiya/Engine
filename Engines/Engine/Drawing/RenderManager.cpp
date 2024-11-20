@@ -1,5 +1,5 @@
 #include "RenderManager.h"
-#include "DirectXSetter.h"
+#include "Core/DirectXSetter.h"
 #include "PostEffectDrawer.h"
 
 RenderManager* RenderManager::GetInstance()
