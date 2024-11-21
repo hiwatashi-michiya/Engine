@@ -1,7 +1,7 @@
 #pragma once
-#include "FrameWork/MolFrameWork.h"
+#include "FrameWork/MarFrameWork.h"
 
-class Game : public MolFrameWork {
+class Game : public MarFrameWork {
 public:
 
 	//初期化

@@ -15,6 +15,8 @@ public:
 
 	void Draw();
 
+	void Render();
+
 	void ChangeScene(const std::string& sceneName);
 
 	void SetSceneFactory(AbsSceneFactory* sceneFactory) { sceneFactory_ = sceneFactory; }

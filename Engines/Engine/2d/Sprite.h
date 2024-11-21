@@ -41,6 +41,8 @@ public:
 
 	void Draw();
 
+	void Render();
+
 	static void Finalize();
 
 	void SetTexture(Texture* tex) { texture_ = tex; }

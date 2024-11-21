@@ -56,6 +56,8 @@ public:
 
 	void Draw(const Matrix4x4& localMatrix, Camera* camera);
 
+	void Render();
+
 	void SetTexture(Texture* texture) { texture_ = texture; }
 
 	void SetTexture(const std::string& name);

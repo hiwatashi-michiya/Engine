@@ -54,6 +54,8 @@ public:
 
 	void Draw(Camera* camera);
 
+	void Render();
+
 	void ImGuiUpdate();
 
 	void SetTexture(Texture* texture) { texture_ = texture; }

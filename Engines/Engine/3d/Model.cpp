@@ -15,6 +15,7 @@
 #include "Core/InputElement.h"
 #include "Core/InputLayout.h"
 #include "Core/DescriptorRange.h"
+#include "Drawing/RenderManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -389,20 +390,7 @@ void Model::Draw(Camera* camera) {
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
-	//PSO設定
-	/*commandList_->SetPipelineState(pipelineStates_[currentBlendMode_]);*/
-
-	//カメラ設定
-	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
-	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
-
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
-	commandList_->SetGraphicsRootDescriptorTable(6, maskTexture_->srvHandleGPU);
-
-	//描画
-	material_->SetCommandMaterial(commandList_);
-
-	mesh_->SetCommandMesh(commandList_);
+	RenderManager::GetInstance()->AddModel(this);
 
 }
 
@@ -415,16 +403,19 @@ void Model::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
-	//ルートシグネチャを設定
-	commandList_->SetGraphicsRootSignature(rootSignature_);
-	//プリミティブ形状を設定
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	RenderManager::GetInstance()->AddModel(this);
+
+}
+
+void Model::Render()
+{
 
 	//カメラ設定
 	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(6, maskTexture_->srvHandleGPU);
 
 	//描画
 	material_->SetCommandMaterial(commandList_);

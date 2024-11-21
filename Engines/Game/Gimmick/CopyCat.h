@@ -48,8 +48,6 @@ public:
 
 	void SetIsDead(bool flag) { isDead_ = flag; }
 
-	void DrawLine(Camera* camera);
-
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
 	bool GetIsGoal() const { return isGoal_; }

@@ -183,7 +183,7 @@
     <ClCompile Include="Game\Game.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\FrameWork\MolFrameWork.cpp">
+    <ClCompile Include="Engine\FrameWork\MarFrameWork.cpp">
       <Filter>Engine\FrameWork</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Drawing\PipelineManager.cpp">
@@ -449,7 +449,7 @@
     <ClInclude Include="Game\Game.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\FrameWork\MolFrameWork.h">
+    <ClInclude Include="Engine\FrameWork\MarFrameWork.h">
       <Filter>Engine\FrameWork</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Drawing\PipelineManager.h">

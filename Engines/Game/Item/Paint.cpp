@@ -152,18 +152,14 @@ void Paint::Update() {
 
 void Paint::Draw(Camera* camera) {
 
-	model_->Draw(camera);
-	modelWire_->Draw(camera);
-
-}
-
-void Paint::DrawLine(Camera* camera) {
-
 #ifdef _DEBUG
 
 	lineBox_->Draw(camera);
 
 #endif // _DEBUG
+
+	model_->Draw(camera);
+	modelWire_->Draw(camera);
 
 }
 

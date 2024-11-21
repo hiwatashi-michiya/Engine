@@ -10,6 +10,7 @@
 #include "Drawing/PipelineManager.h"
 #include "Drawing/MeshManager.h"
 #include "Core/DirectXSetter.h"
+#include "Drawing/RenderManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -487,27 +488,7 @@ void SkinningModel::Draw(Camera* camera) {
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-		mesh_->vbView_,
-		skinCluster_->influenceBufferView_
-	};
-
-	//カメラ設定
-	commandList_->SetGraphicsRootConstantBufferView(4, cameraBuff_->GetGPUVirtualAddress());
-	
-	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
-
-	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
-	commandList_->SetGraphicsRootDescriptorTable(7, maskTexture_->srvHandleGPU);
-
-	commandList_->SetGraphicsRootDescriptorTable(6, skinCluster_->paletteSrvHandle_.second);
-
-	//描画
-	material_->SetCommandMaterial(commandList_);
-
-	commandList_->IASetVertexBuffers(0, 2, vbvs);
-
-	mesh_->SetCommandMeshForSkinning(commandList_);
+	RenderManager::GetInstance()->AddSkinningModel(this);
 
 }
 
@@ -520,6 +501,13 @@ void SkinningModel::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 
 	cameraMap_->worldPosition = camera->GetWorldPosition();
 
+	RenderManager::GetInstance()->AddSkinningModel(this);
+
+}
+
+void SkinningModel::Render()
+{
+
 	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
 		mesh_->vbView_,
 		skinCluster_->influenceBufferView_
@@ -531,6 +519,7 @@ void SkinningModel::Draw(const Matrix4x4& localMatrix, Camera* camera) {
 	commandList_->SetGraphicsRootConstantBufferView(1, matBuff_->GetGPUVirtualAddress());
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
+	commandList_->SetGraphicsRootDescriptorTable(7, maskTexture_->srvHandleGPU);
 
 	commandList_->SetGraphicsRootDescriptorTable(6, skinCluster_->paletteSrvHandle_.second);
 

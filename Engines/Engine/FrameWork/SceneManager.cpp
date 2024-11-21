@@ -7,6 +7,7 @@
 #include "PostEffectDrawer.h"
 #include "Skinning/SkinningModel.h"
 #include "LineDrawer.h"
+#include "Drawing/RenderManager.h"
 
 SceneManager* SceneManager::GetInstance() {
 	static SceneManager instance;
@@ -45,41 +46,14 @@ void SceneManager::Finalize()
 
 void SceneManager::Draw() {
 
-	DirectXSetter::GetInstance()->RenderTexturePreDraw();
+	scene_->Draw();
 
-	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
+}
 
-	scene_->DrawModel();
+void SceneManager::Render()
+{
 
-	Model::PostDraw();
-
-	SkinningModel::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
-
-	scene_->DrawSkinningModel();
-
-	SkinningModel::PostDraw();
-
-	Particle3D::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
-
-	scene_->DrawParticle();
-
-	Particle3D::PostDraw();
-
-	DirectXSetter::GetInstance()->PreDraw();
-
-	PostEffectDrawer::GetInstance()->Draw();
-
-	Sprite::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
-
-	scene_->DrawSprite();
-
-	Sprite::PostDraw();
-
-	Line::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
-
-	scene_->DrawLine();
-
-	Line::PostDraw();
+	RenderManager::GetInstance()->Render();
 
 }
 

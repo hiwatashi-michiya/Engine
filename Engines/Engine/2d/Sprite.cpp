@@ -6,6 +6,7 @@
 #include "Drawing/RootSignatureManager.h"
 #include "Drawing/ImGuiManager.h"
 #include "Buffer/BufferResource.h"
+#include "Drawing/RenderManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -336,6 +337,13 @@ void Sprite::Draw() {
 		MakeTranslateMatrix(Vector3(uvTranslate_.x, uvTranslate_.y, 0.0f));
 
 	constMap_->uvTransform = matUVTransform;
+
+	RenderManager::GetInstance()->AddSprite(this);
+
+}
+
+void Sprite::Render()
+{
 
 	//Spriteの描画
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);

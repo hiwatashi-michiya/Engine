@@ -47,11 +47,7 @@ void SceneChangeManager::Update() {
 
 void SceneChangeManager::Draw() {
 
-	Sprite::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
-
 	sprite_->Draw();
-
-	Sprite::PostDraw();
 
 }
 

@@ -134,12 +134,6 @@ void GameScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
-	if (input_->TriggerKey(DIK_H) and input_->PushKey(DIK_LCONTROL)) {
-
-		isShowHitBox_ = !isShowHitBox_;
-
-	}
-
 	ImGui::Begin("Frame Late");
 	ImGui::Text("%1.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
@@ -256,41 +250,15 @@ void GameScene::Update() {
 
 }
 
-void GameScene::DrawModel() {
-
-
-	/*Model::PostDraw();
-
-	Skybox::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
-
-	skybox_->Draw(camera_.get());
-
-	Skybox::PostDraw();
-
-	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());*/
+void GameScene::Draw()
+{
 
 	skyDome_->Draw(camera_.get());
 	skyDomeNet_->Draw(camera_.get());
 
 	stage_->Draw(camera_.get());
 
-}
-
-void GameScene::DrawSkinningModel() {
-
-	stage_->DrawSkinningModel(camera_.get());
-
-}
-
-void GameScene::DrawParticle() {
-
-	stage_->DrawParticle(camera_.get());
-
 	particleManager_->Draw(camera_.get());
-
-}
-
-void GameScene::DrawSprite() {
 
 	if (isPause_) {
 		pauseSprite_->Draw();
@@ -308,14 +276,3 @@ void GameScene::DrawSprite() {
 
 }
 
-void GameScene::DrawLine() {
-
-#ifdef _DEBUG
-
-#endif // _DEBUG
-
-	if (isShowHitBox_) {
-		stage_->DrawLine(camera_.get());
-	}
-
-}

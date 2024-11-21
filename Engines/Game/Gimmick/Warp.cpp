@@ -149,21 +149,17 @@ void Warp::Update() {
 
 void Warp::Draw(Camera* camera) {
 
-	modelA_->Draw(camera);
-	modelAWire_->Draw(camera);
-	modelB_->Draw(camera);
-	modelBWire_->Draw(camera);
-
-}
-
-void Warp::DrawLine(Camera* camera) {
-
 #ifdef _DEBUG
 
 	lineBox_->Draw(camera);
 	lineBoxB_->Draw(camera);
 
 #endif // _DEBUG
+
+	modelA_->Draw(camera);
+	modelAWire_->Draw(camera);
+	modelB_->Draw(camera);
+	modelBWire_->Draw(camera);
 
 }
 

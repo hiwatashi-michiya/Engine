@@ -199,7 +199,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Drawing\RootSignatureManager.cpp" />
     <ClCompile Include="Engine\Drawing\ShaderManager.cpp" />
     <ClCompile Include="Engine\Drawing\TextureManager.cpp" />
-    <ClCompile Include="Engine\FrameWork\MolFrameWork.cpp" />
+    <ClCompile Include="Engine\FrameWork\MarFrameWork.cpp" />
     <ClCompile Include="Engine\FrameWork\SceneManager.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
     <ClCompile Include="Engine\Leak.cpp" />
@@ -295,7 +295,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Drawing\TextureManager.h" />
     <ClInclude Include="Engine\FrameWork\AbsSceneFactory.h" />
     <ClInclude Include="Engine\FrameWork\BaseScene.h" />
-    <ClInclude Include="Engine\FrameWork\MolFrameWork.h" />
+    <ClInclude Include="Engine\FrameWork\MarFrameWork.h" />
     <ClInclude Include="Engine\FrameWork\SceneManager.h" />
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\Leak.h" />

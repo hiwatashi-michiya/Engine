@@ -21,8 +21,6 @@ public:
 
 	void Draw(Camera* camera);
 
-	void DrawLine(Camera* camera);
-
 private:
 
 	void OnCollision(Collider* collider);

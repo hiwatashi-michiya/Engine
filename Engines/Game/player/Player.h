@@ -38,10 +38,6 @@ public:
 
 	void Draw(Camera* camera);
 
-	void DrawSkinningModel(Camera* camera);
-
-	void DrawParticle(Camera* camera);
-
 	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
 
 	void SetPosition(const Vector3& position) {
@@ -61,8 +57,6 @@ public:
 	bool GetIsDead() const { return isDead_; }
 
 	void SetIsDead(bool flag) { isDead_ = flag; }
-
-	void DrawLine(Camera* camera);
 
 	void SetCamera(Camera* camera) { camera_ = camera; }
 

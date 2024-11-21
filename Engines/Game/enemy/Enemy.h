@@ -20,8 +20,6 @@ public:
 
 	void Draw(Camera* camera);
 
-	void DrawLine(Camera* camera);
-
 	void SetColor(GameColor::Color color) { color_ = color; }
 
 	bool GetIsDead() const { return isDead_; }

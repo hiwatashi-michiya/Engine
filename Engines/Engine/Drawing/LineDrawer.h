@@ -17,6 +17,8 @@ public:
 
 	static const int32_t kVertexNum_ = 2;
 
+	static bool showCollisionLine_;
+
 	static void Initialize(ID3D12Device* device);
 
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
@@ -24,6 +26,10 @@ public:
 	static void PostDraw();
 
 	void Draw(Camera* camera, const Matrix4x4& matrix = MakeIdentity4x4());
+
+	void Render();
+
+	void SetIsCollisionLine(bool flag) { isCollisionLine_ = flag; }
 
 	Vector3 start_;
 
@@ -61,6 +67,9 @@ private:
 
 	LineVertexData* vertexMap_ = nullptr;
 
+	//当たり判定の線かどうか
+	bool isCollisionLine_ = true;
+
 };
 
 class LineBox
@@ -70,6 +79,8 @@ public:
 	~LineBox();
 
 	void SetOBB(OBB* obb) { obb_ = obb; }
+
+	void SetIsCollisionLine(bool flag);
 
 	void Update();
 

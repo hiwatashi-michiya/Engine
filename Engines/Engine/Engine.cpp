@@ -23,6 +23,7 @@
 #include "CollisionManager.h"
 #include "Skybox.h"
 #include "ParticleManager.h"
+#include "RenderManager.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -77,6 +78,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	//Engineクラスでインスタンス生成をしておく
 	CollisionManager::GetInstance()->Initialize();
 	ParticleManager::GetInstance()->Initialize();
+	RenderManager::GetInstance()->Clear();
 
 #ifdef _DEBUG
 

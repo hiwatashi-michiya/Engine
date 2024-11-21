@@ -48,7 +48,9 @@ void Stage::Update() {
 
 #ifdef _DEBUG
 
-	
+	if (Input::GetInstance()->TriggerKey(DIK_H) and Input::GetInstance()->PushKey(DIK_LCONTROL)) {
+		Line::showCollisionLine_ = not Line::showCollisionLine_;
+	}
 
 #endif // _DEBUG
 
@@ -142,15 +144,11 @@ void Stage::Draw(Camera* camera) {
 	}
 
 	for (auto& box : moveBoxes_) {
-
 		box->Draw(camera);
-
 	}
 
 	for (auto& block : blocks_) {
-
 		block->Draw(camera);
-
 	}
 
 	for (auto& ghostBox : ghostBoxes_) {
@@ -179,76 +177,11 @@ void Stage::Draw(Camera* camera) {
 
 	player_->Draw(camera);
 
-}
-
-void Stage::DrawSkinningModel(Camera* camera) {
-
-	player_->DrawSkinningModel(camera);
-
 	for (auto& cat : copyCats_) {
 		cat->Draw(camera);
 	}
 
-}
-
-void Stage::DrawParticle(Camera* camera) {
-
-	player_->DrawParticle(camera);
-
-	for (auto& goal : goals_) {
-		goal->DrawParticle(camera);
-	}
-
 	stageParticle_->Draw(camera);
-
-}
-
-void Stage::DrawLine(Camera* camera) {
-
-	player_->DrawLine(camera);
-
-	for (auto& block : blocks_) {
-
-		block->DrawLine(camera);
-	}
-
-	for (auto& box : moveBoxes_) {
-
-		box->DrawLine(camera);
-	}
-
-	for (auto& ring : rings_) {
-
-		ring->DrawLine(camera);
-	}
-
-	for (auto& warp : warps_) {
-		warp->DrawLine(camera);
-	}
-
-	for (auto& goal : goals_) {
-		goal->DrawLine(camera);
-	}
-
-	for (auto& colorSwitch : switches_) {
-		colorSwitch->DrawLine(camera);
-	}
-
-	for (auto& cat : copyCats_) {
-		cat->DrawLine(camera);
-	}
-
-	for (auto& enemy : enemies_) {
-		enemy->DrawLine(camera);
-	}
-
-	for (auto& holder : holders_) {
-		holder->DrawLine(camera);
-	}
-
-	for (auto& ghostBox : ghostBoxes_) {
-		ghostBox->DrawLine(camera);
-	}
 
 }
 

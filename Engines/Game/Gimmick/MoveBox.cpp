@@ -59,11 +59,6 @@ void MoveBox::Update() {
 void MoveBox::Draw(Camera* camera) {
 
 	model_->Draw(camera);
-
-}
-
-void MoveBox::DrawLine(Camera* camera) {
-
 	lineBox_->Draw(camera);
 
 }

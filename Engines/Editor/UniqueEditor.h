@@ -31,8 +31,6 @@ public:
 
 	void Draw(Camera* camera);
 
-	void DrawLine(Camera* camera);
-
 	const std::string& kDirectoryPath_ = "./Resources/Maps/";
 
 	void SetCamera(Camera* camera) { camera_ = camera; }

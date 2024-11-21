@@ -97,11 +97,6 @@ void Enemy::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 	modelWire_->Draw(camera);
-
-}
-
-void Enemy::DrawLine(Camera* camera) {
-
 	lineBox_->Draw(camera);
 
 }

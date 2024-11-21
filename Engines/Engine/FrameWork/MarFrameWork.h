@@ -3,10 +3,10 @@
 #include "SceneManager.h"
 #include <memory>
 
-class MolFrameWork {
+class MarFrameWork {
 public:
 
-	virtual ~MolFrameWork() = default;
+	virtual ~MarFrameWork() = default;
 
 	//初期化
 	virtual void Initialize();

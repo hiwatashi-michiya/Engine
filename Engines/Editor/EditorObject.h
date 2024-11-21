@@ -29,8 +29,6 @@ public:
 
 	virtual void Draw(Camera* camera);
 
-	virtual void DrawLine(Camera* camera);
-
 	std::string objName_;
 
 	std::unique_ptr<Model> model_;
@@ -135,8 +133,6 @@ public:
 	void RecordMove() override;
 
 	void Draw(Camera* camera) override;
-
-	void DrawLine(Camera* camera) override;
 
 	bool isMoveA_ = true;
 

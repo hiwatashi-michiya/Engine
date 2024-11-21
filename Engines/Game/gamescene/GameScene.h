@@ -20,15 +20,7 @@ public:
 
 	void Update() override;
 
-	void DrawModel() override;
-
-	void DrawSkinningModel() override;
-
-	void DrawParticle() override;
-
-	void DrawSprite() override;
-
-	void DrawLine() override;
+	void Draw() override;
 
 private:
 
@@ -77,9 +69,6 @@ private:
 
 	//ポーズ画面を開いているか
 	bool isPause_ = false;
-
-	//当たり判定表示するかどうか
-	bool isShowHitBox_ = false;
 
 };
 

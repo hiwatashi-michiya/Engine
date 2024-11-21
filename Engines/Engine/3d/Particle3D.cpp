@@ -9,6 +9,7 @@
 #include "Drawing/ImGuiManager.h"
 #include "Model.h"
 #include "Drawing/MeshManager.h"
+#include "Drawing/RenderManager.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -365,8 +366,15 @@ void Particle3D::Draw(Camera* camera) {
 
 	}
 
+	RenderManager::GetInstance()->AddParticle3D(this);
+
+}
+
+void Particle3D::Render()
+{
+
 	commandList_->SetGraphicsRootDescriptorTable(1, instancingResource_.srvHandleGPU);
-	
+
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
 
 	//描画
@@ -378,28 +386,12 @@ void Particle3D::Draw(Camera* camera) {
 
 void Particle3D::Finalize() {
 
-	/*pipelineState_->Release();*/
-	/*for (int i = BlendMode::kCountBlend - 1; i >= 0; i--) {
-		particlePipelineStates_[i]->Release();
-	}
-	rootSignature_->Release();
-	ps3dParticleBlob_->Release();
-	vs3dParticleBlob_->Release();*/
+	
 
 }
 
 void Particle3D::ImGuiUpdate() {
 
-	////識別ナンバー設定(ImGuiで使用)
-	//std::string name = "model Color";
-
-	//name += std::to_string(modelNumber_);
-
-	//ImGui::Begin("model Settings");
-	//ImGui::ColorEdit4(name.c_str(), &constMap_->color.x);
-	//ImGui::End();
-
-	//modelNumber_++;
 
 }
 

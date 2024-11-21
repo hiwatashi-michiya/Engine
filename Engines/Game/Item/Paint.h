@@ -23,8 +23,6 @@ public:
 
 	void Draw(Camera* camera);
 
-	void DrawLine(Camera* camera);
-
 	bool GetIsVanish() const { return isVanish_; }
 
 	bool GetIsObtained() const { return isObtained_; }

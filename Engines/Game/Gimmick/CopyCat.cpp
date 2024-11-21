@@ -425,14 +425,6 @@ void CopyCat::OnCollision(Collider* collider) {
 
 void CopyCat::Draw(Camera* camera) {
 
-	if (!isDead_) {
-		model_->Draw(camera);
-	}
-
-}
-
-void CopyCat::DrawLine(Camera* camera) {
-
 #ifdef _DEBUG
 
 	model_->DrawSkeleton(camera);
@@ -441,4 +433,9 @@ void CopyCat::DrawLine(Camera* camera) {
 
 #endif // _DEBUG
 
+	if (!isDead_) {
+		model_->Draw(camera);
+	}
+
 }
+

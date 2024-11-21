@@ -30,12 +30,6 @@ public:
 
 	void Draw(Camera* camera);
 
-	void DrawSkinningModel(Camera* camera);
-
-	void DrawParticle(Camera* camera);
-
-	void DrawLine(Camera* camera);
-
 	void LoadStage(uint32_t stageNumber);
 
 	const std::string& kDirectoryPath_ = "./resources/Maps/";
@@ -100,6 +94,10 @@ private:
 	std::list<std::shared_ptr<ColorHolder>> holders_;
 
 	Segment line_{};
+
+
+	//当たり判定表示するかどうか
+	bool isShowHitBox_ = false;
 
 };
 

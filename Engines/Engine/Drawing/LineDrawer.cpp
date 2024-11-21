@@ -5,11 +5,13 @@
 #include "Drawing/PipelineManager.h"
 #include "Buffer/BufferResource.h"
 #include "Convert.h"
+#include "RenderManager.h"
 
 ID3D12Device* Line::device_ = nullptr;
 ID3D12GraphicsCommandList* Line::commandList_ = nullptr;
 ID3D12RootSignature* Line::rootSignature_ = nullptr;
 ID3D12PipelineState* Line::pipelineState_ = nullptr;
+bool Line::showCollisionLine_ = false;
 
 void Line::Initialize(ID3D12Device* device) {
 
@@ -204,6 +206,16 @@ void Line::Draw(Camera* camera, const Matrix4x4& matrix) {
 
 	*wvpMatrix_ = matrix * camera->matViewProjection_;
 
+	//当たり判定ラインじゃない場合か、当たり判定ライン表示がONの場合に描画
+	if (not isCollisionLine_ or showCollisionLine_) {
+		RenderManager::GetInstance()->AddLine(this);
+	}
+
+}
+
+void Line::Render()
+{
+
 	commandList_->IASetVertexBuffers(0, 1, &vbView_);
 
 	commandList_->SetGraphicsRootConstantBufferView(0, wvpBuff_->GetGPUVirtualAddress());
@@ -223,6 +235,13 @@ LineBox::LineBox()
 
 LineBox::~LineBox()
 {
+}
+
+void LineBox::SetIsCollisionLine(bool flag)
+{
+	for (int32_t i = 0; i < kMaxLine_; i++) {
+		lines_[i]->SetIsCollisionLine(flag);
+	}
 }
 
 void LineBox::Update() {

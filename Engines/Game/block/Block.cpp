@@ -88,11 +88,7 @@ void Block::Update() {
 void Block::Draw(Camera* camera) {
 
 	model_->Draw(camera);
-
-}
-
-void Block::DrawLine(Camera* camera) {
-
 	lineBox_->Draw(camera);
 
 }
+

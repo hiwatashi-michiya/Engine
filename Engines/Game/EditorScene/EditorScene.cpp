@@ -147,30 +147,12 @@ void EditorScene::Update() {
 
 }
 
-void EditorScene::DrawModel() {
+void EditorScene::Draw()
+{
 
 	editor_->Draw(currentCamera_);
-
-}
-
-void EditorScene::DrawSkinningModel() {
-
-}
-
-void EditorScene::DrawParticle() {
 
 	particleEditor_->Draw(currentCamera_);
 
 }
 
-void EditorScene::DrawSprite() {
-
-	/*test_->Draw();*/
-
-}
-
-void EditorScene::DrawLine() {
-
-	editor_->DrawLine(currentCamera_);
-
-}

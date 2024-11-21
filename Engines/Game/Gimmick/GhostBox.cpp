@@ -85,11 +85,6 @@ void GhostBox::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 	modelWire_->Draw(camera);
-
-}
-
-void GhostBox::DrawLine(Camera* camera) {
-
 	if (collider_->GetIsActive()) {
 		lineBox_->Draw(camera);
 	}

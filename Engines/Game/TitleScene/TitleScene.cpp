@@ -97,31 +97,13 @@ void TitleScene::Update() {
 	
 }
 
-void TitleScene::DrawModel() {
+void TitleScene::Draw()
+{
 
 	skyDome_->Draw(camera_.get());
-
-}
-
-void TitleScene::DrawSkinningModel() {
-
-}
-
-void TitleScene::DrawParticle() {
-
-
-
-}
-
-void TitleScene::DrawSprite() {
 
 	title_->Draw();
 	aButton_->Draw();
 
 }
 
-void TitleScene::DrawLine() {
-
-
-
-}

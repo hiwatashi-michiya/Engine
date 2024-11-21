@@ -176,36 +176,14 @@ void SelectScene::Update() {
 
 }
 
-void SelectScene::DrawModel() {
+void SelectScene::Draw()
+{
 
 	skyDome_->Draw(camera_.get());
-
-}
-
-void SelectScene::DrawSkinningModel() {
-
-	
-
-}
-
-void SelectScene::DrawParticle() {
-
-
-
-}
-
-void SelectScene::DrawSprite() {
 
 	stageSelect_->Draw();
 	toTitle_->Draw();
 	aButton_->Draw();
-	/*stage1_->Draw();
-	stage2_->Draw();
-	stage3_->Draw();*/
 	num_->Draw();
-
-}
-
-void SelectScene::DrawLine() {
 
 }

@@ -137,34 +137,11 @@ void TestScene::Update() {
 
 }
 
-void TestScene::DrawModel() {
-
-	/*editor_->Draw(camera_.get());*/
+void TestScene::Draw()
+{
 
 	for (int32_t i = 0; i < models_.size(); i++) {
 		models_[i]->Draw(camera_.get());
 	}
-
-}
-
-void TestScene::DrawSkinningModel() {
-
-
-
-}
-
-void TestScene::DrawParticle() {
-
-
-
-}
-
-void TestScene::DrawSprite() {
-
-
-
-}
-
-void TestScene::DrawLine() {
 
 }

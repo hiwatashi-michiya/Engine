@@ -58,11 +58,6 @@ void ColorHolder::Draw(Camera* camera) {
 
 	modelOuter_->Draw(camera);
 	modelInner_->Draw(camera);
-
-}
-
-void ColorHolder::DrawLine(Camera* camera) {
-
 	lineBox_->Draw(camera);
 
 }

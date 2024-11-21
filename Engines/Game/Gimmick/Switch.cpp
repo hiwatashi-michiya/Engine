@@ -86,11 +86,6 @@ void Switch::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 	modelWire_->Draw(camera);
-
-}
-
-void Switch::DrawLine(Camera* camera) {
-
 	lineBox_->Draw(camera);
 
 }

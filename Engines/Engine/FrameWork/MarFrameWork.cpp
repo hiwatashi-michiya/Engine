@@ -2,9 +2,9 @@
 static D3DResourceLeakChecker leak;
 #include "Engine/Engine.h"
 #include "Engine/input/Input.h"
-#include "MolFrameWork.h"
+#include "MarFrameWork.h"
 
-void MolFrameWork::Initialize() {
+void MarFrameWork::Initialize() {
 
 	Engine::Initialize("カイロウ", 1280, 720);
 
@@ -12,19 +12,19 @@ void MolFrameWork::Initialize() {
 
 }
 
-void MolFrameWork::Finalize() {
+void MarFrameWork::Finalize() {
 
 	Engine::Finalize();
 
 }
 
-void MolFrameWork::Update() {
+void MarFrameWork::Update() {
 
 	sceneManager_->Update();
 
 }
 
-void MolFrameWork::Run() {
+void MarFrameWork::Run() {
 
 	Initialize();
 

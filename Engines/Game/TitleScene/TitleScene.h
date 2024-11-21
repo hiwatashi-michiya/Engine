@@ -25,15 +25,7 @@ public:
 
 	void Update() override;
 
-	void DrawModel() override;
-
-	void DrawSkinningModel() override;
-
-	void DrawParticle() override;
-
-	void DrawSprite() override;
-
-	void DrawLine() override;
+	void Draw() override;
 
 private:
 

@@ -316,6 +316,7 @@ void UniqueEditor::Initialize() {
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
 
 	mouseLine_ = std::make_unique<Line>();
+	mouseLine_->SetIsCollisionLine(false);
 
 	oldTransform_ = std::make_unique<Transform>();
 
@@ -639,22 +640,11 @@ void UniqueEditor::Edit() {
 
 void UniqueEditor::Draw(Camera* camera) {
 
-	for (int32_t i = 0; i < mapObjData_.size(); i++) {
-
-		mapObjData_[i]->Draw(camera);
-
-	}
-
-}
-
-void UniqueEditor::DrawLine(Camera* camera)
-{
-
 	mouseLine_->Draw(camera);
 
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		mapObjData_[i]->DrawLine(camera);
+		mapObjData_[i]->Draw(camera);
 
 	}
 

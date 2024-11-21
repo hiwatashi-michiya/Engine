@@ -4,7 +4,7 @@
 
 void Game::Initialize() {
 
-	MolFrameWork::Initialize();
+	MarFrameWork::Initialize();
 
 	//ゲームシーンのインスタンス生成
 	sceneFactory_ = std::make_unique<SceneFactory>();
@@ -16,7 +16,7 @@ void Game::Initialize() {
 
 void Game::Finalize() {
 
-	MolFrameWork::Finalize();
+	MarFrameWork::Finalize();
 
 }
 
@@ -33,6 +33,8 @@ void Game::Draw() {
 	sceneManager_->Draw();
 
 	SceneChangeManager::GetInstance()->Draw();
+
+	sceneManager_->Render();
 
 }
 

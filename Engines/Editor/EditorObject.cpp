@@ -11,6 +11,7 @@ MapObject::MapObject() {
 	oldTransform_ = std::make_unique<Transform>();
 	obb_ = std::make_unique<OBB>();
 	lineBox_ = std::make_unique<LineBox>();
+	lineBox_->SetIsCollisionLine(false);
 	lineBox_->SetOBB(obb_.get());
 }
 
@@ -127,15 +128,10 @@ void MapObject::RecordMove()
 void MapObject::Draw(Camera* camera) {
 
 	model_->Draw(camera);
-
-}
-
-void MapObject::DrawLine(Camera* camera)
-{
-
 	lineBox_->Draw(camera);
 
 }
+
 
 void PlayerObject::Initialize(const std::string& name) {
 
@@ -344,6 +340,7 @@ void WarpObject::Initialize(const std::string& name) {
 
 	obbB_ = std::make_unique<OBB>();
 	lineBoxB_ = std::make_unique<LineBox>();
+	lineBoxB_->SetIsCollisionLine(false);
 	lineBoxB_->SetOBB(obbB_.get());
 
 }
@@ -476,12 +473,6 @@ void WarpObject::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 	modelB_->Draw(camera);
-
-}
-
-void WarpObject::DrawLine(Camera* camera)
-{
-
 	lineBox_->Draw(camera);
 	lineBoxB_->Draw(camera);
 

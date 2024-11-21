@@ -90,21 +90,16 @@ void Goal::Update() {
 }
 
 void Goal::Draw(Camera* camera) {
-	model_->Draw(camera);
-}
 
-void Goal::DrawParticle(Camera* camera) {
-
-	if (isActiveEffect_) {
-		particle_->Draw(camera);
-	}
-
-}
-
-void Goal::DrawLine(Camera* camera) {
 #ifdef _DEBUG
 
 	lineBox_->Draw(camera);
 
 #endif // _DEBUG
+
+	if (isActiveEffect_) {
+		particle_->Draw(camera);
+	}
+
+	model_->Draw(camera);
 }

@@ -18,8 +18,6 @@ public:
 
 	void Draw(Camera* camera);
 
-	void DrawLine(Camera* camera);
-
 	void SetPosition(const Vector3& position) { 
 		transform_->translate_ = position;
 		collider_->collider_.center = transform_->translate_;

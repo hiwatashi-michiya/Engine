@@ -16,6 +16,16 @@ public:
 
 	void Render();
 
+	void AddModel(Model* model) { models_.push_back(model); }
+
+	void AddSkinningModel(SkinningModel* skinningModel) { skinningModels_.push_back(skinningModel); }
+	
+	void AddParticle3D(Particle3D* particle) { particles_.push_back(particle); }
+	
+	void AddSprite(Sprite* sprite) { sprites_.push_back(sprite); }
+	
+	void AddLine(Line* line) { lines_.push_back(line); }
+
 private:
 
 	std::vector<Model*> models_;

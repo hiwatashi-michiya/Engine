@@ -481,30 +481,6 @@ void Player::OnCollision(Collider* collider) {
 void Player::Draw(Camera* camera)
 {
 
-	for (int32_t i = 0; i < bullets_.size(); i++) {
-		bullets_[i]->Draw(camera);
-	}
-
-}
-
-void Player::DrawSkinningModel(Camera* camera) {
-
-	if (!isDead_) {
-		model_->Draw(camera);
-	}
-
-}
-
-void Player::DrawParticle(Camera* camera) {
-
-	if (not isDead_) {
-		particle_->Draw(camera);
-	}
-
-}
-
-void Player::DrawLine(Camera* camera) {
-
 #ifdef _DEBUG
 
 	model_->DrawSkeleton(camera);
@@ -512,5 +488,17 @@ void Player::DrawLine(Camera* camera) {
 	lineBox_->Draw(camera);
 
 #endif // _DEBUG
+
+	for (int32_t i = 0; i < bullets_.size(); i++) {
+		bullets_[i]->Draw(camera);
+	}
+
+	if (not isDead_) {
+		model_->Draw(camera);
+	}
+
+	if (not isDead_) {
+		particle_->Draw(camera);
+	}
 
 }
