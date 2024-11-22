@@ -33,23 +33,11 @@ public:
 
 	static Sprite* Create(Texture* texture, Vector2 position, Vector4 color = { 1.0f,1.0f,1.0f,1.0f });
 
-	bool Initialize();
-
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
 
 	static void PostDraw();
-
-	void Draw();
-
-	void Render();
-
+	
 	static void Finalize();
-
-	void SetTexture(Texture* tex) { texture_ = tex; }
-
-	void SetPosition(Vector2 pos) { position_ = pos; }
-
-	Vector2 GetPosition() { return position_; }
 
 	//位置
 	Vector2 position_{};
@@ -72,7 +60,23 @@ public:
 	//色
 	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 
+public:
+
+	void Draw();
+
+	void Render();
+
+	void SetTexture(Texture* tex) { texture_ = tex; }
+
+	void SetPosition(Vector2 pos) { position_ = pos; }
+
+	Vector2 GetPosition() { return position_; }
+
 	void ImGuiUpdate(const std::string name);
+
+private:
+
+	bool Initialize();
 
 private:
 

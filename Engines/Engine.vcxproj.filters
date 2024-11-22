@@ -381,6 +381,9 @@
     <ClCompile Include="Engine\Drawing\RenderManager.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\Easing.cpp">
+      <Filter>Engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -664,6 +667,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Drawing\RenderManager.h">
       <Filter>Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\Easing.h">
+      <Filter>Engine\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

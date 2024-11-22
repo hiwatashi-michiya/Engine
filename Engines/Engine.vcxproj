@@ -205,6 +205,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Leak.cpp" />
     <ClCompile Include="Engine\Collider\Collision.cpp" />
     <ClCompile Include="Engine\math\DebugCamera.cpp" />
+    <ClCompile Include="Engine\math\Easing.cpp" />
     <ClCompile Include="Engine\math\Matrix4x4.cpp" />
     <ClCompile Include="Engine\math\Quaternion.cpp" />
     <ClCompile Include="Engine\math\Rand.cpp" />
@@ -301,6 +302,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Leak.h" />
     <ClInclude Include="Engine\Collider\Collision.h" />
     <ClInclude Include="Engine\math\DebugCamera.h" />
+    <ClInclude Include="Engine\math\Easing.h" />
     <ClInclude Include="Engine\math\Matrix4x4.h" />
     <ClInclude Include="Engine\math\Quaternion.h" />
     <ClInclude Include="Engine\math\Rand.h" />
