@@ -64,7 +64,7 @@ void PlayerBullet::Draw(Camera* camera)
 
 }
 
-void PlayerBullet::OnCollision(Collider* collider)
+void PlayerBullet::OnCollision([[maybe_unused]]Collider* collider)
 {
 
 	lifeTime_ = 0;

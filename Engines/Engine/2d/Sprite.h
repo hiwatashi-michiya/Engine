@@ -15,8 +15,7 @@ public:
 	Sprite(Texture* texture, Vector2 position, Vector2 size, Vector4 color);
 	~Sprite() = default;
 
-	static void StaticInitialize(ID3D12Device* device, int window_width,
-		int window_height);
+	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
 	/// 頂点データ構造体

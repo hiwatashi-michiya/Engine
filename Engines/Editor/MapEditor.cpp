@@ -205,8 +205,8 @@ void MapEditor::Edit() {
 
 				std::vector<const char*> meshNames;
 
-				for (uint32_t i = 0; i < meshNames_.size(); i++) {
-					meshNames.push_back(meshNames_[i].c_str());
+				for (uint32_t k = 0; k < meshNames_.size(); k++) {
+					meshNames.push_back(meshNames_[k].c_str());
 				}
 
 				if (ImGui::Combo("mesh", &object->meshNumber, meshNames.data(), int(meshNames_.size()))) {

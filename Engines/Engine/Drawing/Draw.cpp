@@ -3,7 +3,7 @@
 #include <numbers>
 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix,
-	const Matrix4x4& viewportMatrix, uint32_t color) {
+	const Matrix4x4& viewportMatrix) {
 	const uint32_t kSubdivision = 16; //分割数
 	const float  kLonEvery = float(2 * std::numbers::pi / kSubdivision); //経度分割1つ分の角度
 	const float kLatEvery = float(2 * std::numbers::pi / kSubdivision); //緯度分割1つ分の角度
@@ -90,7 +90,7 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 
 }
 
-void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
 	//中心点を決める
 	Vector3 center = Multiply(plane.distance, plane.normal);
 	//描画に使う四つのベクトルを定義
@@ -119,17 +119,8 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 
 }
 
-void DrawTransformLine(const Vector3& p1, const Vector3& p2, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
 
-	Vector3 start = CoordTransform(CoordTransform(p1, viewProjectionMatrix), viewportMatrix);
-
-	Vector3 end = CoordTransform(CoordTransform(Add(p1, p2), viewProjectionMatrix), viewportMatrix);
-
-	/*Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), color);*/
-
-}
-
-void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
 
 	Vector3 point[3]{};
 
@@ -144,7 +135,7 @@ void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatri
 
 }
 
-void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
 
 	Vector3 point[8]{};
 
@@ -201,89 +192,4 @@ void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Mat
 	Novice::DrawLine(int(point[6].x), int(point[6].y), int(point[7].x), int(point[7].y), color);*/
 
 
-}
-
-void DrawOBB(const OBB& obb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
-
-	Vector3 point[8]{};
-
-	Matrix4x4 rotateMatrix{
-		{
-			{obb.orientations[0].x,obb.orientations[0].y,obb.orientations[0].z,0},
-			{obb.orientations[1].x,obb.orientations[1].y,obb.orientations[1].z,0},
-			{obb.orientations[2].x,obb.orientations[2].y,obb.orientations[2].z,0},
-			{0,0,0,1}
-		}
-	};
-
-	//それぞれの位置を計算
-
-	//左下前
-	point[0] = CoordTransform(Vector3{ - obb.size.x, - obb.size.y, - obb.size.z }, rotateMatrix);
-	//右下前
-	point[1] = CoordTransform(Vector3{ + obb.size.x, - obb.size.y, - obb.size.z }, rotateMatrix);
-	//左上前
-	point[2] = CoordTransform(Vector3{ - obb.size.x, + obb.size.y, - obb.size.z }, rotateMatrix);
-	//右上前
-	point[3] = CoordTransform(Vector3{ + obb.size.x, + obb.size.y, - obb.size.z }, rotateMatrix);
-	//左下奥
-	point[4] = CoordTransform(Vector3{ - obb.size.x, - obb.size.y, + obb.size.z }, rotateMatrix);
-	//右下奥
-	point[5] = CoordTransform(Vector3{ + obb.size.x, - obb.size.y, + obb.size.z }, rotateMatrix);
-	//左上奥
-	point[6] = CoordTransform(Vector3{ - obb.size.x, + obb.size.y, + obb.size.z }, rotateMatrix);
-	//右上奥
-	point[7] = CoordTransform(Vector3{ + obb.size.x, + obb.size.y, + obb.size.z }, rotateMatrix);
-
-	//左下前
-	point[0] = Add(point[0], obb.center);
-	//右下前
-	point[1] = Add(point[1], obb.center);
-	//左上前
-	point[2] = Add(point[2], obb.center);
-	//右上前
-	point[3] = Add(point[3], obb.center);
-	//左下奥
-	point[4] = Add(point[4], obb.center);
-	//右下奥
-	point[5] = Add(point[5], obb.center);
-	//左上奥
-	point[6] = Add(point[6], obb.center);
-	//右上奥
-	point[7] = Add(point[7], obb.center);
-
-	//左下前
-	point[0] = CoordTransform(CoordTransform(point[0], viewProjectionMatrix), viewportMatrix);
-	//右下前
-	point[1] = CoordTransform(CoordTransform(point[1], viewProjectionMatrix), viewportMatrix);
-	//左上前
-	point[2] = CoordTransform(CoordTransform(point[2], viewProjectionMatrix), viewportMatrix);
-	//右上前
-	point[3] = CoordTransform(CoordTransform(point[3], viewProjectionMatrix), viewportMatrix);
-	//左下奥
-	point[4] = CoordTransform(CoordTransform(point[4], viewProjectionMatrix), viewportMatrix);
-	//右下奥
-	point[5] = CoordTransform(CoordTransform(point[5], viewProjectionMatrix), viewportMatrix);
-	//左上奥
-	point[6] = CoordTransform(CoordTransform(point[6], viewProjectionMatrix), viewportMatrix);
-	//右上奥
-	point[7] = CoordTransform(CoordTransform(point[7], viewProjectionMatrix), viewportMatrix);
-
-	//八頂点を使って描画
-	/*Novice::DrawLine(int(point[0].x), int(point[0].y), int(point[1].x), int(point[1].y), color);
-	Novice::DrawLine(int(point[0].x), int(point[0].y), int(point[2].x), int(point[2].y), color);
-	Novice::DrawLine(int(point[1].x), int(point[1].y), int(point[3].x), int(point[3].y), color);
-	Novice::DrawLine(int(point[2].x), int(point[2].y), int(point[3].x), int(point[3].y), color);
-
-	Novice::DrawLine(int(point[0].x), int(point[0].y), int(point[4].x), int(point[4].y), color);
-	Novice::DrawLine(int(point[1].x), int(point[1].y), int(point[5].x), int(point[5].y), color);
-	Novice::DrawLine(int(point[2].x), int(point[2].y), int(point[6].x), int(point[6].y), color);
-	Novice::DrawLine(int(point[3].x), int(point[3].y), int(point[7].x), int(point[7].y), color);
-
-	Novice::DrawLine(int(point[4].x), int(point[4].y), int(point[5].x), int(point[5].y), color);
-	Novice::DrawLine(int(point[4].x), int(point[4].y), int(point[6].x), int(point[6].y), color);
-	Novice::DrawLine(int(point[5].x), int(point[5].y), int(point[7].x), int(point[7].y), color);
-	Novice::DrawLine(int(point[6].x), int(point[6].y), int(point[7].x), int(point[7].y), color);*/
-
-	
 }

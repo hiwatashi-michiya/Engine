@@ -397,8 +397,6 @@ void DirectXSetter::CreateRenderTargets() {
 
 void DirectXSetter::CreateDepthBuffer() {
 
-	HRESULT hr = S_FALSE;
-
 	depthStencil_.Create(device_.Get(), WindowManager::kWindowWidth, WindowManager::kWindowHeight);
 
 	dsvHeap_ = DescriptorHeapManager::GetInstance()->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false, "DSVHeap");

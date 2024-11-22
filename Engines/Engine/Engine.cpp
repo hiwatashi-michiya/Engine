@@ -65,7 +65,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	RootSignatureManager::GetInstance()->Initialize(dxSetter_->GetDevice());
 
 	AudioManager::GetInstance()->Initialize();
-	Sprite::StaticInitialize(dxSetter_->GetDevice(), WindowManager::kWindowWidth, WindowManager::kWindowHeight);
+	Sprite::StaticInitialize(dxSetter_->GetDevice());
 	Model::StaticInitialize(dxSetter_->GetDevice());
 	SkinningModel::StaticInitialize(dxSetter_->GetDevice());
 	Skybox::Initialize();

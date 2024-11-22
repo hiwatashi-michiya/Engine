@@ -239,7 +239,7 @@ void GlobalVariables::Update() {
 				Vector3* posPtr = &ptr->position;
 				Vector3* rotPtr = &ptr->rotation;
 				Vector3* scaPtr = &ptr->scale;
-				ImGui::InputText(strName.c_str(), strPtr, IM_ARRAYSIZE(ptr->objName.data()));
+				ImGui::InputText(strName.c_str(), strPtr, 256);
 				ImGui::SliderFloat3(posName.c_str(), reinterpret_cast<float*>(posPtr), -10.0f, 10.0f);
 				ImGui::SliderFloat3(rotName.c_str(), reinterpret_cast<float*>(rotPtr), -10.0f, 10.0f);
 				ImGui::SliderFloat3(scaName.c_str(), reinterpret_cast<float*>(scaPtr), -10.0f, 10.0f);
@@ -450,9 +450,6 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 			uint32_t roopCount = 0;
 
 			for (nlohmann::json::iterator itItemObject = itObject->begin(); itItemObject != itObject->end(); ++itItemObject) {
-
-				//アイテム名を取得
-				const std::string& itemNameObject = itItemObject.key();
 
 				//要素数3の配列であれば
 				if (itItemObject->is_array() and itItemObject->size() == 3) {

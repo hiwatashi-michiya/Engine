@@ -18,8 +18,7 @@ IDxcBlob* Sprite::vs2dBlob_ = nullptr;
 IDxcBlob* Sprite::ps2dBlob_ = nullptr;
 
 //静的初期化
-void Sprite::StaticInitialize(ID3D12Device* device, int window_width,
-	int window_height) {
+void Sprite::StaticInitialize(ID3D12Device* device) {
 
 	assert(device);
 

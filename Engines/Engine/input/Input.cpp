@@ -251,8 +251,6 @@ bool Input::TriggerLStick(StickArrow arrow) {
 		break;
 	}
 
-	return false;
-
 }
 
 bool Input::TriggerRStick(StickArrow arrow) {
@@ -275,8 +273,6 @@ bool Input::TriggerRStick(StickArrow arrow) {
 		return false;
 		break;
 	}
-
-	return false;
 
 }
 
@@ -301,7 +297,5 @@ SHORT Input::GetStickValue(Stick stick) {
 		return 0;
 		break;
 	}
-
-	return 0;
 
 }

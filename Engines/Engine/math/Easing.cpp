@@ -141,7 +141,6 @@ float Easing::OutBounce(float x)
 		return n1 * (x -= 2.625f / d1) * x + 0.984375f;
 	}
 
-	return 0.0f;
 }
 
 float Easing::InOutSine(float x)

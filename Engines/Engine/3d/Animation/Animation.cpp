@@ -24,8 +24,6 @@ Animation LoadAnimationFile(const std::string& fileName) {
 
 		return animation;
 
-		assert(false);
-
 	}
 
 	aiAnimation* animationAssimp = scene->mAnimations[0]; //最初のアニメーションだけ採用。今後複数対応するのもあり
@@ -76,8 +74,6 @@ Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time
 
 		return Vector3::Identity();
 
-		assert(false);
-
 	}
 
 	//キーが1つか、時刻がキーフレーム前なら最初の値とする
@@ -111,8 +107,6 @@ Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, floa
 		MessageBox(NULL, L"keyframe is empty", L"Animation - CalculateValue(Quaternion)", MB_OK);
 
 		return IdentityQuaternion();
-
-		assert(false);
 
 	}
 
