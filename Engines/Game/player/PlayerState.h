@@ -3,6 +3,9 @@
 
 class Player;
 
+/// <summary>
+/// 停止時の更新処理
+/// </summary>
 class PlayerStay
 {
 public:
@@ -19,6 +22,9 @@ private:
 
 };
 
+/// <summary>
+/// 移動時の更新処理
+/// </summary>
 class PlayerMove
 {
 public:
@@ -35,6 +41,9 @@ private:
 
 };
 
+/// <summary>
+/// 弾発射時の更新処理
+/// </summary>
 class PlayerShot
 {
 public:

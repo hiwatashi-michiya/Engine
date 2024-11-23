@@ -8,24 +8,27 @@
 #include "Vector3.h"
 #include "Game/ColorSetter/ColorSetter.h"
 
+/// <summary>
+/// プレイヤーが触れると死亡するオブジェクトのクラス
+/// </summary>
 class Enemy : public GameObject
 {
 public:
 	Enemy();
 	~Enemy();
-
+	//初期化
 	void Initialize();
-
+	//更新
 	void Update();
-
+	//描画
 	void Draw(Camera* camera);
-
+	//色セット
 	void SetColor(GameColor::Color color) { color_ = color; }
-
+	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
 
 private:
-
+	//オブジェクトと当たった時の処理
 	void OnCollision(Collider* collider);
 
 private:
@@ -36,7 +39,7 @@ private:
 	std::unique_ptr<LineBox> lineBox_;
 
 	std::unique_ptr<BoxCollider> collider_;
-
+	//死亡フラグ
 	bool isDead_ = false;
 
 	GameColor::Color color_ = GameColor::kWhite;

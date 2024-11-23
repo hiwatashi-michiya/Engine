@@ -63,6 +63,7 @@ void Switch::Update() {
 
 	}
 
+	//クールタイムカウント
 	if (countTimer_ > 0) {
 		countTimer_--;
 	}
@@ -92,8 +93,10 @@ void Switch::Draw(Camera* camera) {
 
 void Switch::OnCollision(Collider* collider) {
 
+	//プレイヤーが触れた場合
 	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 
+		//クールタイムを終えていたら切り替え発動
 		if (countTimer_ <= 0) {
 			Stage::stageColor_ = color_;
 		}

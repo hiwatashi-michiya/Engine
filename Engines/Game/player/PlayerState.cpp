@@ -12,7 +12,7 @@ PlayerStay::~PlayerStay()
 
 void PlayerStay::InitializeStay(Player& player)
 {
-
+	//モデルのアニメーションリセット、移動をリセット
 	player.model_->SetAnimation(0, true);
 	player.model_->SetAnimationSpeed(2.0f);
 	player.velocity_.x = 0.0f;
@@ -23,6 +23,7 @@ void PlayerStay::InitializeStay(Player& player)
 void PlayerStay::UpdateStay(Player& player)
 {
 
+	//デバッグ用入力処理
 #ifdef _DEBUG
 
 	if (player.input_->PushKey(DIK_W) or player.input_->PushKey(DIK_A) or
@@ -41,7 +42,7 @@ void PlayerStay::UpdateStay(Player& player)
 		player.behaviorRequest_ = Player::Behavior::kMove;
 
 	}
-	//Aボタンで弾発射
+	//RBボタンで弾発射
 	else if (player.input_->TriggerButton(Input::Button::RB)) {
 		player.behaviorRequest_ = Player::Behavior::kShot;
 	}
@@ -59,7 +60,7 @@ PlayerMove::~PlayerMove()
 
 void PlayerMove::InitializeMove(Player& player)
 {
-
+	//モデルのアニメーションリセット
 	player.model_->SetAnimation(1, true);
 	player.model_->SetAnimationSpeed(2.0f);
 
@@ -70,6 +71,7 @@ void PlayerMove::UpdateMove(Player& player)
 
 	Vector3 moveVector{};
 
+	//デバッグ用の入力処理
 #ifdef _DEBUG
 
 	if (player.input_->PushKey(DIK_W)) {
@@ -92,6 +94,7 @@ void PlayerMove::UpdateMove(Player& player)
 
 #endif // _DEBUG
 
+	//移動している時
 	if (fabsf(player.input_->GetStickValue(Input::LX)) > 0 or fabsf(player.input_->GetStickValue(Input::LY)) > 0 or
 		fabsf(moveVector.x) > 0.0f or fabsf(moveVector.z) > 0.0f) {
 
@@ -100,26 +103,29 @@ void PlayerMove::UpdateMove(Player& player)
 			player.behaviorRequest_ = Player::Behavior::kShot;
 		}
 
+		//X移動量
 		if (fabsf(player.input_->GetStickValue(Input::LX)) > 0) {
 
 			moveVector.x = player.input_->GetStickValue(Input::LX);
 
 		}
-
+		//Z移動量
 		if (fabsf(player.input_->GetStickValue(Input::LY)) > 0) {
 
 			moveVector.z = player.input_->GetStickValue(Input::LY);
 
 		}
 
+		//カメラの向きに合わせて移動方向を修正
 		if (player.camera_) {
 			moveVector = TransformNormal(Normalize(moveVector), player.camera_->matRotate_);
 		}
 
+		//正規化し、速度を掛ける
 		moveVector = Normalize(Vector3{ moveVector.x,0.0f,moveVector.z });
-
 		moveVector *= player.speed_;
 
+		//回転処理用のVector作成
 		Vector3 moveXZ = { moveVector.x, 0.0f, moveVector.z };
 
 		//回転処理
@@ -179,6 +185,7 @@ void PlayerShot::InitializeShot(Player& player)
 void PlayerShot::UpdateShot(Player& player)
 {
 
+	//アニメーションが終了した時
 	if (player.model_->IsEndAnimation()) {
 
 		//移動の入力があるならMoveに遷移

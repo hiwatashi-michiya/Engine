@@ -186,11 +186,11 @@ uint32_t AudioManager::LoadInMF(const std::string& filename) {
 	MFCreateMediaType(&tmpAudio.pMFMediaType);
 	tmpAudio.pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
 	tmpAudio.pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
-	tmpAudio.pMFSourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, tmpAudio.pMFMediaType);
+	tmpAudio.pMFSourceReader->SetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), nullptr, tmpAudio.pMFMediaType);
 
 	tmpAudio.pMFMediaType->Release();
 	tmpAudio.pMFMediaType = nullptr;
-	tmpAudio.pMFSourceReader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, &tmpAudio.pMFMediaType);
+	tmpAudio.pMFSourceReader->GetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), &tmpAudio.pMFMediaType);
 
 	//オーディオデータ形式の作成
 	MFCreateWaveFormatExFromMFMediaType(tmpAudio.pMFMediaType, &tmpAudio.wfex, nullptr);
@@ -202,7 +202,7 @@ uint32_t AudioManager::LoadInMF(const std::string& filename) {
 
 		IMFSample* pMFSample{ nullptr };
 		DWORD dwStreamFlags{ 0 };
-		tmpAudio.pMFSourceReader->ReadSample(MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
+		tmpAudio.pMFSourceReader->ReadSample(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
 
 		if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM) {
 			break;

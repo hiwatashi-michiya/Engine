@@ -5,22 +5,25 @@
 #include "LineDrawer.h"
 #include "Game/ColorSetter/ColorSetter.h"
 
+/// <summary>
+/// ステージの色の切り替えを行うスイッチの役割を持ったクラス
+/// </summary>
 class Switch : public GameObject
 {
 public:
 	Switch();
 	~Switch();
-
+	//初期化
 	void Initialize();
-
+	//更新
 	void Update();
-
+	//描画
 	void Draw(Camera* camera);
-
+	//色セット
 	void SetColor(GameColor::Color color) { color_ = color; }
 
 private:
-
+	//他オブジェクトと当たった時の処理
 	void OnCollision(Collider* collider);
 
 private:
@@ -33,9 +36,9 @@ private:
 	std::unique_ptr<LineBox> lineBox_;
 
 	GameColor::Color color_ = GameColor::kWhite;
-
+	//切り替えクールタイム
 	int32_t coolTime_ = 30;
-
+	//クールタイムのカウント
 	int32_t countTimer_ = 0;
 
 };

@@ -86,6 +86,7 @@ void Player::Update() {
 
 	Vector3 moveVector{};
 
+	//デバッグ用入力処理
 #ifdef _DEBUG
 
 	ImGui::Begin("Player");
@@ -481,6 +482,7 @@ void Player::OnCollision(Collider* collider) {
 void Player::Draw(Camera* camera)
 {
 
+	//ライン描画
 #ifdef _DEBUG
 
 	model_->DrawSkeleton(camera);
@@ -489,14 +491,15 @@ void Player::Draw(Camera* camera)
 
 #endif // _DEBUG
 
+	//弾描画
 	for (int32_t i = 0; i < bullets_.size(); i++) {
 		bullets_[i]->Draw(camera);
 	}
-
+	//モデル描画
 	if (not isDead_) {
 		model_->Draw(camera);
 	}
-
+	//パーティクル描画
 	if (not isDead_) {
 		particle_->Draw(camera);
 	}

@@ -42,7 +42,9 @@ void Paint::Initialize(const Vector3& position) {
 
 void Paint::Obtained() {
 
+	//取得されたフラグを立てる
 	isObtained_ = true;
+	//アニメーションを切り替え
 	model_->LoadAnimation("./Resources/paint/paint_2.gltf");
 	model_->ResetAnimation();
 	model_->SetIsLoop(false);
@@ -51,9 +53,12 @@ void Paint::Obtained() {
 	modelWire_->ResetAnimation();
 	modelWire_->SetIsLoop(false);
 	modelWire_->SetAnimationSpeed(5.0f);
+	//コライダーを非アクティブにする
 	collider_->SetIsActive(false);
+	//SE流す
 	PlaySE();
 
+	//取得された時にパーティクル追加
 	std::shared_ptr<Particle> newParticle;
 	newParticle = std::make_shared<Particle>();
 	newParticle->Initialize();
@@ -61,13 +66,13 @@ void Paint::Obtained() {
 	newParticle->SetMinSpawnPoint(transform_->translate_ - transform_->scale_);
 	newParticle->SetMaxSpawnPoint(transform_->translate_ + transform_->scale_);
 	newParticle->SetEndColor(CreateColor(color_));
-
+	//マネージャーに渡す
 	ParticleManager::GetInstance()->AddParticle(newParticle);
 
 }
 
 void Paint::PlaySE() {
-
+	//マネージャーからSE再生
 	AudioManager::GetInstance()->Play(getSE_, 0.8f);
 
 }
@@ -165,6 +170,7 @@ void Paint::Draw(Camera* camera) {
 
 void Paint::OnCollision(Collider* collider) {
 
+	//プレイヤーか分身に触れたら取得された時の処理を実行
 	if (collider->GetGameObject()->GetName() == "player" || collider->GetGameObject()->GetName() == "copyCat") {
 		Obtained();
 	}

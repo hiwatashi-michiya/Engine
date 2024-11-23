@@ -16,6 +16,9 @@
 #include "Game/Bullet/Bullet.h"
 #include <vector>
 
+/// <summary>
+/// プレイヤー全体の処理をまとめたクラス
+/// </summary>
 class Player : public GameObject
 {
 	friend class PlayerStay;
@@ -23,57 +26,60 @@ class Player : public GameObject
 	friend class PlayerShot;
 public:
 
+	/// <summary>
+	/// 行動パターン
+	/// </summary>
 	enum class Behavior {
-		kStay,
-		kMove,
-		kShot,
+		kStay, //停止
+		kMove, //移動
+		kShot, //弾発射
 	};
 
 	Player();
 	~Player();
 
+	//初期化
 	void Initialize();
-
+	//更新
 	void Update();
-
+	//描画
 	void Draw(Camera* camera);
-
+	//当たり判定の位置を調整
 	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
-
+	//オブジェクトの位置を調整し、その後当たり判定をオブジェクトの位置に合わせる
 	void SetPosition(const Vector3& position) {
 		transform_->translate_ = position;
 		transform_->UpdateMatrix();
 		collider_->collider_.center = transform_->worldMatrix_.GetTranslate() + Vector3{ 0.0f, collider_->collider_.size.y, 0.0f };
 	}
-
+	//コライダー取得
 	BoxCollider* GetCollider() const { return collider_.get(); }
-
+	//オブジェクトの位置取得
 	Vector3 GetPosition() const { return collider_->collider_.center; }
-
+	//スケール取得
 	const Vector3& GetScale() { return transform_->scale_; }
-
+	//落下速度設定。主に落下先にオブジェクトがあった場合のリセットに使用
 	void SetVelocityY(float speed) { velocity_.y = speed; }
-
+	//死亡フラグのゲッター、セッター
 	bool GetIsDead() const { return isDead_; }
-
 	void SetIsDead(bool flag) { isDead_ = flag; }
-
+	//カメラをプレイヤーに共有。主にカメラ回転時の移動方向調整に使用
 	void SetCamera(Camera* camera) { camera_ = camera; }
-
+	//ゴールフラグのゲッター
 	bool GetIsGoal() const { return isGoal_; }
-
+	//ゴール可能フラグのゲッター
 	bool GetCanGoal() const { return canGoal_; }
-
+	//ゴールに必要なインクの数を設定
 	void SetGoalCount(int32_t count) { goalCount_ = count; }
-
+	//Velocityのゲッター
 	Vector3 GetVelocity() const { return velocity_; }
-
+	//プレイヤーの回転向きを取得
 	Quaternion GetRotate() const { return transform_->rotateQuaternion_; }
-
-	void AddRingCount() { itemGetCount_++; }
+	//インクの取得数増加
+	void AddItemCount() { itemGetCount_++; }
 
 private:
-
+	//他のオブジェクトに当たった時の処理
 	void OnCollision(Collider* collider);
 
 private:

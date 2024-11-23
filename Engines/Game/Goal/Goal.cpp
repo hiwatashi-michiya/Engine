@@ -37,10 +37,12 @@ void Goal::Initialize() {
 
 void Goal::Update() {
 
-	if (!isActiveEffect_ and player_ and player_->GetCanGoal()) {
+	//エフェクトが非アクティブの時
+	if (not isActiveEffect_ and player_ and player_->GetCanGoal()) {
 		isActiveEffect_ = true;
 	}
 
+	//エフェクトの更新
 	if (isActiveEffect_) {
 
 		//パーティクル更新

@@ -7,6 +7,9 @@
 #include "Collider.h"
 #include "Game/ColorSetter/ColorSetter.h"
 
+/// <summary>
+/// 弾のインターフェース
+/// </summary>
 class IBullet : public GameObject
 {
 public:
@@ -41,6 +44,9 @@ protected:
 
 };
 
+/// <summary>
+/// プレイヤーがブロックの色を変える時に放つ弾のクラス
+/// </summary>
 class PlayerBullet : public IBullet
 {
 public:
