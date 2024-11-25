@@ -52,4 +52,6 @@ private:
 
 	std::unique_ptr<Line> line_;
 
+	Texture* testTex_ = nullptr;
+
 };

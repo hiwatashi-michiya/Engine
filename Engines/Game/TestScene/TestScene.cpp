@@ -32,6 +32,8 @@ void TestScene::Initialize() {
 	camera_->position_ = { 0.0f,2.0f, -20.0f };
 	camera_->rotation_.y = 0.0f;
 
+	testTex_ = TextureManager::GetInstance()->Load("./Resources/textures/head_cake_jpg.dds");
+
 	loader_ = LevelDataLoader::GetInstance();
 	loader_->Load("./Resources/Levels/scene.json");
 
