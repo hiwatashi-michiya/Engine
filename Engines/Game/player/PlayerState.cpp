@@ -249,7 +249,7 @@ void PlayerDive::InitializeDive(Player& player)
 	//ブロックに潜っている判定もtrue
 	player.isDivingBlock_ = true;
 	//プレイヤーの向きからvelocityを設定
-	player.velocity_ = CalcDiveVelocity(player.transform_->worldMatrix_.GetZAxis());
+	player.velocity_ = CalcDiveVelocity(player.transform_->worldMatrix_.GetZAxis()) * player.speed_ * 2.0f;
 
 }
 

@@ -39,10 +39,12 @@ public:
 	BoxCollider* GetCollider() { return collider_.get(); }
 	//色セット
 	void SetColor(GameColor::Color color) { color_ = color; }
-
+	//色取得
 	const GameColor::Color& GetColor() const { return color_; }
-
+	//回転方向取得
 	const CommonVariables::RotateType& GetRotateType() const { return rotateType_; }
+	//回転方向セット
+	void SetRotateType(CommonVariables::RotateType type) { rotateType_ = type; }
 
 private:
 	//オブジェクトと当たった時の処理

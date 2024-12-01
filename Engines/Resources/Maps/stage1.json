@@ -101,7 +101,28 @@
                 ],
                 "tag": "block"
             },
-            "ghostBox4": {
+            "block5": {
+                "color": 0,
+                "position": [
+                    23.0,
+                    1.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    2.0,
+                    2.0,
+                    2.0
+                ],
+                "tag": "block"
+            },
+            "ghostBox": {
+                "RotateRight": false,
                 "color": 0,
                 "position": [
                     7.0,
@@ -121,10 +142,31 @@
                 ],
                 "tag": "ghostBox"
             },
+            "ghostBox1": {
+                "RotateRight": true,
+                "color": 0,
+                "position": [
+                    27.0,
+                    1.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    2.0,
+                    2.0,
+                    2.0
+                ],
+                "tag": "ghostBox"
+            },
             "goal": {
                 "color": 0,
                 "position": [
-                    20.0,
+                    -4.0,
                     0.0,
                     0.0
                 ],

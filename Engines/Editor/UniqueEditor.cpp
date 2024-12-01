@@ -686,6 +686,10 @@ void UniqueEditor::Save(const std::string& filename) {
 			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["tag"] = mapObjData_[i]->tag_;
 			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
 
+			if (auto ghostBoxPtr = dynamic_cast<GhostBoxObject*>(mapObjData_[i].get())) {
+				root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["RotateRight"] = ghostBoxPtr->isRotateRight_;
+			}
+
 		}
 
 	}

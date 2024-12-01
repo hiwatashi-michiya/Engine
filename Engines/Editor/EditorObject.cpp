@@ -503,9 +503,20 @@ void GhostBoxObject::Edit() {
 		model_->SetColor(GameColor::CreateColor(color_));
 	}
 
+	if (ImGui::Checkbox("rotate Right", &isRotateRight_)) {
+
+	}
+
 	RecordMove();
 
 #endif // _DEBUG
+
+	if (isRotateRight_) {
+		model_->SetTexture("./Resources/block/clockWise.png");
+	}
+	else {
+		model_->SetTexture("./Resources/block/counterClockWise.png");
+	}
 
 	transform_->UpdateMatrix();
 

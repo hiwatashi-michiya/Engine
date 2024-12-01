@@ -319,6 +319,10 @@ void Stage::LoadStage(uint32_t stageNumber) {
 							mapObject->color = GameColor::Color(itItemObject->get<int32_t>());
 						}
 
+						if (itemNameObject == "RotateRight") {
+							mapObject->isRotateRight_ = itItemObject->get<bool>();
+						}
+
 						//クォータニオン追加
 						if (itemNameObject == "quaternion") {
 							//float型のjson配列登録
@@ -409,6 +413,14 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
 			newObject->SetColor(object->color);
+			
+			if (object->isRotateRight_) {
+				newObject->SetRotateType(CommonVariables::RotateType::kClockwise);
+			}
+			else {
+				newObject->SetRotateType(CommonVariables::RotateType::kCounterclockwise);
+			}
+
 			ghostBoxes_.push_back(newObject);
 		}
 

@@ -284,7 +284,7 @@ void Player::OnCollision(Collider* collider) {
 				if (playerDive_->isDiving_) {
 
 					//面の反対側から向かってきている場合
-					if (velocity_.y < -0.99f) {
+					if (velocity_.y < -0.99f * speed_ * 2.0f) {
 						//回転方向に応じてvelocityを90度回転
 						RotateVelocity(FollowCamera::GetCameraType());
 					}
@@ -321,7 +321,7 @@ void Player::OnCollision(Collider* collider) {
 				if (playerDive_->isDiving_) {
 
 					//面の反対側から向かってきている場合
-					if (velocity_.y > 0.99f) {
+					if (velocity_.y > 0.99f * speed_ * 2.0f) {
 						//回転方向に応じてvelocityを90度回転
 						RotateVelocity(FollowCamera::GetCameraType());
 					}
@@ -378,7 +378,7 @@ void Player::OnCollision(Collider* collider) {
 					if (playerDive_->isDiving_) {
 
 						//面の反対側から向かってきている場合
-						if (velocity_.x > 0.99f) {
+						if (velocity_.x > 0.99f * speed_ * 2.0f) {
 							//回転方向に応じてvelocityを90度回転
 							RotateVelocity(FollowCamera::GetCameraType());
 						}
@@ -431,7 +431,7 @@ void Player::OnCollision(Collider* collider) {
 					if (playerDive_->isDiving_) {
 
 						//面の反対側から向かってきている場合
-						if (velocity_.x < -0.99f) {
+						if (velocity_.x < -0.99f * speed_ * 2.0f) {
 							//回転方向に応じてvelocityを90度回転
 							RotateVelocity(FollowCamera::GetCameraType());
 						}
@@ -485,7 +485,7 @@ void Player::OnCollision(Collider* collider) {
 					if (playerDive_->isDiving_) {
 
 						//面の反対側から向かってきている場合
-						if (velocity_.z > 0.99f) {
+						if (velocity_.z > 0.99f * speed_ * 2.0f) {
 							//回転方向に応じてvelocityを90度回転
 							RotateVelocity(FollowCamera::GetCameraType());
 						}
@@ -538,7 +538,7 @@ void Player::OnCollision(Collider* collider) {
 					if (playerDive_->isDiving_) {
 
 						//面の反対側から向かってきている場合
-						if (velocity_.z < -0.99f) {
+						if (velocity_.z < -0.99f * speed_ * 2.0f) {
 							//回転方向に応じてvelocityを90度回転
 							RotateVelocity(FollowCamera::GetCameraType());
 						}

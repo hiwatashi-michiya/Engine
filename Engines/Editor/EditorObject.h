@@ -149,6 +149,9 @@ public:
 
 	void Edit() override;
 
+	//回転方向のフラグ
+	bool isRotateRight_ = true;
+
 };
 
 class SwitchObject : public MapObject

@@ -64,6 +64,8 @@ private:
 
 		int32_t tagNumber = 0;
 
+		bool isRotateRight_ = true;
+
 		bool isSelect = false;
 
 		GameColor::Color color = GameColor::kWhite;
