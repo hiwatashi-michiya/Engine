@@ -75,7 +75,16 @@ void Stage::Update() {
 
 		});
 
-	player_->Update();
+	if (followCamera_) {
+		//カメラが動いている時プレイヤーの更新を止める
+		if (not followCamera_->GetIsSwitching()) {
+			player_->Update();
+		}
+
+	}
+	else {
+		player_->Update();
+	}
 
 	for (uint32_t i = 0; auto& block : blocks_) {
 

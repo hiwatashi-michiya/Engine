@@ -1,5 +1,7 @@
 #pragma once
 #include "Vector2.h"
+#include "Game/Variables/CommonVariables.h"
+#include "Vector3.h"
 
 class Player;
 
@@ -60,6 +62,29 @@ private:
 
 };
 
+class PlayerDive
+{
+public:
+	PlayerDive();
+	~PlayerDive();
+
+	void InitializeDive(Player& player);
+
+	void UpdateDive(Player& player);
+
+public:
+
+	//移動時の回転方向
+	CommonVariables::RotateType rotateType_ = CommonVariables::RotateType::kClockwise;
+
+	//潜っている途中かどうか
+	bool isDiving_ = false;
+
+private:
+
+	Vector3 CalcDiveVelocity(const Vector3& vec);
+
+};
 
 
 

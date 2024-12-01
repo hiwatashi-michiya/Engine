@@ -52,12 +52,13 @@ void GameScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,35.0f, -30.0f };
-	camera_->rotation_.x = 0.9f;
+	camera_->position_ = { 0.0f,0.0f, -60.0f };
+	camera_->rotation_.x = 0.0f;
 	mapEditor_->SetCamera(camera_.get());
 
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->SetCamera(camera_.get());
+	followCamera_->Initialize();
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
@@ -80,6 +81,7 @@ void GameScene::Initialize() {
 	stage_->LoadStage(stageNumber_);
 	followCamera_->SetTarget(stage_->GetPlayer()->GetTransform());
 	stage_->GetPlayer()->SetCamera(camera_.get());
+	stage_->SetFollowCamera(followCamera_.get());
 
 	PostEffectDrawer::GetInstance()->SetCamera(camera_.get());
 	PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);

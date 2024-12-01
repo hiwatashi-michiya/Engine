@@ -1,7 +1,47 @@
 {
     "marScene": {
         "objectData": {
-            "ghostBox": {
+            "block": {
+                "color": 0,
+                "position": [
+                    11.0,
+                    1.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    2.0,
+                    2.0,
+                    2.0
+                ],
+                "tag": "block"
+            },
+            "block1": {
+                "color": 0,
+                "position": [
+                    0.0,
+                    -2.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    5.0,
+                    1.0,
+                    5.0
+                ],
+                "tag": "block"
+            },
+            "block2": {
                 "color": 0,
                 "position": [
                     10.0,
@@ -19,9 +59,9 @@
                     1.0,
                     5.0
                 ],
-                "tag": "ghostBox"
+                "tag": "block"
             },
-            "ghostBox1": {
+            "block3": {
                 "color": 0,
                 "position": [
                     20.0,
@@ -39,29 +79,9 @@
                     1.0,
                     5.0
                 ],
-                "tag": "ghostBox"
+                "tag": "block"
             },
-            "ghostBox2": {
-                "color": 0,
-                "position": [
-                    0.0,
-                    -2.0,
-                    0.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    5.0,
-                    1.0,
-                    5.0
-                ],
-                "tag": "ghostBox"
-            },
-            "ghostBox3": {
+            "block4": {
                 "color": 0,
                 "position": [
                     30.0,
@@ -78,6 +98,26 @@
                     5.0,
                     1.0,
                     5.0
+                ],
+                "tag": "block"
+            },
+            "ghostBox4": {
+                "color": 0,
+                "position": [
+                    7.0,
+                    1.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    2.0,
+                    2.0,
+                    2.0
                 ],
                 "tag": "ghostBox"
             },
@@ -100,46 +140,6 @@
                     1.0
                 ],
                 "tag": "goal"
-            },
-            "paint": {
-                "color": 0,
-                "position": [
-                    10.0,
-                    0.0,
-                    0.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "paint"
-            },
-            "paint1": {
-                "color": 0,
-                "position": [
-                    30.0,
-                    0.0,
-                    0.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "tag": "paint"
             },
             "player": {
                 "color": 0,

@@ -121,6 +121,9 @@
     <Filter Include="Game\ColorSetter">
       <UniqueIdentifier>{86a6ee48-f5ad-4cfb-8980-5ebe00a209f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Variables">
+      <UniqueIdentifier>{a9a24275-0c33-4be9-bc40-607f88b25c08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -383,6 +386,9 @@
     </ClCompile>
     <ClCompile Include="Engine\math\Easing.cpp">
       <Filter>Engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\player\DiveFlagObject.cpp">
+      <Filter>Game\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -670,6 +676,12 @@
     </ClInclude>
     <ClInclude Include="Engine\math\Easing.h">
       <Filter>Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Variables\CommonVariables.h">
+      <Filter>Game\Variables</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\player\DiveFlagObject.h">
+      <Filter>Game\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

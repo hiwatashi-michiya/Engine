@@ -109,9 +109,9 @@ bool IsCollision(const Segment& segment, const Triangle& triangle) {
 
 bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
 
-	if ((aabb1.min.x <= aabb2.max.x and aabb1.max.x >= aabb2.min.x) and
-		(aabb1.min.y <= aabb2.max.y and aabb1.max.y >= aabb2.min.y) and
-		(aabb1.min.z <= aabb2.max.z and aabb1.max.z >= aabb2.min.z)) {
+	if ((aabb1.min.x < aabb2.max.x and aabb1.max.x > aabb2.min.x) and
+		(aabb1.min.y < aabb2.max.y and aabb1.max.y > aabb2.min.y) and
+		(aabb1.min.z < aabb2.max.z and aabb1.max.z > aabb2.min.z)) {
 		return true;
 	}
 

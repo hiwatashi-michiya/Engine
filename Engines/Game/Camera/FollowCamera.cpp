@@ -2,6 +2,9 @@
 #include "Input.h"
 #include <cmath>
 #include <algorithm>
+#include "Easing.h"
+
+CommonVariables::CameraType FollowCamera::cameraType_ = CommonVariables::CameraType::kSide;
 
 FollowCamera::FollowCamera()
 {
@@ -11,18 +14,87 @@ FollowCamera::~FollowCamera()
 {
 }
 
+void FollowCamera::Initialize()
+{
+	cameraType_ = CommonVariables::CameraType::kSide;
+}
+
 void FollowCamera::Update() {
 
 	if (camera_) {
 
 		if (target_) {
 
-			Vector2 addRotate = { -float(Input::GetInstance()->GetStickValue(Input::Stick::RY) * 0.000001f),
+#ifdef _DEBUG
+
+			if (not isSwitching_ and Input::GetInstance()->TriggerKey(DIK_C)) {
+				isSwitching_ = true;
+			}
+
+#endif // _DEBUG
+
+
+			if (not isSwitching_ and Input::GetInstance()->TriggerButton(Input::Button::Y)) {
+				isSwitching_ = true;
+			}
+
+			if (isSwitching_) {
+
+				float t = 0.0f;
+
+				if (easingCount_ != 0) {
+					t = Easing::InSine(float(easingCount_) / float(maxEasingTime_));
+				}
+
+				camera_->rotation_ = Lerp(sideAngle_, aboveAngle_, t);
+
+				//横から視点の場合
+				if (cameraType_ == CommonVariables::CameraType::kSide) {
+
+					//カウント加算
+					easingCount_++;
+					//カウントが最大値になったらカメラのタイプ変更、切り替え処理終了
+					if (easingCount_ >= maxEasingTime_) {
+						camera_->rotation_ = aboveAngle_;
+						cameraType_ = CommonVariables::CameraType::kAbove;
+						easingCount_ = maxEasingTime_;
+						isSwitching_ = false;
+					}
+
+				}
+				//上から視点の場合
+				else {
+
+					//カウント加算
+					easingCount_--;
+					//カウントが最大値になったらカメラのタイプ変更、切り替え処理終了
+					if (easingCount_ <= 0) {
+						camera_->rotation_ = sideAngle_;
+						cameraType_ = CommonVariables::CameraType::kSide;
+						easingCount_ = 0;
+						isSwitching_ = false;
+					}
+
+				}
+
+			}
+			else {
+
+				//タイプに応じてカメラの回転固定
+				if (cameraType_ == CommonVariables::CameraType::kSide) {
+					camera_->rotation_ = sideAngle_;
+				}
+				else {
+					camera_->rotation_ = aboveAngle_;
+				}
+
+			}
+			
+
+			/*Vector2 addRotate = { -float(Input::GetInstance()->GetStickValue(Input::Stick::RY) * 0.000001f),
 			float(Input::GetInstance()->GetStickValue(Input::Stick::RX) * 0.000001f) };
 
-			camera_->rotation_ += {addRotate.x, addRotate.y, 0.0f};
-
-			camera_->rotation_.x = std::clamp(camera_->rotation_.x, -0.6f, 0.6f);
+			camera_->rotation_ += {addRotate.x, addRotate.y, 0.0f};*/
 
 			camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 

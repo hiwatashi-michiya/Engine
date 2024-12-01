@@ -7,6 +7,9 @@
 #include <functional>
 #include "UsefulFunc.h"
 #include "Game/stage/Stage.h"
+#include "Game/Gimmick/GhostBox.h"
+#include <numbers>
+#include "Game/Camera/FollowCamera.h"
 
 Player::Player()
 {
@@ -26,6 +29,8 @@ Player::Player()
 	playerStay_ = std::make_unique<PlayerStay>();
 	playerMove_ = std::make_unique<PlayerMove>();
 	playerShot_ = std::make_unique<PlayerShot>();
+	playerDive_ = std::make_unique<PlayerDive>();
+	diveFlag_ = std::make_unique<DiveFlagObject>();
 
 #ifdef _DEBUG
 
@@ -61,7 +66,7 @@ void Player::Initialize() {
 	particle_->SetColor(CreateColor(Stage::stageColor_));
 
 	collider_->collider_.center = transform_->translate_;
-	collider_->collider_.size = { 0.5f,1.5f,0.5f };
+	collider_->collider_.size = { 0.5f,0.5f,0.5f };
 
 	preTranslate_ = collider_->collider_.center;
 
@@ -72,6 +77,8 @@ void Player::Initialize() {
 	onGround_ = false;
 	itemGetCount_ = 0;
 	canGoal_ = false;
+
+	diveFlag_->Initialize(transform_.get(), this);
 
 #ifdef _DEBUG
 
@@ -152,6 +159,9 @@ void Player::Update() {
 			case Player::Behavior::kShot:
 				playerShot_->InitializeShot(*this);
 				break;
+			case Player::Behavior::kDive:
+				playerDive_->InitializeDive(*this);
+				break;
 			}
 
 			behaviorRequest_ = std::nullopt;
@@ -171,13 +181,20 @@ void Player::Update() {
 		case Player::Behavior::kShot:
 			playerShot_->UpdateShot(*this);
 			break;
+		case Player::Behavior::kDive:
+			playerDive_->UpdateDive(*this);
+			break;
 		}
 
-		//落下速度更新
-		velocity_.y += fallSpeed_;
+		//落下速度更新。潜行中は受け付けない
+		if (behavior_ != Behavior::kDive) {
 
-		if (velocity_.y < fallSpeedLimit_) {
-			velocity_.y = fallSpeedLimit_;
+			velocity_.y += fallSpeed_;
+
+			if (velocity_.y < fallSpeedLimit_) {
+				velocity_.y = fallSpeedLimit_;
+			}
+
 		}
 
 		//速度加算
@@ -192,6 +209,8 @@ void Player::Update() {
 		transform_->UpdateMatrix();
 		//当たり判定更新
 		collider_->collider_.center = transform_->worldMatrix_.GetTranslate() + Vector3{0.0f, collider_->collider_.size.y, 0.0f};
+		//フラグの当たり判定更新
+		diveFlag_->Update();
 		//モデルに更新した行列をセット
 		model_->SetWorldMatrix(transform_->worldMatrix_);
 		//モデルのアニメーション更新
@@ -210,7 +229,8 @@ void Player::Update() {
 
 		//地面判定をfalseにする。ブロックとの判定時に切り替わる
 		onGround_ = false;
-
+		//ブロックに潜っている判定をfalseにする
+		isDivingBlock_ = false;
 	}
 
 #ifdef _DEBUG
@@ -224,8 +244,23 @@ void Player::Update() {
 
 void Player::OnCollision(Collider* collider) {
 
-	if (collider->GetGameObject()->GetName() == "block" || collider->GetGameObject()->GetName() == "moveBox" ||
+	if (collider->GetGameObject()->GetName() == "block" or collider->GetGameObject()->GetName() == "moveBox" or
 		collider->GetGameObject()->GetName() == "ghostBox") {
+
+		//潜る状態の時
+		if (playerDive_->isDiving_) {
+
+			if (auto pBullet = dynamic_cast<GhostBox*>(collider->GetGameObject())) {
+				//同色のブロックなら当たり判定を取らずに早期リターン
+				if (pBullet->GetColor() == Stage::stageColor_) {
+					//ブロックに潜っている判定をtrueにする
+					isDivingBlock_ = true;
+					return;
+				}
+
+			}
+
+		}
 
 		//上にいる時
 		if (preTranslate_.y >= collider->GetPosition().y + collider->GetSize().y) {
@@ -244,8 +279,21 @@ void Player::OnCollision(Collider* collider) {
 				//座標更新
 				transform_->translate_.y = collider_->collider_.center.y - collider_->collider_.size.y;
 				transform_->UpdateMatrix();
-				SetVelocityY(0.0f);
-				onGround_ = true;
+
+				//潜る状態のとき
+				if (playerDive_->isDiving_) {
+
+					//面の反対側から向かってきている場合
+					if (velocity_.y < -0.99f) {
+						//回転方向に応じてvelocityを90度回転
+						RotateVelocity(FollowCamera::GetCameraType());
+					}
+
+				}
+				else {
+					SetVelocityY(0.0f);
+					onGround_ = true;
+				}
 
 			}
 
@@ -269,8 +317,20 @@ void Player::OnCollision(Collider* collider) {
 				transform_->translate_.y = collider_->collider_.center.y - collider_->collider_.size.y;
 				transform_->UpdateMatrix();
 
-				if (velocity_.y > 0.0f) {
-					SetVelocityY(0.0f);
+				//潜る状態のとき
+				if (playerDive_->isDiving_) {
+
+					//面の反対側から向かってきている場合
+					if (velocity_.y > 0.99f) {
+						//回転方向に応じてvelocityを90度回転
+						RotateVelocity(FollowCamera::GetCameraType());
+					}
+
+				}
+				else {
+					if (velocity_.y > 0.0f) {
+						SetVelocityY(0.0f);
+					}
 				}
 
 			}
@@ -314,6 +374,17 @@ void Player::OnCollision(Collider* collider) {
 					transform_->translate_.x = collider_->collider_.center.x;
 					transform_->UpdateMatrix();
 
+					//潜る状態のとき
+					if (playerDive_->isDiving_) {
+
+						//面の反対側から向かってきている場合
+						if (velocity_.x > 0.99f) {
+							//回転方向に応じてvelocityを90度回転
+							RotateVelocity(FollowCamera::GetCameraType());
+						}
+
+					}
+
 				}
 
 			}
@@ -355,6 +426,17 @@ void Player::OnCollision(Collider* collider) {
 					//座標更新
 					transform_->translate_.x = collider_->collider_.center.x;
 					transform_->UpdateMatrix();
+
+					//潜る状態のとき
+					if (playerDive_->isDiving_) {
+
+						//面の反対側から向かってきている場合
+						if (velocity_.x < -0.99f) {
+							//回転方向に応じてvelocityを90度回転
+							RotateVelocity(FollowCamera::GetCameraType());
+						}
+
+					}
 
 				}
 
@@ -399,6 +481,17 @@ void Player::OnCollision(Collider* collider) {
 					transform_->translate_.z = collider_->collider_.center.z;
 					transform_->UpdateMatrix();
 
+					//潜る状態のとき
+					if (playerDive_->isDiving_) {
+
+						//面の反対側から向かってきている場合
+						if (velocity_.z > 0.99f) {
+							//回転方向に応じてvelocityを90度回転
+							RotateVelocity(FollowCamera::GetCameraType());
+						}
+
+					}
+
 				}
 
 			}
@@ -441,6 +534,17 @@ void Player::OnCollision(Collider* collider) {
 					transform_->translate_.z = collider_->collider_.center.z;
 					transform_->UpdateMatrix();
 
+					//潜る状態のとき
+					if (playerDive_->isDiving_) {
+
+						//面の反対側から向かってきている場合
+						if (velocity_.z < -0.99f) {
+							//回転方向に応じてvelocityを90度回転
+							RotateVelocity(FollowCamera::GetCameraType());
+						}
+
+					}
+
 				}
 
 			}
@@ -479,6 +583,51 @@ void Player::OnCollision(Collider* collider) {
 
 }
 
+void Player::RotateVelocity(const CommonVariables::CameraType& cameraType)
+{
+
+	//横から視点の場合
+	if (cameraType == CommonVariables::CameraType::kSide) {
+
+		//時計回り(右回り)の場合
+		if (playerDive_->rotateType_ == CommonVariables::RotateType::kClockwise) {
+			velocity_ = RotateOnZAxis(velocity_, float(std::numbers::pi * 0.5f));
+		}
+		//反時計回り(左回り)の場合
+		else {
+			velocity_ = RotateOnZAxis(velocity_, -float(std::numbers::pi * 0.5f));
+		}
+
+	}
+	//上から視点の場合
+	else {
+
+		//時計回り(右回り)の場合
+		if (playerDive_->rotateType_ == CommonVariables::RotateType::kClockwise) {
+			velocity_ = RotateOnYAxis(velocity_, float(std::numbers::pi * 0.5f));
+		}
+		//反時計回り(左回り)の場合
+		else {
+			velocity_ = RotateOnYAxis(velocity_, -float(std::numbers::pi * 0.5f));
+		}
+
+	}
+
+	//velocityの誤差を無くすため、ここで調整
+	if (fabsf(velocity_.x) < 0.0001f) {
+		velocity_.x = 0.0f;
+	}
+
+	if (fabsf(velocity_.y) < 0.0001f) {
+		velocity_.y = 0.0f;
+	}
+
+	if (fabsf(velocity_.z) < 0.0001f) {
+		velocity_.z = 0.0f;
+	}
+
+}
+
 void Player::Draw(Camera* camera)
 {
 
@@ -488,6 +637,8 @@ void Player::Draw(Camera* camera)
 	model_->DrawSkeleton(camera);
 
 	lineBox_->Draw(camera);
+
+	diveFlag_->Draw(camera);
 
 #endif // _DEBUG
 

@@ -7,6 +7,7 @@
 #include "LineDrawer.h"
 #include "Vector3.h"
 #include "Game/ColorSetter/ColorSetter.h"
+#include "Game/Variables/CommonVariables.h"
 
 /// <summary>
 /// 色に反応して出現したり消えたりするブロックのクラス
@@ -39,6 +40,10 @@ public:
 	//色セット
 	void SetColor(GameColor::Color color) { color_ = color; }
 
+	const GameColor::Color& GetColor() const { return color_; }
+
+	const CommonVariables::RotateType& GetRotateType() const { return rotateType_; }
+
 private:
 	//オブジェクトと当たった時の処理
 	void OnCollision(Collider* collider);
@@ -55,5 +60,7 @@ private:
 	Vector3 preTranslate_{};
 
 	GameColor::Color color_ = GameColor::kWhite;
+
+	CommonVariables::RotateType rotateType_ = CommonVariables::RotateType::kClockwise;
 
 };

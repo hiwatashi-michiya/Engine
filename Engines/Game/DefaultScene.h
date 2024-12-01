@@ -15,6 +15,9 @@
 #include "SceneChangeManager.h"
 #include "ParticleManager.h"
 
+/// <summary>
+/// ゲーム固有のシーン間共通の変数を持つクラス
+/// </summary>
 class DefaultScene : public BaseScene
 {
 public:
@@ -26,9 +29,9 @@ protected:
 	Input* input_ = nullptr;
 	AudioManager* audioManager_ = nullptr;
 	ParticleManager* particleManager_ = nullptr;
-
+	//現在のステージ
 	static uint32_t stageNumber_;
-
+	//最大ステージ数
 	static const uint32_t kMaxStage_ = 5;
 
 };

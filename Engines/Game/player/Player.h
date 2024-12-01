@@ -14,7 +14,9 @@
 #include "PlayerState.h"
 #include <optional>
 #include "Game/Bullet/Bullet.h"
+#include "DiveFlagObject.h"
 #include <vector>
+#include "Game/Variables/CommonVariables.h"
 
 /// <summary>
 /// プレイヤー全体の処理をまとめたクラス
@@ -24,6 +26,8 @@ class Player : public GameObject
 	friend class PlayerStay;
 	friend class PlayerMove;
 	friend class PlayerShot;
+	friend class PlayerDive;
+	friend class DiveFlagObject;
 public:
 
 	/// <summary>
@@ -33,6 +37,7 @@ public:
 		kStay, //停止
 		kMove, //移動
 		kShot, //弾発射
+		kDive, //潜る
 	};
 
 	Player();
@@ -82,6 +87,9 @@ private:
 	//他のオブジェクトに当たった時の処理
 	void OnCollision(Collider* collider);
 
+	//潜行状態でブロックにぶつかった時の移動方向回転処理
+	void RotateVelocity(const CommonVariables::CameraType& cameraType);
+
 private:
 
 	Input* input_ = nullptr;
@@ -101,6 +109,8 @@ private:
 	std::unique_ptr<PlayerStay> playerStay_;
 	std::unique_ptr<PlayerMove> playerMove_;
 	std::unique_ptr<PlayerShot> playerShot_;
+	std::unique_ptr<PlayerDive> playerDive_;
+	std::unique_ptr<DiveFlagObject> diveFlag_;
 
 	//弾リスト
 	std::vector<std::shared_ptr<PlayerBullet>> bullets_;
@@ -134,6 +144,8 @@ private:
 	float deadHeight_ = -20.0f;
 	//地面判定
 	bool onGround_ = false;
+	//ブロックに潜っている判定
+	bool isDivingBlock_ = false;
 	//テクスチャ
 	Texture* tex_ = nullptr;
 

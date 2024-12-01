@@ -169,6 +169,12 @@ Vector3 Perpendicular(const Vector3& vector);
 //反射ベクトル
 Vector3 Reflect(const Vector3& input, const Vector3& normal);
 
+//Z軸中心でベクトルを回転
+Vector3 RotateOnZAxis(const Vector3& vec, float angle);
+
+//Y軸中心でベクトルを回転
+Vector3 RotateOnYAxis(const Vector3& vec, float angle);
+
 void ClampAABB(AABB& aabb);
 
 // OBB回転

@@ -71,6 +71,7 @@ void GhostBox::Update() {
 
 	transform_->UpdateMatrix();
 
+	lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
@@ -101,6 +102,11 @@ void GhostBox::OnCollision(Collider* collider) {
 			color_ = pBullet->GetBulletColor();
 		}
 
+	}
+
+	if (collider->GetGameObject()->GetName() == "P_Dive") {
+		model_->SetColor(CreateColor(color_) + CreateColor(color_));
+		modelWire_->SetColor(CreateColor(color_) + CreateColor(color_));
 	}
 
 }

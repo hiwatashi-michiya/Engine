@@ -15,6 +15,7 @@
 #include "Game/Enemy/Enemy.h"
 #include "Game/Gimmick/ColorHolder.h"
 #include "Particle.h"
+#include "Game/Camera/FollowCamera.h"
 
 class Stage
 {
@@ -31,6 +32,8 @@ public:
 	void Draw(Camera* camera);
 
 	void LoadStage(uint32_t stageNumber);
+
+	void SetFollowCamera(FollowCamera* camera) { followCamera_ = camera; }
 
 	const std::string& kDirectoryPath_ = "./resources/Maps/";
 
@@ -66,6 +69,8 @@ private:
 		GameColor::Color color = GameColor::kWhite;
 
 	};
+
+	FollowCamera* followCamera_ = nullptr;
 
 	std::unique_ptr<Player> player_;
 

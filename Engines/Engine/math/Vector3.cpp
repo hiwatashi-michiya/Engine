@@ -5,6 +5,7 @@
 #include <cassert>
 #include <iostream>
 #include <algorithm>
+#include <numbers>
 
 // 加算
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
@@ -251,6 +252,33 @@ Vector3 Reflect(const Vector3& input, const Vector3& normal) {
 
 	return r;
 
+}
+
+Vector3 RotateOnZAxis(const Vector3& vec, float angle)
+{
+
+	float sinTheta = std::sinf(angle);
+	float cosTheta = std::cosf(angle);
+
+
+	return Vector3{
+		vec.x * cosTheta - vec.y * sinTheta,
+		vec.x * sinTheta + vec.y * cosTheta,
+		vec.z
+	};
+}
+
+Vector3 RotateOnYAxis(const Vector3& vec, float angle)
+{
+
+	float sinTheta = std::sinf(angle);
+	float cosTheta = std::cosf(angle);
+
+	return Vector3{
+		vec.x * cosTheta + vec.z * sinTheta,
+		vec.y,
+		-vec.x * sinTheta + vec.z * cosTheta
+	};
 }
 
 void ClampAABB(AABB& aabb) {

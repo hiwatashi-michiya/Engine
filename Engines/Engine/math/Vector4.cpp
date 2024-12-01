@@ -2,6 +2,16 @@
 #include <algorithm>
 
 
+Vector4 Add(const Vector4& v1, const Vector4& v2)
+{
+	return Vector4{ v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w };
+}
+
+Vector4 Subtract(const Vector4& v1, const Vector4& v2)
+{
+	return Vector4{ v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w };
+}
+
 Vector4 Lerp(const Vector4& v1, const Vector4& v2, float t)
 {
 
@@ -17,3 +27,9 @@ Vector4 Lerp(const Vector4& v1, const Vector4& v2, float t)
 	return p;
 
 }
+
+Vector4 operator+(const Vector4& v1, const Vector4& v2) { return Add(v1, v2); }
+Vector4 operator-(const Vector4& v1, const Vector4& v2) { return Subtract(v1, v2); }
+
+Vector4 operator-(const Vector4& v) { return { -v.x, -v.y, -v.z, -v.w }; }
+Vector4 operator+(const Vector4& v) { return v; }

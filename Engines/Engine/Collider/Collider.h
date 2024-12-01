@@ -8,6 +8,7 @@
 
 class BoxCollider;
 class SphereCollider;
+class PointCollider;
 
 class Collider {
 public:

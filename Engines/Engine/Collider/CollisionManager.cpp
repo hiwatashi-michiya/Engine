@@ -60,12 +60,12 @@ void CollisionManager::CheckAllCollisions() {
 void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 
 	// 衝突フィルタリング
-	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
+	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 or
 	    (colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
 	}
 
-	// 球と球の交差判定
+	// 交差判定
 	if (colliderA->CollideWith(colliderB)) {
 		// コライダーAの衝突時コールバックを呼び出す
 		colliderA->OnCollision(colliderB);
