@@ -74,6 +74,13 @@ void GhostBox::Update() {
 	lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	lineBox_->Update();
 
+	if (rotateType_ == CommonVariables::RotateType::kClockwise) {
+		model_->SetTexture("./Resources/block/clockWise.png");
+	}
+	else {
+		model_->SetTexture("./Resources/block/counterClockWise.png");
+	}
+
 	model_->SetWorldMatrix(transform_->worldMatrix_);
 	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
 

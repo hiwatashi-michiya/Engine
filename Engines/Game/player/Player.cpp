@@ -591,11 +591,11 @@ void Player::RotateVelocity(const CommonVariables::CameraType& cameraType)
 
 		//時計回り(右回り)の場合
 		if (playerDive_->rotateType_ == CommonVariables::RotateType::kClockwise) {
-			velocity_ = RotateOnZAxis(velocity_, float(std::numbers::pi * 0.5f));
+			velocity_ = RotateOnZAxis(velocity_, -float(std::numbers::pi * 0.5f));
 		}
 		//反時計回り(左回り)の場合
 		else {
-			velocity_ = RotateOnZAxis(velocity_, -float(std::numbers::pi * 0.5f));
+			velocity_ = RotateOnZAxis(velocity_, float(std::numbers::pi * 0.5f));
 		}
 
 	}
