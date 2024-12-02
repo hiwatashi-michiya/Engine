@@ -24,6 +24,10 @@ public:
 
 	bool GetIsSwitching() const { return isSwitching_; }
 
+	bool GetIsSwitched() const { return isSwitched_; }
+
+	void SetCanSwitch(bool flag) { canSwitch_ = flag; }
+
 private:
 
 	Camera* camera_ = nullptr;
@@ -33,6 +37,10 @@ private:
 	Vector3 offset_ = { 0.0f,0.0f,-60.0f };
 	//カメラ視点切り替えフラグ
 	bool isSwitching_ = false;
+	//切り替え終わった瞬間のフラグ
+	bool isSwitched_ = false;
+	//カメラの切り替えが可能かどうか
+	bool canSwitch_ = true;
 	//イージングの時間カウント
 	int32_t easingCount_ = 0;
 	//最大イージング時間

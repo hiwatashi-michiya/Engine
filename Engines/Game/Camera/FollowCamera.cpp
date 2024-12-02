@@ -27,15 +27,20 @@ void FollowCamera::Update() {
 
 #ifdef _DEBUG
 
-			if (not isSwitching_ and Input::GetInstance()->TriggerKey(DIK_C)) {
+			if (not isSwitching_ and Input::GetInstance()->TriggerKey(DIK_C) and canSwitch_) {
 				isSwitching_ = true;
 			}
 
 #endif // _DEBUG
 
 
-			if (not isSwitching_ and Input::GetInstance()->TriggerButton(Input::Button::Y)) {
+			if (not isSwitching_ and Input::GetInstance()->TriggerButton(Input::Button::Y) and canSwitch_) {
 				isSwitching_ = true;
+			}
+
+			//切り替え終わりのフラグを降ろす
+			if (isSwitched_) {
+				isSwitched_ = false;
 			}
 
 			if (isSwitching_) {
@@ -59,6 +64,7 @@ void FollowCamera::Update() {
 						cameraType_ = CommonVariables::CameraType::kAbove;
 						easingCount_ = maxEasingTime_;
 						isSwitching_ = false;
+						isSwitched_ = true;
 					}
 
 				}
@@ -73,6 +79,7 @@ void FollowCamera::Update() {
 						cameraType_ = CommonVariables::CameraType::kSide;
 						easingCount_ = 0;
 						isSwitching_ = false;
+						isSwitched_ = true;
 					}
 
 				}

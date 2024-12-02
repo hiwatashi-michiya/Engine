@@ -76,6 +76,12 @@ void Stage::Update() {
 		});
 
 	if (followCamera_) {
+
+		//カメラの切り替えが終わった瞬間且つ横から視点の場合、補正を掛ける
+		if (followCamera_->GetIsSwitched() and followCamera_->GetCameraType() == CommonVariables::CameraType::kSide) {
+			player_->CorrectionPosition();
+		}
+
 		//カメラが動いている時プレイヤーの更新を止める
 		if (not followCamera_->GetIsSwitching()) {
 			player_->Update();

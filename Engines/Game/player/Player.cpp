@@ -233,12 +233,57 @@ void Player::Update() {
 		isDivingBlock_ = false;
 	}
 
+	groundPosition_ = nullptr;
+	groundSize_ = nullptr;
+
 #ifdef _DEBUG
 
 	lineBox_->Update();
 
 #endif // _DEBUG
 
+
+}
+
+void Player::CorrectionPosition()
+{
+
+	//ポインタに値が入っている時(地面に触れている時)補正可能にする
+	if (groundPosition_ and groundSize_) {
+
+		//内側に寄せるための補正値
+		float correctionValue = 0.01f;
+
+		//奥にはみ出ている場合
+		if (collider_->collider_.center.z + collider_->collider_.size.z > groundPosition_->z + groundSize_->z) {
+
+			//以前の座標の保存
+			preTranslate_ = collider_->collider_.center;
+
+			//手前にずらす
+			collider_->collider_.center.z = groundPosition_->z + groundSize_->z - collider_->collider_.size.z - correctionValue;
+
+			//座標更新
+			transform_->translate_.z = collider_->collider_.center.z;
+			transform_->UpdateMatrix();
+
+		}
+		//手前にはみ出ている場合
+		else if (collider_->collider_.center.z - collider_->collider_.size.z < groundPosition_->z - groundSize_->z) {
+
+			//以前の座標の保存
+			preTranslate_ = collider_->collider_.center;
+
+			//奥にずらす
+			collider_->collider_.center.z = groundPosition_->z - groundSize_->z + collider_->collider_.size.z + correctionValue;
+
+			//座標更新
+			transform_->translate_.z = collider_->collider_.center.z;
+			transform_->UpdateMatrix();
+
+		}
+
+	}
 
 }
 
@@ -291,6 +336,29 @@ void Player::OnCollision(Collider* collider) {
 
 				}
 				else {
+
+					//地面のサイズと位置を記録。補正に使う
+					if (not groundPosition_ and not groundSize_) {
+
+						auto boxCollider = dynamic_cast<BoxCollider*>(collider);
+
+						groundPosition_ = &boxCollider->collider_.center;
+						groundSize_ = &boxCollider->collider_.size;
+
+					}
+					//既に記録されている場合、中心が入っているなら補正対象を更新
+					else {
+
+						auto boxCollider = dynamic_cast<BoxCollider*>(collider);
+
+						if (collider_->collider_.center.z > boxCollider->collider_.center.z - boxCollider->collider_.size.z and
+							collider_->collider_.center.z < boxCollider->collider_.center.z + boxCollider->collider_.size.z) {
+							groundPosition_ = &boxCollider->collider_.center;
+							groundSize_ = &boxCollider->collider_.size;
+						}
+
+					}
+
 					SetVelocityY(0.0f);
 					onGround_ = true;
 				}

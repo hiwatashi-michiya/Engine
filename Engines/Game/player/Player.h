@@ -74,6 +74,10 @@ public:
 	bool GetIsGoal() const { return isGoal_; }
 	//ゴール可能フラグのゲッター
 	bool GetCanGoal() const { return canGoal_; }
+	//地面フラグのゲッター
+	bool GetOnGround() const { return onGround_; }
+	//潜行状態フラグのゲッター
+	bool GetIsDivingBlock() const { return isDivingBlock_; }
 	//ゴールに必要なインクの数を設定
 	void SetGoalCount(int32_t count) { goalCount_ = count; }
 	//Velocityのゲッター
@@ -82,6 +86,16 @@ public:
 	Quaternion GetRotate() const { return transform_->rotateQuaternion_; }
 	//インクの取得数増加
 	void AddItemCount() { itemGetCount_++; }
+	//プレイヤーの手前当たり判定の座標
+	float GetMinZ() const { return collider_->collider_.center.z - collider_->collider_.size.z; }
+	//プレイヤーの奥当たり判定の座標
+	float GetMaxZ() const { return collider_->collider_.center.z + collider_->collider_.size.z; }
+	//プレイヤーの下当たり判定の座標
+	float GetMinY() const { return collider_->collider_.center.y - collider_->collider_.size.y; }
+	//プレイヤーの上当たり判定の座標
+	float GetMaxY() const { return collider_->collider_.center.y + collider_->collider_.size.y; }
+	//プレイヤーの位置補正
+	void CorrectionPosition();
 
 private:
 	//他のオブジェクトに当たった時の処理
@@ -146,6 +160,10 @@ private:
 	bool onGround_ = false;
 	//ブロックに潜っている判定
 	bool isDivingBlock_ = false;
+	//補正時に使う地面の位置
+	Vector3* groundPosition_ = nullptr;
+	//補正時に使う地面のサイズ
+	Vector3* groundSize_ = nullptr;
 	//テクスチャ
 	Texture* tex_ = nullptr;
 
