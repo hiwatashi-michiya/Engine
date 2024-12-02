@@ -295,11 +295,16 @@ void Player::OnCollision(Collider* collider) {
 		//潜る状態の時
 		if (playerDive_->isDiving_) {
 
-			if (auto pBullet = dynamic_cast<GhostBox*>(collider->GetGameObject())) {
+			if (auto pBox = dynamic_cast<GhostBox*>(collider->GetGameObject())) {
 				//同色のブロックなら当たり判定を取らずに早期リターン
-				if (pBullet->GetColor() == Stage::stageColor_) {
-					//ブロックに潜っている判定をtrueにする
-					isDivingBlock_ = true;
+				if (pBox->GetColor() == Stage::stageColor_) {
+
+					//センターがブロック内に埋まっていたら
+					if (IsCollision(pBox->GetCollider()->collider_, collider_->collider_.center)) {
+						//ブロックに潜っている判定をtrueにする
+						isDivingBlock_ = true;
+					}
+
 					return;
 				}
 

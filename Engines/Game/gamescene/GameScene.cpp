@@ -27,6 +27,8 @@ GameScene::GameScene()
 	rightSprite_.reset(Sprite::Create(rightTex_, { 1140.0f - 128.0f,660.0f - 32.0f }));
 	rbTex_ = TextureManager::GetInstance()->Load("./Resources/UI/RB.png");
 	rbSprite_.reset(Sprite::Create(rbTex_, { 1140.0f - 128.0f,660.0f - 96.0f }));
+	lbTex_ = TextureManager::GetInstance()->Load("./Resources/UI/LB.png");
+	lbSprite_.reset(Sprite::Create(lbTex_, { 140.0f - 128.0f,660.0f - 96.0f }));
 	toGameTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toGame.png");
 	toGameSprite_.reset(Sprite::Create(toGameTex_, { 340.0f - 256.0f,560.0f - 32.0f }));
 	toSelectTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toSelect.png");
@@ -281,7 +283,8 @@ void GameScene::Draw()
 		menuSprite_->Draw();
 		leftSprite_->Draw();
 		rightSprite_->Draw();
-		rbSprite_->Draw();
+		lbSprite_->Draw();
+		/*rbSprite_->Draw();*/
 
 	}
 

@@ -99,7 +99,7 @@ Material* Material::Create() {
 		dLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&dLightMap_));
 
 		dLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		dLightMap_->direction = { 0.0f,-1.0f,0.0f };
+		dLightMap_->direction = { 0.0f,1.0f,-1.0f };
 		dLightMap_->intensity = 0.0f;
 
 		dLightBuff_->Unmap(0, nullptr);
@@ -116,7 +116,7 @@ Material* Material::Create() {
 		pLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&pLightMap_));
 
 		pLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		pLightMap_->position = { 0.0f,10.0f,0.0f };
+		pLightMap_->position = { 0.0f,10.0f,-10.0f };
 		pLightMap_->intensity = 1.0f;
 		pLightMap_->radius = 200.0f;
 		pLightMap_->decay = 1.0f;

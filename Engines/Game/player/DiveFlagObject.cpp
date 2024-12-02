@@ -24,7 +24,7 @@ void DiveFlagObject::Initialize(Transform* parent, Player* player)
 
 	//プレイヤーのトランスフォームを親として、そこから正面方向に向けて当たり判定を移動
 	transform_->SetParent(parent);
-	transform_->translate_ = { 0.0f,2.0f,3.0f };
+	transform_->translate_ = { 0.0f,1.5f,3.0f };
 	transform_->UpdateMatrix();
 	collider_->collider_.center = transform_->worldMatrix_.GetTranslate();
 	collider_->collider_.size = { 1.0f,1.0f,1.0f };
@@ -91,6 +91,8 @@ void DiveFlagObject::OnCollision(Collider* collider)
 				auto blockPtr = dynamic_cast<GhostBox*>(collider->GetGameObject());
 				//プレイヤーの回転向きにセット
 				player_->playerDive_->rotateType_ = blockPtr->GetRotateType();
+				//プレイヤーの位置をコライダーに合わせる
+				player_->transform_->translate_ = transform_->worldMatrix_.GetTranslate();
 				//状態を切り替える
 				player_->behaviorRequest_ = Player::Behavior::kDive;
 			}
@@ -104,6 +106,8 @@ void DiveFlagObject::OnCollision(Collider* collider)
 				auto blockPtr = dynamic_cast<GhostBox*>(collider->GetGameObject());
 				//プレイヤーの回転向きにセット
 				player_->playerDive_->rotateType_ = blockPtr->GetRotateType();
+				//プレイヤーの位置をコライダーに合わせる
+				player_->transform_->translate_ = transform_->worldMatrix_.GetTranslate();
 				//状態を切り替える
 				player_->behaviorRequest_ = Player::Behavior::kDive;
 			}

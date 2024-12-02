@@ -6,6 +6,9 @@
 #include "ImGuiManager.h"
 #include "PostEffectDrawer.h"
 #include "UsefulFunc.h"
+#include "Game/Variables/CommonVariables.h"
+
+using namespace CommonVariables;
 
 GameColor::Color Stage::stageColor_ = GameColor::kWhite;
 
@@ -78,7 +81,7 @@ void Stage::Update() {
 	if (followCamera_) {
 
 		//カメラの切り替えが終わった瞬間且つ横から視点の場合、補正を掛ける
-		if (followCamera_->GetIsSwitched() and followCamera_->GetCameraType() == CommonVariables::CameraType::kSide) {
+		if (followCamera_->GetIsSwitched() and followCamera_->GetCameraType() == CameraType::kSide) {
 			player_->CorrectionPosition();
 		}
 
@@ -92,17 +95,9 @@ void Stage::Update() {
 		player_->Update();
 	}
 
-	for (uint32_t i = 0; auto& block : blocks_) {
+	for (auto& block : blocks_) {
 
 		block->Update();
-
-		i++;
-
-	}
-
-	for (auto& box : moveBoxes_) {
-
-		box->Update();
 
 	}
 
@@ -122,10 +117,6 @@ void Stage::Update() {
 
 	for (auto& colorSwitch : switches_) {
 		colorSwitch->Update();
-	}
-
-	for (auto& cat : copyCats_) {
-		cat->Update();
 	}
 
 	for (auto& enemy : enemies_) {
@@ -155,19 +146,36 @@ void Stage::Draw(Camera* camera) {
 	line_.diff = player_->GetPosition() - camera->GetWorldPosition();
 
 	for (auto& ring : rings_) {
-		ring->Draw(camera);
-	}
 
-	for (auto& box : moveBoxes_) {
-		box->Draw(camera);
+		if ((followCamera_->GetCameraType() == CameraType::kSide and
+			ring->GetCollider()->collider_.center.z + ring->GetCollider()->collider_.size.z > player_->GetMinZ()) or
+			(followCamera_->GetCameraType() == CameraType::kAbove and
+				ring->GetCollider()->collider_.center.y - ring->GetCollider()->collider_.size.y < player_->GetMaxY())) {
+			ring->Draw(camera);
+		}
+
 	}
 
 	for (auto& block : blocks_) {
-		block->Draw(camera);
+
+		if ((followCamera_->GetCameraType() == CameraType::kSide and
+			block->GetCollider()->collider_.center.z + block->GetCollider()->collider_.size.z > player_->GetMinZ()) or
+			(followCamera_->GetCameraType() == CameraType::kAbove and
+				block->GetCollider()->collider_.center.y - block->GetCollider()->collider_.size.y < player_->GetMaxY())) {
+			block->Draw(camera);
+		}
+
 	}
 
 	for (auto& ghostBox : ghostBoxes_) {
-		ghostBox->Draw(camera);
+
+		if ((followCamera_->GetCameraType() == CameraType::kSide and
+			ghostBox->GetCollider()->collider_.center.z + ghostBox->GetCollider()->collider_.size.z > player_->GetMinZ()) or
+			(followCamera_->GetCameraType() == CameraType::kAbove and
+				ghostBox->GetCollider()->collider_.center.y - ghostBox->GetCollider()->collider_.size.y < player_->GetMaxY())) {
+			ghostBox->Draw(camera);
+		}
+		
 	}
 
 	for (auto& warp : warps_) {
@@ -187,14 +195,17 @@ void Stage::Draw(Camera* camera) {
 	}
 
 	for (auto& goal : goals_) {
-		goal->Draw(camera);
+
+		if ((followCamera_->GetCameraType() == CameraType::kSide and
+			goal->GetCollider()->collider_.center.z + goal->GetCollider()->collider_.size.z > player_->GetMinZ()) or
+			(followCamera_->GetCameraType() == CameraType::kAbove and
+				goal->GetCollider()->collider_.center.y - goal->GetCollider()->collider_.size.y < player_->GetMaxY())) {
+			goal->Draw(camera);
+		}
+
 	}
 
 	player_->Draw(camera);
-
-	for (auto& cat : copyCats_) {
-		cat->Draw(camera);
-	}
 
 	stageParticle_->Draw(camera);
 

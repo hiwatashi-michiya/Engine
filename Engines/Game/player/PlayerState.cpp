@@ -59,9 +59,9 @@ void PlayerStay::UpdateStay(Player& player)
 		player.behaviorRequest_ = Player::Behavior::kMove;
 	}
 	//RBボタンで弾発射
-	else if (player.input_->TriggerButton(Input::Button::RB)) {
+	/*else if (player.input_->TriggerButton(Input::Button::RB)) {
 		player.behaviorRequest_ = Player::Behavior::kShot;
-	}
+	}*/
 	
 
 }
@@ -121,10 +121,10 @@ void PlayerMove::UpdateMove(Player& player)
 		(fabsf(player.input_->GetStickValue(Input::LY)) > 0 and FollowCamera::GetCameraType() == CameraType::kAbove) or
 		fabsf(moveVector.x) > 0.0f or fabsf(moveVector.z) > 0.0f) {
 
-		//Aボタンで弾発射
-		if (player.input_->TriggerButton(Input::Button::RB)) {
+		//弾発射
+		/*if (player.input_->TriggerButton(Input::Button::RB)) {
 			player.behaviorRequest_ = Player::Behavior::kShot;
-		}
+		}*/
 
 		//X移動量
 		if (fabsf(player.input_->GetStickValue(Input::LX)) > 0) {
@@ -140,9 +140,9 @@ void PlayerMove::UpdateMove(Player& player)
 		}
 
 		//カメラの向きに合わせて移動方向を修正
-		if (player.camera_) {
+		/*if (player.camera_) {
 			moveVector = TransformNormal(Normalize(moveVector), player.camera_->matRotate_);
-		}
+		}*/
 
 		//正規化し、速度を掛ける
 		moveVector = Normalize(Vector3{ moveVector.x,0.0f,moveVector.z });

@@ -50,7 +50,7 @@ void Goal::Update() {
 
 			if (particle_->transforms_[i]->scale_.y <= 0.0f) {
 
-				particle_->colors_[i] = CreateColor(Stage::stageColor_);
+				particle_->colors_[i] = { 1.0f,1.0f,0.0f,1.0f };
 				particle_->velocities_[i] = { float((rand() % 40 - 20) * 0.003f),float((rand() % 40 + 20) * 0.003f), float((rand() % 40 - 20) * 0.003f) };
 				particle_->transforms_[i]->translate_ = transform_->translate_ + Vector3{ float((rand() % 3 - 1) * 0.5f),0.0f, float((rand() % 3 - 1) * 0.5f) };
 				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
@@ -66,7 +66,7 @@ void Goal::Update() {
 		for (int32_t i = 0; i < 32; i++) {
 
 			if (particle_->transforms_[i]->scale_.y > 0.0f) {
-				particle_->colors_[i] = CreateColor(Stage::stageColor_);
+				particle_->colors_[i] = { 1.0f,1.0f,0.0f,1.0f };
 				particle_->transforms_[i]->translate_ += particle_->velocities_[i];
 				particle_->transforms_[i]->rotateQuaternion_ = particle_->transforms_[i]->rotateQuaternion_ * ConvertFromEuler(particle_->velocities_[i]);
 				particle_->transforms_[i]->scale_ -= {0.02f, 0.02f, 0.02f};
@@ -82,12 +82,26 @@ void Goal::Update() {
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
 
+	transform_->rotate_.y += 0.04f;
+
+	if (transform_->rotate_.y > 6.28f) {
+		transform_->rotate_.y = 0.0f;
+	}
+
+	transform_->rotateQuaternion_ = ConvertFromEuler(transform_->rotate_);
+
 	transform_->UpdateMatrix();
 
 	lineBox_->Update();
 
 	model_->SetWorldMatrix(transform_->worldMatrix_);
-	model_->SetColor(CreateColor(Stage::stageColor_));
+
+	if (isActiveEffect_) {
+		model_->SetColor({ 1.0f,1.0f,0.0f,1.0f });
+	}
+	else {
+		model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+	}
 
 }
 
