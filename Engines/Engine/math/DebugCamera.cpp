@@ -26,13 +26,13 @@ void DebugCamera::Update() {
 
 		if (input_->GetMouseMove().x != 0.0f) {
 
-			camera_->rotation_.y += input_->GetMouseMove().x * 0.001f;
+			camera_->rotation_.y += input_->GetMouseMove().x * rotateSensi_;
 
 		}
 
 		if (input_->GetMouseMove().y != 0.0f) {
 
-			camera_->rotation_.x += input_->GetMouseMove().y * 0.001f;
+			camera_->rotation_.x += input_->GetMouseMove().y * rotateSensi_;
 
 		}
 
@@ -42,13 +42,13 @@ void DebugCamera::Update() {
 
 		if (input_->GetMouseMove().x != 0.0f) {
 
-			camera_->position_.x -= input_->GetMouseMove().x * 0.05f;
+			camera_->position_ -= camera_->matWorld_.GetXAxis() * input_->GetMouseMove().x * moveSensi_;
 
 		}
 
 		if (input_->GetMouseMove().y != 0.0f) {
 
-			camera_->position_.y -= input_->GetMouseMove().y * 0.05f;
+			camera_->position_ -= camera_->matWorld_.GetYAxis() * input_->GetMouseMove().y * moveSensi_;
 
 		}
 
@@ -56,7 +56,7 @@ void DebugCamera::Update() {
 
 	if (input_->GetMouseWheel() != 0.0f) {
 
-		camera_->position_.z += float(input_->GetMouseWheel()) * 0.02f;
+		camera_->position_+= camera_->matWorld_.GetZAxis() * float(input_->GetMouseWheel()) * moveSensi_;
 
 	}
 

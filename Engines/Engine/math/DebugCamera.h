@@ -28,6 +28,11 @@ private:
 
 	std::shared_ptr<Camera> camera_;
 
+	//回転感度
+	float rotateSensi_ = 0.003f;
+	//移動感度
+	float moveSensi_ = 0.10f;
+
 };
 
 
