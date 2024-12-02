@@ -897,6 +897,16 @@ void UniqueEditor::Load(const std::string& filename) {
 					//Vector3以外の場合
 					else {
 
+						if (itemNameObject == "RotateRight") {
+
+							if (auto ghostBoxPtr = dynamic_cast<GhostBoxObject*>(object.get())) {
+
+								ghostBoxPtr->isRotateRight_ = itItemObject->get<bool>();
+
+							}
+
+						}
+
 						//名前がpositionだった場合、positionを登録
 						if (itemNameObject == "position") {
 
