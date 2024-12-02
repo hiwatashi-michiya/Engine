@@ -250,6 +250,7 @@ void PlayerDive::InitializeDive(Player& player)
 	player.isDivingBlock_ = true;
 	//プレイヤーの向きからvelocityを設定
 	player.velocity_ = CalcDiveVelocity(player.transform_->worldMatrix_.GetZAxis()) * player.speed_ * 2.0f;
+	player.collider_->collider_.size = { 1.0f,1.0f,1.0f };
 
 }
 
@@ -268,6 +269,7 @@ void PlayerDive::UpdateDive(Player& player)
 	//潜行していなかったら停止状態に移行
 	else {
 		player.velocity_ = { 0.0f,0.0f,0.0f };
+		player.collider_->collider_.size = { 1.0f,1.0f,1.0f };
 		player.behaviorRequest_ = Player::Behavior::kStay;
 	}
 

@@ -112,6 +112,13 @@ void GhostBox::OnCollision(Collider* collider) {
 	}
 
 	if (collider->GetGameObject()->GetName() == "P_Dive") {
+
+		auto boxCollider = dynamic_cast<BoxCollider*>(collider);
+
+		if (not IsWrapped(collider_->collider_, boxCollider->collider_)) {
+			return;
+		}
+
 		model_->SetColor(CreateColor(color_) + CreateColor(color_));
 		modelWire_->SetColor(CreateColor(color_) + CreateColor(color_));
 	}

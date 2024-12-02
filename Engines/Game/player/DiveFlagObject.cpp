@@ -24,10 +24,10 @@ void DiveFlagObject::Initialize(Transform* parent, Player* player)
 
 	//プレイヤーのトランスフォームを親として、そこから正面方向に向けて当たり判定を移動
 	transform_->SetParent(parent);
-	transform_->translate_ = { 0.0f,2.0f,1.0f };
+	transform_->translate_ = { 0.0f,2.0f,3.0f };
 	transform_->UpdateMatrix();
 	collider_->collider_.center = transform_->worldMatrix_.GetTranslate();
-	collider_->collider_.size = { 0.011f,0.011f,0.011f };
+	collider_->collider_.size = { 1.0f,1.0f,1.0f };
 
 	//コライダーのセット
 	name_ = "P_Dive";
@@ -72,6 +72,12 @@ void DiveFlagObject::OnCollision(Collider* collider)
 {
 
 	if (collider->GetGameObject()->GetName() == "ghostBox") {
+
+		auto boxCollider = dynamic_cast<BoxCollider*>(collider);
+
+		if (not IsWrapped(boxCollider->collider_, collider_->collider_)) {
+			return;
+		}
 
 		//プレイヤーがあるとき且つ停止か移動状態の時
 		if (player_ and

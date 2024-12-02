@@ -66,7 +66,7 @@ void Player::Initialize() {
 	particle_->SetColor(CreateColor(Stage::stageColor_));
 
 	collider_->collider_.center = transform_->translate_;
-	collider_->collider_.size = { 0.5f,0.5f,0.5f };
+	collider_->collider_.size = { 1.0f,1.0f,1.0f };
 
 	preTranslate_ = collider_->collider_.center;
 

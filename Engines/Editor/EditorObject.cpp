@@ -481,6 +481,7 @@ void WarpObject::Draw(Camera* camera) {
 void GhostBoxObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
+	model_->SetTexture("./Resources/block/clockWise.png");
 	model_->SetColor(CreateColor(color_));
 	objName_ = name;
 	tag_ = "ghostBox";

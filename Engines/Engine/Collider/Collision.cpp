@@ -3,6 +3,7 @@
 #include <math.h>
 #include <algorithm>
 #include <cassert>
+#include <vector>
 
 bool IsCollision(const Sphere& s1, const Sphere& s2) {
 
@@ -440,5 +441,62 @@ bool IsCollision(const OBB& obb1, const OBB& obb2) {
 
 	return true;
 
+}
+
+bool IsCollision(const OBB& obb, const Vector3& point)
+{
+
+	Vector3 v = point - obb.center;
+
+	//各軸についてチェック
+	for (int32_t i = 0; i < 3; i++) {
+		//射影の絶対値計算
+		float proj = Dot(v, obb.orientations[i]);
+
+		if (i == 0) {
+			if (std::abs(proj) > obb.size.x) {
+				return false;
+			}
+		}
+		else if (i == 1) {
+			if (std::abs(proj) > obb.size.y) {
+				return false;
+			}
+		}
+		else {
+			if (std::abs(proj) > obb.size.z) {
+				return false;
+			}
+		}
+
+	}
+
+	return true;
+}
+
+bool IsWrapped(const OBB& outSide, const OBB& inside)
+{
+
+	std::vector<Vector3> points = {
+		{inside.center.x - inside.size.x, inside.center.y - inside.size.y, inside.center.z - inside.size.z},
+		{inside.center.x - inside.size.x, inside.center.y - inside.size.y, inside.center.z + inside.size.z},
+		{inside.center.x - inside.size.x, inside.center.y + inside.size.y, inside.center.z - inside.size.z},
+		{inside.center.x - inside.size.x, inside.center.y + inside.size.y, inside.center.z + inside.size.z},
+		{inside.center.x + inside.size.x, inside.center.y - inside.size.y, inside.center.z - inside.size.z},
+		{inside.center.x + inside.size.x, inside.center.y - inside.size.y, inside.center.z + inside.size.z},
+		{inside.center.x + inside.size.x, inside.center.y + inside.size.y, inside.center.z - inside.size.z},
+		{inside.center.x + inside.size.x, inside.center.y + inside.size.y, inside.center.z + inside.size.z},
+	};
+
+	//全ての点との当たり判定について
+	for (int32_t i = 0; i < points.size(); i++) {
+		//1つでも外にあれば完全に内包されていない
+		if (not IsCollision(outSide, points[i])) {
+			return false;
+		}
+
+	}
+
+	return true;
 }
 

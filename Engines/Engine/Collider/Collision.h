@@ -45,3 +45,9 @@ bool IsCollision(const Segment& segment, const OBB& obb);
 
 //OBB同士の当たり判定
 bool IsCollision(const OBB& obb1, const OBB& obb2);
+
+//OBBと点の当たり判定
+bool IsCollision(const OBB& obb, const Vector3& point);
+
+//OBBが完全にもう一方のOBBに内包しているか
+bool IsWrapped(const OBB& outSide, const OBB& inside);
