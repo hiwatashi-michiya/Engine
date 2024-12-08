@@ -133,14 +133,6 @@ void Player::Update() {
 	//死んでいない時の処理
 	if (!isDead_) {
 
-		//リングを規定数集めていたらゴール可能
-		if (itemGetCount_ >= goalCount_) {
-			canGoal_ = true;
-		}
-		else {
-			canGoal_ = false;
-		}
-
 		//切り替えの受付があったら状態遷移
 		if (behaviorRequest_) {
 

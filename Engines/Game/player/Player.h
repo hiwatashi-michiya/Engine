@@ -74,6 +74,8 @@ public:
 	bool GetIsGoal() const { return isGoal_; }
 	//ゴール可能フラグのゲッター
 	bool GetCanGoal() const { return canGoal_; }
+	//ゴール可能フラグセッター
+	void SetCanGoal(bool flag) { canGoal_ = flag; }
 	//地面フラグのゲッター
 	bool GetOnGround() const { return onGround_; }
 	//潜行状態フラグのゲッター

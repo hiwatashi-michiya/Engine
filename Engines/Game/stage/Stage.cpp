@@ -78,6 +78,12 @@ void Stage::Update() {
 
 		});
 
+	//ゴール可能の状態でない時
+	if (not player_->GetCanGoal()) {
+		//プレイヤーがゴール可能か確認
+		SetPlayerCanGoal();
+	}
+
 	if (followCamera_) {
 
 		//カメラの切り替えが終わった瞬間且つ横から視点の場合、補正を掛ける
@@ -486,5 +492,21 @@ void Stage::LoadStage(uint32_t stageNumber) {
 
 	//プレイヤーのゴールカウントを設定
 	player_->SetGoalCount(int32_t(rings_.size()));
+
+}
+
+void Stage::SetPlayerCanGoal()
+{
+
+	for (auto& ghostBox : ghostBoxes_) {
+
+		if (ghostBox->IsWhite()) {
+			player_->SetCanGoal(false);
+			return;
+		}
+
+	}
+
+	player_->SetCanGoal(true);
 
 }

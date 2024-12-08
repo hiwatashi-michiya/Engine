@@ -51,8 +51,8 @@ public:
 	void SetRotateType(CommonVariables::RotateType type) { rotateType_ = type; }
 	//色切り替え演出セット
 	void StartColorChange(GameColor::Color color);
-	//色が白以外かどうか
-	bool IsNotWhite() const { return color_ != GameColor::Color::kWhite; }
+	//色が白かどうか
+	bool IsWhite() const { return color_ == GameColor::Color::kWhite; }
 
 private:
 	//オブジェクトと当たった時の処理

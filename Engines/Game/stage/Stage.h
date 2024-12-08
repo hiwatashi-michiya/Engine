@@ -41,7 +41,7 @@ public:
 
 private:
 
-
+	void SetPlayerCanGoal();
 
 private:
 
