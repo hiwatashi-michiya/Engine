@@ -189,7 +189,14 @@ void Stage::Draw(Camera* camera) {
 	}
 
 	for (auto& colorSwitch : switches_) {
-		colorSwitch->Draw(camera);
+
+		if ((followCamera_->GetCameraType() == CameraType::kSide and
+			colorSwitch->GetCollider()->collider_.center.z + colorSwitch->GetCollider()->collider_.size.z > player_->GetMinZ()) or
+			(followCamera_->GetCameraType() == CameraType::kAbove and
+				colorSwitch->GetCollider()->collider_.center.y - colorSwitch->GetCollider()->collider_.size.y < player_->GetMaxY())) {
+			colorSwitch->Draw(camera);
+		}
+
 	}
 
 	for (auto& enemy : enemies_) {
@@ -498,9 +505,19 @@ void Stage::LoadStage(uint32_t stageNumber) {
 void Stage::SetPlayerCanGoal()
 {
 
+	//1つでも白かったらゴールフラグを立たせない
 	for (auto& ghostBox : ghostBoxes_) {
 
 		if (ghostBox->IsWhite()) {
+			player_->SetCanGoal(false);
+			return;
+		}
+
+	}
+	//1つでも白かったらゴールフラグを立たせない
+	for (auto& block : blocks_) {
+
+		if (block->IsWhite()) {
 			player_->SetCanGoal(false);
 			return;
 		}

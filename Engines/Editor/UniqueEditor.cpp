@@ -635,7 +635,23 @@ void UniqueEditor::Edit() {
 
 		if (selectObject_ < mapObjData_.size()) {
 			ImGui::Begin("Current Object");
+			
 			mapObjData_[selectObject_]->Edit();
+
+			if (ImGui::Button("Copy")) {
+				CopyObject(mapObjData_[selectObject_]);
+			}
+
+			if (ImGui::Button("Delete")) {
+
+				mapObjData_[selectObject_]->isDelete_ = true;
+
+				if (selectObject_ > 0) {
+					selectObject_--;
+				}
+
+			}
+
 			ImGui::End();
 		}
 
@@ -1203,6 +1219,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1213,6 +1230,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1223,6 +1241,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
@@ -1234,6 +1253,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
@@ -1245,6 +1265,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
@@ -1256,11 +1277,13 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 
 		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
 			tmpObject->transformB_->translate_ = warpPtr->transformB_->translate_;
 			tmpObject->transformB_->rotate_ = warpPtr->transformB_->rotate_;
 			tmpObject->transformB_->scale_ = warpPtr->transformB_->scale_;
+			tmpObject->transform_->UpdateMatrix();
 		}
 
 		tmpObject->color_ = object->color_;
@@ -1275,6 +1298,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
@@ -1286,6 +1310,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
@@ -1297,6 +1322,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
@@ -1308,6 +1334,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
@@ -1319,6 +1346,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1329,6 +1357,7 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
+		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 

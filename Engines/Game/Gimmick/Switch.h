@@ -21,6 +21,8 @@ public:
 	void Draw(Camera* camera);
 	//色セット
 	void SetColor(GameColor::Color color) { color_ = color; }
+	//コライダー取得
+	BoxCollider* GetCollider() { return collider_.get(); }
 
 private:
 	//他オブジェクトと当たった時の処理

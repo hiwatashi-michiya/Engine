@@ -4,8 +4,8 @@
             "block": {
                 "color": 0,
                 "position": [
-                    8.0,
-                    -4.0,
+                    24.0,
+                    -5.0,
                     0.0
                 ],
                 "quaternion": [
@@ -25,28 +25,8 @@
                 "color": 0,
                 "position": [
                     0.0,
-                    -4.0,
+                    -5.0,
                     0.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "block"
-            },
-            "block10": {
-                "color": 0,
-                "position": [
-                    32.0,
-                    -4.0,
-                    8.0
                 ],
                 "quaternion": [
                     0.0,
@@ -64,9 +44,9 @@
             "block2": {
                 "color": 0,
                 "position": [
-                    40.0,
-                    -4.0,
-                    8.0
+                    8.0,
+                    -5.0,
+                    0.0
                 ],
                 "quaternion": [
                     0.0,
@@ -84,48 +64,8 @@
             "block3": {
                 "color": 0,
                 "position": [
-                    48.0,
-                    -4.0,
-                    8.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "block"
-            },
-            "block4": {
-                "color": 0,
-                "position": [
-                    56.0,
-                    4.0,
-                    8.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "block"
-            },
-            "block5": {
-                "color": 0,
-                "position": [
-                    24.0,
-                    4.0,
+                    16.0,
+                    -5.0,
                     0.0
                 ],
                 "quaternion": [
@@ -141,11 +81,12 @@
                 ],
                 "tag": "block"
             },
-            "block6": {
+            "ghostBox": {
+                "RotateRight": true,
                 "color": 0,
                 "position": [
                     16.0,
-                    -4.0,
+                    3.0,
                     0.0
                 ],
                 "quaternion": [
@@ -159,54 +100,14 @@
                     4.0,
                     4.0
                 ],
-                "tag": "block"
-            },
-            "block8": {
-                "color": 0,
-                "position": [
-                    24.0,
-                    -4.0,
-                    8.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "block"
-            },
-            "block9": {
-                "color": 0,
-                "position": [
-                    16.0,
-                    -4.0,
-                    8.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "block"
+                "tag": "ghostBox"
             },
             "goal": {
                 "color": 0,
                 "position": [
-                    48.0,
-                    1.0,
-                    8.0
+                    24.0,
+                    0.0,
+                    0.0
                 ],
                 "quaternion": [
                     0.0,
@@ -224,28 +125,28 @@
             "player": {
                 "color": 0,
                 "position": [
-                    -2.0,
                     0.0,
+                    -1.4901161193847656e-08,
                     0.0
                 ],
                 "quaternion": [
+                    -0.7068251967430115,
                     0.0,
                     0.0,
-                    0.0,
-                    1.0
+                    0.7073882222175598
                 ],
                 "scale": [
                     1.0,
-                    1.0,
-                    1.0
+                    0.9998276829719543,
+                    0.9998276829719543
                 ],
                 "tag": "player"
             },
             "switch": {
                 "color": 1,
                 "position": [
-                    2.0,
-                    1.0,
+                    8.0,
+                    0.0,
                     0.0
                 ],
                 "quaternion": [

@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Collider.h"
 #include "LineDrawer.h"
+#include "Game/ColorSetter/ColorSetter.h"
 
 /// <summary>
 /// プレイヤーの足場や壁となるブロックのクラス
@@ -34,6 +35,15 @@ public:
 	const Vector3& GetScale() { return transform_->scale_; }
 	//コライダー取得
 	BoxCollider* GetCollider() { return collider_.get(); }
+	//色切り替え演出セット
+	void StartColorChange(GameColor::Color color);
+	//色が白かどうか
+	bool IsWhite() const { return color_ == GameColor::Color::kWhite; }
+
+private:
+
+	//オブジェクトと当たった時の処理
+	void OnCollision(Collider* collider);
 
 private:
 
@@ -48,5 +58,9 @@ private:
 	int32_t lightCount_ = 0;
 
 	int32_t setCount_;
+
+	GameColor::Color color_ = GameColor::kWhite;
+
+	GameColor::Color secondColor_ = GameColor::kWhite;
 
 };
