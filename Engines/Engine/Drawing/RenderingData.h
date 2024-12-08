@@ -22,6 +22,8 @@ struct MaterialData
 {
 	Vector4 color;
 	
+	Vector4 secondColor;
+
 	int32_t enableLighting;
 	float shininess; //光沢度
 

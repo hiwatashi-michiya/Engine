@@ -123,9 +123,10 @@ private:
 	DIMOUSESTATE2 mouse_;
 	DIMOUSESTATE2 preMouse_;
 	HWND hwnd_;
-	bool isGetController_ = false;
 
 	Vector2 mousePosition_{};
+
+	bool isGetController_ = false;
 
 };
 

@@ -89,54 +89,56 @@ private:
 	std::array<std::string, kMaxObjects_> objectName_ = 
 	{ "player", "block", "moveBox", "paint", "goal", "warp", "ghostBox", "switch", "copyCat", "enemy", "colorHolder"};
 
+	char name_[256];
+
+	char fileName_[256];
+
+	std::unordered_map<std::string, std::string> meshMap_;
+
+	std::unordered_map<std::string, int32_t> meshNumMap_;
+
+	std::string currentObject_;
+
+	//Undoできるコマンドリスト
+	std::stack<std::shared_ptr<ICommand>> undoCommands_;
+	//Redoできるコマンドリスト
+	std::stack<std::shared_ptr<ICommand>> redoCommands_;
+
+	std::vector<std::shared_ptr<MapObject>> mapObjData_;
+
+	std::vector<std::string> meshNames_;
+
+	std::vector<std::string> mapNames_;
+
+	Segment mouseSegment_{};
+
+	Vector3 spawnPoint_ = { 0.0f,0.0f,0.0f };
+
+	bool preIsMove_ = false;
+
+	//オブジェクトの動きを記録するフラグ
+	bool isRecordMove_ = false;
+
+	bool isLoading_ = false;
+
+	bool isMove_ = false;
+
+	std::unique_ptr<Line> mouseLine_;
+
+	//古いトランスフォームの記録
+	std::unique_ptr<Transform> oldTransform_;
+
 	Camera* camera_ = nullptr;
 
 	Input* input_ = nullptr;
 
 	GlobalVariables* globalVariables_ = nullptr;
 
-	std::vector<std::shared_ptr<MapObject>> mapObjData_;
-
-	std::string currentObject_;
+	int32_t selectObject_ = 0;
 
 	bool isOpenFile_ = false;
 
-	Vector3 spawnPoint_ = { 0.0f,0.0f,0.0f };
-
-	char name_[256];
-
-	char fileName_[256];
-
 	bool isSave_ = true;
-
-	bool isLoading_ = false;
-
-	bool isMove_ = false;
-
-	bool preIsMove_ = false;
-
-	std::vector<std::string> meshNames_;
-
-	std::unordered_map<std::string, std::string> meshMap_;
-
-	std::unordered_map<std::string, int32_t> meshNumMap_;
-
-	std::vector<std::string> mapNames_;
-
-	std::unique_ptr<Line> mouseLine_;
-
-	int32_t selectObject_ = 0;
-
-	Segment mouseSegment_{};
-
-	//Undoできるコマンドリスト
-	std::stack<std::shared_ptr<ICommand>> undoCommands_;
-	//Redoできるコマンドリスト
-	std::stack<std::shared_ptr<ICommand>> redoCommands_;
-	//オブジェクトの動きを記録するフラグ
-	bool isRecordMove_ = false;
-	//古いトランスフォームの記録
-	std::unique_ptr<Transform> oldTransform_;
 
 private:
 

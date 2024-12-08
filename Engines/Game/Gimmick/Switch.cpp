@@ -34,35 +34,6 @@ void Switch::Update() {
 
 	model_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 
-	//ステージの色と違ったらスイッチを使用できる
-	if (color_ != Stage::stageColor_ and countTimer_ <= 0) {
-		
-		if (model_->material_->constMap_->threshold > 0.0f) {
-
-			model_->material_->constMap_->threshold -= 0.05f;
-
-			if (model_->material_->constMap_->threshold < 0.0f) {
-				model_->material_->constMap_->threshold = 0.0f;
-			}
-
-		}
-		
-	}
-	//同じだったら効果なし
-	else {
-		
-		if (model_->material_->constMap_->threshold < 1.0f) {
-
-			model_->material_->constMap_->threshold += 0.05f;
-
-			if (model_->material_->constMap_->threshold > 1.0f) {
-				model_->material_->constMap_->threshold = 1.0f;
-			}
-
-		}
-
-	}
-
 	//クールタイムカウント
 	if (countTimer_ > 0) {
 		countTimer_--;
@@ -86,7 +57,6 @@ void Switch::Update() {
 void Switch::Draw(Camera* camera) {
 
 	model_->Draw(camera);
-	modelWire_->Draw(camera);
 	lineBox_->Draw(camera);
 
 }

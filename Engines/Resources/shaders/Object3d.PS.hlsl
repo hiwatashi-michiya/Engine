@@ -97,6 +97,8 @@ PixelShaderOutput main(VertexShaderOutput input) {
     float32_t density = 20.0f;
     float32_t pn = 1.0f;
     
+    float32_t4 usingColor = gMaterial.color;
+    
     //ノイズを利用する場合
     if (gMaterial.isActiveNoise != 0)
     {
@@ -104,7 +106,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
     }
     
 	//textureのα値が0.5以下のときにPixelを棄却
-    if (textureColor.a <= 0.5)
+    if (textureColor.a <= 0.1)
     {
         discard;
     }
@@ -114,7 +116,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
     
     if (mask <= gMaterial.Threshold)
     {
-        discard;
+        usingColor = gMaterial.secondColor;
     }
     
 	if (gMaterial.enableLighting != 0) { //Lightingする場合
@@ -141,7 +143,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
     
             //拡散反射
             diffuseDirectionalLight =
-            gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
+            usingColor.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
         
             //鏡面反射
             specularDirectionalLight =
@@ -171,7 +173,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
     
             //拡散反射
             diffusePointLight =
-            gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity * factor;
+            usingColor.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity * factor;
         
             //鏡面反射
             specularPointLight =
@@ -181,16 +183,22 @@ PixelShaderOutput main(VertexShaderOutput input) {
         
         //拡散反射+鏡面反射
         output.color.rgb = (diffuseDirectionalLight + specularDirectionalLight + diffusePointLight + specularPointLight) * pn;
-        output.color.a = gMaterial.color.a * textureColor.a;
+        output.color.a = usingColor.a * textureColor.a;
     }
 	else { //Lightingしない場合
-		output.color = gMaterial.color * textureColor;
-	}
+        output.color = usingColor * textureColor;
+    }
     
-    //dissolve : edge
-    float32_t edge = 1.0f - smoothstep(gMaterial.Threshold, gMaterial.Threshold + 0.03f, mask);
-    //Edgeに近いほど指定した色を加算
-    output.color.rgb += edge * gMaterial.edgeColor;
+    if (mask <= gMaterial.Threshold + 0.03f
+        && mask >= gMaterial.Threshold)
+    {
+      
+        //dissolve : edge
+        float32_t edge = 1.0f - smoothstep(gMaterial.Threshold, gMaterial.Threshold + 0.03f, mask);
+        //Edgeに近いほど指定した色を加算
+        output.color.rgb += edge * gMaterial.edgeColor;
+        
+    }
     
 	//output.colorのα値が0のときにPixelを棄却
     if (output.color.a == 0.0)

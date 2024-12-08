@@ -3,6 +3,7 @@ struct Material
 {
 	
     float32_t4 color;
+    float32_t4 secondColor;
     
     int32_t enableLighting;
     float32_t shininess;

@@ -150,6 +150,7 @@ void GameScene::Update() {
 		resetCount_ = 60;
 	}
 
+	//ポーズ状態の時
 	if (isPause_ and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 
 
@@ -174,46 +175,55 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
+	//シーン切り替え中は更新せずに早期リターン
+	if (SceneChangeManager::GetInstance()->IsSceneChange()) {
+		return;
+	}
 	
-
-	if (isPause_ and !SceneChangeManager::GetInstance()->IsSceneChange()) {
+	//ポーズ状態の時
+	if (isPause_ and not SceneChangeManager::GetInstance()->IsSceneChange()) {
 
 		PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
 
-		if (input_->TriggerButton(Input::Button::START) || input_->TriggerButton(Input::Button::B)) {
+		if (input_->TriggerButton(Input::Button::START) or input_->TriggerButton(Input::Button::B)) {
 			isPause_ = false;
 		}
 
-		if (input_->TriggerButton(Input::Button::A) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		if (input_->TriggerButton(Input::Button::A) and not SceneChangeManager::GetInstance()->IsSceneChange()) {
 			SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 			SceneChangeManager::GetInstance()->SceneChangeStart();
 		}
 
-	}
-	else if(!SceneChangeManager::GetInstance()->IsSceneChange()) {
+		return;
 
+	}
+
+	//通常更新
+	{
+
+		//スタートボタンを押したらポーズ画面
 		if (input_->TriggerButton(Input::Button::START)) {
 			isPause_ = true;
 		}
 
+		//プレイヤーがゴールした時
 		if (stage_->GetPlayer()->GetIsGoal()) {
 
+			//ステージが続いていたら次のステージ
 			if (stageNumber_ < kMaxStage_ and stageNumber_ > 0) {
 				stageNumber_++;
 				SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
 				SceneChangeManager::GetInstance()->SceneChangeStart();
 			}
+			//ステージが続いていない場合はセレクト画面へ遷移
 			else {
 				SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 				SceneChangeManager::GetInstance()->SceneChangeStart();
 			}
 
-			/*stage_->Initialize();
-			stage_->LoadStage(stageNumber_);
-			resetCount_ = 60;*/
-
 		}
 
+		//死んだ場合
 		if (stage_->GetPlayer()->GetIsDead()) {
 
 			resetCount_--;
@@ -248,9 +258,9 @@ void GameScene::Update() {
 		skyDome_->SetColor(CreateColor(stage_->stageColor_));
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
-		skyDomeNet_->SetColor(CreateColor(ColorHolder::GetHolderColor()));
+		/*skyDomeNet_->SetColor(CreateColor(ColorHolder::GetHolderColor()));
 		skyDomeNetTransform_->UpdateMatrix();
-		skyDomeNet_->SetWorldMatrix(skyDomeNetTransform_->worldMatrix_);
+		skyDomeNet_->SetWorldMatrix(skyDomeNetTransform_->worldMatrix_);*/
 		skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 
 		PostEffectDrawer::GetInstance()->SetCamera(camera_.get());
@@ -267,7 +277,7 @@ void GameScene::Draw()
 {
 
 	skyDome_->Draw(camera_.get());
-	skyDomeNet_->Draw(camera_.get());
+	/*skyDomeNet_->Draw(camera_.get());*/
 
 	stage_->Draw(camera_.get());
 

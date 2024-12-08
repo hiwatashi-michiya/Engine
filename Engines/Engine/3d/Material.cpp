@@ -76,12 +76,13 @@ Material* Material::Create() {
 		constBuff_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
 
 		constMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		constMap_->secondColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		constMap_->enableLighting = true;
 		constMap_->shininess = 50.0f;
 		constMap_->threshold = 0.0f;
 		constMap_->edgeValue = 0.0f;
 		constMap_->edgeColor = { 1.0f,1.0f,1.0f };
-		constMap_->isActiveNoise = true;
+		constMap_->isActiveNoise = false;
 		constMap_->uvTransform = MakeIdentity4x4();
 
 		//アンマップ
@@ -116,7 +117,7 @@ Material* Material::Create() {
 		pLightBuff_->Map(0, nullptr, reinterpret_cast<void**>(&pLightMap_));
 
 		pLightMap_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		pLightMap_->position = { 0.0f,10.0f,-10.0f };
+		pLightMap_->position = { 0.0f,50.0f,-10.0f };
 		pLightMap_->intensity = 1.0f;
 		pLightMap_->radius = 200.0f;
 		pLightMap_->decay = 1.0f;

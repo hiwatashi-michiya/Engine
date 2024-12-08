@@ -145,20 +145,13 @@ void UniqueEditor::EditTransform()
 
 			}
 			else {
-				mapObjData_[i]->lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+				mapObjData_[i]->lineBox_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
 			}
 
 			matrices.push_back(tmpMatrix);
 
 		}
 
-	}
-
-	if (isHit) {
-		mouseLine_->color_ = { 1.0f,0.0f,0.0f,1.0f };
-	}
-	else {
-		mouseLine_->color_ = { 1.0f,1.0f,1.0f,1.0f };
 	}
 
 	//マウスをクリックしていたら選択を切り替える
@@ -321,7 +314,7 @@ void UniqueEditor::Initialize() {
 	oldTransform_ = std::make_unique<Transform>();
 
 	//あらかじめ容量を確保
-	mapObjData_.reserve(999);
+	mapObjData_.reserve(500);
 
 	if (isOpenFile_) {
 		Close();
@@ -383,264 +376,283 @@ void UniqueEditor::Edit() {
 
 	EditTransform();
 
-	
+	//マップのセーブ機能やオブジェクト全体の管理を行うウィンドウ
+	{
 
-	ImGui::Begin("Unique Editor");
+		ImGui::Begin("Unique Editor");
 
-	//ファイルを開いている時の処理
-	if (isOpenFile_) {
+		//ファイルを開いている時の処理
+		if (isOpenFile_) {
 
-		if (ImGui::Button("Save")) {
-			Save(fileName_);
-		}
+			if (ImGui::Button("Save")) {
+				Save(fileName_);
+			}
 
-		if (ImGui::Button("Close")) {
-			Close();
-		}
+			if (ImGui::Button("Close")) {
+				Close();
+			}
 
-		if (ImGui::BeginTabBar("Objects", ImGuiTabBarFlags_None)) {
+			if (ImGui::BeginTabBar("Objects", ImGuiTabBarFlags_None)) {
 
-			for (int32_t i = 0; i < kMaxObjects_; i++) {
+				for (int32_t i = 0; i < kMaxObjects_; i++) {
 
-				if (ImGui::BeginTabItem(objectName_[i].c_str())) {
+					if (ImGui::BeginTabItem(objectName_[i].c_str())) {
 
-					ImGui::Text(objectName_[i].c_str());
-					ImGui::Separator();
+						ImGui::Text(objectName_[i].c_str());
+						ImGui::Separator();
 
-					if (objectName_[i] == "block") {
+						if (objectName_[i] == "block") {
 
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "moveBox") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "paint") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "goal") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "warp") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "ghostBox") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "switch") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "copyCat") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "enemy") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
+						}
+						else if (objectName_[i] == "colorHolder") {
+
+							if (ImGui::Button("Add")) {
+								CreateObject(objectName_[i]);
+							}
+
 						}
 
-					}
-					else if (objectName_[i] == "moveBox") {
+						for (int32_t k = 0; auto & object : mapObjData_) {
 
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
+							object->preOpen_ = object->isOpen_;
 
-					}
-					else if (objectName_[i] == "paint") {
+							if (object->tag_ == objectName_[i]) {
 
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
+								if (ImGui::TreeNode(object->objName_.c_str())) {
 
-					}
-					else if (objectName_[i] == "goal") {
+									object->isOpen_ = true;
 
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
-
-					}
-					else if (objectName_[i] == "warp") {
-
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
-
-					}
-					else if (objectName_[i] == "ghostBox") {
-
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
-
-					}
-					else if (objectName_[i] == "switch") {
-
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
-
-					}
-					else if (objectName_[i] == "copyCat") {
-
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
-
-					}
-					else if (objectName_[i] == "enemy") {
-
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
-
-					}
-					else if (objectName_[i] == "colorHolder") {
-
-						if (ImGui::Button("Add")) {
-							CreateObject(objectName_[i]);
-						}
-
-					}
-
-					for (int32_t k = 0; auto & object : mapObjData_) {
-
-						object->preOpen_ = object->isOpen_;
-
-						if (object->tag_ == objectName_[i]) {
-
-							if (ImGui::TreeNode(object->objName_.c_str())) {
-
-								object->isOpen_ = true;
-
-								if (object->isOpen_ and !object->preOpen_) {
-									selectObject_ = k;
-								}
-
-								object->Edit();
-
-								if (object->tag_ != "player") {
-
-									if (ImGui::Button("Copy")) {
-										CopyObject(object);
+									if (object->isOpen_ and !object->preOpen_) {
+										selectObject_ = k;
 									}
 
-									if (ImGui::Button("Delete")) {
+									object->Edit();
 
-										object->isDelete_ = true;
+									if (object->tag_ != "player") {
 
-										if (selectObject_ > 0) {
-											selectObject_--;
+										if (ImGui::Button("Copy")) {
+											CopyObject(object);
+										}
+
+										if (ImGui::Button("Delete")) {
+
+											object->isDelete_ = true;
+
+											if (selectObject_ > 0) {
+												selectObject_--;
+											}
+
 										}
 
 									}
 
+									ImGui::TreePop();
+
+								}
+								else {
+									object->isOpen_ = false;
 								}
 
-								ImGui::TreePop();
-
-							}
-							else {
-								object->isOpen_ = false;
 							}
 
+							object->transform_->UpdateMatrix();
+							object->model_->SetWorldMatrix(object->transform_->worldMatrix_);
+
+							if (auto holderPtr = dynamic_cast<HolderObject*>(object.get())) {
+								holderPtr->modelB_->SetWorldMatrix(object->transform_->worldMatrix_);
+							}
+
+							if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
+								warpPtr->transformB_->UpdateMatrix();
+								warpPtr->modelB_->SetWorldMatrix(warpPtr->transformB_->worldMatrix_);
+							}
+
+							object->Update();
+
+							k++;
+
 						}
 
-						object->transform_->UpdateMatrix();
-						object->model_->SetWorldMatrix(object->transform_->worldMatrix_);
-
-						if (auto holderPtr = dynamic_cast<HolderObject*>(object.get())) {
-							holderPtr->modelB_->SetWorldMatrix(object->transform_->worldMatrix_);
-						}
-
-						if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
-							warpPtr->transformB_->UpdateMatrix();
-							warpPtr->modelB_->SetWorldMatrix(warpPtr->transformB_->worldMatrix_);
-						}
-
-						object->Update();
-
-						k++;
+						ImGui::EndTabItem();
 
 					}
 
-					ImGui::EndTabItem();
-
 				}
+
+				ImGui::EndTabBar();
 
 			}
 
-			ImGui::EndTabBar();
+			if (!mapObjData_.empty()) {
+				ImGui::SliderInt("Select Object", &selectObject_, 0, int(mapObjData_.size() - 1));
+			}
 
-		}
-
-		if (!mapObjData_.empty()) {
-			ImGui::SliderInt("Select Object", &selectObject_, 0, int(mapObjData_.size() - 1));
-		}
-
-		if (not undoCommands_.empty() and ImGui::Button("Undo")) {
-			undoCommands_.top()->Undo();
-			redoCommands_.push(undoCommands_.top());
-			undoCommands_.pop();
-		}
-
-		if (not redoCommands_.empty() and ImGui::Button("Redo")) {
-			redoCommands_.top()->Execute();
-			undoCommands_.push(redoCommands_.top());
-			redoCommands_.pop();
-		}
-
-		if (input_->TriggerKey(DIK_Z) and input_->PushKey(DIK_LCONTROL)) {
-			
-			if (not undoCommands_.empty()) {
+			if (not undoCommands_.empty() and ImGui::Button("Undo")) {
 				undoCommands_.top()->Undo();
 				redoCommands_.push(undoCommands_.top());
 				undoCommands_.pop();
 			}
 
-		}
-
-		if (input_->TriggerKey(DIK_Y) and input_->PushKey(DIK_LCONTROL)) {
-
-			if (not redoCommands_.empty()) {
+			if (not redoCommands_.empty() and ImGui::Button("Redo")) {
 				redoCommands_.top()->Execute();
 				undoCommands_.push(redoCommands_.top());
 				redoCommands_.pop();
 			}
 
-		}
+			if (input_->TriggerKey(DIK_Z) and input_->PushKey(DIK_LCONTROL)) {
 
-	}
-	else {
-
-		ImGui::InputText(".json", fileName_, sizeof(fileName_));
-
-		if (ImGui::Button("Create")) {
-
-			//ファイル名が空の場合スキップ
-			if (!CheckIsEmpty(fileName_)) {
-				Create(fileName_);
-			}
-			else {
-				MessageBox(nullptr, L"ファイル名を入力してください。", L"Map Editor - Create", 0);
-			}
-
-		}
-
-		if (ImGui::Button("Load")) {
-
-			//ファイル名が空の場合スキップ
-			if (!CheckIsEmpty(fileName_)) {
-				Load(fileName_);
-			}
-			else {
-				MessageBox(nullptr, L"ファイル名を入力してください。", L"Map Editor - Load", 0);
-			}
-
-		}
-
-		ImGui::Separator();
-		ImGui::Text("Map List");
-
-		for (int32_t i = 0; i < mapNames_.size(); i++) {
-
-			if (ImGui::Button(mapNames_[i].c_str())) {
-				
-				for (int32_t k = 0; k < mapNames_[i].size(); k++) {
-					fileName_[k] = mapNames_[i][k];
+				if (not undoCommands_.empty()) {
+					undoCommands_.top()->Undo();
+					redoCommands_.push(undoCommands_.top());
+					undoCommands_.pop();
 				}
 
-				Load(fileName_);
+			}
+
+			if (input_->TriggerKey(DIK_Y) and input_->PushKey(DIK_LCONTROL)) {
+
+				if (not redoCommands_.empty()) {
+					redoCommands_.top()->Execute();
+					undoCommands_.push(redoCommands_.top());
+					redoCommands_.pop();
+				}
+
+			}
+
+		}
+		else {
+
+			ImGui::InputText(".json", fileName_, sizeof(fileName_));
+
+			if (ImGui::Button("Create")) {
+
+				//ファイル名が空の場合スキップ
+				if (!CheckIsEmpty(fileName_)) {
+					Create(fileName_);
+				}
+				else {
+					MessageBox(nullptr, L"ファイル名を入力してください。", L"Map Editor - Create", 0);
+				}
+
+			}
+
+			if (ImGui::Button("Load")) {
+
+				//ファイル名が空の場合スキップ
+				if (!CheckIsEmpty(fileName_)) {
+					Load(fileName_);
+				}
+				else {
+					MessageBox(nullptr, L"ファイル名を入力してください。", L"Map Editor - Load", 0);
+				}
+
+			}
+
+			ImGui::Separator();
+			ImGui::Text("Map List");
+
+			for (int32_t i = 0; i < mapNames_.size(); i++) {
+
+				if (ImGui::Button(mapNames_[i].c_str())) {
+
+					for (int32_t k = 0; k < mapNames_[i].size(); k++) {
+						fileName_[k] = mapNames_[i][k];
+					}
+
+					Load(fileName_);
+				}
+
 			}
 
 		}
 
+		ImGui::End();
+
 	}
 
-	ImGui::End();
+	//選択したオブジェクトの調整を行うウィンドウ
+	{
+
+		if (selectObject_ < mapObjData_.size()) {
+			ImGui::Begin("Current Object");
+			mapObjData_[selectObject_]->Edit();
+			ImGui::End();
+		}
+
+	}
+
+	//オブジェクトの数などのデータを表示するウィンドウ
+	{
+
+
+
+	}
 
 #endif // _DEBUG
 
 }
 
 void UniqueEditor::Draw(Camera* camera) {
-
-	mouseLine_->Draw(camera);
 
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 

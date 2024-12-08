@@ -22,9 +22,6 @@ SelectScene::SelectScene()
 	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
 	stageSelect_.reset(Sprite::Create(stageSelectTex_, { 640.0f - 256.0f,100.0f - 32.0f }));
 	toTitle_.reset(Sprite::Create(toTitleTex_, { 140.0f - 128.0f,60.0f - 32.0f }));
-	stage1_.reset(Sprite::Create(Tex1_, { 440.0f - 32.0f,360.0f - 32.0f }));
-	stage2_.reset(Sprite::Create(Tex2_, { 640.0f - 32.0f,360.0f - 32.0f }));
-	stage3_.reset(Sprite::Create(Tex3_, { 840.0f - 32.0f,360.0f - 32.0f }));
 	num_.reset(Sprite::Create(numTex_, { 640.0f - 32.0f,360.0f - 32.0f }));
 	num_->size_ = { 64.0f,64.0f };
 	num_->viewRect_ = { 0.1f,1.0f };
@@ -153,22 +150,6 @@ void SelectScene::Update() {
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
-
-	if (stageNumber_ == 1) {
-		stage1_->position_ = { 440.0f - 32.0f,310.0f - 32.0f };
-		stage2_->position_ = { 640.0f - 32.0f,360.0f - 32.0f };
-		stage3_->position_ = { 840.0f - 32.0f,360.0f - 32.0f };
-	}
-	else if(stageNumber_ == 2) {
-		stage1_->position_ = { 440.0f - 32.0f,360.0f - 32.0f };
-		stage2_->position_ = { 640.0f - 32.0f,310.0f - 32.0f };
-		stage3_->position_ = { 840.0f - 32.0f,360.0f - 32.0f };
-	}
-	else if (stageNumber_ == 3) {
-		stage1_->position_ = { 440.0f - 32.0f,360.0f - 32.0f };
-		stage2_->position_ = { 640.0f - 32.0f,360.0f - 32.0f };
-		stage3_->position_ = { 840.0f - 32.0f,310.0f - 32.0f };
-	}
 
 	num_->uvTranslate_.x = float(stageNumber_) * 0.1f;
 

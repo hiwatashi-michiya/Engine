@@ -70,6 +70,9 @@ class PlayerObject : public MapObject
 {
 public:
 
+	PlayerObject(){}
+	~PlayerObject(){}
+
 	void Initialize(const std::string& name) override;
 
 	void Edit() override;
@@ -80,6 +83,9 @@ class BlockObject : public MapObject
 {
 public:
 
+	BlockObject() {}
+	~BlockObject() {}
+
 	void Initialize(const std::string& name) override;
 
 	void Edit() override;
@@ -89,6 +95,7 @@ public:
 class MoveBoxObject : public MapObject
 {
 public:
+
 
 	void Initialize(const std::string& name) override;
 
@@ -109,6 +116,9 @@ public:
 class GoalObject : public MapObject
 {
 public:
+
+	GoalObject() {}
+	~GoalObject() {}
 
 	void Initialize(const std::string& name) override;
 
@@ -145,6 +155,9 @@ class GhostBoxObject : public MapObject
 {
 public:
 
+	GhostBoxObject() {}
+	~GhostBoxObject() {}
+
 	void Initialize(const std::string& name) override;
 
 	void Edit() override;
@@ -157,6 +170,9 @@ public:
 class SwitchObject : public MapObject
 {
 public:
+
+	SwitchObject() {}
+	~SwitchObject() {}
 
 	void Initialize(const std::string& name) override;
 

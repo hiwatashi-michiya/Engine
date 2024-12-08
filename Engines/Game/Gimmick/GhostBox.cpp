@@ -33,37 +33,26 @@ void GhostBox::Initialize() {
 
 void GhostBox::Update() {
 
-	model_->material_->constMap_->edgeColor = CreateVector3Color(color_);
+	model_->material_->constMap_->edgeColor = CreateVector3Color(secondColor_);
+	model_->material_->constMap_->secondColor = CreateColor(secondColor_);
 
 	preTranslate_ = collider_->collider_.center;
 
-	if (GameColor::CheckIsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
+	//色が一致していない場合
+	if (color_ != secondColor_) {
 
-		if (model_->material_->constMap_->threshold > 0.0f) {
+		if (model_->material_->constMap_->threshold < 1.0f) {
 
-			model_->material_->constMap_->threshold -= 0.05f;
+			model_->material_->constMap_->threshold += 0.02f;
 
-			if (model_->material_->constMap_->threshold < 0.0f) {
+			//切り替え演出が終わったら色を既存の色に書き換え
+			if (model_->material_->constMap_->threshold >= 1.0f) {
+				color_ = secondColor_;
 				model_->material_->constMap_->threshold = 0.0f;
 			}
 
 		}
 
-		collider_->SetIsActive(true);
-	}
-	else {
-
-		if (model_->material_->constMap_->threshold < 1.0f) {
-
-			model_->material_->constMap_->threshold += 0.05f;
-
-			if (model_->material_->constMap_->threshold > 1.0f) {
-				model_->material_->constMap_->threshold = 1.0f;
-			}
-
-		}
-
-		collider_->SetIsActive(false);
 	}
 
 	collider_->collider_.center = transform_->translate_;
@@ -92,10 +81,29 @@ void GhostBox::Update() {
 void GhostBox::Draw(Camera* camera) {
 
 	model_->Draw(camera);
-	modelWire_->Draw(camera);
 	if (collider_->GetIsActive()) {
 		lineBox_->Draw(camera);
 	}
+
+}
+
+void GhostBox::StartColorChange(GameColor::Color color)
+{
+
+	//色が同じ場合は処理不要
+	if (secondColor_ == color) {
+		return;
+	}
+
+	//現在の色と第二の色が違う場合は、第二の色を現在の色にしておく
+	if (color_ != secondColor_) {
+		color_ = secondColor_;
+	}
+
+	secondColor_ = color;
+
+	//切り替え演出の初期化
+	model_->material_->constMap_->threshold = 0.0f;
 
 }
 

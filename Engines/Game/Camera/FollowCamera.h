@@ -34,7 +34,7 @@ private:
 
 	Transform* target_ = nullptr;
 
-	Vector3 offset_ = { 0.0f,0.0f,-60.0f };
+	Vector3 offset_ = { 0.0f,0.0f,-100.0f };
 	//カメラ視点切り替えフラグ
 	bool isSwitching_ = false;
 	//切り替え終わった瞬間のフラグ

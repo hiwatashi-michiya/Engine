@@ -45,9 +45,6 @@ private:
 	std::unique_ptr<Sprite> stageSelect_;
 	std::unique_ptr<Sprite> toTitle_;
 	std::unique_ptr<Sprite> aButton_;
-	std::unique_ptr<Sprite> stage1_;
-	std::unique_ptr<Sprite> stage2_;
-	std::unique_ptr<Sprite> stage3_;
 	std::unique_ptr<Sprite> num_;
 
 	Texture* stageSelectTex_;

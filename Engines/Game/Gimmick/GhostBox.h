@@ -41,10 +41,18 @@ public:
 	void SetColor(GameColor::Color color) { color_ = color; }
 	//色取得
 	const GameColor::Color& GetColor() const { return color_; }
+	//2つ目の色セット
+	void SetSecondColor(GameColor::Color color) { secondColor_ = color; }
+	//2つ目の色取得
+	const GameColor::Color& GetSecondColor() const { return secondColor_; }
 	//回転方向取得
 	const CommonVariables::RotateType& GetRotateType() const { return rotateType_; }
 	//回転方向セット
 	void SetRotateType(CommonVariables::RotateType type) { rotateType_ = type; }
+	//色切り替え演出セット
+	void StartColorChange(GameColor::Color color);
+	//色が白以外かどうか
+	bool IsNotWhite() const { return color_ != GameColor::Color::kWhite; }
 
 private:
 	//オブジェクトと当たった時の処理
@@ -62,6 +70,8 @@ private:
 	Vector3 preTranslate_{};
 
 	GameColor::Color color_ = GameColor::kWhite;
+
+	GameColor::Color secondColor_ = GameColor::kWhite;
 
 	CommonVariables::RotateType rotateType_ = CommonVariables::RotateType::kClockwise;
 

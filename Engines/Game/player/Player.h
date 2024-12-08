@@ -112,8 +112,6 @@ private:
 
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
-	Behavior behavior_ = Behavior::kStay;
-
 	std::unique_ptr<SkinningModel> model_;
 
 	std::shared_ptr<Particle> particle_;
@@ -129,15 +127,10 @@ private:
 	//弾リスト
 	std::vector<std::shared_ptr<PlayerBullet>> bullets_;
 
-	//ゴール判定
-	bool isGoal_ = false;
-
 	//ゴールに必要なアイテム数
 	int32_t goalCount_ = 0;
 	//アイテムの取得数
 	int32_t itemGetCount_ = 0;
-	//ゴール可能かどうか
-	bool canGoal_ = false;
 
 	Quaternion rotation_;
 
@@ -152,20 +145,27 @@ private:
 	float fallSpeed_ = -0.1f;
 	//落下速度上限
 	float fallSpeedLimit_ = -2.0f;
-	//死亡フラグ
-	bool isDead_ = false;
 	//死亡する高さ
 	float deadHeight_ = -20.0f;
-	//地面判定
-	bool onGround_ = false;
-	//ブロックに潜っている判定
-	bool isDivingBlock_ = false;
 	//補正時に使う地面の位置
 	Vector3* groundPosition_ = nullptr;
 	//補正時に使う地面のサイズ
 	Vector3* groundSize_ = nullptr;
 	//テクスチャ
 	Texture* tex_ = nullptr;
+
+	Behavior behavior_ = Behavior::kStay;
+
+	//ゴール可能かどうか
+	bool canGoal_ = false;
+	//ゴール判定
+	bool isGoal_ = false;
+	//地面判定
+	bool onGround_ = false;
+	//ブロックに潜っている判定
+	bool isDivingBlock_ = false;
+	//死亡フラグ
+	bool isDead_ = false;
 
 };
 

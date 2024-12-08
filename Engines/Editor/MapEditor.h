@@ -44,10 +44,10 @@ private:
 		//メッシュ
 		std::string meshName;
 
-		int32_t meshNumber = 0;
-
 		//オブジェクトの役割を表すタグ
 		std::string tag;
+
+		int32_t meshNumber = 0;
 
 		bool isSelect = false;
 
@@ -100,13 +100,13 @@ private:
 
 	bool isOpenFile_ = false;
 
+	bool isSave_ = true;
+
 	Vector3 spawnPoint_ = { 0.0f,0.0f,0.0f };
 
 	char name_[256];
 
 	char fileName_[256];
-
-	bool isSave_ = true;
 
 	std::vector<std::string> meshNames_;
 

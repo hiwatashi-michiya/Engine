@@ -251,37 +251,15 @@ void Player::CorrectionPosition()
 	//ポインタに値が入っている時(地面に触れている時)補正可能にする
 	if (groundPosition_ and groundSize_) {
 
-		//内側に寄せるための補正値
-		float correctionValue = 0.01f;
+		//以前の座標の保存
+		preTranslate_ = collider_->collider_.center;
 
-		//奥にはみ出ている場合
-		if (collider_->collider_.center.z + collider_->collider_.size.z > groundPosition_->z + groundSize_->z) {
+		//中央にずらす
+		collider_->collider_.center.z = groundPosition_->z;
 
-			//以前の座標の保存
-			preTranslate_ = collider_->collider_.center;
-
-			//手前にずらす
-			collider_->collider_.center.z = groundPosition_->z + groundSize_->z - collider_->collider_.size.z - correctionValue;
-
-			//座標更新
-			transform_->translate_.z = collider_->collider_.center.z;
-			transform_->UpdateMatrix();
-
-		}
-		//手前にはみ出ている場合
-		else if (collider_->collider_.center.z - collider_->collider_.size.z < groundPosition_->z - groundSize_->z) {
-
-			//以前の座標の保存
-			preTranslate_ = collider_->collider_.center;
-
-			//奥にずらす
-			collider_->collider_.center.z = groundPosition_->z - groundSize_->z + collider_->collider_.size.z + correctionValue;
-
-			//座標更新
-			transform_->translate_.z = collider_->collider_.center.z;
-			transform_->UpdateMatrix();
-
-		}
+		//座標更新
+		transform_->translate_.z = collider_->collider_.center.z;
+		transform_->UpdateMatrix();
 
 	}
 
@@ -296,17 +274,15 @@ void Player::OnCollision(Collider* collider) {
 		if (playerDive_->isDiving_) {
 
 			if (auto pBox = dynamic_cast<GhostBox*>(collider->GetGameObject())) {
-				//同色のブロックなら当たり判定を取らずに早期リターン
-				if (pBox->GetColor() == Stage::stageColor_) {
-
-					//センターがブロック内に埋まっていたら
-					if (IsCollision(pBox->GetCollider()->collider_, collider_->collider_.center)) {
-						//ブロックに潜っている判定をtrueにする
-						isDivingBlock_ = true;
-					}
-
-					return;
+				
+				//センターがブロック内に埋まっていたら
+				if (IsCollision(pBox->GetCollider()->collider_, collider_->collider_.center)) {
+					pBox->StartColorChange(Stage::stageColor_);
+					//ブロックに潜っている判定をtrueにする
+					isDivingBlock_ = true;
 				}
+
+				return;
 
 			}
 
