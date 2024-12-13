@@ -1,4 +1,6 @@
 
+[![DebugBuild](https://github.com/hiwatashi-michiya/Engine/actions/workflows/msbuild_debug.yml/badge.svg)](https://github.com/hiwatashi-michiya/Engine/actions/workflows/msbuild_debug.yml)
+
 # コード概要
 
 * * *
