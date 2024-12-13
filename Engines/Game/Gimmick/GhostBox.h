@@ -66,13 +66,18 @@ private:
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
-
+	//一フレーム前の位置
 	Vector3 preTranslate_{};
+	//色変化時の変化量
+	float changeValue_ = 0.02f;
+	//最大値
+	float maxValue_ = 1.0f;
 
+	//色
 	GameColor::Color color_ = GameColor::kWhite;
-
+	//二つ目の色
 	GameColor::Color secondColor_ = GameColor::kWhite;
-
+	//回転タイプ
 	CommonVariables::RotateType rotateType_ = CommonVariables::RotateType::kClockwise;
 
 };

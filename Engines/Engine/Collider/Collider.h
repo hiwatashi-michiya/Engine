@@ -8,8 +8,10 @@
 
 class BoxCollider;
 class SphereCollider;
-class PointCollider;
 
+/// <summary>
+/// コライダーの基底クラス
+/// </summary>
 class Collider {
 public:
 	Collider();
@@ -67,6 +69,9 @@ protected:
 
 };
 
+/// <summary>
+/// OBBの当たり判定を持ったコライダー
+/// </summary>
 class BoxCollider : public Collider {
 public:
 
@@ -81,6 +86,9 @@ public:
 
 };
 
+/// <summary>
+/// 球体の当たり判定を持ったコライダー
+/// </summary>
 class SphereCollider : public Collider {
 public:
 

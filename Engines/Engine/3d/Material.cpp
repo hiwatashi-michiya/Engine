@@ -162,13 +162,6 @@ void Material::ImGuiUpdate() {
 		ImGui::ColorEdit4("C_color", &constMap_->color.x);
 		ImGui::SliderInt("C_Lighting", &constMap_->enableLighting, 0, 1);
 		ImGui::DragFloat("C_shininess", &constMap_->shininess, 0.05f, 0.0f, 100.0f);
-		/*ImGui::SliderInt("C_is_gray", &constMap_->isGrayScale, 0, 1);
-		ImGui::SliderInt("C_is_inversion", &constMap_->isInversion, 0, 1);
-		ImGui::SliderInt("C_is_retro", &constMap_->isRetro, 0, 1);*/
-		/*ImGui::SliderInt("C_is_aveblur", &constMap_->isAverageBlur, 0, 1);
-		ImGui::SliderInt("C_is_emboss", &constMap_->isEmboss, 0, 1);
-		ImGui::SliderInt("C_is_sharp", &constMap_->isSharpness, 0, 1);
-		ImGui::SliderInt("C_is_outline", &constMap_->isOutline, 0, 1);*/
 		ImGui::TreePop();
 	}
 	if (ImGui::TreeNode("Directional Light")) {

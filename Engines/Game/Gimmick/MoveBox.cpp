@@ -32,15 +32,18 @@ void MoveBox::Initialize() {
 
 void MoveBox::Update() {
 
+	//色が同じなら動かすこと可能
 	if (GameColor::CheckIsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
 		name_ = "moveBox";
 		model_->SetTexture(circleTex_);
 	}
+	//違うならブロックと同じ扱い
 	else {
 		name_ = "block";
 		model_->SetTexture(crossTex_);
 	}
 
+	//座標関連更新
 	preTranslate_ = collider_->collider_.center;
 
 	collider_->collider_.center = transform_->translate_;
@@ -72,142 +75,5 @@ void MoveBox::OnCollision(Collider* collider) {
 		isMove_ = false;
 	}
 
-	if (isMove_ and (collider->GetGameObject()->GetName() == "block" || collider->GetGameObject()->GetName() == "moveBox")) {
-		
-		//上にいる時
-		if (preTranslate_.y > collider->GetPosition().y + collider->GetSize().y) {
-
-			//衝突したブロックの面積内なら上に留まる
-			if (transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x and
-				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x and
-				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z and
-				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
-
-				preTranslate_ = collider_->collider_.center;
-
-				//当たり判定更新
-				collider_->collider_.center.y = collider->GetPosition().y + collider->GetSize().y + collider_->collider_.size.y;
-
-				//座標更新
-				transform_->translate_.y = collider_->collider_.center.y;
-				transform_->UpdateMatrix();
-
-			}
-
-
-		}
-		//下にいる時
-		else if (preTranslate_.y < collider->GetPosition().y - collider->GetSize().y) {
-
-			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x and
-				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x and
-				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z and
-				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
-
-				preTranslate_ = collider_->collider_.center;
-
-				//当たり判定更新
-				collider_->collider_.center.y = collider->GetPosition().y - collider->GetSize().y - collider_->collider_.size.y;
-
-				//座標更新
-				transform_->translate_.y = collider_->collider_.center.y;
-				transform_->UpdateMatrix();
-
-			}
-
-		}
-
-		//左にいる時
-		if (preTranslate_.x < collider->GetPosition().x - collider->GetSize().x and
-			preTranslate_.z + transform_->scale_.z > collider->GetPosition().z - collider->GetSize().z and
-			preTranslate_.z - transform_->scale_.z < collider->GetPosition().z + collider->GetSize().z) {
-
-			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
-				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z and
-				transform_->translate_.z + transform_->scale_.z * 0.99f > collider->GetPosition().z - collider->GetSize().z) {
-
-				preTranslate_ = collider_->collider_.center;
-
-				//当たり判定更新
-				collider_->collider_.center.x = collider->GetPosition().x - collider->GetSize().x - collider_->collider_.size.x;
-
-				//座標更新
-				transform_->translate_.x = collider_->collider_.center.x;
-				transform_->UpdateMatrix();
-
-			}
-
-		}
-		//右にいる時
-		else if (preTranslate_.x > collider->GetPosition().x + collider->GetSize().x and
-			preTranslate_.z + transform_->scale_.z > collider->GetPosition().z - collider->GetSize().z and
-			preTranslate_.z - transform_->scale_.z < collider->GetPosition().z + collider->GetSize().z) {
-
-			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
-				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z and
-				transform_->translate_.z + transform_->scale_.z * 0.99f > collider->GetPosition().z - collider->GetSize().z) {
-
-				preTranslate_ = collider_->collider_.center;
-
-				//当たり判定更新
-				collider_->collider_.center.x = collider->GetPosition().x + collider->GetSize().x + collider_->collider_.size.x;
-
-				//座標更新
-				transform_->translate_.x = collider_->collider_.center.x;
-				transform_->UpdateMatrix();
-
-			}
-
-		}
-
-		//手前にいる時
-		else if (preTranslate_.z < collider->GetPosition().z - collider->GetSize().z) {
-
-			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
-				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x and
-				transform_->translate_.x + transform_->scale_.x * 0.99f > collider->GetPosition().x - collider->GetSize().x) {
-
-				preTranslate_ = collider_->collider_.center;
-
-				//当たり判定更新
-				collider_->collider_.center.z = collider->GetPosition().z - collider->GetSize().z - collider_->collider_.size.z;
-
-				//座標更新
-				transform_->translate_.z = collider_->collider_.center.z;
-				transform_->UpdateMatrix();
-
-			}
-
-		}
-		//奥にいる時
-		else if (preTranslate_.z > collider->GetPosition().z + collider->GetSize().z) {
-
-			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
-				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x and
-				transform_->translate_.x + transform_->scale_.x * 0.99f > collider->GetPosition().x - collider->GetSize().x) {
-
-				preTranslate_ = collider_->collider_.center;
-
-				//当たり判定更新
-				collider_->collider_.center.z = collider->GetPosition().z + collider->GetSize().z + collider_->collider_.size.z;
-
-				//座標更新
-				transform_->translate_.z = collider_->collider_.center.z;
-				transform_->UpdateMatrix();
-
-			}
-
-		}
-
-	}
-
+	
 }

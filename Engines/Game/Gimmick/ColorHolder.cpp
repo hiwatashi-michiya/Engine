@@ -42,9 +42,11 @@ void ColorHolder::Update() {
 
 	lineBox_->Update();
 
+	//色が保持されていたらその色になる
 	if (holderColor_ != -1) {
 		modelInner_->SetColor(CreateColor(holderColor_));
 	}
+	//保持されていない場合は白色
 	else {
 		modelInner_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	}

@@ -16,8 +16,6 @@ Block::~Block()
 
 void Block::Initialize() {
 
-	setCount_ = (rand() % 10) * 5 + 10;
-
 	name_ = "block";
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
@@ -34,58 +32,15 @@ void Block::Update() {
 	model_->material_->constMap_->edgeColor = CreateVector3Color(secondColor_);
 	model_->material_->constMap_->secondColor = CreateColor(secondColor_);
 
-	//光源の点滅
-	if (lightCount_ <= 0) {
-
-		if (pLightIntensity_ > 0.5f) {
-
-			pLightIntensity_ -= 0.01f;
-
-			if (pLightIntensity_ < 0.5f) {
-				pLightIntensity_ = 0.5f;
-			}
-
-		}
-
-	}
-	else if (lightCount_ > 0) {
-
-		if (pLightIntensity_ < 1.0f) {
-
-			pLightIntensity_ += 0.01f;
-
-			if (pLightIntensity_ > 1.0f) {
-				pLightIntensity_ = 1.0f;
-			}
-
-		}
-
-		lightCount_--;
-
-	}
-
-	//ランダムで明かりを点滅させる
-	if (--setCount_ <= 0) {
-
-		int32_t random = rand() % 33;
-
-		if (random == 0) {
-			lightCount_ = 30;
-		}
-
-		setCount_ = (rand() % 10) * 5 + 10;
-
-	}
-
 	//色が一致していない場合
 	if (color_ != secondColor_) {
 
-		if (model_->material_->constMap_->threshold < 1.0f) {
+		if (model_->material_->constMap_->threshold < maxValue_) {
 
-			model_->material_->constMap_->threshold += 0.02f;
+			model_->material_->constMap_->threshold += changeValue_;
 
 			//切り替え演出が終わったら色を既存の色に書き換え
-			if (model_->material_->constMap_->threshold >= 1.0f) {
+			if (model_->material_->constMap_->threshold >= maxValue_) {
 				color_ = secondColor_;
 				model_->material_->constMap_->threshold = 0.0f;
 			}

@@ -47,22 +47,22 @@ void Warp::Update() {
 
 	if (GameColor::CheckIsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor())) {
 		
-		if (modelA_->material_->constMap_->threshold > 0.0f) {
+		if (modelA_->material_->constMap_->threshold > maxValue_) {
 
-			modelA_->material_->constMap_->threshold -= 0.05f;
+			modelA_->material_->constMap_->threshold -= changeValue_;
 
-			if (modelA_->material_->constMap_->threshold < 0.0f) {
-				modelA_->material_->constMap_->threshold = 0.0f;
+			if (modelA_->material_->constMap_->threshold < maxValue_) {
+				modelA_->material_->constMap_->threshold = maxValue_;
 			}
 
 		}
 
-		if (modelB_->material_->constMap_->threshold > 0.0f) {
+		if (modelB_->material_->constMap_->threshold > maxValue_) {
 
-			modelB_->material_->constMap_->threshold -= 0.05f;
+			modelB_->material_->constMap_->threshold -= changeValue_;
 
-			if (modelB_->material_->constMap_->threshold < 0.0f) {
-				modelB_->material_->constMap_->threshold = 0.0f;
+			if (modelB_->material_->constMap_->threshold < maxValue_) {
+				modelB_->material_->constMap_->threshold = maxValue_;
 			}
 
 		}
@@ -72,22 +72,22 @@ void Warp::Update() {
 	}
 	else {
 
-		if (modelA_->material_->constMap_->threshold < 1.0f) {
+		if (modelA_->material_->constMap_->threshold < maxValue_) {
 
-			modelA_->material_->constMap_->threshold += 0.05f;
+			modelA_->material_->constMap_->threshold += changeValue_;
 
-			if (modelA_->material_->constMap_->threshold > 1.0f) {
-				modelA_->material_->constMap_->threshold = 1.0f;
+			if (modelA_->material_->constMap_->threshold > maxValue_) {
+				modelA_->material_->constMap_->threshold = maxValue_;
 			}
 
 		}
 
-		if (modelB_->material_->constMap_->threshold < 1.0f) {
+		if (modelB_->material_->constMap_->threshold < maxValue_) {
 
-			modelB_->material_->constMap_->threshold += 0.05f;
+			modelB_->material_->constMap_->threshold += changeValue_;
 
-			if (modelB_->material_->constMap_->threshold > 1.0f) {
-				modelB_->material_->constMap_->threshold = 1.0f;
+			if (modelB_->material_->constMap_->threshold > maxValue_) {
+				modelB_->material_->constMap_->threshold = maxValue_;
 			}
 
 		}
@@ -108,14 +108,14 @@ void Warp::Update() {
 
 	if (countCoolTimer_ <= 0 and colliderA_->GetIsActive() and colliderB_->GetIsActive()) {
 
-		transform_->rotate_.y += 0.02f;
-		transformB_->rotate_.y += 0.02f;
+		transform_->rotate_.y += changeValue_;
+		transformB_->rotate_.y += changeValue_;
 
-		if (transform_->rotate_.y >= 6.24f) {
+		if (transform_->rotate_.y >= kMaxRotate_) {
 			transform_->rotate_.y = 0.0f;
 		}
 
-		if (transformB_->rotate_.y >= 6.24f) {
+		if (transformB_->rotate_.y >= kMaxRotate_) {
 			transformB_->rotate_.y = 0.0f;
 		}
 

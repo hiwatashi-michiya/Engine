@@ -5,19 +5,24 @@
 #include "Camera.h"
 #include "Vector4.h"
 
+//パーティクルエディタの前方宣言
 class ParticleEditor;
 
+/// <summary>
+/// パーティクルを汎用的にしたクラス
+/// </summary>
 class Particle
 {
+	//パーティクルエディタも編集可能にする
 	friend class ParticleEditor;
 public:
 	Particle();
 	~Particle();
-
+	//初期化
 	void Initialize();
-
+	//更新
 	void Update();
-
+	//描画
 	void Draw(Camera* camera);
 
 	//パーティクルのランダム速度最小設定
@@ -100,59 +105,60 @@ public:
 		particle_->SetInstanceCount(instanceCount_);
 
 	}
-
+	//ループフラグセット
 	void SetIsLoop(bool flag) { isLoop_ = flag; }
-
+	//終了したかどうか
 	bool IsEnd();
-
+	//名前取得
 	const std::string& GetName() { return name_; }
-
+	//テクスチャセット
 	void SetTexture(const std::string& texture) { particle_->SetTexture(texture); }
-
+	//データ読み込み
 	void Load(const std::string& filePath);
 
 private:
 
 	std::shared_ptr<Particle3D> particle_;
-
+	//最大発生数
 	static const uint32_t kMaxParticle_ = 128;
-
+	//名前
 	std::string name_;
 
-	//速度の最低値
+	//速度最低値
 	Vector3 minSpeed_{};
-
+	//速度最大値
 	Vector3 maxSpeed_{};
-
+	//最小スケール
 	float minScale_ = 0.1f;
-
+	//最大スケール
 	float maxScale_ = 1.0f;
-
+	//最小スポーン地点
 	Vector3 minSpawnPoint_{};
-
+	//最大スポーン地点
 	Vector3 maxSpawnPoint_{};
-	
+	//スピードの変化量(一定)
 	Vector3 changeSpeed_{};
-
+	//スケール変化量(一定)
 	float changeScale_ = 0.0f;
-
+	//回転変化量
 	Vector3 changeRotate_{};
-
+	//最小生存時間
 	int32_t minLifeTime_ = 60;
-
+	//最大生存時間
 	int32_t maxLifeTime_ = 60;
-
+	//インスタンス数
 	int32_t instanceCount_ = 32;
-
+	//パーティクル全体の生存時間
 	int32_t particleLifeTime_ = 120;
-
+	//パーティクル全体の最大生存時間
 	int32_t maxParticleLifeTime_ = 120;
-
+	//ループするかどうか
 	bool isLoop_ = false;
-
+	//出現時の色
 	Vector4 startColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	//消滅時の色
 	Vector4 endColor_ = { 1.0f,1.0f,1.0f,1.0f };
-
+	//アクティブ状態かどうか
 	bool isActive_ = true;
 
 };

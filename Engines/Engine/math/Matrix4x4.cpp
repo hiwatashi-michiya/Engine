@@ -91,32 +91,6 @@ Vector3 Matrix4x4::GetRotate() {
 		rotate.z = std::atan2(xAxis.y, xAxis.x);
 	}
 
-	/*rotate.x = std::atan2(yAxis.y,yAxis.x);
-	rotate.y = std::atan2(zAxis.z, zAxis.y);
-	rotate.z = std::atan2(xAxis.x, xAxis.z);*/
-
-	//float thetaY = std::asinf(-rotateMatrix.m[0][2]);
-
-	//float cosThetaY = std::cosf(thetaY);
-
-	//float thetaX{}, thetaZ{};
-
-	////0度に近い値は0度とする
-	//if (fabsf(cosThetaY) <= 0.0001f) {
-
-	//	thetaX = std::atanf(-rotateMatrix.m[2][1] / rotateMatrix.m[1][1]);
-	//	thetaZ = 0.0f;
-
-	//}
-	//else {
-
-	//	thetaX = std::atanf(rotateMatrix.m[1][2] / rotateMatrix.m[2][2]);
-	//	thetaZ = std::atanf(rotateMatrix.m[0][1] / rotateMatrix.m[0][0]);
-
-	//}
-
-	//rotate = { thetaX, thetaY, thetaZ };
-
 	return rotate;
 
 }

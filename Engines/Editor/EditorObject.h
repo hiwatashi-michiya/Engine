@@ -18,15 +18,15 @@ public:
 
 	MapObject();
 	~MapObject() = default;
-
+	//初期化
 	virtual void Initialize(const std::string& name);
-
+	//更新
 	virtual void Update();
-
+	//編集
 	virtual void Edit();
-
+	//変更記録
 	virtual void RecordMove();
-
+	//描画コマンド積む
 	virtual void Draw(Camera* camera);
 
 	std::string objName_;
@@ -66,6 +66,9 @@ protected:
 
 };
 
+/// <summary>
+/// プレイヤー
+/// </summary>
 class PlayerObject : public MapObject
 {
 public:
@@ -79,6 +82,9 @@ public:
 
 };
 
+/// <summary>
+/// ブロック
+/// </summary>
 class BlockObject : public MapObject
 {
 public:
@@ -92,6 +98,9 @@ public:
 
 };
 
+/// <summary>
+/// 移動箱
+/// </summary>
 class MoveBoxObject : public MapObject
 {
 public:
@@ -103,6 +112,9 @@ public:
 
 };
 
+/// <summary>
+/// ペイント
+/// </summary>
 class PaintObject : public MapObject
 {
 public:
@@ -113,6 +125,9 @@ public:
 
 };
 
+/// <summary>
+/// ゴール
+/// </summary>
 class GoalObject : public MapObject
 {
 public:
@@ -126,6 +141,9 @@ public:
 
 };
 
+/// <summary>
+/// ワープ
+/// </summary>
 class WarpObject : public MapObject
 {
 public:
@@ -151,6 +169,9 @@ public:
 
 };
 
+/// <summary>
+/// ダイブ可能な箱
+/// </summary>
 class GhostBoxObject : public MapObject
 {
 public:
@@ -167,6 +188,9 @@ public:
 
 };
 
+/// <summary>
+/// 色切り替え
+/// </summary>
 class SwitchObject : public MapObject
 {
 public:
@@ -180,6 +204,9 @@ public:
 
 };
 
+/// <summary>
+/// 分身
+/// </summary>
 class CopyCatObject : public MapObject
 {
 public:
@@ -190,6 +217,9 @@ public:
 
 };
 
+/// <summary>
+/// 敵
+/// </summary>
 class EnemyObject : public MapObject
 {
 public:
@@ -200,6 +230,9 @@ public:
 
 };
 
+/// <summary>
+/// 色保持
+/// </summary>
 class HolderObject : public MapObject
 {
 public:

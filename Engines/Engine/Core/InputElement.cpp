@@ -10,7 +10,7 @@ ML_InputElement::~ML_InputElement()
 
 void ML_InputElement::SetElement(const char* semanticName, uint32_t semanticIndex, DXGI_FORMAT format, uint32_t alignedByteIndex, uint32_t elementIndex)
 {
-
+	//サイズより大きい値なら早期リターン
 	if (elementIndex >= inputElement_.size()) {
 		return;
 	}

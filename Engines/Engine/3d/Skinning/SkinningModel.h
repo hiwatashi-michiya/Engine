@@ -14,14 +14,16 @@
 #include <vector>
 #include <wrl.h>
 
-
+/// <summary>
+/// スキニングモデルの描画を行うクラス
+/// </summary>
 class SkinningModel
 {
 public:
 
 	//モデル全体の初期化
 	static void StaticInitialize(ID3D12Device* device);
-
+	//ブレンドモード
 	enum BlendMode {
 		kNormal,//通常
 		kAdd,//加算
@@ -31,7 +33,7 @@ public:
 
 		kCountBlend
 	};
-
+	//ブレンドモードの名前
 	static const char* BlendTexts[BlendMode::kCountBlend];
 
 	//モデル生成
@@ -42,7 +44,7 @@ public:
 
 	//描画後処理
 	static void PostDraw();
-
+	//終了処理
 	static void Finalize();
 
 	//モデル全体に影響を与えるImGui
@@ -52,17 +54,17 @@ public:
 	static void SetBlendMode(BlendMode blendMode) { currentBlendMode_ = blendMode; }
 
 public:
-
+	//初期化
 	void Initialize(const std::string& filename, int32_t number);
-
+	//描画コマンド積む
 	void Draw(Camera* camera);
-
+	//スケルトン描画
 	void DrawSkeleton(Camera* camera);
-
+	//描画コマンド積む
 	void Draw(const Matrix4x4& localMatrix, Camera* camera);
-
+	//実際の描画
 	void Render();
-
+	//テクスチャセット
 	void SetTexture(Texture* texture) { texture_ = texture; }
 
 	//メッシュ切り替え
@@ -76,7 +78,7 @@ public:
 
 	//ImGui表示
 	void ImGuiUpdate(const std::string& name);
-
+	//ワールド行列セット
 	void SetWorldMatrix(const Matrix4x4& matrix) { worldMatrix_ = matrix; }
 
 	//アニメーションのロード、切り替え時に数字を使う
@@ -84,11 +86,11 @@ public:
 
 	//アニメーションを指定した数字のものに切り替え
 	void SetAnimation(int32_t number, bool isReset = true);
-
+	//アニメーション取得
 	Animation* GetAnimation() { return animations_[currentFileName_].get(); }
-
+	//スケルトン取得
 	Skeleton* GetSkeleton() { return skeleton_.get(); }
-
+	//スケルトンの行列取得
 	Matrix4x4 GetSkeletonSpaceMatrix(std::string name) const { return skeleton_->joints[skeleton_->jointMap[name]].skeletonSpaceMatrix; }
 
 	/// <summary>
@@ -111,10 +113,8 @@ public:
 	bool IsEndAnimation() const { return isEndAnimation_; }
 	//アニメーションのループフラグを設定
 	void SetIsLoop(bool flag) { isLoop_ = flag; }
-
+	//ワールド行列
 	Matrix4x4 worldMatrix_;
-
-	SkinningModel* parent_ = nullptr;
 
 	//メッシュ
 	Mesh* mesh_;

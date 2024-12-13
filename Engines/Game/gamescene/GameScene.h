@@ -8,6 +8,9 @@
 #include "Skybox.h"
 #include "Game/Camera/FollowCamera.h"
 
+/// <summary>
+/// メインのゲームの流れを更新するクラス
+/// </summary>
 class GameScene : public DefaultScene
 {
 public:
@@ -34,19 +37,17 @@ private:
 	MapEditor* mapEditor_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
-
+	//追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_;
-
+	//スカイボックス
 	std::unique_ptr<Skybox> skybox_;
-
+	//天球
 	std::unique_ptr<Model> skyDome_;
 	std::unique_ptr<Transform> skyDomeTransform_;
-
-	std::unique_ptr<Model> skyDomeNet_;
-	std::unique_ptr<Transform> skyDomeNetTransform_;
-
+	//ステージ
 	std::unique_ptr<Stage> stage_;
 
+	//画像
 	std::unique_ptr<Sprite> pauseSprite_;
 	std::unique_ptr<Sprite> menuSprite_;
 	std::unique_ptr<Sprite> leftSprite_;
@@ -56,10 +57,6 @@ private:
 	std::unique_ptr<Sprite> toGameSprite_;
 	std::unique_ptr<Sprite> toSelectSprite_;
 
-	int32_t resetCount_ = 60;
-
-	uint32_t testSE_;
-
 	Texture* pauseTex_;
 	Texture* menuTex_;
 	Texture* leftTex_;
@@ -68,6 +65,9 @@ private:
 	Texture* lbTex_;
 	Texture* toGameTex_;
 	Texture* toSelectTex_;
+
+	//リセット時のカウント
+	int32_t resetCount_ = 60;
 
 	//ポーズ画面を開いているか
 	bool isPause_ = false;

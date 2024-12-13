@@ -36,7 +36,7 @@ private:
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
-
+	//色
 	GameColor::Color color_ = GameColor::kWhite;
 	//切り替えクールタイム
 	int32_t coolTime_ = 30;

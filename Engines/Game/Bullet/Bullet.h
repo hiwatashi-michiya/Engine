@@ -14,17 +14,17 @@ class IBullet : public GameObject
 {
 public:
 	~IBullet() = default;
-
+	//初期化
 	virtual void Initialize(const Vector3& velocity, const Vector3& startPosition, float lifeTime) = 0;
-
+	//更新
 	virtual void Update() = 0;
-
+	//描画コマンド積む
 	virtual void Draw(Camera* camera) = 0;
-
+	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
 
 protected:
-
+	//オブジェクトと当たった時の処理
 	virtual void OnCollision(Collider* collider) = 0;
 
 protected:
@@ -35,11 +35,11 @@ protected:
 	float speed_ = 1.0f;
 	//生存時間
 	float lifeTime_ = 60;
-
+	//モデル
 	std::unique_ptr<Model> model_;
-
+	//コライダー
 	std::unique_ptr<BoxCollider> collider_;
-
+	//死亡フラグ
 	bool isDead_ = false;
 
 };
@@ -52,7 +52,7 @@ class PlayerBullet : public IBullet
 public:
 	PlayerBullet();
 	~PlayerBullet();
-
+	
 	void Initialize(const Vector3& velocity, const Vector3& startPosition, float lifeTime) override;
 
 	void Update() override;
@@ -60,7 +60,7 @@ public:
 	void Draw(Camera* camera) override;
 
 	void OnCollision(Collider* collider) override;
-
+	//弾の色取得
 	GameColor::Color GetBulletColor() const { return bulletColor_; }
 
 private:

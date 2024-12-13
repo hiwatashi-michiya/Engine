@@ -17,6 +17,9 @@
 #include "Particle.h"
 #include "Game/Camera/FollowCamera.h"
 
+/// <summary>
+/// ゲームシーンのステージに関連したオブジェクトの管理をするクラス
+/// </summary>
 class Stage
 {
 public:
@@ -24,23 +27,23 @@ public:
 	~Stage();
 
 	static GameColor::Color stageColor_;
-
+	//初期化
 	void Initialize();
-
+	//更新
 	void Update();
-
+	//描画コマンド積む
 	void Draw(Camera* camera);
-
+	//ステージ読み込み
 	void LoadStage(uint32_t stageNumber);
-
+	//追従カメラセット
 	void SetFollowCamera(FollowCamera* camera) { followCamera_ = camera; }
-
+	//読み込み先のディレクトリパス
 	const std::string& kDirectoryPath_ = "./resources/Maps/";
-
+	//プレイヤー取得
 	Player* GetPlayer() const { return player_.get(); }
 
 private:
-
+	//プレイヤーがゴール可能かどうかセット
 	void SetPlayerCanGoal();
 
 private:
@@ -73,35 +76,41 @@ private:
 	};
 
 	FollowCamera* followCamera_ = nullptr;
-
+	//プレイヤー
 	std::unique_ptr<Player> player_;
-
+	//ステージ全体に書けるパーティクル
 	std::unique_ptr<Particle> stageParticle_;
+	
+	//TODO:リストを一つにまとめる
 
+	//オブジェクトリスト
 	std::list<std::shared_ptr<MapObject>> mapObjData_;
-
+	//ブロック
 	std::list<std::shared_ptr<Block>> blocks_;
-
+	//ペイント
 	std::list<std::shared_ptr<Paint>> rings_;
-
+	//ゴール
 	std::list<std::shared_ptr<Goal>> goals_;
-
+	//移動箱
 	std::list<std::shared_ptr<MoveBox>> moveBoxes_;
-
+	//ワープ
 	std::list<std::shared_ptr<Warp>> warps_;
-
+	//潜行可能な箱
 	std::list<std::shared_ptr<GhostBox>> ghostBoxes_;
-
+	//スイッチ
 	std::list<std::shared_ptr<Switch>> switches_;
-
+	//分身
 	std::list<std::shared_ptr<CopyCat>> copyCats_;
-
+	//敵
 	std::list<std::shared_ptr<Enemy>> enemies_;
-
+	//色ホルダー
 	std::list<std::shared_ptr<ColorHolder>> holders_;
-
+	//線
 	Segment line_{};
 
+	//ステージパーティクルの最小、最大範囲
+	Vector3 minParticleLange_ = { -50.0f,-10.0f,-50.0f };
+	Vector3 maxParticleLange_ = { 50.0f,-5.0f,50.0f };
 
 	//当たり判定表示するかどうか
 	bool isShowHitBox_ = false;

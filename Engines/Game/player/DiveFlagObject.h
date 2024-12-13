@@ -31,7 +31,7 @@ private:
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
-
+	//プレイヤーのポインタ
 	Player* player_ = nullptr;
 
 };

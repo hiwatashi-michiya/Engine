@@ -213,7 +213,10 @@ void Player::Update() {
 			bullets_[i]->Update();
 		}
 
-		particle_->SetMinMaxSpawnPoint(transform_->translate_ - transform_->scale_ * 0.5f, transform_->translate_ + transform_->scale_ * 0.5f);
+		//半分の値
+		float half = 0.5f;
+
+		particle_->SetMinMaxSpawnPoint(transform_->translate_ - transform_->scale_ * half, transform_->translate_ + transform_->scale_ * half);
 		particle_->SetColor(CreateColor(Stage::stageColor_));
 
 		particle_->Update();
@@ -284,10 +287,10 @@ void Player::OnCollision(Collider* collider) {
 		if (preTranslate_.y >= collider->GetPosition().y + collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら上に留まる
-			if (transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x and
-				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x and
-				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z and
-				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
+			if (transform_->translate_.x - transform_->scale_.x * kHeightCorrectValue_ < collider->GetPosition().x + collider->GetSize().x and
+				transform_->translate_.x + transform_->scale_.x * kHeightCorrectValue_ > collider->GetPosition().x - collider->GetSize().x and
+				transform_->translate_.z - transform_->scale_.z * kHeightCorrectValue_ < collider->GetPosition().z + collider->GetSize().z and
+				transform_->translate_.z + transform_->scale_.z * kHeightCorrectValue_ > collider->GetPosition().z - collider->GetSize().z) {
 
 				preTranslate_ = collider_->collider_.center;
 
@@ -302,7 +305,7 @@ void Player::OnCollision(Collider* collider) {
 				if (playerDive_->isDiving_) {
 
 					//面の反対側から向かってきている場合
-					if (velocity_.y < -0.99f * speed_ * 2.0f) {
+					if (velocity_.y < -kSpeedBorder_ * speed_) {
 						//回転方向に応じてvelocityを90度回転
 						RotateVelocity(FollowCamera::GetCameraType());
 					}
@@ -344,10 +347,10 @@ void Player::OnCollision(Collider* collider) {
 		else if (preTranslate_.y <= collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.x - transform_->scale_.x * 0.5f < collider->GetPosition().x + collider->GetSize().x and
-				transform_->translate_.x + transform_->scale_.x * 0.5f > collider->GetPosition().x - collider->GetSize().x and
-				transform_->translate_.z - transform_->scale_.z * 0.5f < collider->GetPosition().z + collider->GetSize().z and
-				transform_->translate_.z + transform_->scale_.z * 0.5f > collider->GetPosition().z - collider->GetSize().z) {
+			if (transform_->translate_.x - transform_->scale_.x * kHeightCorrectValue_ < collider->GetPosition().x + collider->GetSize().x and
+				transform_->translate_.x + transform_->scale_.x * kHeightCorrectValue_ > collider->GetPosition().x - collider->GetSize().x and
+				transform_->translate_.z - transform_->scale_.z * kHeightCorrectValue_ < collider->GetPosition().z + collider->GetSize().z and
+				transform_->translate_.z + transform_->scale_.z * kHeightCorrectValue_ > collider->GetPosition().z - collider->GetSize().z) {
 
 				preTranslate_ = collider_->collider_.center;
 
@@ -362,7 +365,7 @@ void Player::OnCollision(Collider* collider) {
 				if (playerDive_->isDiving_) {
 
 					//面の反対側から向かってきている場合
-					if (velocity_.y > 0.99f * speed_ * 2.0f) {
+					if (velocity_.y > kSpeedBorder_ * speed_) {
 						//回転方向に応じてvelocityを90度回転
 						RotateVelocity(FollowCamera::GetCameraType());
 					}
@@ -384,10 +387,10 @@ void Player::OnCollision(Collider* collider) {
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
-				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z and
-				transform_->translate_.z + transform_->scale_.z * 0.99f > collider->GetPosition().z - collider->GetSize().z) {
+			if (transform_->translate_.y - transform_->scale_.y * kWidthCorrectValue_ < collider->GetPosition().y + collider->GetSize().y and
+				transform_->translate_.y + transform_->scale_.y * kWidthCorrectValue_ > collider->GetPosition().y - collider->GetSize().y and
+				transform_->translate_.z - transform_->scale_.z * kWidthCorrectValue_ < collider->GetPosition().z + collider->GetSize().z and
+				transform_->translate_.z + transform_->scale_.z * kWidthCorrectValue_ > collider->GetPosition().z - collider->GetSize().z) {
 
 				if (collider->GetGameObject()->GetName() == "moveBox") {
 
@@ -419,7 +422,7 @@ void Player::OnCollision(Collider* collider) {
 					if (playerDive_->isDiving_) {
 
 						//面の反対側から向かってきている場合
-						if (velocity_.x > 0.99f * speed_ * 2.0f) {
+						if (velocity_.x > kSpeedBorder_ * speed_) {
 							//回転方向に応じてvelocityを90度回転
 							RotateVelocity(FollowCamera::GetCameraType());
 						}
@@ -437,10 +440,10 @@ void Player::OnCollision(Collider* collider) {
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
-				transform_->translate_.z - transform_->scale_.z * 0.99f < collider->GetPosition().z + collider->GetSize().z and
-				transform_->translate_.z + transform_->scale_.z * 0.99f > collider->GetPosition().z - collider->GetSize().z) {
+			if (transform_->translate_.y - transform_->scale_.y * kWidthCorrectValue_ < collider->GetPosition().y + collider->GetSize().y and
+				transform_->translate_.y + transform_->scale_.y * kWidthCorrectValue_ > collider->GetPosition().y - collider->GetSize().y and
+				transform_->translate_.z - transform_->scale_.z * kWidthCorrectValue_ < collider->GetPosition().z + collider->GetSize().z and
+				transform_->translate_.z + transform_->scale_.z * kWidthCorrectValue_ > collider->GetPosition().z - collider->GetSize().z) {
 
 				if (collider->GetGameObject()->GetName() == "moveBox") {
 
@@ -472,7 +475,7 @@ void Player::OnCollision(Collider* collider) {
 					if (playerDive_->isDiving_) {
 
 						//面の反対側から向かってきている場合
-						if (velocity_.x < -0.99f * speed_ * 2.0f) {
+						if (velocity_.x < -kSpeedBorder_ * speed_) {
 							//回転方向に応じてvelocityを90度回転
 							RotateVelocity(FollowCamera::GetCameraType());
 						}
@@ -491,10 +494,10 @@ void Player::OnCollision(Collider* collider) {
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
-				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x and
-				transform_->translate_.x + transform_->scale_.x * 0.99f > collider->GetPosition().x - collider->GetSize().x) {
+			if (transform_->translate_.y - transform_->scale_.y * kWidthCorrectValue_ < collider->GetPosition().y + collider->GetSize().y and
+				transform_->translate_.y + transform_->scale_.y * kWidthCorrectValue_ > collider->GetPosition().y - collider->GetSize().y and
+				transform_->translate_.x - transform_->scale_.x * kWidthCorrectValue_ < collider->GetPosition().x + collider->GetSize().x and
+				transform_->translate_.x + transform_->scale_.x * kWidthCorrectValue_ > collider->GetPosition().x - collider->GetSize().x) {
 
 				if (collider->GetGameObject()->GetName() == "moveBox") {
 
@@ -526,7 +529,7 @@ void Player::OnCollision(Collider* collider) {
 					if (playerDive_->isDiving_) {
 
 						//面の反対側から向かってきている場合
-						if (velocity_.z > 0.99f * speed_ * 2.0f) {
+						if (velocity_.z > kSpeedBorder_ * speed_) {
 							//回転方向に応じてvelocityを90度回転
 							RotateVelocity(FollowCamera::GetCameraType());
 						}
@@ -544,10 +547,10 @@ void Player::OnCollision(Collider* collider) {
 			preTranslate_.y > collider->GetPosition().y - collider->GetSize().y) {
 
 			//衝突したブロックの面積内なら押し出し
-			if (transform_->translate_.y - transform_->scale_.y * 0.99f < collider->GetPosition().y + collider->GetSize().y and
-				transform_->translate_.y + transform_->scale_.y * 0.99f > collider->GetPosition().y - collider->GetSize().y and
-				transform_->translate_.x - transform_->scale_.x * 0.99f < collider->GetPosition().x + collider->GetSize().x and
-				transform_->translate_.x + transform_->scale_.x * 0.99f > collider->GetPosition().x - collider->GetSize().x) {
+			if (transform_->translate_.y - transform_->scale_.y * kWidthCorrectValue_ < collider->GetPosition().y + collider->GetSize().y and
+				transform_->translate_.y + transform_->scale_.y * kWidthCorrectValue_ > collider->GetPosition().y - collider->GetSize().y and
+				transform_->translate_.x - transform_->scale_.x * kWidthCorrectValue_ < collider->GetPosition().x + collider->GetSize().x and
+				transform_->translate_.x + transform_->scale_.x * kWidthCorrectValue_ > collider->GetPosition().x - collider->GetSize().x) {
 
 				if (collider->GetGameObject()->GetName() == "moveBox") {
 
@@ -579,7 +582,7 @@ void Player::OnCollision(Collider* collider) {
 					if (playerDive_->isDiving_) {
 
 						//面の反対側から向かってきている場合
-						if (velocity_.z < -0.99f * speed_ * 2.0f) {
+						if (velocity_.z < -kSpeedBorder_ * speed_) {
 							//回転方向に応じてvelocityを90度回転
 							RotateVelocity(FollowCamera::GetCameraType());
 						}
@@ -627,16 +630,19 @@ void Player::OnCollision(Collider* collider) {
 void Player::RotateVelocity(const CommonVariables::CameraType& cameraType)
 {
 
+	//半分の値
+	float half = 0.5f;
+
 	//横から視点の場合
 	if (cameraType == CommonVariables::CameraType::kSide) {
 
 		//時計回り(右回り)の場合
 		if (playerDive_->rotateType_ == CommonVariables::RotateType::kClockwise) {
-			velocity_ = RotateOnZAxis(velocity_, -float(std::numbers::pi * 0.5f));
+			velocity_ = RotateOnZAxis(velocity_, -float(std::numbers::pi * half));
 		}
 		//反時計回り(左回り)の場合
 		else {
-			velocity_ = RotateOnZAxis(velocity_, float(std::numbers::pi * 0.5f));
+			velocity_ = RotateOnZAxis(velocity_, float(std::numbers::pi * half));
 		}
 
 	}
@@ -645,25 +651,27 @@ void Player::RotateVelocity(const CommonVariables::CameraType& cameraType)
 
 		//時計回り(右回り)の場合
 		if (playerDive_->rotateType_ == CommonVariables::RotateType::kClockwise) {
-			velocity_ = RotateOnYAxis(velocity_, float(std::numbers::pi * 0.5f));
+			velocity_ = RotateOnYAxis(velocity_, float(std::numbers::pi * half));
 		}
 		//反時計回り(左回り)の場合
 		else {
-			velocity_ = RotateOnYAxis(velocity_, -float(std::numbers::pi * 0.5f));
+			velocity_ = RotateOnYAxis(velocity_, -float(std::numbers::pi * half));
 		}
 
 	}
+	//速度の下限
+	float speedBorderValue = 0.0001f;
 
 	//velocityの誤差を無くすため、ここで調整
-	if (fabsf(velocity_.x) < 0.0001f) {
+	if (fabsf(velocity_.x) < speedBorderValue) {
 		velocity_.x = 0.0f;
 	}
 
-	if (fabsf(velocity_.y) < 0.0001f) {
+	if (fabsf(velocity_.y) < speedBorderValue) {
 		velocity_.y = 0.0f;
 	}
 
-	if (fabsf(velocity_.z) < 0.0001f) {
+	if (fabsf(velocity_.z) < speedBorderValue) {
 		velocity_.z = 0.0f;
 	}
 

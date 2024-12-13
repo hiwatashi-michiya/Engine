@@ -42,8 +42,8 @@ void Stage::Initialize() {
 	stageParticle_->Initialize();
 	stageParticle_->Load("./Resources/ParticleData/stage.json");
 	stageParticle_->SetInstanceCount(128);
-	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + Vector3{ -30.0f,-10.0f,-30.0f },
-		player_->GetPosition() + Vector3{ 30.0f,-5.0f,30.0f });
+	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + minParticleLange_,
+		player_->GetPosition() + maxParticleLange_);
 
 }
 
@@ -57,7 +57,7 @@ void Stage::Update() {
 
 #endif // _DEBUG
 
-
+	//フラグが立ったものを削除
 	rings_.remove_if([](std::shared_ptr<Paint> ring) {
 
 		if (ring->GetIsVanish()) {
@@ -101,6 +101,7 @@ void Stage::Update() {
 		player_->Update();
 	}
 
+	//各オブジェクト更新
 	for (auto& block : blocks_) {
 
 		block->Update();
@@ -136,9 +137,9 @@ void Stage::Update() {
 	for (auto& goal : goals_) {
 		goal->Update();
 	}
-
-	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + Vector3{ -50.0f,-10.0f,-50.0f },
-		player_->GetPosition() + Vector3{ 50.0f,-5.0f,50.0f });
+	//パーティクルのスポーン地点更新
+	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + minParticleLange_,
+		player_->GetPosition() + maxParticleLange_);
 	
 	stageParticle_->SetEndColor(CreateColor(stageColor_));
 
@@ -152,7 +153,7 @@ void Stage::Draw(Camera* camera) {
 	line_.diff = player_->GetPosition() - camera->GetWorldPosition();
 
 	for (auto& ring : rings_) {
-
+		//プレイヤーが見やすい様に描画制限をかける
 		if ((followCamera_->GetCameraType() == CameraType::kSide and
 			ring->GetCollider()->collider_.center.z + ring->GetCollider()->collider_.size.z > player_->GetMinZ()) or
 			(followCamera_->GetCameraType() == CameraType::kAbove and
@@ -163,7 +164,7 @@ void Stage::Draw(Camera* camera) {
 	}
 
 	for (auto& block : blocks_) {
-
+		//プレイヤーが見やすい様に描画制限をかける
 		if ((followCamera_->GetCameraType() == CameraType::kSide and
 			block->GetCollider()->collider_.center.z + block->GetCollider()->collider_.size.z > player_->GetMinZ()) or
 			(followCamera_->GetCameraType() == CameraType::kAbove and
@@ -174,7 +175,7 @@ void Stage::Draw(Camera* camera) {
 	}
 
 	for (auto& ghostBox : ghostBoxes_) {
-
+		//プレイヤーが見やすい様に描画制限をかける
 		if ((followCamera_->GetCameraType() == CameraType::kSide and
 			ghostBox->GetCollider()->collider_.center.z + ghostBox->GetCollider()->collider_.size.z > player_->GetMinZ()) or
 			(followCamera_->GetCameraType() == CameraType::kAbove and
@@ -189,7 +190,7 @@ void Stage::Draw(Camera* camera) {
 	}
 
 	for (auto& colorSwitch : switches_) {
-
+		//プレイヤーが見やすい様に描画制限をかける
 		if ((followCamera_->GetCameraType() == CameraType::kSide and
 			colorSwitch->GetCollider()->collider_.center.z + colorSwitch->GetCollider()->collider_.size.z > player_->GetMinZ()) or
 			(followCamera_->GetCameraType() == CameraType::kAbove and
@@ -208,7 +209,7 @@ void Stage::Draw(Camera* camera) {
 	}
 
 	for (auto& goal : goals_) {
-
+		//プレイヤーが見やすい様に描画制限をかける
 		if ((followCamera_->GetCameraType() == CameraType::kSide and
 			goal->GetCollider()->collider_.center.z + goal->GetCollider()->collider_.size.z > player_->GetMinZ()) or
 			(followCamera_->GetCameraType() == CameraType::kAbove and

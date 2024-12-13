@@ -122,7 +122,7 @@ void TextureManager::Initialize(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srv
 	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	srvDescHeap_ = srvHeap;
-
+	//全部リセット
 	for (size_t i = 0; i < kNumDescriptors; i++) {
 		textures_[i].resource.Reset();
 		textures_[i].srvHandleCPU.ptr = 0;

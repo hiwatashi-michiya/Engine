@@ -9,12 +9,15 @@ struct CameraForGPU
 	Vector3 worldPosition;
 };
 
+/// <summary>
+/// 描画時に使う視点カメラ
+/// </summary>
 class Camera
 {
 public:
-
+	//初期化
 	void Initialize();
-
+	//更新
 	void Update();
 
 	//ローカルスケール
@@ -38,7 +41,7 @@ public:
 	Matrix4x4 matProjection_;
 	//ビュープロジェクション行列
 	Matrix4x4 matViewProjection_;
-
+	//ワールド座標取得
 	Vector3 GetWorldPosition() {
 
 		Vector3 pos;

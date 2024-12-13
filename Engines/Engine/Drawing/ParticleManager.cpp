@@ -12,7 +12,7 @@ void ParticleManager::Initialize() {
 }
 
 void ParticleManager::Update() {
-
+	//終了したパーティクルを取り出す
 	particles_.remove_if([](std::shared_ptr<Particle> particle) {
 
 		if (particle->IsEnd()) {
@@ -22,7 +22,7 @@ void ParticleManager::Update() {
 		return false;
 
 		});
-
+	//パーティクル更新
 	for (auto& particle : particles_) {
 		particle->Update();
 	}

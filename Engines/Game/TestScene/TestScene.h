@@ -17,6 +17,9 @@
 #include <memory>
 #include "Tool/LevelDataLoader.h"
 
+/// <summary>
+/// 新機能を試すためのシーン
+/// </summary>
 class TestScene : public DefaultScene
 {
 public:
@@ -34,22 +37,15 @@ public:
 private:
 
 	MapEditor* editor_ = nullptr;
-
+	//ローダー
 	LevelDataLoader* loader_ = nullptr;
 
 	std::unique_ptr<Camera> camera_;
-
-	float animationTime_ = 0.0f;
-
-	Matrix4x4 localMatrix_{};
-
+	//モデルとトランスフォームリスト
 	std::vector<std::shared_ptr<Model>> models_;
 	std::vector<std::shared_ptr<Transform>> transforms_;
 
-	float speed_ = 1.0f;
-
-	uint32_t test_;
-
+	//線分
 	std::unique_ptr<Line> line_;
 
 	Texture* testTex_ = nullptr;

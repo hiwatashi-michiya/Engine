@@ -15,6 +15,9 @@
 #include <memory>
 #include "DebugCamera.h"
 
+/// <summary>
+/// ステージ編集などを行うシーン
+/// </summary>
 class EditorScene : public DefaultScene
 {
 public:
@@ -33,23 +36,18 @@ private:
 
 	UniqueEditor* editor_ = nullptr;
 	ParticleEditor* particleEditor_ = nullptr;
-
-	std::unique_ptr<Camera> cameraX_;
-	std::unique_ptr<Camera> cameraY_;
-	std::unique_ptr<Camera> cameraZ_;
-
+	//デバッグカメラ
 	std::unique_ptr<DebugCamera> debugCamera_;
-
-	std::unique_ptr<Model> model_;
-
-	std::unique_ptr<Transform> transform_;
 
 	std::unique_ptr<Sprite> test_;
 
 	Camera* currentCamera_ = nullptr;
 
-	int32_t cameraIndex_ = 0;
-
 	Texture* tex_;
+
+	//初期座標
+	const Vector3 kStartPosition_ = { 0.0f,65.0f, -60.0f };
+	//初期回転角
+	const Vector3 kStartRotate_ = { 0.9f,0.0f,0.0f };
 
 };

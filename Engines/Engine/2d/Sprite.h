@@ -8,13 +8,16 @@
 #include <dxcapi.h>
 #include <wrl.h>
 
+/// <summary>
+/// 画像の描画を行うクラス
+/// </summary>
 class Sprite
 {
 public:
 
 	Sprite(Texture* texture, Vector2 position, Vector2 size, Vector4 color);
 	~Sprite() = default;
-
+	//静的初期化
 	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
@@ -24,18 +27,20 @@ public:
 		Vector4 position; //位置
 		Vector2 texcoord; //uv座標
 	};
-
+	/// <summary>
+	/// 2Dマテリアルデータ
+	/// </summary>
 	struct Material2D {
 		Vector4 color;
 		Matrix4x4 uvTransform;
 	};
-
+	//生成
 	static Sprite* Create(Texture* texture, Vector2 position, Vector4 color = { 1.0f,1.0f,1.0f,1.0f });
-
+	//描画前処理
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
-
+	//描画後処理
 	static void PostDraw();
-	
+	//終了処理
 	static void Finalize();
 
 	//位置
@@ -60,21 +65,21 @@ public:
 	Vector4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 
 public:
-
+	//描画コマンド積む
 	void Draw();
-
+	//実際の描画
 	void Render();
-
+	//テクスチャセット
 	void SetTexture(Texture* tex) { texture_ = tex; }
-
+	//ポジションセット
 	void SetPosition(Vector2 pos) { position_ = pos; }
-
+	//ポジション取得
 	Vector2 GetPosition() { return position_; }
-
+	//デバッグ更新
 	void ImGuiUpdate(const std::string name);
 
 private:
-
+	//初期化
 	bool Initialize();
 
 private:

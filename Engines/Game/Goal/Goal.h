@@ -49,10 +49,18 @@ private:
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
-
+	//エフェクトがアクティブ状態かどうか
 	bool isActiveEffect_ = false;
-
+	//パーティクルの数
 	int32_t particleCount_ = 32;
+	//最大パーティクル数
+	const int32_t kMaxParticles_ = 128;
+	//変化量
+	float changeValue_ = 0.04f;
+	//最大値
+	float maxValue_ = 1.0f;
+	//最大回転角
+	const float kMaxRotate_ = 6.28f;
 
 };
 

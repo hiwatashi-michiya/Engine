@@ -61,7 +61,7 @@ void PostEffectDrawer::Initialize() {
 		renderTextures_.push_back(newRenderTex);
 
 	}
-
+	//ここから各ポストエフェクト追加
 	postEffects_.push_back(std::make_shared<CopyImageRender>());
 
 	postEffects_.push_back(std::make_shared<Grayscale>());
@@ -120,7 +120,7 @@ void PostEffectDrawer::Draw() {
 		isUsedAllEffects_ = true;
 
 	}
-
+	//指定したタイプのエフェクト描画
 	if (type_ < postEffects_.size()) {
 		postEffects_[type_]->Render();
 	}
@@ -150,6 +150,7 @@ void PostEffectDrawer::Debug() {
 
 #ifdef _DEBUG
 
+	//各ポストエフェクトのデバッグ処理
 	ImGui::Begin("PostEffects", nullptr, ImGuiWindowFlags_MenuBar);
 
 	if (ImGui::Button("Normal")) {

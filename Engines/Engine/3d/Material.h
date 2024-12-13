@@ -3,13 +3,15 @@
 #include <d3d12.h>
 #include <wrl.h>
 
-
+/// <summary>
+/// マテリアルデータを保持するクラス
+/// </summary>
 class Material
 {
 public:
-
+	//静的初期化
 	static void StaticInitialize(ID3D12Device* device);
-
+	//生成
 	Material* Create();
 	
 	//マテリアルファイル読み込み

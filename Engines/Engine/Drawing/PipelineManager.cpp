@@ -25,7 +25,7 @@ void PipelineManager::CreatePipeLine(const D3D12_GRAPHICS_PIPELINE_STATE_DESC& d
 	}
 
 	HRESULT hr;
-
+	//パイプライン生成
 	hr = device_->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&pipelineStates_[pipelineName]));
 
 	assert(SUCCEEDED(hr));
@@ -33,7 +33,7 @@ void PipelineManager::CreatePipeLine(const D3D12_GRAPHICS_PIPELINE_STATE_DESC& d
 }
 
 ID3D12PipelineState* PipelineManager::GetPipeline(const std::string& pipelineName) {
-
+	//既に生成したパイプラインがあるならそれを返す
 	if (pipelineStates_.find(pipelineName) != pipelineStates_.end()) {
 
 		return pipelineStates_[pipelineName].Get();

@@ -34,7 +34,7 @@ IDxcBlob* ShaderManager::CompileShader(const std::wstring& filePath, ShaderType 
 	if (blobs_.find(name) != blobs_.end()) {
 		return blobs_[name].Get();
 	}
-
+	//シェーダーコンパイル
 	blobs_[name] = CompileShader(filePath, profiles[type].c_str(), dxcUtils_, dxcCompiler_, includeHandler_);
 
 	return blobs_[name].Get();

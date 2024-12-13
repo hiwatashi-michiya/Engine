@@ -74,7 +74,13 @@ private:
 	int32_t countCoolTimer_ = 0;
 	//クールタイム
 	int32_t coolTime_ = 60;
-
+	//色変化時の変化量
+	float changeValue_ = 0.05f;
+	//最大値
+	float maxValue_ = 1.0f;
+	//最大回転角
+	const float kMaxRotate_ = 6.28f;
+	//色
 	GameColor::Color color_ = GameColor::kWhite;
 
 };

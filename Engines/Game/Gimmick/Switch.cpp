@@ -39,6 +39,7 @@ void Switch::Update() {
 		countTimer_--;
 	}
 
+	//座標更新
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
 

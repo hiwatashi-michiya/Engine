@@ -7,7 +7,7 @@
 class ModelManager
 {
 public:
-	
+	//インスタンス取得
 	static ModelManager* GetInstance();
 
 
@@ -17,7 +17,7 @@ private:
 
 
 private:
-
+	//シングルトン化
 	ModelManager() = default;
 	~ModelManager() = default;
 	ModelManager(const ModelManager&) = delete;

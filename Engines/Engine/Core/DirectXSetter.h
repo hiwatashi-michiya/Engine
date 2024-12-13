@@ -13,11 +13,14 @@
 #include <Windows.h>
 #include <wrl.h>
 
+/// <summary>
+/// DirectX12を使用した初期化や描画処理関連の流れを形成するクラス
+/// </summary>
 class DirectXSetter
 {
 
 public:
-
+	//インスタンス取得
 	static DirectXSetter* GetInstance();
 
 	//srvHeapのHandle
@@ -53,36 +56,67 @@ public:
 	/// 終了処理
 	/// </summary>
 	void Finalize();
-
+	/// <summary>
+	/// デバイス取得
+	/// </summary>
+	/// <returns></returns>
 	ID3D12Device* GetDevice() { return device_.Get(); }
-
+	/// <summary>
+	/// コマンドリスト取得
+	/// </summary>
+	/// <returns></returns>
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList_.Get(); }
-
+	/// <summary>
+	/// SRVデスクリプタヒープ取得
+	/// </summary>
+	/// <returns></returns>
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeap() { return srvHeap_; }
-
+	/// <summary>
+	/// RTVデスクリプタヒープ取得
+	/// </summary>
+	/// <returns></returns>
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetRtvHeap() { return rtvHeap_; }
-
+	/// <summary>
+	/// デプスステンシル取得
+	/// </summary>
+	/// <returns></returns>
 	ID3D12Resource* GetDepthStencilResource() { return depthStencil_.Get(); }
 
 private:
 
 	WindowManager* windowManager_;
 
+	//ファクトリー
 	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_;
+	//デバイス
 	Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	//コマンドキュー
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
+	//アロケータ
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_;
+	//コマンドリスト
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
+	//スワップチェーン
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
+	//スワップチェーンデスク
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
+	//バックバッファ
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
+	//デプスステンシル
 	DepthStencil depthStencil_;
+	//レンダーターゲットビューデスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
+	//デプスステンシルビューデスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_;
+	//シェーダーリソースビューデスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
+	//フェンス
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
+	//フェンスの値
 	UINT64 fenceVal_ = 0;
+	//横幅
 	int32_t backBufferWidth_ = 0;
+	//縦幅
 	int32_t backBufferHeight_ = 0;
 
 	//DescriptorSizeを取得しておく
@@ -96,7 +130,7 @@ private:
 	std::chrono::steady_clock::time_point preReference_;
 
 private:
-
+	//シングルトン化
 	DirectXSetter() = default;
 	~DirectXSetter() = default;
 	DirectXSetter(const DirectXSetter&) = delete;

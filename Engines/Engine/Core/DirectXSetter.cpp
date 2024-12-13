@@ -351,7 +351,7 @@ void DirectXSetter::CreateSwapChain() {
 }
 
 void DirectXSetter::CreateSrvHeap() {
-
+	//シェーダーリソースビュー生成
 	srvHeap_ = DescriptorHeapManager::GetInstance()->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 256, true, "SRVHeap");
 
 	srvHandleNumber_ = 0;
@@ -367,7 +367,7 @@ void DirectXSetter::CreateRenderTargets() {
 	DXGI_SWAP_CHAIN_DESC swcDesc = {};
 	hr = swapChain_->GetDesc(&swcDesc);
 	assert(SUCCEEDED(hr));
-
+	//レンダーターゲットビュー生成
 	rtvHeap_ = DescriptorHeapManager::GetInstance()->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 4, false, "RTVHeap");
 
 	rtvHeap_->SetName(L"rtvHeap");
@@ -397,6 +397,7 @@ void DirectXSetter::CreateRenderTargets() {
 
 void DirectXSetter::CreateDepthBuffer() {
 
+	//デプスステンシルビュー生成
 	depthStencil_.Create(device_.Get(), WindowManager::kWindowWidth, WindowManager::kWindowHeight);
 
 	dsvHeap_ = DescriptorHeapManager::GetInstance()->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false, "DSVHeap");

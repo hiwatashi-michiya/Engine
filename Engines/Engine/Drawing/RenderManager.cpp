@@ -21,9 +21,9 @@ void RenderManager::Clear()
 
 void RenderManager::Render()
 {
-
+	//レンダーテクスチャの対象設定
 	DirectXSetter::GetInstance()->RenderTexturePreDraw();
-
+	//モデル描画
 	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	for (int32_t i = 0; i < models_.size(); i++) {
@@ -31,7 +31,7 @@ void RenderManager::Render()
 	}
 
 	Model::PostDraw();
-
+	//スキニングモデル描画描画
 	SkinningModel::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	for (int32_t i = 0; i < skinningModels_.size(); i++) {
@@ -39,7 +39,7 @@ void RenderManager::Render()
 	}
 
 	SkinningModel::PostDraw();
-
+	//パーティクル描画
 	Particle3D::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	for (int32_t i = 0; i < particles_.size(); i++) {
@@ -47,11 +47,11 @@ void RenderManager::Render()
 	}
 
 	Particle3D::PostDraw();
-
+	//ここまでがポストエフェクトの対象
 	DirectXSetter::GetInstance()->PreDraw();
-
+	//ポストエフェクト適用
 	PostEffectDrawer::GetInstance()->Draw();
-
+	//スプライト描画
 	Sprite::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	for (int32_t i = 0; i < sprites_.size(); i++) {
@@ -59,7 +59,7 @@ void RenderManager::Render()
 	}
 
 	Sprite::PostDraw();
-
+	//ライン描画
 	Line::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
 	for (int32_t i = 0; i < lines_.size(); i++) {
@@ -67,7 +67,7 @@ void RenderManager::Render()
 	}
 
 	Line::PostDraw();
-
+	//描画対象のリセット
 	Clear();
 
 }

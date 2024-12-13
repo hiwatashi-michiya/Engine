@@ -32,7 +32,7 @@ void SceneManager::Update() {
 		scene_->Initialize();
 
 	}
-
+	//シーン更新
 	scene_->Update();
 
 }

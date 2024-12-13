@@ -56,6 +56,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 	windowManager_->CreateGameWindow(
 		titleString.c_str(), width, height);
 
+	//ここから諸々の初期化処理
 	dxSetter_ = DirectXSetter::GetInstance();
 	dxSetter_->Initialize(windowManager_, width, height);
 

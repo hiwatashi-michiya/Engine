@@ -14,7 +14,6 @@ GameScene::GameScene()
 {
 
 	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
-	skyDomeNet_.reset(Model::Create("./Resources/skydome/skydome_net.obj"));
 	skybox_ = std::make_unique<Skybox>();
 	skybox_->LoadDds("./Resources/skydome/test.dds");
 	pauseTex_ = TextureManager::GetInstance()->Load("./Resources/UI/pause.png");
@@ -70,14 +69,6 @@ void GameScene::Initialize() {
 	skyDome_->material_->pLightMap_->intensity = 0.15f;
 	skyDome_->material_->pLightMap_->decay = 0.5f;
 
-	skyDomeNetTransform_ = std::make_unique<Transform>();
-	skyDomeNetTransform_->scale_ = { 450.0f,450.0f,450.0f };
-	skyDomeNet_->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
-	skyDomeNet_->material_->dLightMap_->intensity = 1.0f;
-	skyDomeNet_->material_->pLightMap_->radius = 650.0f;
-	skyDomeNet_->material_->pLightMap_->intensity = 0.15f;
-	skyDomeNet_->material_->pLightMap_->decay = 0.5f;
-
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
 	stage_->LoadStage(stageNumber_);
@@ -92,8 +83,6 @@ void GameScene::Initialize() {
 
 	skyDomeTransform_->UpdateMatrix();
 	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
-	skyDomeNetTransform_->UpdateMatrix();
-	skyDomeNet_->SetWorldMatrix(skyDomeNetTransform_->worldMatrix_);
 	skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 	followCamera_->Update();
 
@@ -143,7 +132,7 @@ void GameScene::Update() {
 	ImGui::End();
 
 	PostEffectDrawer::GetInstance()->Debug();
-
+	//Rキーでリセット
 	if (input_->TriggerKey(DIK_R)) {
 		stage_->Initialize();
 		stage_->LoadStage(stageNumber_);
@@ -151,20 +140,21 @@ void GameScene::Update() {
 	}
 
 	//ポーズ状態の時
-	if (isPause_ and !SceneChangeManager::GetInstance()->IsSceneChange()) {
+	if (isPause_ and not SceneChangeManager::GetInstance()->IsSceneChange()) {
 
 
 		if (input_->TriggerKey(DIK_Q)) {
 			isPause_ = false;
 		}
 
-		if (input_->TriggerKey(DIK_SPACE) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
+		if (input_->TriggerKey(DIK_SPACE)) {
 			SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 			SceneChangeManager::GetInstance()->SceneChangeStart();
 		}
 
 	}
-	else if (!SceneChangeManager::GetInstance()->IsSceneChange()) {
+	//ポーズ状態でない時
+	else if (not SceneChangeManager::GetInstance()->IsSceneChange()) {
 
 		if (input_->TriggerKey(DIK_P)) {
 			isPause_ = true;
@@ -227,7 +217,7 @@ void GameScene::Update() {
 		if (stage_->GetPlayer()->GetIsDead()) {
 
 			resetCount_--;
-
+			//ゲームのリセット
 			if (resetCount_ <= 0) {
 				SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
 				SceneChangeManager::GetInstance()->SceneChangeStart();
@@ -258,9 +248,6 @@ void GameScene::Update() {
 		skyDome_->SetColor(CreateColor(stage_->stageColor_));
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
-		/*skyDomeNet_->SetColor(CreateColor(ColorHolder::GetHolderColor()));
-		skyDomeNetTransform_->UpdateMatrix();
-		skyDomeNet_->SetWorldMatrix(skyDomeNetTransform_->worldMatrix_);*/
 		skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 
 		PostEffectDrawer::GetInstance()->SetCamera(camera_.get());

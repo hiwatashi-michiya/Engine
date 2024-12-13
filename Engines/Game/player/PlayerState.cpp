@@ -151,8 +151,11 @@ void PlayerMove::UpdateMove(Player& player)
 		//回転処理用のVector作成
 		Vector3 moveXZ = { moveVector.x, 0.0f, moveVector.z };
 
+		//最小速度
+		float minSpeed = 0.00001f;
+
 		//回転処理
-		if (fabsf(Length(moveXZ)) > 0.00001f) {
+		if (fabsf(Length(moveXZ)) > minSpeed) {
 
 			//一旦正規化
 			moveXZ = Normalize(moveXZ);
@@ -161,7 +164,9 @@ void PlayerMove::UpdateMove(Player& player)
 
 			Quaternion diff = MakeRotateAxisAngleQuaternion(Normalize(Cross({ 0.0f,0.0f,1.0f }, Normalize(tmp))), std::acos(Dot({ 0.0f,0.0f,1.0f }, Normalize(tmp))));
 
-			player.transform_->rotateQuaternion_ = Slerp(IdentityQuaternion(), diff, 0.5f) * player.transform_->rotateQuaternion_;
+			float t = 0.5f;
+
+			player.transform_->rotateQuaternion_ = Slerp(IdentityQuaternion(), diff, t) * player.transform_->rotateQuaternion_;
 
 		}
 
@@ -303,7 +308,7 @@ Vector3 PlayerDive::CalcDiveVelocity(const Vector3& vec)
 		}
 
 	}
-
+	//最も近い向きを返す
 	return closestDirection;
 
 }

@@ -226,16 +226,6 @@ Quaternion Quaternion::ConvertFromRotateMatrix(const Matrix4x4& matrix) {
 	this->z = tmpQr[2];
 	this->w = tmpQr[3];
 
-	/**this = Quaternion(
-		(matrix.m[2][1] - matrix.m[1][2]) /
-		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
-		(matrix.m[0][2] - matrix.m[2][0]) /
-		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
-		(matrix.m[1][0] - matrix.m[0][1]) /
-		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
-		(std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)) / 2.0f
-	);*/
-
 	return *this;
 
 }
@@ -409,16 +399,6 @@ Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix) {
 	qr.z = tmpQr[2];
 	qr.w = tmpQr[3];
 
-	/*qr = Quaternion(
-		(matrix.m[2][1] - matrix.m[1][2]) /
-		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
-		(matrix.m[0][2] - matrix.m[2][0]) /
-		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
-		(matrix.m[1][0] - matrix.m[0][1]) /
-		(2.0f * std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)),
-		(std::sqrtf(matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1)) / 2.0f
-	);*/
-
 	return qr;
 
 }
@@ -467,17 +447,6 @@ Vector3 operator*(const Quaternion& q, const Vector3& v) {
 	Quaternion newQuaternion = q * tmpQ * Inverse(q);
 
 	return { newQuaternion.x ,newQuaternion.y, newQuaternion.z };
-
-	/*float x = q.w * v.x + q.y * v.z - q.z * v.y;
-	float y = q.w * v.y + q.z * v.x - q.x * v.z;
-	float z = q.w * v.z + q.x * v.y - q.y * v.x;
-	float w = -q.x * v.x - q.y * v.y - q.z * v.z;
-
-	return {
-		x * q.w + w * -q.x + y * -q.z - z * -q.y,
-		y * q.w + w * -q.y + z * -q.x - x * -q.z,
-		z * q.w + w * -q.z + x * -q.y - y * -q.x
-	};*/
 
 }
 

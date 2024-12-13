@@ -23,9 +23,6 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize() {
 
-	editor_ = MapEditor::GetInstance();
-	editor_->Initialize();
-
 	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
 
@@ -33,8 +30,6 @@ void TitleScene::Initialize() {
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,65.0f, -60.0f };
 	camera_->rotation_.x = 0.9f;
-
-	editor_->SetCamera(camera_.get());
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
@@ -83,6 +78,7 @@ void TitleScene::Update() {
 
 #endif // _DEBUG
 
+	//ボタンを押したらシーン切り替え
 	if (input_->TriggerButton(Input::Button::A) && !SceneChangeManager::GetInstance()->IsSceneChange()) {
 		SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 		SceneChangeManager::GetInstance()->SceneChangeStart();

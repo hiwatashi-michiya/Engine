@@ -5,6 +5,9 @@
 #include <string>
 #include <array>
 
+/// <summary>
+/// ゲームの色を数字に置き換える
+/// </summary>
 namespace GameColor {
 
 	enum Color {
@@ -21,7 +24,7 @@ namespace GameColor {
 		kMaxColor
 
 	};
-
+	//色の名前
 	static std::array<const char*, kMaxColor> colorNames = {
 	"White", "Red", "Blue", "Green", "Yellow", "Cyan", "Magenta"
 	};

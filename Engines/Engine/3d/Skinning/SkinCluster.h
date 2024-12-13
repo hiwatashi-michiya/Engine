@@ -12,25 +12,33 @@
 //最大4Jointの影響を受ける
 const uint32_t kNumMaxInfluence = 4;
 
+/// <summary>
+/// 頂点情報
+/// </summary>
 struct VertexInfluence {
 	std::array<float, kNumMaxInfluence> weights;
 	std::array<int32_t, kNumMaxInfluence> jointIndices;
 };
-
+/// <summary>
+/// GPUに送るスケルトンの行列データ
+/// </summary>
 struct WellForGPU {
 	Matrix4x4 skeletonSpaceMatrix; //位置用
 	Matrix4x4 skeletonSpaceInverseTransposeMatrix; //法線用
 };
 
+/// <summary>
+/// スキンクラスターのデータをまとめたクラス
+/// </summary>
 class SkinCluster
 {
 public:
 	SkinCluster();
 	~SkinCluster();
-
+	//生成
 	void Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton,
 		const ModelData& modelData);
-
+	//更新
 	void Update(const Skeleton& skeleton);
 
 	std::vector<Matrix4x4> inverseBindPoseMatrices_;

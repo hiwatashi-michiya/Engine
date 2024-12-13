@@ -37,6 +37,7 @@ void TestScene::Initialize() {
 	loader_ = LevelDataLoader::GetInstance();
 	loader_->Load("./Resources/Levels/scene.json");
 
+	//レベルの読み込み
 	for (auto& object : loader_->levelData_->objects_) {
 
 		if (object.type.compare("MESH") == 0) {
@@ -61,8 +62,6 @@ void TestScene::Initialize() {
 	}
 
 	editor_->SetCamera(camera_.get());
-
-	test_ = audioManager_->LoadInMF("./Resources/SE/test.mp3");
 
 	line_ = std::make_unique<Line>();
 	line_->start_ = { 0.0f,0.0f,0.0f };
@@ -98,12 +97,12 @@ void TestScene::Update() {
 		ImGui::Text("Center Push");
 	}
 
-	if (input_->TriggerMouse(Input::kLeft) || input_->TriggerMouse(Input::kRight)
+	if (input_->TriggerMouse(Input::kLeft) or input_->TriggerMouse(Input::kRight)
 		|| input_->TriggerMouse(Input::kCenter)) {
 		ImGui::Text("Trigger");
 	}
 
-	if (input_->ReleaseMouse(Input::kLeft) || input_->ReleaseMouse(Input::kRight)
+	if (input_->ReleaseMouse(Input::kLeft) or input_->ReleaseMouse(Input::kRight)
 		|| input_->ReleaseMouse(Input::kCenter)) {
 		ImGui::Text("Release");
 	}
@@ -125,13 +124,11 @@ void TestScene::Update() {
 	ImGui::End();
 
 #endif // _DEBUG
-
+	//各モデル更新
 	for (int32_t i = 0; i < models_.size(); i++) {
 		transforms_[i]->UpdateMatrix();
 		models_[i]->SetWorldMatrix(transforms_[i]->worldMatrix_);
 	}
-
-	/*editor_->Edit();*/
 
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();

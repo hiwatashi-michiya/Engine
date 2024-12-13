@@ -52,14 +52,19 @@ private:
 	std::unique_ptr<Model> model_;
 	std::unique_ptr<Model> modelWire_;
 
+	//変化量
+	float changeValue_ = 0.05f;
+	//最大値
+	float maxValue_ = 1.0f;
+
 	//取得されたフラグ
 	bool isObtained_ = false;
 
 	//リングが消えるフラグ
 	bool isVanish_ = false;
-
+	//色
 	GameColor::Color color_ = GameColor::kWhite;
-
+	//取得時のSE
 	uint32_t getSE_;
 
 };

@@ -250,6 +250,7 @@ void LineBox::Update() {
 
 	Matrix4x4 rotateMatrix = MakeIdentity4x4();
 
+	//OBBのポインタがある場合のみ更新
 	if (obb_) {
 
 		rotateMatrix = {

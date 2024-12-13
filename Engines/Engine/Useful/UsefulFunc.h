@@ -8,5 +8,10 @@
 #include "Vector3.h"
 #include <stdint.h>
 
+///
+/// 便利な関数を纏めていくヘッダー
+///
+
+//リソースファイルの検索
 std::string SearchResourceFile(const std::string& name, const std::string& extension);
 

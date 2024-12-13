@@ -17,6 +17,9 @@
 #include <memory>
 #include "Tool/LevelDataLoader.h"
 
+/// <summary>
+/// セレクトシーンの更新を行う
+/// </summary>
 class SelectScene : public DefaultScene
 {
 public:
@@ -33,15 +36,11 @@ public:
 
 private:
 
-	MapEditor* editor_ = nullptr;
-
-	LevelDataLoader* loader_ = nullptr;
-
 	std::unique_ptr<Camera> camera_;
 
 	std::unique_ptr<Model> skyDome_;
 	std::unique_ptr<Transform> skyDomeTransform_;
-
+	//画像
 	std::unique_ptr<Sprite> stageSelect_;
 	std::unique_ptr<Sprite> toTitle_;
 	std::unique_ptr<Sprite> aButton_;

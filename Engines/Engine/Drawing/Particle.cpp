@@ -29,8 +29,8 @@ void Particle::Update() {
 	}
 
 	for (int32_t i = 0; i < instanceCount_; i++) {
-
-		if ((isLoop_ or particleLifeTime_ > 0) and !particle_->isActive_[i]) {
+		//非アクティブのパーティクルを出現させる
+		if ((isLoop_ or particleLifeTime_ > 0) and not particle_->isActive_[i]) {
 
 			particle_->transforms_[i]->translate_ = RandomVector3(minSpawnPoint_, maxSpawnPoint_);
 			particle_->transforms_[i]->rotateQuaternion_ = ConvertFromEuler(RandomVector3(-3.14f, 3.14f));
@@ -50,6 +50,7 @@ void Particle::Update() {
 
 	for (int32_t i = 0; i < instanceCount_; i++) {
 
+		//アクティブ状態のパーティクルを更新
 		if (particle_->isActive_[i]) {
 
 			particle_->transforms_[i]->translate_ += particle_->velocities_[i];

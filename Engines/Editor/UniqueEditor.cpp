@@ -22,13 +22,8 @@ void UniqueEditor::EditTransform()
 		return;
 	}
 
+	//Guizmo関連の変数宣言
 	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
-	static bool useSnap = false;
-	static float snap[3] = { 1.f, 1.f, 1.f };
-	static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
-	static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
-	static bool boundSizing = false;
-	static bool boundSizingSnap = false;
 	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
 	ImGui::Begin("Gizmo Transform");
@@ -62,19 +57,20 @@ void UniqueEditor::EditTransform()
 	bool isHit = false;
 
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
-		
+		//判定用のOBB
 		OBB tmpObb{};
 
 		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
 
 			tmpObb = *warpPtr->obb_.get();
-
+			//判定用のOBB
 			OBB tmpObbB = *warpPtr->obbB_.get();
 
+			//マウスと当たっていた場合
 			if (IsCollision(mouseSegment_, tmpObb)) {
 
 				warpPtr->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
+				//最も近いなら数字を代入
 				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
 					nearLength = Length(tmpObb.center - mouseSegment_.origin);
 					changeNum = i;
@@ -89,10 +85,11 @@ void UniqueEditor::EditTransform()
 				warpPtr->lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 			}
 
+			//マウスと当たっていた場合
 			if (IsCollision(mouseSegment_, tmpObbB)) {
 
 				warpPtr->lineBoxB_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
+				//最も近いなら数字を代入
 				if (Length(tmpObbB.center - mouseSegment_.origin) < nearLength) {
 					nearLength = Length(tmpObbB.center - mouseSegment_.origin);
 					changeNum = i;
@@ -133,10 +130,11 @@ void UniqueEditor::EditTransform()
 
 			tmpObb = *mapObjData_[i]->obb_.get();
 
+			//マウスと当たっていた場合
 			if (IsCollision(mouseSegment_, tmpObb)) {
 
 				mapObjData_[i]->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
+				//最も近いなら数字を代入
 				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
 					nearLength = Length(tmpObb.center - mouseSegment_.origin);
 					changeNum = i;
@@ -184,7 +182,7 @@ void UniqueEditor::EditTransform()
 			
 			//操作した瞬間に状態を保存
 			if (not isRecordMove_) {
-
+				//ワープの処理
 				if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[selectObject_].get())) {
 
 					if (warpPtr->isMoveA_) {
@@ -207,13 +205,12 @@ void UniqueEditor::EditTransform()
 
 				}
 
-				/*oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->scale_;
-				oldTransform_->rotateQuaternion_ = mapObjData_[selectObject_]->transform_->rotateQuaternion_;
-				oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->translate_;*/
+				
 				isRecordMove_ = true;
 			}
 
 		}
+		//操作していない時
 		else if(not ImGuizmo::IsUsing()) {
 			
 			//操作が終わったらUndoリストに追加
@@ -255,6 +252,7 @@ void UniqueEditor::EditTransform()
 
 	}
 
+	//全てのトランスフォームを更新
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
 		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
@@ -472,6 +470,7 @@ void UniqueEditor::Edit() {
 
 						}
 
+						//項目に当てはまっているオブジェクトのみ描画
 						for (int32_t k = 0; auto & object : mapObjData_) {
 
 							object->preOpen_ = object->isOpen_;
@@ -546,19 +545,19 @@ void UniqueEditor::Edit() {
 			if (!mapObjData_.empty()) {
 				ImGui::SliderInt("Select Object", &selectObject_, 0, int(mapObjData_.size() - 1));
 			}
-
+			//Undo
 			if (not undoCommands_.empty() and ImGui::Button("Undo")) {
 				undoCommands_.top()->Undo();
 				redoCommands_.push(undoCommands_.top());
 				undoCommands_.pop();
 			}
-
+			//Redo
 			if (not redoCommands_.empty() and ImGui::Button("Redo")) {
 				redoCommands_.top()->Execute();
 				undoCommands_.push(redoCommands_.top());
 				redoCommands_.pop();
 			}
-
+			//Undo
 			if (input_->TriggerKey(DIK_Z) and input_->PushKey(DIK_LCONTROL)) {
 
 				if (not undoCommands_.empty()) {
@@ -568,7 +567,7 @@ void UniqueEditor::Edit() {
 				}
 
 			}
-
+			//Redo
 			if (input_->TriggerKey(DIK_Y) and input_->PushKey(DIK_LCONTROL)) {
 
 				if (not redoCommands_.empty()) {
@@ -685,7 +684,7 @@ void UniqueEditor::Save(const std::string& filename) {
 	root = nlohmann::json::object();
 
 	root[kSceneName_] = nlohmann::json::object();
-
+	//情報を書き出し
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
 		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {

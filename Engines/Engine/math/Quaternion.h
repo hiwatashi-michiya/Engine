@@ -71,6 +71,7 @@ public:
 	/// <returns></returns>
 	Quaternion ConvertFromEuler(const Vector3& euler);
 
+	//回転行列からの変換
 	Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
 
 	Quaternion operator*=(const Quaternion& qr) { return this->Multiply(qr); }
@@ -127,8 +128,9 @@ Quaternion Inverse(const Quaternion& quaternion);
 /// <returns></returns>
 Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
 
+//オイラー角からの変換
 Quaternion ConvertFromEuler(const Vector3& euler);
-
+//回転行列からの変換
 Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
 
 //球面線形補間

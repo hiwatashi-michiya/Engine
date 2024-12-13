@@ -86,11 +86,11 @@ private:
 	Quaternion rotation_;
 
 	std::unique_ptr<BoxCollider> collider_;
-
+	//一フレーム前の位置
 	Vector3 preTranslate_{};
-
+	//速度
 	Vector3 velocity_{};
-
+	//リスポーン地点
 	Vector3 respawnPosition_{};
 	//速度
 	float speed_ = 0.25f;

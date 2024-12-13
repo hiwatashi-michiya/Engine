@@ -33,7 +33,7 @@ void FollowCamera::Update() {
 
 #endif // _DEBUG
 
-
+			//切り替え可能で、現在切り替えていない時にYボタンを押したら
 			if (not isSwitching_ and Input::GetInstance()->TriggerButton(Input::Button::Y) and canSwitch_) {
 				isSwitching_ = true;
 			}
@@ -43,6 +43,7 @@ void FollowCamera::Update() {
 				isSwitched_ = false;
 			}
 
+			//切り替え途中
 			if (isSwitching_) {
 
 				float t = 0.0f;

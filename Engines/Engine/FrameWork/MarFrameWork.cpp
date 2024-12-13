@@ -37,6 +37,7 @@ void MarFrameWork::Run() {
 		//ゲームシーン更新
 		Update();
 
+		//エスケープキーが押されるか、ウィンドウのxボタンが押されたら終了する
 		if (Input::GetInstance()->TriggerKey(DIK_ESCAPE) or Engine::ProcessMessage() != 0) {
 			sceneManager_->Finalize();
 			break;

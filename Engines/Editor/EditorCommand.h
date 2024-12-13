@@ -17,23 +17,29 @@ enum CommandType {
 
 };
 
+/// <summary>
+/// コマンドの基底クラス
+/// </summary>
 class ICommand
 {
 public:
 	~ICommand() = default;
-
+	//実行
 	virtual void Execute() = 0;
-
+	//手戻り
 	virtual void Undo() = 0;
-
+	//タイプ取得
 	const CommandType& GetType() const { return type_; }
 
 protected:
-
+	//種類
 	CommandType type_;
 
 };
 
+/// <summary>
+/// 移動コマンド
+/// </summary>
 class MoveCommand : public ICommand
 {
 public:
@@ -41,7 +47,7 @@ public:
 		target_(target), oldValue_(oldValue), newValue_(newValue) {
 		type_ = kMove;
 	}
-
+	//値をセット
 	void Set(Transform& target, const Transform& oldValue, const Transform& newValue) {
 		target_ = target;
 		oldValue_ = oldValue;
@@ -64,6 +70,10 @@ private:
 
 };
 
+/// <summary>
+/// 追加コマンド
+/// </summary>
+/// <typeparam name="T"></typeparam>
 template <class T>
 class AddCommand : public ICommand
 {
@@ -72,7 +82,7 @@ public:
 		container_(container), object_(object) {
 		type_ = kAdd;
 	}
-
+	//値セット
 	void Set(std::vector<T>& container, T object) {
 		container_ = container;
 		object_ = object;
@@ -93,6 +103,10 @@ private:
 
 };
 
+/// <summary>
+/// 削除コマンド
+/// </summary>
+/// <typeparam name="T"></typeparam>
 template <class T>
 class RemoveCommand : public ICommand
 {
@@ -102,6 +116,7 @@ public:
 		type_ = kRemove;
 	}
 
+	//値セット
 	void Set(std::vector<T>& container, T object) {
 		container_ = container;
 		object_ = object;

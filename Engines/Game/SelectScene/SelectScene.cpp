@@ -39,15 +39,10 @@ void SelectScene::Initialize() {
 	input_ = Input::GetInstance();
 	audioManager_ = AudioManager::GetInstance();
 
-	editor_ = MapEditor::GetInstance();
-	editor_->Initialize();
-
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,65.0f, -60.0f };
 	camera_->rotation_.x = 0.9f;
-
-	editor_->SetCamera(camera_.get());
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
@@ -94,7 +89,7 @@ void SelectScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("EDITOR");
 	}
 
-	if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
+	if (input_->TriggerKey(DIK_LEFT) or input_->TriggerKey(DIK_A)) {
 
 		if (stageNumber_ > 1) {
 			stageNumber_--;
@@ -102,7 +97,7 @@ void SelectScene::Update() {
 
 	}
 
-	if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
+	if (input_->TriggerKey(DIK_RIGHT) or input_->TriggerKey(DIK_D)) {
 
 		if (stageNumber_ < kMaxStage_) {
 			stageNumber_++;
@@ -122,27 +117,28 @@ void SelectScene::Update() {
 
 #endif // _DEBUG
 
-	if (input_->TriggerButton(Input::Button::LEFT) || input_->TriggerLStick(Input::StickArrow::S_LEFT)) {
-
+	//左の入力があったら数字を下げる
+	if (input_->TriggerButton(Input::Button::LEFT) or input_->TriggerLStick(Input::StickArrow::S_LEFT)) {
+		//ステージが1の場合は下げない
 		if (stageNumber_ > 1) {
 			stageNumber_--;
 		}
 
 	}
-
-	if (input_->TriggerButton(Input::Button::RIGHT) || input_->TriggerLStick(Input::StickArrow::S_RIGHT)) {
-
+	//右の入力があったら数字を上げる
+	if (input_->TriggerButton(Input::Button::RIGHT) or input_->TriggerLStick(Input::StickArrow::S_RIGHT)) {
+		//最終ステージなら上げない
 		if (stageNumber_ < kMaxStage_) {
 			stageNumber_++;
 		}
 
 	}
-
+	//Aボタンでステージに入る
 	if (input_->TriggerButton(Input::Button::A) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 		SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
 		SceneChangeManager::GetInstance()->SceneChangeStart();
 	}
-
+	//Bボタンでタイトルへ
 	if (input_->TriggerButton(Input::Button::B) and !SceneChangeManager::GetInstance()->IsSceneChange()) {
 		SceneChangeManager::GetInstance()->SetNextScene("TITLE");
 		SceneChangeManager::GetInstance()->SceneChangeStart();
@@ -151,7 +147,10 @@ void SelectScene::Update() {
 	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 	camera_->Update();
 
-	num_->uvTranslate_.x = float(stageNumber_) * 0.1f;
+	//10分割した時のuvの値
+	float division = 0.1f;
+
+	num_->uvTranslate_.x = float(stageNumber_) * division;
 
 	skyDome_->SetColor(CreateColor(GameColor::Color(stageNumber_)));
 

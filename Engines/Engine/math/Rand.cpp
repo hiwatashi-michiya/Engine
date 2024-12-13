@@ -12,6 +12,7 @@ float RandomFloat(float min, float max) {
 	static std::random_device seed;
 	static std::default_random_engine engine(seed());
 
+	//最小値と最大値が逆の場合、入れ替える
 	if (min > max) {
 		std::swap(min, max);
 	}
@@ -30,6 +31,7 @@ int RandomInt(int min, int max) {
 	static std::random_device seed;
 	static std::default_random_engine engine(seed());
 
+	//最小値と最大値が逆の場合、入れ替える
 	if (min > max) {
 		std::swap(min, max);
 	}
@@ -48,6 +50,7 @@ Vector3 RandomVector3(float min, float max) {
 	static std::random_device seed;
 	static std::default_random_engine engine(seed());
 
+	//最小値と最大値が逆の場合、入れ替える
 	if (min > max) {
 		std::swap(min, max);
 	}
@@ -70,6 +73,7 @@ Vector3 RandomVector3(float minX, float maxX, float minY, float maxY, float minZ
 	static std::random_device seed;
 	static std::default_random_engine engine(seed());
 
+	//最小値と最大値が逆の場合、入れ替える
 	if (minX > maxX) {
 		std::swap(minX, maxX);
 	}
@@ -102,6 +106,7 @@ Vector3 RandomVector3(Vector3 min, Vector3 max) {
 	static std::random_device seed;
 	static std::default_random_engine engine(seed());
 
+	//最小値と最大値が逆の場合、入れ替える
 	if (min.x > max.x) {
 		std::swap(min.x, max.x);
 	}

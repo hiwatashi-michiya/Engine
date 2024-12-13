@@ -9,21 +9,21 @@ class Matrix4x4 {
 public:
 
 	float m[4][4];
-
+	//単位行列
 	static Matrix4x4 Identity();
-
+	//X軸取得
 	Vector3 GetXAxis();
-
+	//Y軸取得
 	Vector3 GetYAxis();
-
+	//Z軸取得
 	Vector3 GetZAxis();
-
+	//スケール取得
 	Vector3 GetScale();
-
+	//回転行列取得
 	Matrix4x4 GetRotateMatrix();
-
+	//オイラー角回転取得
 	Vector3 GetRotate();
-
+	//平行移動取得
 	Vector3 GetTranslate();
 
 	Matrix4x4& operator+=(const Matrix4x4& matrix) {
@@ -57,6 +57,7 @@ public:
 
 };
 
+//GPUに渡す行列のデータ
 struct TransformationMatrix {
 	Matrix4x4 WVP;
 	Matrix4x4 World;

@@ -1,5 +1,8 @@
 #pragma once
 
+/// <summary>
+/// ゲームエンジン
+/// </summary>
 class Engine
 {
 public:

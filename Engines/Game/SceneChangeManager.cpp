@@ -16,23 +16,24 @@ void SceneChangeManager::Initialize() {
 }
 
 void SceneChangeManager::Update() {
-
+	//シーン切り替え開始中
 	if (isSceneChangeEnter_) {
 
 		sceneChangeValue_ += sceneChangeSpeed_;
-
-		if (sceneChangeValue_ >= 1.0f) {
-			sceneChangeValue_ = 1.0f;
+		//値が最大値になったらシーン切り替え、終了処理に移行
+		if (sceneChangeValue_ >= maxSceneChangeValue_) {
+			sceneChangeValue_ = maxSceneChangeValue_;
 			SceneManager::GetInstance()->ChangeScene(nextScene_);
 			isSceneChangeExit_ = true;
 			isSceneChangeEnter_ = false;
 		}
 
 	}
+	//シーン切り替え終了中
 	else if (isSceneChangeExit_) {
 
 		sceneChangeValue_ -= sceneChangeSpeed_;
-
+		//値が0になったら切り替え処理終了
 		if (sceneChangeValue_ <= 0.0f) {
 			sceneChangeValue_ = 0.0f;
 			isSceneChangeExit_ = false;

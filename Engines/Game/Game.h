@@ -1,6 +1,9 @@
 #pragma once
 #include "FrameWork/MarFrameWork.h"
 
+/// <summary>
+/// ゲームの流れを更新するクラス
+/// </summary>
 class Game : public MarFrameWork {
 public:
 

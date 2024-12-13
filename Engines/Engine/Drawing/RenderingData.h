@@ -11,13 +11,14 @@
 
 //モデルに必要な構造体などを纏めたヘッダー
 
+//頂点データ
 struct VertexData {
 	Vector4 position;
 	Vector2 texcoord;
 	Vector3 normal;
 	float padding;
 };
-
+//マテリアルデータ
 struct MaterialData
 {
 	Vector4 color;
@@ -36,24 +37,15 @@ struct MaterialData
 	int32_t isActiveNoise;
 
 	Matrix4x4 uvTransform;
-	
-	//int32_t isGrayScale = 0; //グレースケール化のint型フラグ
-	//int32_t isInversion = 0; //色反転フラグ
-	//int32_t isRetro = 0; //レトロ化フラグ
-
-	//int32_t isAverageBlur = 0; //平均化ブラーフラグ
-	//int32_t isEmboss = 0; //エンボス加工
-	//int32_t isSharpness = 0; //シャープネス
-	//int32_t isOutline = 0; //輪郭線抽出
 
 };
-
+//平行光源
 struct DirectionalLight {
 	Vector4 color;
 	Vector3 direction;
 	float intensity;
 };
-
+//点光源
 struct PointLight {
 	Vector4 color; //ライトの色
 	Vector3 position; //ライトの位置
@@ -62,11 +54,11 @@ struct PointLight {
 	float decay; //減衰率
 	float padding[2];
 };
-
+//画像データ
 struct TextureData {
 	std::string textureFilePath;
 };
-
+//メッシュデータ
 struct MeshData {
 	std::vector<VertexData> vertices;
 };
@@ -84,40 +76,40 @@ struct ObjectData
 	Vector3 scale;
 
 };
-
+//オイラー角トランスフォーム
 struct EulerTransform {
 	Vector3 scale;
 	Vector3 rotate;
 	Vector3 translate;
 };
-
+//クォータニオントランスフォーム
 struct QuaternionTransform {
 	Vector3 scale;
 	Quaternion rotate;
 	Vector3 translate;
 };
-
+//ノード
 struct Node {
 	QuaternionTransform transform;
 	Matrix4x4 localMatrix; //ノードのトランスフォーム
 	std::string name; //ノードの名前
 	std::vector<Node> children; //子供のノード
 };
-
+//頂点の重みデータ
 struct VertexWeightData {
 	
 	float weight;
 	uint32_t vertexIndex;
 
 };
-
+//ジョイントの重みデータ
 struct JointWeightData {
 
 	Matrix4x4 inverseBindPoseMatrix;
 	std::vector<VertexWeightData> vertexWeights;
 
 };
-
+//スキニングモデルデータ
 struct ModelData {
 	std::map <std::string, JointWeightData> skinClusterData;
 	std::vector<VertexData> vertices;

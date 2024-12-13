@@ -3,6 +3,9 @@
 #include "SceneManager.h"
 #include <memory>
 
+/// <summary>
+/// フレームワーク
+/// </summary>
 class MarFrameWork {
 public:
 
@@ -29,7 +32,7 @@ protected:
 	SceneManager* sceneManager_ = nullptr;
 
 private:
-
+	//終了フラグ
 	bool endMessage_ = false;
 
 };

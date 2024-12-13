@@ -5,8 +5,8 @@
 Goal::Goal()
 {
 	model_.reset(Model::Create("./Resources/goal/goal.obj"));
-	particle_.reset(Particle3D::Create("./Resources/particle/particle.obj", 128));
-	particle_->SetInstanceCount(32);
+	particle_.reset(Particle3D::Create("./Resources/particle/particle.obj", kMaxParticles_));
+	particle_->SetInstanceCount(particleCount_);
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 }
@@ -26,13 +26,6 @@ void Goal::Initialize() {
 	lineBox_->SetOBB(&collider_->collider_);
 	isActiveEffect_ = false;
 
-	for (int32_t i = 0; i < particleCount_; i++) {
-
-		particle_->velocities_[i] = { 0.0f,1.0f,0.0f };
-		particle_->transforms_[i]->scale_ = { 0.0f,0.0f,0.0f };
-
-	}
-
 }
 
 void Goal::Update() {
@@ -42,49 +35,12 @@ void Goal::Update() {
 		isActiveEffect_ = true;
 	}
 
-	//エフェクトの更新
-	if (isActiveEffect_) {
-
-		//パーティクル更新
-		for (int32_t i = 0; i < 32; i++) {
-
-			if (particle_->transforms_[i]->scale_.y <= 0.0f) {
-
-				particle_->colors_[i] = CreateColor(Stage::stageColor_);
-				particle_->velocities_[i] = { float((rand() % 40 - 20) * 0.003f),float((rand() % 40 + 20) * 0.003f), float((rand() % 40 - 20) * 0.003f) };
-				particle_->transforms_[i]->translate_ = transform_->translate_ + Vector3{ float((rand() % 3 - 1) * 0.5f),0.0f, float((rand() % 3 - 1) * 0.5f) };
-				particle_->transforms_[i]->rotateQuaternion_ = IdentityQuaternion();
-				particle_->transforms_[i]->scale_ = { 0.5f,0.5f,0.5f };
-				particle_->isActive_[i] = true;
-				break;
-			}
-
-
-
-		}
-
-		for (int32_t i = 0; i < 32; i++) {
-
-			if (particle_->transforms_[i]->scale_.y > 0.0f) {
-				particle_->colors_[i] = CreateColor(Stage::stageColor_);
-				particle_->transforms_[i]->translate_ += particle_->velocities_[i];
-				particle_->transforms_[i]->rotateQuaternion_ = particle_->transforms_[i]->rotateQuaternion_ * ConvertFromEuler(particle_->velocities_[i]);
-				particle_->transforms_[i]->scale_ -= {0.02f, 0.02f, 0.02f};
-			}
-			else {
-				particle_->colors_[i].w = 0.0f;
-			}
-
-		}
-
-	}
-
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
 
-	transform_->rotate_.y += 0.04f;
+	transform_->rotate_.y += changeValue_;
 
-	if (transform_->rotate_.y > 6.28f) {
+	if (transform_->rotate_.y > kMaxRotate_) {
 		transform_->rotate_.y = 0.0f;
 	}
 
@@ -113,9 +69,7 @@ void Goal::Draw(Camera* camera) {
 
 #endif // _DEBUG
 
-	if (isActiveEffect_) {
-		particle_->Draw(camera);
-	}
+	
 
 	model_->Draw(camera);
 }

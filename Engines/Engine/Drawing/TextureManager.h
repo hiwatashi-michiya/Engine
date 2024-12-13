@@ -32,30 +32,33 @@ struct InstancingResource {
 
 };
 
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
 class TextureManager
 {
 public:
-
+	//最大デスクリプタ数
 	static const size_t kNumDescriptors = 256;
-
+	//インスタンス取得
 	static TextureManager* GetInstance();
-
+	//初期化
 	void Initialize(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap);
-
+	//テクスチャ読み込み
 	Texture* Load(const std::string& filePath);
-
+	//インスタンシングリソースセット
 	InstancingResource SetInstancingResource(uint32_t instanceCount, Microsoft::WRL::ComPtr<ID3D12Resource> mapResource);
-
+	//終了処理
 	void Finalize();
-
+	//SRVデスクリプタヒープ取得
 	ID3D12DescriptorHeap* GetSRVDescHeap() { return srvDescHeap_.Get(); }
-
+	//テクスチャの番号取得
 	const uint32_t& GetTextureIndex() { return textureIndex_; }
-
+	//インデックス加算
 	void AddIndex() { textureIndex_++; }
 
 private:
-
+	//シングルトン化
 	TextureManager() = default;
 	~TextureManager() = default;
 	TextureManager(const TextureManager&) = delete;

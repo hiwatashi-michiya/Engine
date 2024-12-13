@@ -112,7 +112,7 @@ void Paint::Update() {
 
 		if (model_->material_->constMap_->threshold > 0.0f) {
 
-			model_->material_->constMap_->threshold -= 0.05f;
+			model_->material_->constMap_->threshold -= changeValue_;
 
 			if (model_->material_->constMap_->threshold < 0.0f) {
 				model_->material_->constMap_->threshold = 0.0f;
@@ -125,12 +125,12 @@ void Paint::Update() {
 	//色が揃っていない時
 	else {
 
-		if (model_->material_->constMap_->threshold < 1.0f) {
+		if (model_->material_->constMap_->threshold < maxValue_) {
 
-			model_->material_->constMap_->threshold += 0.1f;
+			model_->material_->constMap_->threshold += changeValue_;
 
-			if (model_->material_->constMap_->threshold > 1.0f) {
-				model_->material_->constMap_->threshold = 1.0f;
+			if (model_->material_->constMap_->threshold > maxValue_) {
+				model_->material_->constMap_->threshold = maxValue_;
 			}
 
 		}

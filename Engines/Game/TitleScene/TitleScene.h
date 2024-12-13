@@ -13,6 +13,9 @@
 #include "Transform.h"
 #include <memory>
 
+/// <summary>
+/// タイトルシーンの更新を行う
+/// </summary>
 class TitleScene : public DefaultScene
 {
 public:
@@ -28,15 +31,13 @@ public:
 	void Draw() override;
 
 private:
-
-	MapEditor* editor_ = nullptr;
-
+	//カメラ
 	std::unique_ptr<Camera> camera_;
-
+	//モデル
 	std::unique_ptr<Model> model_;
-
+	//トランスフォーム
 	std::unique_ptr<Transform> transform_;
-
+	//画像
 	std::unique_ptr<Sprite> title_;
 	std::unique_ptr<Sprite> aButton_;
 

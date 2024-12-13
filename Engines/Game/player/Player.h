@@ -158,6 +158,13 @@ private:
 
 	Behavior behavior_ = Behavior::kStay;
 
+	//速度の境界値
+	const float kSpeedBorder_ = 1.98f;
+	//ブロックの当たり判定の高さ補正値
+	const float kHeightCorrectValue_ = 0.5f;
+	//ブロックの当たり判定の横補正値
+	const float kWidthCorrectValue_ = 0.99f;
+
 	//ゴール可能かどうか
 	bool canGoal_ = false;
 	//ゴール判定

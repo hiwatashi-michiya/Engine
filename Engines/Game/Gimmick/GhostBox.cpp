@@ -41,12 +41,12 @@ void GhostBox::Update() {
 	//色が一致していない場合
 	if (color_ != secondColor_) {
 
-		if (model_->material_->constMap_->threshold < 1.0f) {
+		if (model_->material_->constMap_->threshold < maxValue_) {
 
-			model_->material_->constMap_->threshold += 0.02f;
+			model_->material_->constMap_->threshold += changeValue_;
 
 			//切り替え演出が終わったら色を既存の色に書き換え
-			if (model_->material_->constMap_->threshold >= 1.0f) {
+			if (model_->material_->constMap_->threshold >= maxValue_) {
 				color_ = secondColor_;
 				model_->material_->constMap_->threshold = 0.0f;
 			}

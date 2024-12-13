@@ -1,5 +1,8 @@
 #pragma once
 
+/// <summary>
+/// 4次元ベクトル
+/// </summary>
 struct Vector4 {
 	float x;
 	float y;
@@ -7,8 +10,9 @@ struct Vector4 {
 	float w;
 };
 
+//加算
 Vector4 Add(const Vector4& v1, const Vector4& v2);
-
+//減算
 Vector4 Subtract(const Vector4& v1, const Vector4& v2);
 
 // 線形補間

@@ -12,7 +12,7 @@
 /// </summary>
 class GlobalVariables {
 public:
-
+	//インスタンス取得
 	static GlobalVariables* GetInstance();
 
 	//項目
@@ -84,9 +84,8 @@ public:
 	Vector3 GetVector3Value(const std::string& groupName, const std::string& key) const;
 	ObjectData GetObjectDataValue(const std::string& groupName, const std::string& key) const;
 
-	std::array<const char*, 2> strings_ = { "cube", "sphere" };
-
 private:
+	//シングルトン化
 	GlobalVariables() = default;
 	~GlobalVariables() = default;
 	GlobalVariables(const GlobalVariables&) = delete;

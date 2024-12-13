@@ -39,9 +39,16 @@ private:
 	std::unique_ptr<LineBox> lineBox_;
 
 	std::unique_ptr<BoxCollider> collider_;
+	//最大回転角
+	const float kMaxRotate_ = 6.28f;
+	//変化量
+	float changeValue_ = 0.05f;
+	//最大値
+	float maxValue_ = 1.0f;
+
 	//死亡フラグ
 	bool isDead_ = false;
-
+	//色
 	GameColor::Color color_ = GameColor::kWhite;
 
 };

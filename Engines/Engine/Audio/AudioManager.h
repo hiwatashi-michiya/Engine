@@ -8,10 +8,13 @@
 #include <wrl.h>
 #include <xaudio2.h>
 
+/// <summary>
+/// オーディオの再生管理をするクラス
+/// </summary>
 class AudioManager
 {
 public:
-
+	//インスタンス取得
 	static AudioManager* GetInstance();
 
 	//初期化
@@ -19,7 +22,7 @@ public:
 
 	//終了処理
 	void Finalize();
-
+	//XAudio2取得
 	IXAudio2* GetXAudio2() { return xAudio2_.Get(); }
 
 	//チャンクヘッダ
@@ -116,16 +119,17 @@ private:
 
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2_;
 	IXAudio2MasteringVoice* masterVoice_;
-
+	//ファイル名と数字を紐づけたマップ
 	std::unordered_map<std::string, uint32_t> intMap_;
+	//オーディオリスト
 	std::vector<Audio> audios_;
-
+	//現在のオーディオ数
 	static uint32_t audioCount_;
-
+	//最大オーディオ数
 	static const uint32_t kMaxAudioCount_ = 256;
 
 private:
-
+	//シングルトン化
 	AudioManager() = default;
 	~AudioManager() = default;
 	AudioManager(const AudioManager&) = delete;

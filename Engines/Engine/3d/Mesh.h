@@ -8,14 +8,17 @@
 #include <memory>
 #include <wrl.h>
 
+/// <summary>
+/// 頂点データを保持するクラス
+/// </summary>
 class Mesh
 {
 public:
-
+	//静的初期化
 	static void StaticInitialize(ID3D12Device* device);
-
+	//生成
 	Mesh* Create(const std::string& filename);
-
+	//データ読み込み
 	void LoadModelFile(const std::string& filename);
 
 	//テクスチャ読み込み
@@ -56,7 +59,7 @@ public:
 private:
 
 	static ID3D12Device* device_;
-
+	//ノード読み込み
 	Node ReadNode(aiNode* node);
 
 private:

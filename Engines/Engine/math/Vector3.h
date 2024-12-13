@@ -22,13 +22,13 @@ public:
 	Vector3& operator/=(float s) { x /= s; y /= s; z /= s; return *this; }
 
 };
-
+//パーティクル用のトランスフォーム
 struct TransformForParticle {
 	Vector3 scale;
 	Vector3 rotate;
 	Vector3 translate;
 };
-
+//パーティクルに使う値
 struct ParticleData {
 	TransformForParticle transform;
 	Vector3 velocity;
@@ -125,17 +125,17 @@ struct Vector2;
 class Matrix4x4;
 
 class Quaternion;
-
+//加算
 Vector3 Add(const Vector3& v1, const Vector3& v2);
-
+//減算
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
-
+//乗算
 Vector3 Multiply(float scalar, const Vector3& v1);
-
+//内積
 float Dot(const Vector3& v1, const Vector3& v2);
-
+//長さ
 float Length(const Vector3& v);
-
+//正規化
 Vector3 Normalize(const Vector3& v);
 
 //座標変換
@@ -155,12 +155,12 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 // 球面線形補間
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
-
+//Catmull-Rom直線
 Vector3 CatmullRomPoint(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
 
-float Clamp(float x, float min, float max);
-
+//射影
 Vector3 Project(const Vector3& v1, const Vector3& v2);
+//線と点の最近接点
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 
 // 垂直なベクトルを求める関数
@@ -174,7 +174,7 @@ Vector3 RotateOnZAxis(const Vector3& vec, float angle);
 
 //Y軸中心でベクトルを回転
 Vector3 RotateOnYAxis(const Vector3& vec, float angle);
-
+//AABBを収める
 void ClampAABB(AABB& aabb);
 
 // OBB回転

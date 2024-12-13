@@ -19,7 +19,7 @@ public:
 	void SetPosition(const Vector3& position) { transform_->translate_ = position; }
 
 protected:
-
+	//トランスフォーム
 	std::unique_ptr<Transform> transform_;
 	//名前
 	std::string name_;

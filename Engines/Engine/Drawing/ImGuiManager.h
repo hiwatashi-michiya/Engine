@@ -8,6 +8,9 @@
 #include <ImGuizmo.h>
 #include <imgui_internal.h>
 
+/// <summary>
+/// ImGuiに関する処理を管理するクラス
+/// </summary>
 class ImGuiManager
 {
 public:
@@ -15,7 +18,7 @@ public:
 
 
 private:
-
+	//シングルトン化
 	ImGuiManager() = default;
 	~ImGuiManager() = default;
 	ImGuiManager(const ImGuiManager&) = delete;

@@ -62,6 +62,9 @@ private:
 
 };
 
+/// <summary>
+/// 潜行時の更新処理
+/// </summary>
 class PlayerDive
 {
 public:
@@ -81,7 +84,7 @@ public:
 	bool isDiving_ = false;
 
 private:
-
+	//潜行中の速度計算
 	Vector3 CalcDiveVelocity(const Vector3& vec);
 
 };

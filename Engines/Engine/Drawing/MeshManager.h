@@ -9,7 +9,7 @@
 class MeshManager
 {
 public:
-	
+	//インスタンス取得
 	static MeshManager* GetInstance();
 
 	/// <summary>
@@ -33,11 +33,11 @@ public:
 	bool IsExistMesh(const std::string& fileName) { return meshes_.find(fileName) != meshes_.end(); }
 
 private:
-
+	//メッシュと名前を紐づけたマップ
 	std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes_;
 
 private:
-
+	//シングルトン化
 	MeshManager() = default;
 	~MeshManager() = default;
 	MeshManager(const MeshManager&) = delete;

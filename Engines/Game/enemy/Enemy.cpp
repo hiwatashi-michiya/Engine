@@ -38,7 +38,7 @@ void Enemy::Update() {
 		
 		if (model_->material_->constMap_->threshold > 0.0f) {
 
-			model_->material_->constMap_->threshold -= 0.05f;
+			model_->material_->constMap_->threshold -= changeValue_;
 
 			if (model_->material_->constMap_->threshold < 0.0f) {
 				model_->material_->constMap_->threshold = 0.0f;
@@ -48,14 +48,14 @@ void Enemy::Update() {
 		
 		collider_->SetIsActive(true);
 
-		transform_->rotate_.x += 0.05f;
-		transform_->rotate_.y += 0.05f;
+		transform_->rotate_.x += changeValue_;
+		transform_->rotate_.y += changeValue_;
 
-		if (transform_->rotate_.y > 6.28f) {
+		if (transform_->rotate_.y > kMaxRotate_) {
 			transform_->rotate_.y = 0.0f;
 		}
 
-		if (transform_->rotate_.x > 6.28f) {
+		if (transform_->rotate_.x > kMaxRotate_) {
 			transform_->rotate_.x = 0.0f;
 		}
 
@@ -65,12 +65,12 @@ void Enemy::Update() {
 	//違うなら判定を消す
 	else {
 
-		if (model_->material_->constMap_->threshold < 1.0f) {
+		if (model_->material_->constMap_->threshold < maxValue_) {
 
-			model_->material_->constMap_->threshold += 0.05f;
+			model_->material_->constMap_->threshold += changeValue_;
 
-			if (model_->material_->constMap_->threshold > 1.0f) {
-				model_->material_->constMap_->threshold = 1.0f;
+			if (model_->material_->constMap_->threshold > maxValue_) {
+				model_->material_->constMap_->threshold = maxValue_;
 			}
 
 		}
@@ -107,22 +107,6 @@ void Enemy::OnCollision(Collider* collider) {
 
 		isDead_ = true;
 
-		std::shared_ptr<Particle> newParticle;
-		newParticle = std::make_shared<Particle>();
-		newParticle->Initialize();
-		newParticle->SetMinSpawnPoint(transform_->translate_ - transform_->scale_);
-		newParticle->SetMaxSpawnPoint(transform_->translate_ + transform_->scale_);
-		newParticle->SetMinLifeTime(30);
-		newParticle->SetMaxLifeTime(60);
-		newParticle->SetParticleLifeTime(90);
-		newParticle->SetMinSpeed({ -0.05f,0.02f,-0.05f });
-		newParticle->SetMaxSpeed({ 0.05f,0.07f,0.05f });
-		newParticle->SetMinScale(0.1f);
-		newParticle->SetMaxScale(0.5f);
-		newParticle->SetChangeScale(-0.02f);
-		newParticle->SetColor(CreateColor(color_));
-
-		ParticleManager::GetInstance()->AddParticle(newParticle);
 
 	}
 

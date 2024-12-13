@@ -56,8 +56,10 @@ private:
 	float pLightIntensity_ = 0.5f;
 	//ブロックが光るときのカウント
 	int32_t lightCount_ = 0;
-
-	int32_t setCount_;
+	//変化量
+	float changeValue_ = 0.02f;
+	//最大値
+	float maxValue_ = 1.0f;
 
 	GameColor::Color color_ = GameColor::kWhite;
 
