@@ -16,6 +16,7 @@
 #include "Transform.h"
 #include <memory>
 #include "Tool/LevelDataLoader.h"
+#include "DebugCamera.h"
 
 /// <summary>
 /// 新機能を試すためのシーン
@@ -36,18 +37,22 @@ public:
 
 private:
 
-	MapEditor* editor_ = nullptr;
-	//ローダー
-	LevelDataLoader* loader_ = nullptr;
+	std::unique_ptr<DebugCamera> camera_;
 
-	std::unique_ptr<Camera> camera_;
-	//モデルとトランスフォームリスト
-	std::vector<std::shared_ptr<Model>> models_;
-	std::vector<std::shared_ptr<Transform>> transforms_;
+	std::unique_ptr<Sprite> testA_;
+	std::unique_ptr<Sprite> testB_;
+	std::unique_ptr<Sprite> testC_;
+	std::unique_ptr<Model> testD_;
+	std::unique_ptr<Model> testE_;
 
-	//線分
-	std::unique_ptr<Line> line_;
+	std::unique_ptr<Transform> testDTransform_;
+	std::unique_ptr<Transform> testETransform_;
 
-	Texture* testTex_ = nullptr;
+
+	Texture* testATex_ = nullptr;
+	Texture* testBTex_ = nullptr;
+	Texture* testCTex_ = nullptr;
+	Texture* testDTex_ = nullptr;
+	Texture* testETex_ = nullptr;
 
 };

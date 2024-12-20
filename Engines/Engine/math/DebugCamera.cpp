@@ -22,6 +22,10 @@ void DebugCamera::Initialize() {
 
 void DebugCamera::Update() {
 
+	if (not input_) {
+		return;
+	}
+
 	//マウスホイールをクリックした時
 	if (input_->PushMouse(Input::Mouse::kCenter)) {
 

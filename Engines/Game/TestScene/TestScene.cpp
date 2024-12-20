@@ -24,48 +24,29 @@ void TestScene::Initialize() {
 	input_ = Input::GetInstance();
 	audioManager_ = AudioManager::GetInstance();
 
-	editor_ = MapEditor::GetInstance();
-	editor_->Initialize();
-
-	camera_ = std::make_unique<Camera>();
+	camera_ = std::make_unique<DebugCamera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,2.0f, -20.0f };
-	camera_->rotation_.y = 0.0f;
+	camera_->GetCamera()->position_ = {0.0f,2.0f, -60.0f};
+	camera_->GetCamera()->rotation_.x = 0.0f;
 
-	testTex_ = TextureManager::GetInstance()->Load("./Resources/textures/head_cake_jpg.dds");
+	testATex_ = TextureManager::GetInstance()->Load("./Resources/textures/head_cake_jpg.dds");
+	testBTex_ = TextureManager::GetInstance()->Load("./Resources/textures/image_drape_jpg.dds");
+	testCTex_ = TextureManager::GetInstance()->Load("./Resources/textures/head_s_moun_jpg.dds");
+	testDTex_ = TextureManager::GetInstance()->Load("./Resources/textures/head_cake_jpg.dds");
+	testETex_ = TextureManager::GetInstance()->Load("./Resources/textures/head_trees_jpg.dds");
 
-	loader_ = LevelDataLoader::GetInstance();
-	loader_->Load("./Resources/Levels/scene.json");
-
-	//レベルの読み込み
-	for (auto& object : loader_->levelData_->objects_) {
-
-		if (object.type.compare("MESH") == 0) {
-			std::shared_ptr<Model> newModel;
-
-			newModel.reset(Model::Create(object.fileName));
-
-			models_.push_back(newModel);
-
-			std::shared_ptr<Transform> newTransform = std::make_shared<Transform>();
-			newTransform->translate_ = object.translation;
-			newTransform->rotateQuaternion_ = ConvertFromEuler(object.rotation);
-			newTransform->scale_ = object.scaling;
-
-			transforms_.push_back(newTransform);
-		}
-		if (object.type.compare("CAMERA") == 0) {
-			camera_->position_ = object.translation;
-			camera_->rotation_ = object.rotation;
-		}
-
-	}
-
-	editor_->SetCamera(camera_.get());
-
-	line_ = std::make_unique<Line>();
-	line_->start_ = { 0.0f,0.0f,0.0f };
-	line_->end_ = { 0.0f,0.0f,0.0f };
+	testA_.reset(Sprite::Create(testATex_, {100.0f,100.0f}));
+	testB_.reset(Sprite::Create(testBTex_, {300.0f,100.0f}));
+	testC_.reset(Sprite::Create(testCTex_, {500.0f,100.0f}));
+	testD_.reset(Model::Create("./Resources/block/block.obj"));
+	testE_.reset(Model::Create("./Resources/block/block.obj"));
+	testD_->SetTexture(testDTex_);
+	testE_->SetTexture(testETex_);
+	testDTransform_ = std::make_unique<Transform>();
+	testETransform_ = std::make_unique<Transform>();
+	testETransform_->translate_ = { 3.0f,3.0f,3.0f };
+	testETransform_->UpdateMatrix();
+	testE_->SetWorldMatrix(testETransform_->worldMatrix_);
 
 }
 
@@ -83,54 +64,12 @@ void TestScene::Update() {
 	moves.y = input_->GetMouseMove().y;
 	moves.z = float(input_->GetMouseWheel());
 
-	ImGui::Begin("mouse");
-	ImGui::Text("Pos x : %1.2f,  y : %1.2f", input_->GetMousePosition().x, input_->GetMousePosition().y);
-	ImGui::Text("move & wheel move x : %1.2f, y : %1.2f, wheel : %1.2f", moves.x, moves.y, moves.z);
-
-	if (input_->PushMouse(Input::kLeft)) {
-		ImGui::Text("Left Push");
-	}
-	if (input_->PushMouse(Input::kRight)) {
-		ImGui::Text("Right Push");
-	}
-	if (input_->PushMouse(Input::kCenter)) {
-		ImGui::Text("Center Push");
-	}
-
-	if (input_->TriggerMouse(Input::kLeft) or input_->TriggerMouse(Input::kRight)
-		|| input_->TriggerMouse(Input::kCenter)) {
-		ImGui::Text("Trigger");
-	}
-
-	if (input_->ReleaseMouse(Input::kLeft) or input_->ReleaseMouse(Input::kRight)
-		|| input_->ReleaseMouse(Input::kCenter)) {
-		ImGui::Text("Release");
-	}
-
-	ImGui::End();
-
-	ImGui::Begin("camera");
-	ImGui::DragFloat3("scale", &camera_->scale_.x, 0.1f);
-	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
-	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
-	ImGui::End();
-
 	ImGui::Begin("Frame Late");
 	ImGui::Text("%1.2f", ImGui::GetIO().Framerate);
 	ImGui::End();
 
-	ImGui::Begin("Scene Change");
-	ImGui::Text("Key 1 or 3 + L_ctrl: Change Scene\n1 : title\n3 : game");
-	ImGui::End();
-
 #endif // _DEBUG
-	//各モデル更新
-	for (int32_t i = 0; i < models_.size(); i++) {
-		transforms_[i]->UpdateMatrix();
-		models_[i]->SetWorldMatrix(transforms_[i]->worldMatrix_);
-	}
-
-	camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
+	
 	camera_->Update();
 
 
@@ -139,8 +78,10 @@ void TestScene::Update() {
 void TestScene::Draw()
 {
 
-	for (int32_t i = 0; i < models_.size(); i++) {
-		models_[i]->Draw(camera_.get());
-	}
+	testA_->Draw();
+	testB_->Draw();
+	testC_->Draw();
+	testD_->Draw(camera_->GetCamera());
+	testE_->Draw(camera_->GetCamera());
 
 }
