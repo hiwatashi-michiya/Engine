@@ -140,9 +140,9 @@ void PlayerMove::UpdateMove(Player& player)
 		}
 
 		//カメラの向きに合わせて移動方向を修正
-		/*if (player.camera_) {
+		if (player.camera_) {
 			moveVector = TransformNormal(Normalize(moveVector), player.camera_->matRotate_);
-		}*/
+		}
 
 		//正規化し、速度を掛ける
 		moveVector = Normalize(Vector3{ moveVector.x,0.0f,moveVector.z });
