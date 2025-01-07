@@ -18,19 +18,15 @@ Player::Player()
 	model_.reset(SkinningModel::Create("./Resources/player/brush_stay.gltf", 0));
 	model_->LoadAnimation("./Resources/player/brush_walk.gltf", 1);
 	model_->LoadAnimation("./Resources/player/brush_shot.gltf", 2);
+	model_->LoadAnimation("./Resources/player/brush_dive.gltf", 3);
 
-	particle_ = std::make_shared<Particle>();
+	particle_ = std::make_unique<Particle>();
 	particle_->Initialize();
 	particle_->Load("./Resources/ParticleData/player.json");
 
 	/*particle_->SetTexture(tex_);*/
 	transform_ = std::make_unique<Transform>();
 	collider_ = std::make_unique<BoxCollider>();
-	playerStay_ = std::make_unique<PlayerStay>();
-	playerMove_ = std::make_unique<PlayerMove>();
-	playerShot_ = std::make_unique<PlayerShot>();
-	playerDive_ = std::make_unique<PlayerDive>();
-	diveFlag_ = std::make_unique<DiveFlagObject>();
 
 #ifdef _DEBUG
 
@@ -78,7 +74,9 @@ void Player::Initialize() {
 	itemGetCount_ = 0;
 	canGoal_ = false;
 
-	diveFlag_->Initialize(transform_.get(), this);
+	//停止状態で初期化
+	state_ = std::make_unique<PlayerStay>();
+	state_->Initialize(this);
 
 #ifdef _DEBUG
 
@@ -120,7 +118,7 @@ void Player::Update() {
 	preTranslate_ = collider_->collider_.center;
 
 	//弾が生存していない場合は削除
-	bullets_.erase(std::remove_if(bullets_.begin(), bullets_.end(), [](auto bullet) {
+	bullets_.erase(std::remove_if(bullets_.begin(), bullets_.end(), [](const std::unique_ptr<PlayerBullet>& bullet) {
 
 		if (bullet->GetIsDead()) {
 			return true;
@@ -131,62 +129,13 @@ void Player::Update() {
 		}), bullets_.end());
 
 	//死んでいない時の処理
-	if (!isDead_) {
+	if (not isDead_) {
 
-		//切り替えの受付があったら状態遷移
-		if (behaviorRequest_) {
+		state_->Update();
 
-			behavior_ = behaviorRequest_.value();
-
-			//状態に応じて初期化処理を変更
-			switch (behavior_)
-			{
-			default:
-			case Player::Behavior::kStay:
-				playerStay_->InitializeStay(*this);
-				break;
-			case Player::Behavior::kMove:
-				playerMove_->InitializeMove(*this);
-				break;
-			case Player::Behavior::kShot:
-				playerShot_->InitializeShot(*this);
-				break;
-			case Player::Behavior::kDive:
-				playerDive_->InitializeDive(*this);
-				break;
-			}
-
-			behaviorRequest_ = std::nullopt;
-
-		}
-
-		//状態に応じた更新処理
-		switch (behavior_)
-		{
-		default:
-		case Player::Behavior::kStay:
-			playerStay_->UpdateStay(*this);
-			break;
-		case Player::Behavior::kMove:
-			playerMove_->UpdateMove(*this);
-			break;
-		case Player::Behavior::kShot:
-			playerShot_->UpdateShot(*this);
-			break;
-		case Player::Behavior::kDive:
-			playerDive_->UpdateDive(*this);
-			break;
-		}
-
-		//落下速度更新。潜行中は受け付けない
-		if (behavior_ != Behavior::kDive) {
-
-			velocity_.y += fallSpeed_;
-
-			if (velocity_.y < fallSpeedLimit_) {
-				velocity_.y = fallSpeedLimit_;
-			}
-
+		//速度の下限を超えないように調整
+		if (velocity_.y < fallSpeedLimit_) {
+			velocity_.y = fallSpeedLimit_;
 		}
 
 		//速度加算
@@ -195,14 +144,14 @@ void Player::Update() {
 		//デッドラインまで落ちたら死亡
 		if (transform_->translate_.y < deadHeight_) {
 			isDead_ = true;
+			//死亡パーティクル付ける
+
 		}
 
 		//行列更新
 		transform_->UpdateMatrix();
 		//当たり判定更新
 		collider_->collider_.center = transform_->worldMatrix_.GetTranslate() + Vector3{0.0f, collider_->collider_.size.y, 0.0f};
-		//フラグの当たり判定更新
-		diveFlag_->Update();
 		//モデルに更新した行列をセット
 		model_->SetWorldMatrix(transform_->worldMatrix_);
 		//モデルのアニメーション更新
@@ -224,8 +173,6 @@ void Player::Update() {
 
 		//地面判定をfalseにする。ブロックとの判定時に切り替わる
 		onGround_ = false;
-		//ブロックに潜っている判定をfalseにする
-		isDivingBlock_ = false;
 	}
 
 	groundPosition_ = nullptr;
@@ -260,21 +207,38 @@ void Player::CorrectionPosition()
 
 }
 
+void Player::SetAnimation(int32_t number, bool flag, float speed)
+{
+
+	model_->SetAnimation(number, flag);
+	model_->SetAnimationSpeed(speed);
+
+}
+
+void Player::SetPlayerState(std::unique_ptr<PlayerState> nextState)
+{
+	//過去の状態を開放してから新しい状態を挿入
+	state_.release();
+	state_ = std::move(nextState);
+	//初期化
+	state_->Initialize(this);
+}
+
 void Player::OnCollision(Collider* collider) {
 
 	if (collider->GetGameObject()->GetName() == "block" or collider->GetGameObject()->GetName() == "moveBox" or
 		collider->GetGameObject()->GetName() == "ghostBox") {
 
 		//潜る状態の時
-		if (playerDive_->isDiving_) {
+		if (isDiving_) {
 
 			if (auto pBox = dynamic_cast<GhostBox*>(collider->GetGameObject())) {
 				
 				//センターがブロック内に埋まっていたら
 				if (IsCollision(pBox->GetCollider()->collider_, collider_->collider_.center)) {
 					pBox->StartColorChange(Stage::stageColor_);
-					//ブロックに潜っている判定をtrueにする
-					isDivingBlock_ = true;
+					//カウントをセット
+					diveCount_ = poseDiveCount_;
 				}
 
 				return;
@@ -302,38 +266,16 @@ void Player::OnCollision(Collider* collider) {
 				transform_->UpdateMatrix();
 
 				//潜る状態のとき
-				if (playerDive_->isDiving_) {
+				if (isDiving_) {
 
 					//面の反対側から向かってきている場合
 					if (velocity_.y < -kSpeedBorder_ * speed_) {
-						//回転方向に応じてvelocityを90度回転
-						RotateVelocity(FollowCamera::GetCameraType());
+						//velocityを180度回転
+						RotateVelocity();
 					}
 
 				}
 				else {
-
-					//地面のサイズと位置を記録。補正に使う
-					if (not groundPosition_ and not groundSize_) {
-
-						auto boxCollider = dynamic_cast<BoxCollider*>(collider);
-
-						groundPosition_ = &boxCollider->collider_.center;
-						groundSize_ = &boxCollider->collider_.size;
-
-					}
-					//既に記録されている場合、中心が入っているなら補正対象を更新
-					else {
-
-						auto boxCollider = dynamic_cast<BoxCollider*>(collider);
-
-						if (collider_->collider_.center.z > boxCollider->collider_.center.z - boxCollider->collider_.size.z and
-							collider_->collider_.center.z < boxCollider->collider_.center.z + boxCollider->collider_.size.z) {
-							groundPosition_ = &boxCollider->collider_.center;
-							groundSize_ = &boxCollider->collider_.size;
-						}
-
-					}
 
 					SetVelocityY(0.0f);
 					onGround_ = true;
@@ -362,12 +304,12 @@ void Player::OnCollision(Collider* collider) {
 				transform_->UpdateMatrix();
 
 				//潜る状態のとき
-				if (playerDive_->isDiving_) {
+				if (isDiving_) {
 
 					//面の反対側から向かってきている場合
 					if (velocity_.y > kSpeedBorder_ * speed_) {
-						//回転方向に応じてvelocityを90度回転
-						RotateVelocity(FollowCamera::GetCameraType());
+						//velocityを180度回転
+						RotateVelocity();
 					}
 
 				}
@@ -419,12 +361,12 @@ void Player::OnCollision(Collider* collider) {
 					transform_->UpdateMatrix();
 
 					//潜る状態のとき
-					if (playerDive_->isDiving_) {
+					if (isDiving_) {
 
 						//面の反対側から向かってきている場合
 						if (velocity_.x > kSpeedBorder_ * speed_) {
-							//回転方向に応じてvelocityを90度回転
-							RotateVelocity(FollowCamera::GetCameraType());
+							//velocityを180度回転
+							RotateVelocity();
 						}
 
 					}
@@ -472,12 +414,12 @@ void Player::OnCollision(Collider* collider) {
 					transform_->UpdateMatrix();
 
 					//潜る状態のとき
-					if (playerDive_->isDiving_) {
+					if (isDiving_) {
 
 						//面の反対側から向かってきている場合
 						if (velocity_.x < -kSpeedBorder_ * speed_) {
-							//回転方向に応じてvelocityを90度回転
-							RotateVelocity(FollowCamera::GetCameraType());
+							//velocityを180度回転
+							RotateVelocity();
 						}
 
 					}
@@ -526,12 +468,12 @@ void Player::OnCollision(Collider* collider) {
 					transform_->UpdateMatrix();
 
 					//潜る状態のとき
-					if (playerDive_->isDiving_) {
+					if (isDiving_) {
 
 						//面の反対側から向かってきている場合
 						if (velocity_.z > kSpeedBorder_ * speed_) {
-							//回転方向に応じてvelocityを90度回転
-							RotateVelocity(FollowCamera::GetCameraType());
+							//velocityを180度回転
+							RotateVelocity();
 						}
 
 					}
@@ -579,12 +521,12 @@ void Player::OnCollision(Collider* collider) {
 					transform_->UpdateMatrix();
 
 					//潜る状態のとき
-					if (playerDive_->isDiving_) {
+					if (isDiving_) {
 
 						//面の反対側から向かってきている場合
 						if (velocity_.z < -kSpeedBorder_ * speed_) {
-							//回転方向に応じてvelocityを90度回転
-							RotateVelocity(FollowCamera::GetCameraType());
+							//velocityを180度回転
+							RotateVelocity();
 						}
 
 					}
@@ -627,38 +569,15 @@ void Player::OnCollision(Collider* collider) {
 
 }
 
-void Player::RotateVelocity(const CommonVariables::CameraType& cameraType)
+void Player::RotateVelocity()
 {
 
-	//半分の値
-	float half = 0.5f;
+	velocity_ = RotateOnYAxis(velocity_, float(std::numbers::pi));
 
-	//横から視点の場合
-	if (cameraType == CommonVariables::CameraType::kSide) {
+	//プレイヤーの向きを更新
+	transform_->rotateQuaternion_ =
+		RotateForAxis(transform_->rotateQuaternion_, Vector3::AxisZ(), velocity_, 1.0f);
 
-		//時計回り(右回り)の場合
-		if (playerDive_->rotateType_ == CommonVariables::RotateType::kClockwise) {
-			velocity_ = RotateOnZAxis(velocity_, -float(std::numbers::pi * half));
-		}
-		//反時計回り(左回り)の場合
-		else {
-			velocity_ = RotateOnZAxis(velocity_, float(std::numbers::pi * half));
-		}
-
-	}
-	//上から視点の場合
-	else {
-
-		//時計回り(右回り)の場合
-		if (playerDive_->rotateType_ == CommonVariables::RotateType::kClockwise) {
-			velocity_ = RotateOnYAxis(velocity_, float(std::numbers::pi * half));
-		}
-		//反時計回り(左回り)の場合
-		else {
-			velocity_ = RotateOnYAxis(velocity_, -float(std::numbers::pi * half));
-		}
-
-	}
 	//速度の下限
 	float speedBorderValue = 0.0001f;
 
@@ -686,8 +605,6 @@ void Player::Draw(Camera* camera)
 	model_->DrawSkeleton(camera);
 
 	lineBox_->Draw(camera);
-
-	diveFlag_->Draw(camera);
 
 #endif // _DEBUG
 

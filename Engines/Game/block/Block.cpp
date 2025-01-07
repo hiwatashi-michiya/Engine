@@ -90,14 +90,14 @@ void Block::StartColorChange(GameColor::Color color)
 
 }
 
-void Block::OnCollision(Collider* collider)
+void Block::OnCollision([[maybe_unused]]Collider* collider)
 {
 
-	if (collider->GetGameObject()->GetName() == "player") {
+	/*if (collider->GetGameObject()->GetName() == "player") {
 
 		StartColorChange(Stage::stageColor_);
 
-	}
+	}*/
 
 }
 

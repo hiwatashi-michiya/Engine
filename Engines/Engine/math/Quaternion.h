@@ -133,6 +133,9 @@ Quaternion ConvertFromEuler(const Vector3& euler);
 //回転行列からの変換
 Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
 
+//Slerpを使った回転処理
+Quaternion RotateForAxis(const Quaternion& q, const Vector3& axis, const Vector3& vec, float t);
+
 //球面線形補間
 Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t);
 

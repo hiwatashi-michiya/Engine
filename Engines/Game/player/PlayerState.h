@@ -2,21 +2,47 @@
 #include "Vector2.h"
 #include "Game/Variables/CommonVariables.h"
 #include "Vector3.h"
+#include "Input.h"
 
 class Player;
 
 /// <summary>
-/// 停止時の更新処理
+/// PlayerのStatePattern基底クラス
 /// </summary>
-class PlayerStay
+class PlayerState
 {
 public:
-	PlayerStay();
-	~PlayerStay();
 
-	void InitializeStay(Player& player);
+	PlayerState() = default;
+	virtual ~PlayerState() = default;
 
-	void UpdateStay(Player& player);
+	virtual void Initialize(Player* player) = 0;
+
+	virtual void Update() = 0;
+
+protected:
+
+	Input* input_ = nullptr;
+	//プレイヤーのポインタ
+	Player* player_ = nullptr;
+
+};
+
+
+/// <summary>
+/// 停止時の更新処理
+/// </summary>
+class PlayerStay : public PlayerState
+{
+public:
+
+	PlayerStay() {};
+
+	~PlayerStay() override {};
+
+	void Initialize(Player* player) override;
+
+	void Update() override;
 
 private:
 
@@ -27,15 +53,17 @@ private:
 /// <summary>
 /// 移動時の更新処理
 /// </summary>
-class PlayerMove
+class PlayerMove : public PlayerState
 {
 public:
-	PlayerMove();
-	~PlayerMove();
 
-	void InitializeMove(Player& player);
+	PlayerMove() {};
 
-	void UpdateMove(Player& player);
+	~PlayerMove() override {};
+
+	void Initialize(Player* player) override;
+
+	void Update() override;
 
 private:
 
@@ -46,15 +74,17 @@ private:
 /// <summary>
 /// 弾発射時の更新処理
 /// </summary>
-class PlayerShot
+class PlayerShot : public PlayerState
 {
 public:
-	PlayerShot();
-	~PlayerShot();
 
-	void InitializeShot(Player& player);
+	PlayerShot() {};
 
-	void UpdateShot(Player& player);
+	~PlayerShot() override {};
+
+	void Initialize(Player* player) override;
+
+	void Update() override;
 
 private:
 
@@ -65,27 +95,27 @@ private:
 /// <summary>
 /// 潜行時の更新処理
 /// </summary>
-class PlayerDive
+class PlayerDive : public PlayerState
 {
 public:
-	PlayerDive();
-	~PlayerDive();
 
-	void InitializeDive(Player& player);
+	PlayerDive() {};
 
-	void UpdateDive(Player& player);
+	~PlayerDive() override {};
 
-public:
+	void Initialize(Player* player) override;
 
-	//移動時の回転方向
-	CommonVariables::RotateType rotateType_ = CommonVariables::RotateType::kClockwise;
-
-	//潜っている途中かどうか
-	bool isDiving_ = false;
+	void Update() override;
 
 private:
+
 	//潜行中の速度計算
 	Vector3 CalcDiveVelocity(const Vector3& vec);
+
+private:
+
+	//潜行の初期時間
+	static const int32_t startDiveCount_ = 30;
 
 };
 

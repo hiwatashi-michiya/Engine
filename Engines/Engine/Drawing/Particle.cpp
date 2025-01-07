@@ -32,7 +32,12 @@ void Particle::Update() {
 		//非アクティブのパーティクルを出現させる
 		if ((isLoop_ or particleLifeTime_ > 0) and not particle_->isActive_[i]) {
 
-			particle_->transforms_[i]->translate_ = RandomVector3(minSpawnPoint_, maxSpawnPoint_);
+			particle_->transforms_[i]->translate_ = RandomVector3(spawnPoint_ + minSpawnPoint_, spawnPoint_ + maxSpawnPoint_);
+			//追従対象がいたら対象の座標分加算
+			if (targetPoint_) {
+				particle_->transforms_[i]->translate_ += *targetPoint_;
+			}
+
 			particle_->transforms_[i]->rotateQuaternion_ = ConvertFromEuler(RandomVector3(-3.14f, 3.14f));
 			particle_->transforms_[i]->scale_ = Vector3{ 1.0f,1.0f,1.0f } * RandomFloat(minScale_, maxScale_);
 

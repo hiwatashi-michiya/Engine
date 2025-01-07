@@ -232,14 +232,6 @@ void GameScene::Update() {
 
 		if (not stage_->GetPlayer()->GetIsDead()) {
 
-			//地面にいない、または潜行中の場合、切り替え不可にする
-			if (stage_->GetPlayer()->GetIsDivingBlock() or not stage_->GetPlayer()->GetOnGround()) {
-				followCamera_->SetCanSwitch(false);
-			}
-			else {
-				followCamera_->SetCanSwitch(true);
-			}
-
 			followCamera_->Update();
 		}
 

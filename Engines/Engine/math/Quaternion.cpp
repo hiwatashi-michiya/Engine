@@ -230,6 +230,25 @@ Quaternion Quaternion::ConvertFromRotateMatrix(const Matrix4x4& matrix) {
 
 }
 
+Quaternion RotateForAxis(const Quaternion& q, const Vector3& axis, const Vector3& vec, float t)
+{
+
+	//長さのないベクトルを使用しない
+	if (Length(vec) == 0.0f) {
+		return q;
+	}
+
+	//一旦正規化
+	Vector3 normVec = Normalize(vec);
+
+	Vector3 tmp = ConjuGate(q) * normVec;
+
+	Quaternion diff = MakeRotateAxisAngleQuaternion(Normalize(Cross(axis, Normalize(tmp))), std::acos(Dot(axis, Normalize(tmp))));
+
+	return Slerp(IdentityQuaternion(), diff, t) * q;
+
+}
+
 Quaternion IdentityQuaternion() { return Quaternion(0.0f, 0.0f, 0.0f, 1.0f); }
 
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {

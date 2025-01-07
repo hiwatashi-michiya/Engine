@@ -13,7 +13,7 @@
 class IBullet : public GameObject
 {
 public:
-	~IBullet() = default;
+	~IBullet() {};
 	//初期化
 	virtual void Initialize(const Vector3& velocity, const Vector3& startPosition, float lifeTime) = 0;
 	//更新

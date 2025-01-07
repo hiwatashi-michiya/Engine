@@ -387,8 +387,8 @@
     <ClCompile Include="Engine\math\Easing.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Game\player\DiveFlagObject.cpp">
-      <Filter>Game\Player</Filter>
+    <ClCompile Include="Game\gamescene\GameState.cpp">
+      <Filter>Game\GameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -680,8 +680,8 @@
     <ClInclude Include="Game\Variables\CommonVariables.h">
       <Filter>Game\Variables</Filter>
     </ClInclude>
-    <ClInclude Include="Game\player\DiveFlagObject.h">
-      <Filter>Game\Player</Filter>
+    <ClInclude Include="Game\gamescene\GameState.h">
+      <Filter>Game\GameScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

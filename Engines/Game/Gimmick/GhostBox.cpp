@@ -9,10 +9,9 @@
 GhostBox::GhostBox()
 {
 	model_.reset(Model::Create("./Resources/block/block.obj"));
-	modelWire_.reset(Model::Create("./Resources/block/block_wire.obj"));
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
-
+	modelTransform_ = std::make_unique<Transform>();
 }
 
 GhostBox::~GhostBox()
@@ -55,10 +54,25 @@ void GhostBox::Update() {
 
 	}
 
+	//追加スケールが0.0f以外の場合
+	if (addScale_.x >= 0.0f) {
+		float changeValue = 0.10f;
+		addScale_ -= {changeValue, changeValue, changeValue};
+
+		if (addScale_.x <= 0.0f) {
+			addScale_ = Vector3::Zero();
+		}
+
+	}
+
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
+	//モデル用のスケールと平行移動
+	modelTransform_->scale_ = transform_->scale_ + addScale_;
+	modelTransform_->translate_ = transform_->translate_;
 
 	transform_->UpdateMatrix();
+	modelTransform_->UpdateMatrix();
 
 	lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	lineBox_->Update();
@@ -70,11 +84,9 @@ void GhostBox::Update() {
 		model_->SetTexture("./Resources/block/counterClockWise.png");
 	}
 
-	model_->SetWorldMatrix(transform_->worldMatrix_);
-	modelWire_->SetWorldMatrix(transform_->worldMatrix_);
+	model_->SetWorldMatrix(modelTransform_->worldMatrix_);
 
 	model_->SetColor(CreateColor(color_));
-	modelWire_->SetColor(CreateColor(color_));
 
 }
 
@@ -114,21 +126,30 @@ void GhostBox::OnCollision(Collider* collider) {
 
 		//弾の色に変わる
 		if (auto pBullet = dynamic_cast<PlayerBullet*>(collider->GetGameObject())) {
-			color_ = pBullet->GetBulletColor();
+
+			if (color_ != pBullet->GetBulletColor()) {
+				color_ = pBullet->GetBulletColor();
+			}
+
 		}
 
 	}
 
+	//プレイヤーが中に侵入してきたら
 	if (collider->GetGameObject()->GetName() == "P_Dive") {
 
-		auto boxCollider = dynamic_cast<BoxCollider*>(collider);
+		//色が違った場合、色を変えて一瞬サイズを大きくする
+		if (color_ != Stage::stageColor_) {
 
-		if (not IsWrapped(collider_->collider_, boxCollider->collider_)) {
-			return;
+			color_ = Stage::stageColor_;
+			//サイズを大きくする
+			float scaleValue = 1.0f;
+			addScale_ = { scaleValue,scaleValue,scaleValue };
+			//パーティクルを出す
+
+
 		}
 
-		model_->SetColor(CreateColor(color_) + CreateColor(color_));
-		modelWire_->SetColor(CreateColor(color_) + CreateColor(color_));
 	}
 
 }

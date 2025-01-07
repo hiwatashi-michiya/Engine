@@ -32,10 +32,7 @@ void Stage::Initialize() {
 	moveBoxes_.clear();
 	ghostBoxes_.clear();
 	switches_.clear();
-	warps_.clear();
-	copyCats_.clear();
-	enemies_.clear();
-	holders_.clear();
+	gameObjects_.clear();
 	ColorHolder::ResetHolder();
 
 	stageColor_ = GameColor::kWhite;
@@ -58,7 +55,7 @@ void Stage::Update() {
 #endif // _DEBUG
 
 	//フラグが立ったものを削除
-	rings_.remove_if([](std::shared_ptr<Paint> ring) {
+	rings_.remove_if([](const std::unique_ptr<Paint>& ring) {
 
 		if (ring->GetIsVanish()) {
 			return true;
@@ -68,73 +65,38 @@ void Stage::Update() {
 
 	});
 
-	enemies_.remove_if([](std::shared_ptr<Enemy> enemy) {
-
-		if (enemy->GetIsDead()) {
-			return true;
-		}
-
-		return false;
-
-		});
-
 	//ゴール可能の状態でない時
 	if (not player_->GetCanGoal()) {
 		//プレイヤーがゴール可能か確認
 		SetPlayerCanGoal();
 	}
 
-	if (followCamera_) {
-
-		//カメラの切り替えが終わった瞬間且つ横から視点の場合、補正を掛ける
-		if (followCamera_->GetIsSwitched() and followCamera_->GetCameraType() == CameraType::kSide) {
-			player_->CorrectionPosition();
-		}
-
-		//カメラが動いている時プレイヤーの更新を止める
-		if (not followCamera_->GetIsSwitching()) {
-			player_->Update();
-		}
-
-	}
-	else {
-		player_->Update();
-	}
+	player_->Update();
 
 	//各オブジェクト更新
-	for (auto& block : blocks_) {
+	for (const std::unique_ptr<Block>& block : blocks_) {
 
 		block->Update();
 
 	}
 
-	for (auto& ghostBox : ghostBoxes_) {
+	for (const std::unique_ptr<GhostBox>& ghostBox : ghostBoxes_) {
 		ghostBox->Update();
 	}
 
-	for (auto& ring : rings_) {
-
+	for (const std::unique_ptr<Paint>& ring : rings_) {
 		ring->Update();
-
 	}
 
-	for (auto& warp : warps_) {
-		warp->Update();
+	for (const std::unique_ptr<GameObject>& gameObject : gameObjects_) {
+		gameObject;
 	}
 
-	for (auto& colorSwitch : switches_) {
+	for (const std::unique_ptr<Switch>& colorSwitch : switches_) {
 		colorSwitch->Update();
 	}
 
-	for (auto& enemy : enemies_) {
-		enemy->Update();
-	}
-
-	for (auto& holder : holders_) {
-		holder->Update();
-	}
-
-	for (auto& goal : goals_) {
+	for (const std::unique_ptr<Goal>& goal : goals_) {
 		goal->Update();
 	}
 	//パーティクルのスポーン地点更新
@@ -152,71 +114,24 @@ void Stage::Draw(Camera* camera) {
 	line_.origin = camera->GetWorldPosition();
 	line_.diff = player_->GetPosition() - camera->GetWorldPosition();
 
-	for (auto& ring : rings_) {
-		//プレイヤーが見やすい様に描画制限をかける
-		if ((followCamera_->GetCameraType() == CameraType::kSide and
-			ring->GetCollider()->collider_.center.z + ring->GetCollider()->collider_.size.z > player_->GetMinZ()) or
-			(followCamera_->GetCameraType() == CameraType::kAbove and
-				ring->GetCollider()->collider_.center.y - ring->GetCollider()->collider_.size.y < player_->GetMaxY())) {
-			ring->Draw(camera);
-		}
-
+	for (const std::unique_ptr<Paint>& ring : rings_) {
+		ring->Draw(camera);
 	}
 
-	for (auto& block : blocks_) {
-		//プレイヤーが見やすい様に描画制限をかける
-		if ((followCamera_->GetCameraType() == CameraType::kSide and
-			block->GetCollider()->collider_.center.z + block->GetCollider()->collider_.size.z > player_->GetMinZ()) or
-			(followCamera_->GetCameraType() == CameraType::kAbove and
-				block->GetCollider()->collider_.center.y - block->GetCollider()->collider_.size.y < player_->GetMaxY())) {
-			block->Draw(camera);
-		}
-
+	for (const std::unique_ptr<Block>& block : blocks_) {
+		block->Draw(camera);
 	}
 
-	for (auto& ghostBox : ghostBoxes_) {
-		//プレイヤーが見やすい様に描画制限をかける
-		if ((followCamera_->GetCameraType() == CameraType::kSide and
-			ghostBox->GetCollider()->collider_.center.z + ghostBox->GetCollider()->collider_.size.z > player_->GetMinZ()) or
-			(followCamera_->GetCameraType() == CameraType::kAbove and
-				ghostBox->GetCollider()->collider_.center.y - ghostBox->GetCollider()->collider_.size.y < player_->GetMaxY())) {
-			ghostBox->Draw(camera);
-		}
-		
+	for (const std::unique_ptr<GhostBox>& ghostBox : ghostBoxes_) {
+		ghostBox->Draw(camera);
 	}
 
-	for (auto& warp : warps_) {
-		warp->Draw(camera);
+	for (const std::unique_ptr<Switch>& colorSwitch : switches_) {
+		colorSwitch->Draw(camera);
 	}
 
-	for (auto& colorSwitch : switches_) {
-		//プレイヤーが見やすい様に描画制限をかける
-		if ((followCamera_->GetCameraType() == CameraType::kSide and
-			colorSwitch->GetCollider()->collider_.center.z + colorSwitch->GetCollider()->collider_.size.z > player_->GetMinZ()) or
-			(followCamera_->GetCameraType() == CameraType::kAbove and
-				colorSwitch->GetCollider()->collider_.center.y - colorSwitch->GetCollider()->collider_.size.y < player_->GetMaxY())) {
-			colorSwitch->Draw(camera);
-		}
-
-	}
-
-	for (auto& enemy : enemies_) {
-		enemy->Draw(camera);
-	}
-
-	for (auto& holder : holders_) {
-		holder->Draw(camera);
-	}
-
-	for (auto& goal : goals_) {
-		//プレイヤーが見やすい様に描画制限をかける
-		if ((followCamera_->GetCameraType() == CameraType::kSide and
-			goal->GetCollider()->collider_.center.z + goal->GetCollider()->collider_.size.z > player_->GetMinZ()) or
-			(followCamera_->GetCameraType() == CameraType::kAbove and
-				goal->GetCollider()->collider_.center.y - goal->GetCollider()->collider_.size.y < player_->GetMaxY())) {
-			goal->Draw(camera);
-		}
-
+	for (const std::unique_ptr<Goal>& goal : goals_) {
+		goal->Draw(camera);
 	}
 
 	player_->Draw(camera);
@@ -300,7 +215,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 				//保険
 				assert(itData != itObject->end());
 
-				std::shared_ptr<MapObject> mapObject = std::make_shared<MapObject>();
+				std::unique_ptr<MapObject> mapObject = std::make_unique<MapObject>();
 
 				mapObject->isSelect = true;
 				mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
@@ -381,7 +296,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 
 				}
 
-				mapObjData_.push_back(mapObject);
+				mapObjData_.push_back(std::move(mapObject));
 
 			}
 
@@ -396,50 +311,50 @@ void Stage::LoadStage(uint32_t stageNumber) {
 		}
 
 		if (object->tag == "block") {
-			std::shared_ptr<Block> newObject = std::make_shared<Block>();
+			std::unique_ptr<Block> newObject = std::make_unique<Block>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
-			blocks_.push_back(newObject);
+			blocks_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "item" || object->tag == Paint::objectName_) {
-			std::shared_ptr<Paint> newObject = std::make_shared<Paint>();
+			std::unique_ptr<Paint> newObject = std::make_unique<Paint>();
 			newObject->Initialize(object->transforms_[0]->translate_);
 			newObject->SetColor(object->color);
-			rings_.push_back(newObject);
+			rings_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "goal") {
-			std::shared_ptr<Goal> newObject = std::make_shared<Goal>();
+			std::unique_ptr<Goal> newObject = std::make_unique<Goal>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetPlayer(player_.get());
-			goals_.push_back(newObject);
+			goals_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "moveBox") {
-			std::shared_ptr<MoveBox> newObject = std::make_shared<MoveBox>();
+			std::unique_ptr<MoveBox> newObject = std::make_unique<MoveBox>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
 			newObject->SetColor(object->color);
-			moveBoxes_.push_back(newObject);
+			moveBoxes_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "warp") {
-			std::shared_ptr<Warp> newObject = std::make_shared<Warp>();
+			std::unique_ptr<Warp> newObject = std::make_unique<Warp>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
 			newObject->SetPositionB(object->transforms_[1]->translate_);
 			newObject->SetScaleB(object->transforms_[1]->scale_);
 			newObject->SetColor(object->color);
-			warps_.push_back(newObject);
+			gameObjects_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "ghostBox") {
-			std::shared_ptr<GhostBox> newObject = std::make_shared<GhostBox>();
+			std::unique_ptr<GhostBox> newObject = std::make_unique<GhostBox>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
@@ -452,48 +367,40 @@ void Stage::LoadStage(uint32_t stageNumber) {
 				newObject->SetRotateType(CommonVariables::RotateType::kCounterclockwise);
 			}
 
-			ghostBoxes_.push_back(newObject);
+			ghostBoxes_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "switch") {
-			std::shared_ptr<Switch> newObject = std::make_shared<Switch>();
+			std::unique_ptr<Switch> newObject = std::make_unique<Switch>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetColor(object->color);
-			switches_.push_back(newObject);
+			switches_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "copyCat") {
-			std::shared_ptr<CopyCat> newObject = std::make_shared<CopyCat>();
+			std::unique_ptr<CopyCat> newObject = std::make_unique<CopyCat>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetRespawnPosition(object->transforms_[0]->translate_);
 			newObject->SetColor(object->color);
 			newObject->SetPlayer(player_.get());
-			copyCats_.push_back(newObject);
+			gameObjects_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "enemy") {
-			std::shared_ptr<Enemy> newObject = std::make_shared<Enemy>();
+			std::unique_ptr<Enemy> newObject = std::make_unique<Enemy>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetColor(object->color);
-			enemies_.push_back(newObject);
-		}
-
-		if (object->tag == "enemy") {
-			std::shared_ptr<Enemy> newObject = std::make_shared<Enemy>();
-			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->color);
-			enemies_.push_back(newObject);
+			gameObjects_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "colorHolder") {
-			std::shared_ptr<ColorHolder> newObject = std::make_shared<ColorHolder>();
+			std::unique_ptr<ColorHolder> newObject = std::make_unique<ColorHolder>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
-			holders_.push_back(newObject);
+			gameObjects_.push_back(std::move(newObject));
 		}
 
 	}

@@ -60,7 +60,10 @@ public:
 		minSpawnPoint_ = minPoint;
 		maxSpawnPoint_ = maxPoint;
 	}
-
+	//ベースとなる座標を設定
+	void SetSpawnPoint(const Vector3& point) { spawnPoint_ = point; }
+	//追従するターゲット設定
+	void SetTargetPoint(Vector3* target) { targetPoint_ = target; }
 	//パーティクルの速度変化量(一定)
 	void SetChangeSpeed(const Vector3& speed) { changeSpeed_ = speed; }
 
@@ -123,25 +126,32 @@ private:
 	static const uint32_t kMaxParticle_ = 128;
 	//名前
 	std::string name_;
-
+	//出現時の色
+	Vector4 startColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	//消滅時の色
+	Vector4 endColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	//速度最低値
 	Vector3 minSpeed_{};
 	//速度最大値
 	Vector3 maxSpeed_{};
+	//スポーン地点
+	Vector3 spawnPoint_{};
+	//スポーン範囲最小
+	Vector3 minSpawnPoint_{};
+	//スポーン範囲最大
+	Vector3 maxSpawnPoint_{};
+	//スピードの変化量(一定)
+	Vector3 changeSpeed_{};
+	//回転変化量
+	Vector3 changeRotate_{};
+	//スケール変化量(一定)
+	float changeScale_ = 0.0f;
+	//追従する座標
+	Vector3* targetPoint_ = nullptr;
 	//最小スケール
 	float minScale_ = 0.1f;
 	//最大スケール
 	float maxScale_ = 1.0f;
-	//最小スポーン地点
-	Vector3 minSpawnPoint_{};
-	//最大スポーン地点
-	Vector3 maxSpawnPoint_{};
-	//スピードの変化量(一定)
-	Vector3 changeSpeed_{};
-	//スケール変化量(一定)
-	float changeScale_ = 0.0f;
-	//回転変化量
-	Vector3 changeRotate_{};
 	//最小生存時間
 	int32_t minLifeTime_ = 60;
 	//最大生存時間
@@ -152,13 +162,9 @@ private:
 	int32_t particleLifeTime_ = 120;
 	//パーティクル全体の最大生存時間
 	int32_t maxParticleLifeTime_ = 120;
-	//ループするかどうか
-	bool isLoop_ = false;
-	//出現時の色
-	Vector4 startColor_ = { 1.0f,1.0f,1.0f,1.0f };
-	//消滅時の色
-	Vector4 endColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	//アクティブ状態かどうか
 	bool isActive_ = true;
+	//ループするかどうか
+	bool isLoop_ = false;
 
 };

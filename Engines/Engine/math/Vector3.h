@@ -16,6 +16,13 @@ public:
 	//全ての要素を1.0fで返す
 	static const Vector3 Identity(){ return Vector3{ 1.0f,1.0f,1.0f }; }
 
+	//X軸
+	static const Vector3 AxisX() { return Vector3{ 1.0f,0.0f,0.0f }; }
+	//Y軸
+	static const Vector3 AxisY() { return Vector3{ 0.0f,1.0f,0.0f }; }
+	//Z軸
+	static const Vector3 AxisZ() { return Vector3{ 0.0f,0.0f,1.0f }; }
+
 	Vector3& operator*=(float s) { x *= s; y *= s; z *= s; return *this; }
 	Vector3& operator-=(const Vector3& v) { x -= v.x;  y -= v.y; z -= v.z; return *this; }
 	Vector3& operator+=(const Vector3& v) { x += v.x;  y += v.y; z += v.z; return *this; }

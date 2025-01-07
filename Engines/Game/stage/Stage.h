@@ -84,27 +84,22 @@ private:
 	//TODO:リストを一つにまとめる
 
 	//オブジェクトリスト
-	std::list<std::shared_ptr<MapObject>> mapObjData_;
+	std::list<std::unique_ptr<MapObject>> mapObjData_;
 	//ブロック
-	std::list<std::shared_ptr<Block>> blocks_;
+	std::list<std::unique_ptr<Block>> blocks_;
 	//ペイント
-	std::list<std::shared_ptr<Paint>> rings_;
+	std::list<std::unique_ptr<Paint>> rings_;
 	//ゴール
-	std::list<std::shared_ptr<Goal>> goals_;
+	std::list<std::unique_ptr<Goal>> goals_;
 	//移動箱
-	std::list<std::shared_ptr<MoveBox>> moveBoxes_;
-	//ワープ
-	std::list<std::shared_ptr<Warp>> warps_;
+	std::list<std::unique_ptr<MoveBox>> moveBoxes_;
 	//潜行可能な箱
-	std::list<std::shared_ptr<GhostBox>> ghostBoxes_;
+	std::list<std::unique_ptr<GhostBox>> ghostBoxes_;
 	//スイッチ
-	std::list<std::shared_ptr<Switch>> switches_;
-	//分身
-	std::list<std::shared_ptr<CopyCat>> copyCats_;
-	//敵
-	std::list<std::shared_ptr<Enemy>> enemies_;
-	//色ホルダー
-	std::list<std::shared_ptr<ColorHolder>> holders_;
+	std::list<std::unique_ptr<Switch>> switches_;
+	//ゲームオブジェクトリスト
+	std::list<std::unique_ptr<GameObject>> gameObjects_;
+
 	//線
 	Segment line_{};
 

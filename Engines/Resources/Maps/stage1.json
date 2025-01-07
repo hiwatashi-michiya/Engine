@@ -6,7 +6,7 @@
                 "position": [
                     8.0,
                     -4.0,
-                    0.0
+                    8.0
                 ],
                 "quaternion": [
                     0.0,
@@ -44,9 +44,9 @@
             "block10": {
                 "color": 0,
                 "position": [
-                    32.0,
+                    8.0,
                     -4.0,
-                    8.0
+                    0.0
                 ],
                 "quaternion": [
                     0.0,
@@ -64,7 +64,7 @@
             "block2": {
                 "color": 0,
                 "position": [
-                    40.0,
+                    32.0,
                     -4.0,
                     8.0
                 ],
@@ -84,7 +84,7 @@
             "block3": {
                 "color": 0,
                 "position": [
-                    48.0,
+                    40.0,
                     -4.0,
                     8.0
                 ],
@@ -104,8 +104,8 @@
             "block4": {
                 "color": 0,
                 "position": [
-                    56.0,
-                    4.0,
+                    48.0,
+                    -4.0,
                     8.0
                 ],
                 "quaternion": [
@@ -124,9 +124,9 @@
             "block5": {
                 "color": 0,
                 "position": [
-                    24.0,
-                    4.0,
-                    0.0
+                    56.0,
+                    -4.0,
+                    8.0
                 ],
                 "quaternion": [
                     0.0,
@@ -142,6 +142,26 @@
                 "tag": "block"
             },
             "block6": {
+                "color": 0,
+                "position": [
+                    24.0,
+                    -4.0,
+                    0.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "tag": "block"
+            },
+            "block7": {
                 "color": 0,
                 "position": [
                     16.0,
@@ -200,6 +220,69 @@
                     4.0
                 ],
                 "tag": "block"
+            },
+            "ghostBox": {
+                "RotateRight": true,
+                "color": 0,
+                "position": [
+                    16.0,
+                    4.0,
+                    8.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox1": {
+                "RotateRight": true,
+                "color": 0,
+                "position": [
+                    32.0,
+                    4.0,
+                    8.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox2": {
+                "RotateRight": true,
+                "color": 0,
+                "position": [
+                    24.0,
+                    4.0,
+                    8.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "tag": "ghostBox"
             },
             "goal": {
                 "color": 0,

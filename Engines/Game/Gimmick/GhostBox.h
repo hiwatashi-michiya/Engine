@@ -26,11 +26,15 @@ public:
 	//オブジェクトの位置セット
 	void SetPosition(const Vector3& position) {
 		transform_->translate_ = position;
+		modelTransform_->translate_ = position;
 		collider_->collider_.center = transform_->translate_;
 		collider_->collider_.size = transform_->scale_ / 2.0f;
 	}
 	//スケールセッター
-	void SetScale(const Vector3& scale) { transform_->scale_ = scale; }
+	void SetScale(const Vector3& scale) { 
+		transform_->scale_ = scale;
+		modelTransform_->translate_ = scale;
+	}
 	//位置取得
 	const Vector3& GetPosition() { return transform_->translate_; }
 	//スケールゲッター
@@ -61,11 +65,15 @@ private:
 private:
 
 	std::unique_ptr<Model> model_;
-	std::unique_ptr<Model> modelWire_;
 
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
+
+	std::unique_ptr<Transform> modelTransform_;
+
+	//モデルの追加スケール
+	Vector3 addScale_{};
 	//一フレーム前の位置
 	Vector3 preTranslate_{};
 	//色変化時の変化量

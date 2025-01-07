@@ -14,7 +14,6 @@
 #include "PlayerState.h"
 #include <optional>
 #include "Game/Bullet/Bullet.h"
-#include "DiveFlagObject.h"
 #include <vector>
 #include "Game/Variables/CommonVariables.h"
 
@@ -23,22 +22,7 @@
 /// </summary>
 class Player : public GameObject
 {
-	friend class PlayerStay;
-	friend class PlayerMove;
-	friend class PlayerShot;
-	friend class PlayerDive;
-	friend class DiveFlagObject;
 public:
-
-	/// <summary>
-	/// 行動パターン
-	/// </summary>
-	enum class Behavior {
-		kStay, //停止
-		kMove, //移動
-		kShot, //弾発射
-		kDive, //潜る
-	};
 
 	Player();
 	~Player();
@@ -78,12 +62,12 @@ public:
 	void SetCanGoal(bool flag) { canGoal_ = flag; }
 	//地面フラグのゲッター
 	bool GetOnGround() const { return onGround_; }
-	//潜行状態フラグのゲッター
-	bool GetIsDivingBlock() const { return isDivingBlock_; }
 	//ゴールに必要なインクの数を設定
 	void SetGoalCount(int32_t count) { goalCount_ = count; }
 	//Velocityのゲッター
 	Vector3 GetVelocity() const { return velocity_; }
+	//Velocityセッター
+	void SetVelocity(const Vector3& vel) { velocity_ = vel; }
 	//プレイヤーの回転向きを取得
 	Quaternion GetRotate() const { return transform_->rotateQuaternion_; }
 	//インクの取得数増加
@@ -98,13 +82,41 @@ public:
 	float GetMaxY() const { return collider_->collider_.center.y + collider_->collider_.size.y; }
 	//プレイヤーの位置補正
 	void CorrectionPosition();
+	//アニメーションセット
+	void SetAnimation(int32_t number, bool flag, float speed);
+	//プレイヤーの次のステートを設定
+	void SetPlayerState(std::unique_ptr<PlayerState> nextState);
+	//プレイヤーの落下速度取得
+	float GetFallSpeed() const { return fallSpeed_; }
+	//プレイヤーの移動速度取得
+	float GetSpeed() const { return speed_; }
+	//プレイヤーの持っているカメラ取得
+	Camera* GetCamera() const { return camera_; }
+	//トランスフォーム取得
+	Transform* GetTransform() { return transform_.get(); }
+	//弾リスト取得
+	std::vector<std::unique_ptr<PlayerBullet>>* GetBullets() { return &bullets_; }
+	//モデル取得
+	SkinningModel* GetModel() { return model_.get(); }
+	//ダイブフラグ取得
+	bool GetIsDiving() const { return isDiving_; }
+	//ダイブフラグセッター
+	void SetIsDiving(bool flag) { isDiving_ = flag; }
+	//ダイブ可能フラグゲッター、セッター
+	void SetCanDive(bool flag) { canDive_ = flag; }
+	bool GetCanDive() const { return canDive_; }
+	//ダイブカウントゲッター、セッター
+	int32_t GetDiveCount() const { return diveCount_; }
+	void SetDiveCount(int32_t num) { diveCount_ = num; }
+	//タグのセット
+	void SetTag(const std::string& tag) { name_ = tag; }
 
 private:
 	//他のオブジェクトに当たった時の処理
 	void OnCollision(Collider* collider);
 
 	//潜行状態でブロックにぶつかった時の移動方向回転処理
-	void RotateVelocity(const CommonVariables::CameraType& cameraType);
+	void RotateVelocity();
 
 private:
 
@@ -112,22 +124,16 @@ private:
 
 	Camera* camera_ = nullptr;
 
-	std::optional<Behavior> behaviorRequest_ = std::nullopt;
-
 	std::unique_ptr<SkinningModel> model_;
 
-	std::shared_ptr<Particle> particle_;
+	std::unique_ptr<Particle> particle_;
 
 	std::unique_ptr<LineBox> lineBox_;
 
-	std::unique_ptr<PlayerStay> playerStay_;
-	std::unique_ptr<PlayerMove> playerMove_;
-	std::unique_ptr<PlayerShot> playerShot_;
-	std::unique_ptr<PlayerDive> playerDive_;
-	std::unique_ptr<DiveFlagObject> diveFlag_;
+	std::unique_ptr<PlayerState> state_;
 
 	//弾リスト
-	std::vector<std::shared_ptr<PlayerBullet>> bullets_;
+	std::vector<std::unique_ptr<PlayerBullet>> bullets_;
 
 	//ゴールに必要なアイテム数
 	int32_t goalCount_ = 0;
@@ -156,14 +162,16 @@ private:
 	//テクスチャ
 	Texture* tex_ = nullptr;
 
-	Behavior behavior_ = Behavior::kStay;
-
 	//速度の境界値
 	const float kSpeedBorder_ = 1.98f;
 	//ブロックの当たり判定の高さ補正値
 	const float kHeightCorrectValue_ = 0.5f;
 	//ブロックの当たり判定の横補正値
 	const float kWidthCorrectValue_ = 0.99f;
+	//潜行残り時間カウント
+	int32_t diveCount_ = 30;
+	//潜行の中断時間
+	static const int32_t poseDiveCount_ = 10;
 
 	//ゴール可能かどうか
 	bool canGoal_ = false;
@@ -172,7 +180,9 @@ private:
 	//地面判定
 	bool onGround_ = false;
 	//ブロックに潜っている判定
-	bool isDivingBlock_ = false;
+	bool isDiving_ = false;
+	//ダイブ可能状態かどうか
+	bool canDive_ = false;
 	//死亡フラグ
 	bool isDead_ = false;
 
