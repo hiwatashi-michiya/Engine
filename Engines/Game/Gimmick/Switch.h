@@ -36,12 +36,21 @@ private:
 	std::unique_ptr<BoxCollider> collider_;
 
 	std::unique_ptr<LineBox> lineBox_;
+
+	std::unique_ptr<Transform> modelTransform_;
+
+	//モデルの追加スケール
+	Vector3 addScale_{};
+
 	//色
 	GameColor::Color color_ = GameColor::kWhite;
 	//切り替えクールタイム
 	int32_t coolTime_ = 30;
 	//クールタイムのカウント
 	int32_t countTimer_ = 0;
+	//プレイヤーが触れたかどうか
+	bool isEntered_ = false;
+	bool preIsEntered_ = false;
 
 };
 

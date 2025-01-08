@@ -35,6 +35,8 @@ private:
 	std::unique_ptr<Camera> camera_;
 	//モデル
 	std::unique_ptr<Model> model_;
+	//全体のパーティクル
+	std::unique_ptr<Particle> particle_;
 	//トランスフォーム
 	std::unique_ptr<Transform> transform_;
 	//画像

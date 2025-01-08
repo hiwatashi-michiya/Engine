@@ -148,7 +148,7 @@ private:
 
 	Vector3 velocity_{};
 	//移動速度
-	float speed_ = 0.25f;
+	float speed_ = 0.35f;
 	//落下速度
 	float fallSpeed_ = -0.1f;
 	//落下速度上限
@@ -171,7 +171,7 @@ private:
 	//潜行残り時間カウント
 	int32_t diveCount_ = 30;
 	//潜行の中断時間
-	static const int32_t poseDiveCount_ = 10;
+	static const int32_t poseDiveCount_ = 5;
 
 	//ゴール可能かどうか
 	bool canGoal_ = false;

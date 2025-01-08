@@ -11,16 +11,16 @@ ColorCounter::ColorCounter()
 	for (int32_t i = 0; i < GameColor::kMaxColor - 1; i++) {
 
 		for (int32_t k = 0; k < 2; k++) {
-			countNumSprites_[i][k].reset(Sprite::Create(numTex_, {100.0f + 48.0f * k, 50.0f + 64.0f * i}));
+			countNumSprites_[i][k].reset(Sprite::Create(numTex_, {100.0f + 48.0f * k, 28.0f + 64.0f * i}));
 			countNumSprites_[i][k]->size_ = { 64.0f,64.0f };
 			countNumSprites_[i][k]->viewRect_ = { 0.1f,1.0f };
-			goalNumSprites_[i][k].reset(Sprite::Create(numTex_, { 250.0f + 48.0f * k, 50.0f + 64.0f * i }));
+			goalNumSprites_[i][k].reset(Sprite::Create(numTex_, { 250.0f + 48.0f * k, 28.0f + 64.0f * i }));
 			goalNumSprites_[i][k]->size_ = { 64.0f,64.0f };
 			goalNumSprites_[i][k]->viewRect_ = { 0.1f,1.0f };
 		}
 
-		blockSprites_[i].reset(Sprite::Create(blockTex_, { 50.0f, 50.0f + 64.0f * i }));
-		slashSprites_[i].reset(Sprite::Create(slashTex_, { 200.0f, 50.0f + 64.0f * i }));
+		blockSprites_[i].reset(Sprite::Create(blockTex_, { 50.0f, 28.0f + 64.0f * i }));
+		slashSprites_[i].reset(Sprite::Create(slashTex_, { 200.0f, 28.0f + 64.0f * i }));
 
 	}
 
