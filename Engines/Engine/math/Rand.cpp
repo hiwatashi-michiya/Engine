@@ -132,3 +132,43 @@ Vector3 RandomVector3(Vector3 min, Vector3 max) {
 	return result;
 
 }
+
+Vector4 RandomVector4(Vector4 min, Vector4 max)
+{
+	
+	//ランダムエンジン
+	static std::random_device seed;
+	static std::default_random_engine engine(seed());
+
+	//最小値と最大値が逆の場合、入れ替える
+	if (min.x > max.x) {
+		std::swap(min.x, max.x);
+	}
+
+	if (min.y > max.y) {
+		std::swap(min.y, max.y);
+	}
+
+	if (min.z > max.z) {
+		std::swap(min.z, max.z);
+	}
+
+	if (min.w > max.w) {
+		std::swap(min.w, max.w);
+	}
+
+	std::uniform_real_distribution<float> distX(min.x, max.x);
+	std::uniform_real_distribution<float> distY(min.y, max.y);
+	std::uniform_real_distribution<float> distZ(min.z, max.z);
+	std::uniform_real_distribution<float> distW(min.w, max.w);
+
+	Vector4 result{};
+
+	result.x = distX(engine);
+	result.y = distY(engine);
+	result.z = distZ(engine);
+	result.w = distW(engine);
+
+	return result;
+
+}

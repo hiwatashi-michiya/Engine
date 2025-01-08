@@ -218,7 +218,11 @@ void ParticleEditor::EditParticle(Particle& particle)
 
 		if (ImGui::TreeNode("Color")) {
 
-			if (ImGui::DragFloat4("Start", &particle.startColor_.x, 0.01f, 0.0f, 1.0f)) {
+			if (ImGui::DragFloat4("MinStart", &particle.minStartColor_.x, 0.01f, 0.0f, 1.0f)) {
+
+			}
+
+			if (ImGui::DragFloat4("MaxStart", &particle.maxStartColor_.x, 0.01f, 0.0f, 1.0f)) {
 
 			}
 
@@ -422,7 +426,7 @@ void ParticleEditor::Load()
 						const std::string& detailName = itDetailData.key();
 
 						if (detailName == "Start") {
-							newParticle->startColor_ = { itDetailData->at(0),itDetailData->at(1) ,itDetailData->at(2),itDetailData->at(3) };
+							newParticle->minStartColor_ = { itDetailData->at(0),itDetailData->at(1) ,itDetailData->at(2),itDetailData->at(3) };
 						}
 						if (detailName == "End") {
 							newParticle->endColor_ = { itDetailData->at(0),itDetailData->at(1) ,itDetailData->at(2),itDetailData->at(3) };
@@ -521,8 +525,10 @@ void ParticleEditor::SaveParticle(nlohmann::json& jsonData, Particle& particle)
 	jsonData["ParticleData"]["LifeTime"]["Min"] = particle.minLifeTime_;
 	jsonData["ParticleData"]["LifeTime"]["Max"] = particle.maxLifeTime_;
 	jsonData["ParticleData"]["LifeTime"]["All"] = particle.maxParticleLifeTime_;
-	jsonData["ParticleData"]["Color"]["Start"] =
-		nlohmann::json::array({ particle.startColor_.x,particle.startColor_.y ,particle.startColor_.z ,particle.startColor_.w });
+	jsonData["ParticleData"]["Color"]["MinStart"] =
+		nlohmann::json::array({ particle.minStartColor_.x,particle.minStartColor_.y ,particle.minStartColor_.z ,particle.minStartColor_.w });
+	jsonData["ParticleData"]["Color"]["MaxStart"] =
+		nlohmann::json::array({ particle.maxStartColor_.x,particle.maxStartColor_.y ,particle.maxStartColor_.z ,particle.maxStartColor_.w });
 	jsonData["ParticleData"]["Color"]["End"] =
 		nlohmann::json::array({ particle.endColor_.x,particle.endColor_.y ,particle.endColor_.z ,particle.endColor_.w });
 	jsonData["ParticleData"]["Instance"] = particle.instanceCount_;

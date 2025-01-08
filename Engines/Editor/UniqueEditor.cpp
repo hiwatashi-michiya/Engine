@@ -390,6 +390,10 @@ void UniqueEditor::Edit() {
 				Close();
 			}
 
+			if (ImGui::DragInt3("RCount, GCount, BCount", countNum_.data(), 0.2f, 0, 99)) {
+
+			}
+
 			if (ImGui::BeginTabBar("Objects", ImGuiTabBarFlags_None)) {
 
 				for (int32_t i = 0; i < kMaxObjects_; i++) {
@@ -721,6 +725,9 @@ void UniqueEditor::Save(const std::string& filename) {
 
 	}
 
+	//ゴールに必要なカウントの書き出し
+	root[kSceneName_]["Count"] = nlohmann::json::array({ countNum_[0], countNum_[1], countNum_[2] });
+
 	//ディレクトリが無ければ作成する
 	std::filesystem::path dir(kDirectoryPath_);
 	if (!std::filesystem::exists(dir)) {
@@ -999,6 +1006,12 @@ void UniqueEditor::Load(const std::string& filename) {
 				/*mapObjData_.push_back(object);*/
 
 			}
+
+		}
+		//カウント登録
+		if (itemName == "Count") {
+
+			countNum_ = { itItem->at(0), itItem->at(1), itItem->at(2) };
 
 		}
 

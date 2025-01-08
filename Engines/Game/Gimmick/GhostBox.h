@@ -8,6 +8,7 @@
 #include "Vector3.h"
 #include "Game/ColorSetter/ColorSetter.h"
 #include "Game/Variables/CommonVariables.h"
+#include <list>
 
 /// <summary>
 /// 色に反応して出現したり消えたりするブロックのクラス
@@ -15,6 +16,10 @@
 class GhostBox : public GameObject
 {
 public:
+
+	//箱リスト
+	static std::list<GhostBox*> boxList_;
+
 	GhostBox();
 	~GhostBox();
 	//初期化
@@ -49,10 +54,6 @@ public:
 	void SetSecondColor(GameColor::Color color) { secondColor_ = color; }
 	//2つ目の色取得
 	const GameColor::Color& GetSecondColor() const { return secondColor_; }
-	//回転方向取得
-	const CommonVariables::RotateType& GetRotateType() const { return rotateType_; }
-	//回転方向セット
-	void SetRotateType(CommonVariables::RotateType type) { rotateType_ = type; }
 	//色切り替え演出セット
 	void StartColorChange(GameColor::Color color);
 	//色が白かどうか
@@ -85,7 +86,5 @@ private:
 	GameColor::Color color_ = GameColor::kWhite;
 	//二つ目の色
 	GameColor::Color secondColor_ = GameColor::kWhite;
-	//回転タイプ
-	CommonVariables::RotateType rotateType_ = CommonVariables::RotateType::kClockwise;
-
+	
 };

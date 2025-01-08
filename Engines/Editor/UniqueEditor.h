@@ -139,6 +139,8 @@ private:
 	bool isOpenFile_ = false;
 	//セーブしているかどうか
 	bool isSave_ = true;
+	//ゴールに必要なカウント
+	std::array<int32_t, 3> countNum_ = { 0,0,0 };
 
 private:
 	//シングルトン化

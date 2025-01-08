@@ -6,16 +6,27 @@
 #include "ColorHolder.h"
 #include "Game/Bullet/Bullet.h"
 
+std::list<GhostBox*> GhostBox::boxList_;
+
 GhostBox::GhostBox()
 {
 	model_.reset(Model::Create("./Resources/block/block.obj"));
+	model_->SetTexture("./Resources/block/ghostBox.png");
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
 	modelTransform_ = std::make_unique<Transform>();
+	boxList_.push_back(this);
 }
 
 GhostBox::~GhostBox()
 {
+	
+	auto it = std::find(boxList_.begin(), boxList_.end(), this);
+
+	if (it != boxList_.end()) {
+		boxList_.erase(it);
+	}
+
 }
 
 void GhostBox::Initialize() {
@@ -76,13 +87,6 @@ void GhostBox::Update() {
 
 	lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	lineBox_->Update();
-
-	if (rotateType_ == CommonVariables::RotateType::kClockwise) {
-		model_->SetTexture("./Resources/block/clockWise.png");
-	}
-	else {
-		model_->SetTexture("./Resources/block/counterClockWise.png");
-	}
 
 	model_->SetWorldMatrix(modelTransform_->worldMatrix_);
 

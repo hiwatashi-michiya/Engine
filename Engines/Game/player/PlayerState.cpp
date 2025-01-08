@@ -294,7 +294,11 @@ void PlayerDive::Initialize(Player* player)
 	newParticle->SetMinSpeed(-player_->GetVelocity());
 	newParticle->SetMaxSpeed(-player_->GetVelocity() * 0.1f);
 	newParticle->SetEndColor(CreateColor(Stage::stageColor_));
-	newParticle->SetStartColor(CreateColor(Stage::stageColor_));
+	newParticle->SetMaxStartColor(CreateColor(Stage::stageColor_));
+	//色の範囲最小を計算
+	Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(Stage::stageColor_)) * 0.2f + CreateColor(Stage::stageColor_);
+
+	newParticle->SetMinStartColor(minColor);
 	newParticle->SetTargetPoint(&player_->GetTransform()->translate_);
 	//マネージャーに渡す
 	ParticleManager::GetInstance()->AddParticle(newParticle);

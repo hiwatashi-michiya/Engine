@@ -16,6 +16,7 @@
 #include "Game/Gimmick/ColorHolder.h"
 #include "Particle.h"
 #include "Game/Camera/FollowCamera.h"
+#include "ColorCounter.h"
 
 /// <summary>
 /// ゲームシーンのステージに関連したオブジェクトの管理をするクラス
@@ -80,7 +81,9 @@ private:
 	std::unique_ptr<Player> player_;
 	//ステージ全体に書けるパーティクル
 	std::unique_ptr<Particle> stageParticle_;
-	
+	//色カウンター
+	std::unique_ptr<ColorCounter> counter_;
+
 	//TODO:リストを一つにまとめる
 
 	//オブジェクトリスト

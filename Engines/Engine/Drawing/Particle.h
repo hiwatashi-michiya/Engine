@@ -87,12 +87,14 @@ public:
 
 	//色変更
 	void SetColor(const Vector4& color) { 
-		startColor_ = color;
+		minStartColor_ = color;
+		maxStartColor_ = color;
 		endColor_ = color;
 	}
 
 	//色変更
-	void SetStartColor(const Vector4& color) { startColor_ = color; }
+	void SetMinStartColor(const Vector4& color) { minStartColor_ = color; }
+	void SetMaxStartColor(const Vector4& color) { maxStartColor_ = color; }
 
 	//色変更
 	void SetEndColor(const Vector4& color) { endColor_ = color; }
@@ -126,8 +128,9 @@ private:
 	static const uint32_t kMaxParticle_ = 128;
 	//名前
 	std::string name_;
-	//出現時の色
-	Vector4 startColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	//出現時の色範囲
+	Vector4 minStartColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	Vector4 maxStartColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	//消滅時の色
 	Vector4 endColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	//速度最低値

@@ -16,6 +16,7 @@ Stage::Stage()
 {
 	player_ = std::make_unique<Player>();
 	stageParticle_ = std::make_unique<Particle>();
+	counter_ = std::make_unique<ColorCounter>();
 }
 
 Stage::~Stage()
@@ -34,6 +35,7 @@ void Stage::Initialize() {
 	switches_.clear();
 	gameObjects_.clear();
 	ColorHolder::ResetHolder();
+	counter_->Initialize();
 
 	stageColor_ = GameColor::kWhite;
 	stageParticle_->Initialize();
@@ -99,6 +101,9 @@ void Stage::Update() {
 	for (const std::unique_ptr<Goal>& goal : goals_) {
 		goal->Update();
 	}
+
+	counter_->Update();
+
 	//パーティクルのスポーン地点更新
 	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + minParticleLange_,
 		player_->GetPosition() + maxParticleLange_);
@@ -137,6 +142,8 @@ void Stage::Draw(Camera* camera) {
 	player_->Draw(camera);
 
 	stageParticle_->Draw(camera);
+
+	counter_->Draw();
 
 }
 
@@ -301,6 +308,13 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			}
 
 		}
+		//カウント登録
+		if (itemName == "Count") {
+
+			counter_->SetGoalCount(itItem->at(0), itItem->at(1), itItem->at(2));
+
+		}
+
 	}
 
 	//マップオブジェクトのデータを基にオブジェクトを生成
@@ -359,13 +373,6 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
 			newObject->SetColor(object->color);
-			
-			if (object->isRotateRight_) {
-				newObject->SetRotateType(CommonVariables::RotateType::kClockwise);
-			}
-			else {
-				newObject->SetRotateType(CommonVariables::RotateType::kCounterclockwise);
-			}
 
 			ghostBoxes_.push_back(std::move(newObject));
 		}

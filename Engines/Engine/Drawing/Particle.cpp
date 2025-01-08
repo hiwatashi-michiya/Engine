@@ -43,7 +43,7 @@ void Particle::Update() {
 
 			particle_->velocities_[i] = RandomVector3(minSpeed_, maxSpeed_);
 			particle_->lifeTimes_[i] = RandomInt(minLifeTime_, maxLifeTime_);
-			particle_->colors_[i] = startColor_;
+			particle_->colors_[i] = RandomVector4(minStartColor_, maxStartColor_);
 
 			particle_->isActive_[i] = true;
 
@@ -60,7 +60,7 @@ void Particle::Update() {
 
 			particle_->transforms_[i]->translate_ += particle_->velocities_[i];
 			particle_->transforms_[i]->scale_ += {changeScale_, changeScale_, changeScale_};
-			particle_->colors_[i] = Lerp(endColor_, startColor_, float(particle_->transforms_[i]->scale_.x) / maxScale_);
+			/*particle_->colors_[i] = Lerp(endColor_, minStartColor_, float(particle_->transforms_[i]->scale_.x) / maxScale_);*/
 
 			particle_->velocities_[i] += changeSpeed_;
 
@@ -252,7 +252,13 @@ void Particle::Load(const std::string& filePath)
 						const std::string& detailName = itDetailData.key();
 
 						if (detailName == "Start") {
-							startColor_ = { itDetailData->at(0),itDetailData->at(1) ,itDetailData->at(2),itDetailData->at(3) };
+							minStartColor_ = { itDetailData->at(0),itDetailData->at(1) ,itDetailData->at(2),itDetailData->at(3) };
+						}
+						if (detailName == "MinStart") {
+							minStartColor_ = { itDetailData->at(0),itDetailData->at(1) ,itDetailData->at(2),itDetailData->at(3) };
+						}
+						if (detailName == "MaxStart") {
+							maxStartColor_ = { itDetailData->at(0),itDetailData->at(1) ,itDetailData->at(2),itDetailData->at(3) };
 						}
 						if (detailName == "End") {
 							endColor_ = { itDetailData->at(0),itDetailData->at(1) ,itDetailData->at(2),itDetailData->at(3) };

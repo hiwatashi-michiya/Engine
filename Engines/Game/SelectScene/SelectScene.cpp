@@ -14,9 +14,6 @@ SelectScene::SelectScene()
 {
 	stageSelectTex_ = TextureManager::GetInstance()->Load("./Resources/UI/stageSelect.png");
 	toTitleTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toTitle.png");
-	Tex1_ = TextureManager::GetInstance()->Load("./Resources/UI/1.png");
-	Tex2_ = TextureManager::GetInstance()->Load("./Resources/UI/2.png");
-	Tex3_ = TextureManager::GetInstance()->Load("./Resources/UI/3.png");
 	numTex_ = TextureManager::GetInstance()->Load("./Resources/UI/num.png");
 	buttonTex_ = TextureManager::GetInstance()->Load("./Resources/UI/a.png");
 	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));

@@ -277,5 +277,12 @@ void GameScene::Draw()
 
 	}
 
+	//ゴールした時に表示
+	if (stage_->GetPlayer()->GetIsGoal()) {
+
+		
+
+	}
+
 }
 

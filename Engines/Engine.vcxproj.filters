@@ -390,6 +390,9 @@
     <ClCompile Include="Game\gamescene\GameState.cpp">
       <Filter>Game\GameScene</Filter>
     </ClCompile>
+    <ClCompile Include="Game\stage\ColorCounter.cpp">
+      <Filter>Game\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -682,6 +685,9 @@
     </ClInclude>
     <ClInclude Include="Game\gamescene\GameState.h">
       <Filter>Game\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\stage\ColorCounter.h">
+      <Filter>Game\Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

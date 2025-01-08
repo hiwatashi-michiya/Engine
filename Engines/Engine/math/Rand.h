@@ -3,6 +3,7 @@
 #include <ctime>
 #include <random>
 #include "Vector3.h"
+#include "Vector4.h"
 
 //乱数初期化
 void SetRandom();
@@ -16,4 +17,6 @@ Vector3 RandomVector3(float min, float max);
 Vector3 RandomVector3(float minX, float maxX, float minY, float maxY, float minZ, float maxZ);
 //Vector3型で乱数を返す
 Vector3 RandomVector3(Vector3 min, Vector3 max);
+//Vector4型で乱数を返す
+Vector4 RandomVector4(Vector4 min, Vector4 max);
 

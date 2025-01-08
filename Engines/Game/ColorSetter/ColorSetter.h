@@ -12,21 +12,17 @@ namespace GameColor {
 
 	enum Color {
 
-
 		kWhite, //白色
 		kRed, //赤色
-		kBlue, //青色
 		kGreen, //緑色
-		kYellow, //黄色
-		kCyan, //空色
-		kMagenta, //紫色
+		kBlue, //青色
 
 		kMaxColor
 
 	};
 	//色の名前
 	static std::array<const char*, kMaxColor> colorNames = {
-	"White", "Red", "Blue", "Green", "Yellow", "Cyan", "Magenta"
+	"White", "Red", "Green", "Blue"
 	};
 
 	//数字から色を作る
