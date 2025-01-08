@@ -52,6 +52,9 @@ public:
 	//スプライト上の表示範囲
 	Vector2 viewRect_{};
 
+	//アンカーポイント
+	Vector2 anchorPoint_{};
+
 	//UVの位置
 	Vector2 uvTranslate_{};
 

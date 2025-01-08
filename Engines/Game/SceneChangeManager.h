@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include "PostEffectDrawer.h"
+#include <array>
 
 /// <summary>
 /// シーン切り替え時の動きを管理するクラス
@@ -32,10 +33,16 @@ public:
 	bool IsSceneChange() { return isSceneChangeEnter_ or isSceneChangeExit_; }
 
 private:
+	//円の個数
+	static const int32_t kCircleNumX_ = 8;
+	static const int32_t kCircleNumY_ = 6;
+
 	//ポストエフェクト描画のインスタンス
 	PostEffectDrawer* postEffectDrawer_ = nullptr;
 	//切り替え時の黒背景
 	std::unique_ptr<Sprite> sprite_;
+	//切り替え時の丸
+	std::array<std::array<std::unique_ptr<Sprite>, kCircleNumX_>, kCircleNumY_> circleSprites_;
 	//次のシーン
 	std::string nextScene_;
 	//シーン切り替え開始フラグ
@@ -45,11 +52,12 @@ private:
 	//シーン切り替えの時間
 	float sceneChangeValue_ = 0.0f;
 	//シーン切り替え速度
-	float sceneChangeSpeed_ = 0.05f;
+	float sceneChangeSpeed_ = 0.025f;
 	//シーン切り替えの最大値
 	const float maxSceneChangeValue_ = 1.0f;
 	//画像
 	Texture* texture_ = nullptr;
+	Texture* circleTexture_ = nullptr;
 
 private:
 	//シングルトン化

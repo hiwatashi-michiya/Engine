@@ -312,16 +312,16 @@ void Sprite::PostDraw() {
 void Sprite::Draw() {
 
 	//左下
-	vertMap_[0].position = { 0.0f,size_.y, 0.0f,1.0f };
+	vertMap_[0].position = { 0.0f - anchorPoint_.x * size_.x,size_.y - anchorPoint_.y * size_.y, 0.0f,1.0f };
 	vertMap_[0].texcoord = { 0.0f,viewRect_.y };
 	//左上
-	vertMap_[1].position = { 0.0f,0.0f, 0.0f,1.0f };
+	vertMap_[1].position = { 0.0f - anchorPoint_.x * size_.x,0.0f - anchorPoint_.y * size_.y, 0.0f,1.0f };
 	vertMap_[1].texcoord = { 0.0f,0.0f };
 	//右下
-	vertMap_[2].position = { size_.x,size_.y, 0.0f,1.0f };
+	vertMap_[2].position = { size_.x - anchorPoint_.x * size_.x,size_.y - anchorPoint_.y * size_.y, 0.0f,1.0f };
 	vertMap_[2].texcoord = { viewRect_.x,viewRect_.y };
 	//右上
-	vertMap_[3].position = { size_.x,0.0f, 0.0f,1.0f };
+	vertMap_[3].position = { size_.x - anchorPoint_.x * size_.x,0.0f - anchorPoint_.y * size_.y, 0.0f,1.0f };
 	vertMap_[3].texcoord = { viewRect_.x,0.0f };
 
 	Matrix4x4 worldMatrix = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, { position_.x, position_.y, 0.5f });
