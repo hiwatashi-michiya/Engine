@@ -56,6 +56,8 @@ private:
 	std::unique_ptr<Sprite> lbSprite_;
 	std::unique_ptr<Sprite> toGameSprite_;
 	std::unique_ptr<Sprite> toSelectSprite_;
+	std::unique_ptr<Sprite> toNextSprite_;
+	std::unique_ptr<Sprite> clearSprite_;
 
 	Texture* pauseTex_;
 	Texture* menuTex_;
@@ -65,6 +67,8 @@ private:
 	Texture* lbTex_;
 	Texture* toGameTex_;
 	Texture* toSelectTex_;
+	Texture* toNextTex_;
+	Texture* clearTex_;
 
 	//リセット時のカウント
 	int32_t resetCount_ = 60;

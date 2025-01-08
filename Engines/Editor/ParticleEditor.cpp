@@ -413,6 +413,7 @@ void ParticleEditor::Load()
 						}
 						if (detailName == "All") {
 							newParticle->particleLifeTime_ = itDetailData->get<int32_t>();
+							newParticle->maxParticleLifeTime_ = itDetailData->get<int32_t>();
 						}
 
 					}

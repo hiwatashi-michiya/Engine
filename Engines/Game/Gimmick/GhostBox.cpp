@@ -5,6 +5,8 @@
 #include "Game/ColorSetter/ColorSetter.h"
 #include "ColorHolder.h"
 #include "Game/Bullet/Bullet.h"
+#include "Particle.h"
+#include "ParticleManager.h"
 
 std::list<GhostBox*> GhostBox::boxList_;
 
@@ -150,7 +152,20 @@ void GhostBox::OnCollision(Collider* collider) {
 			float scaleValue = 1.0f;
 			addScale_ = { scaleValue,scaleValue,scaleValue };
 			//パーティクルを出す
+			//パーティクル追加
+			std::shared_ptr<Particle> newParticle;
+			newParticle = std::make_shared<Particle>();
+			newParticle->Initialize();
+			newParticle->Load("./Resources/ParticleData/ghostBox.json");
+			newParticle->SetEndColor(CreateColor(color_));
+			newParticle->SetMaxStartColor(CreateColor(color_));
+			//色の範囲最小を計算
+			Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(color_)) * 0.2f + CreateColor(color_);
 
+			newParticle->SetMinStartColor(minColor);
+			newParticle->SetTargetPoint(&transform_->translate_);
+			//マネージャーに渡す
+			ParticleManager::GetInstance()->AddParticle(newParticle);
 
 		}
 

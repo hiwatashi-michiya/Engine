@@ -1,0 +1,69 @@
+{
+    "marParticle": {
+        "ParticleData": {
+            "Color": {
+                "End": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MaxStart": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinStart": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Instance": 32,
+            "IsLoop": false,
+            "LifeTime": {
+                "All": 20,
+                "Max": 30,
+                "Min": 30
+            },
+            "Name": "",
+            "Scale": {
+                "Delta": -0.10000000149011612,
+                "Max": 2.0,
+                "Min": 2.0
+            },
+            "SpawnPoint": {
+                "Max": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "Min": [
+                    -4.0,
+                    -4.0,
+                    -4.0
+                ]
+            },
+            "Speed": {
+                "Delta": [
+                    0.0,
+                    -0.10000000149011612,
+                    0.0
+                ],
+                "Max": [
+                    0.5,
+                    1.0,
+                    0.5
+                ],
+                "Min": [
+                    -0.5,
+                    0.5,
+                    -0.5
+                ]
+            },
+            "Texture": "./Resources/particle\\particle3.png"
+        }
+    }
+}

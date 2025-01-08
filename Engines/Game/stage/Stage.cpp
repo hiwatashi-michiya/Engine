@@ -44,6 +44,8 @@ void Stage::Initialize() {
 	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + minParticleLange_,
 		player_->GetPosition() + maxParticleLange_);
 
+	isClear_ = false;
+
 }
 
 void Stage::Update() {
@@ -73,7 +75,16 @@ void Stage::Update() {
 		SetPlayerCanGoal();
 	}
 
-	player_->Update();
+	if (not isClear_) {
+
+		player_->Update();
+
+		//ダイブ状態以外でカウントが揃っていたらクリア
+		if (not player_->GetIsDiving() and counter_->IsAllCountComplete()) {
+			isClear_ = true;
+		}
+
+	}
 
 	//各オブジェクト更新
 	for (const std::unique_ptr<Block>& block : blocks_) {
@@ -142,8 +153,6 @@ void Stage::Draw(Camera* camera) {
 	player_->Draw(camera);
 
 	stageParticle_->Draw(camera);
-
-	counter_->Draw();
 
 }
 
@@ -420,25 +429,6 @@ void Stage::LoadStage(uint32_t stageNumber) {
 void Stage::SetPlayerCanGoal()
 {
 
-	//1つでも白かったらゴールフラグを立たせない
-	for (auto& ghostBox : ghostBoxes_) {
-
-		if (ghostBox->IsWhite()) {
-			player_->SetCanGoal(false);
-			return;
-		}
-
-	}
-	//1つでも白かったらゴールフラグを立たせない
-	for (auto& block : blocks_) {
-
-		if (block->IsWhite()) {
-			player_->SetCanGoal(false);
-			return;
-		}
-
-	}
-
-	player_->SetCanGoal(true);
+	player_->SetCanGoal(false);
 
 }

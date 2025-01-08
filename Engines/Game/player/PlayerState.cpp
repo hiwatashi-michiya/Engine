@@ -285,8 +285,7 @@ void PlayerDive::Initialize(Player* player)
 		RotateForAxis(player_->GetTransform()->rotateQuaternion_, Vector3::AxisZ(), player_->GetVelocity(), 1.0f);
 	//タグを変更
 	player_->SetTag("P_Dive");
-	//パーティクルを出す
-	//取得された時にパーティクル追加
+	//パーティクル追加
 	std::shared_ptr<Particle> newParticle;
 	newParticle = std::make_shared<Particle>();
 	newParticle->Initialize();

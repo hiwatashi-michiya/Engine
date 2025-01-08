@@ -42,6 +42,10 @@ public:
 	const std::string& kDirectoryPath_ = "./resources/Maps/";
 	//プレイヤー取得
 	Player* GetPlayer() const { return player_.get(); }
+	//クリアフラグ取得
+	bool GetIsClear() const { return isClear_; }
+	//カウンター描画
+	void DrawCounter() { if (counter_) { counter_->Draw(); } }
 
 private:
 	//プレイヤーがゴール可能かどうかセット
@@ -112,6 +116,8 @@ private:
 
 	//当たり判定表示するかどうか
 	bool isShowHitBox_ = false;
+	//クリアフラグ
+	bool isClear_ = false;
 
 };
 

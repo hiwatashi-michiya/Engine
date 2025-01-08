@@ -32,6 +32,10 @@ GameScene::GameScene()
 	toGameSprite_.reset(Sprite::Create(toGameTex_, { 340.0f - 256.0f,560.0f - 32.0f }));
 	toSelectTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toSelect.png");
 	toSelectSprite_.reset(Sprite::Create(toSelectTex_, { 940.0f - 256.0f,560.0f - 32.0f }));
+	toNextTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toNext.png");
+	toNextSprite_.reset(Sprite::Create(toNextTex_, { 340.0f - 256.0f,560.0f - 32.0f }));
+	clearTex_ = TextureManager::GetInstance()->Load("./Resources/UI/clear.png");
+	clearSprite_.reset(Sprite::Create(clearTex_, { 640.0f - 256.0f,360.0f - 32.0f }));
 
 }
 
@@ -175,11 +179,11 @@ void GameScene::Update() {
 
 		PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
 
-		if (input_->TriggerButton(Input::Button::START) or input_->TriggerButton(Input::Button::B)) {
+		if (input_->TriggerButton(Input::Button::START) or input_->TriggerButton(Input::Button::A)) {
 			isPause_ = false;
 		}
 
-		if (input_->TriggerButton(Input::Button::A) and not SceneChangeManager::GetInstance()->IsSceneChange()) {
+		else if (input_->TriggerButton(Input::Button::B) and not SceneChangeManager::GetInstance()->IsSceneChange()) {
 			SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 			SceneChangeManager::GetInstance()->SceneChangeStart();
 		}
@@ -192,29 +196,34 @@ void GameScene::Update() {
 	{
 
 		//スタートボタンを押したらポーズ画面
-		if (input_->TriggerButton(Input::Button::START)) {
+		if (not stage_->GetIsClear() and input_->TriggerButton(Input::Button::START)) {
 			isPause_ = true;
 		}
 
 		//プレイヤーがゴールした時
-		if (stage_->GetPlayer()->GetIsGoal()) {
+		if (stage_->GetIsClear()) {
 
-			//ステージが続いていたら次のステージ
 			if (stageNumber_ < kMaxStage_ and stageNumber_ > 0) {
-				stageNumber_++;
-				SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
-				SceneChangeManager::GetInstance()->SceneChangeStart();
+				//Aボタンで次のステージ
+				if (input_->TriggerButton(Input::Button::A)) {
+					stageNumber_++;
+					SceneChangeManager::GetInstance()->SetNextScene("GAMEPLAY");
+					SceneChangeManager::GetInstance()->SceneChangeStart();
+				}
+
 			}
-			//ステージが続いていない場合はセレクト画面へ遷移
-			else {
+
+			if (not input_->TriggerButton(Input::Button::A) and input_->TriggerButton(Input::Button::B)) {
 				SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 				SceneChangeManager::GetInstance()->SceneChangeStart();
 			}
 
+			PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
+
 		}
 
 		//死んだ場合
-		if (stage_->GetPlayer()->GetIsDead()) {
+		else if (stage_->GetPlayer()->GetIsDead()) {
 
 			resetCount_--;
 			//ゲームのリセット
@@ -267,20 +276,26 @@ void GameScene::Draw()
 		toGameSprite_->Draw();
 		toSelectSprite_->Draw();
 	}
-	else {
+	else if(not stage_->GetIsClear()) {
 
 		menuSprite_->Draw();
 		leftSprite_->Draw();
 		rightSprite_->Draw();
 		lbSprite_->Draw();
+		stage_->DrawCounter();
 		/*rbSprite_->Draw();*/
 
 	}
 
 	//ゴールした時に表示
-	if (stage_->GetPlayer()->GetIsGoal()) {
+	if (stage_->GetIsClear()) {
 
-		
+		if (stageNumber_ < kMaxStage_ and stageNumber_ > 0) {
+			toNextSprite_->Draw();
+		}
+
+		toSelectSprite_->Draw();
+		clearSprite_->Draw();
 
 	}
 

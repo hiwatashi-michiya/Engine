@@ -239,6 +239,7 @@ void Particle::Load(const std::string& filePath)
 						}
 						if (detailName == "All") {
 							particleLifeTime_ = itDetailData->get<int32_t>();
+							maxParticleLifeTime_ = itDetailData->get<int32_t>();
 						}
 
 					}

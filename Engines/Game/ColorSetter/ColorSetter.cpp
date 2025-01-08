@@ -13,6 +13,7 @@ Vector4 GameColor::CreateColor(GameColor::Color color) {
 		break;
 	case GameColor::kGreen:
 		return { 0.0f,1.0f,0.0f,1.0f };
+		break;
 	case GameColor::kBlue:
 		return { 0.0f,0.0f,1.0f,1.0f };
 		break;
@@ -34,6 +35,7 @@ Vector3 GameColor::CreateVector3Color(GameColor::Color color)
 		break;
 	case GameColor::kGreen:
 		return { 0.0f,1.0f,0.0f };
+		break;
 	case GameColor::kBlue:
 		return { 0.0f,0.0f,1.0f };
 		break;

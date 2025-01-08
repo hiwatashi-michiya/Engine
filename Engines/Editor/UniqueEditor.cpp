@@ -1533,19 +1533,8 @@ void UniqueEditor::SetDefaultStage() {
 
 		std::shared_ptr<BlockObject> object = std::make_shared<BlockObject>();
 		object->Initialize(objectName);
-		object->transform_->translate_ = { 15.0f,-2.0f,0.0f };
-		object->transform_->scale_ = { 20.0f,1.0f,10.0f };
-		mapObjData_.push_back(object);
-	}
-	//ゴール生成
-	{
-		std::string objectName = "goal";
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<GoalObject> object = std::make_shared<GoalObject>();
-		object->Initialize(objectName);
-		object->transform_->translate_ = { 30.0f,0.0f,00.0f };
+		object->transform_->translate_ = { 15.0f,-5.0f,0.0f };
+		object->transform_->scale_ = { 20.0f,4.0f,20.0f };
 		mapObjData_.push_back(object);
 	}
 
