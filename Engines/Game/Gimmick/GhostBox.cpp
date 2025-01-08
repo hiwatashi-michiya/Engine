@@ -49,6 +49,7 @@ void GhostBox::Update() {
 	model_->material_->constMap_->secondColor = CreateColor(secondColor_);
 
 	preTranslate_ = collider_->collider_.center;
+	preIsEntered_ = isEntered_;
 
 	//色が一致していない場合
 	if (color_ != secondColor_) {
@@ -93,6 +94,8 @@ void GhostBox::Update() {
 	model_->SetWorldMatrix(modelTransform_->worldMatrix_);
 
 	model_->SetColor(CreateColor(color_));
+
+	isEntered_ = false;
 
 }
 
@@ -144,10 +147,13 @@ void GhostBox::OnCollision(Collider* collider) {
 	//プレイヤーが中に侵入してきたら
 	if (collider->GetGameObject()->GetName() == "P_Dive") {
 
-		//色が違った場合、色を変えて一瞬サイズを大きくする
-		if (color_ != Stage::stageColor_) {
+		isEntered_ = true;
+
+		//入られた瞬間、色を変えて一瞬サイズを大きくする
+		if (isEntered_ != preIsEntered_) {
 
 			color_ = Stage::stageColor_;
+			secondColor_ = color_;
 			//サイズを大きくする
 			float scaleValue = 1.0f;
 			addScale_ = { scaleValue,scaleValue,scaleValue };

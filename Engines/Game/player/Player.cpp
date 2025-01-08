@@ -236,7 +236,6 @@ void Player::OnCollision(Collider* collider) {
 				
 				//センターがブロック内に埋まっていたら
 				if (IsCollision(pBox->GetCollider()->collider_, collider_->collider_.center)) {
-					pBox->StartColorChange(Stage::stageColor_);
 					//カウントをセット
 					diveCount_ = poseDiveCount_;
 				}

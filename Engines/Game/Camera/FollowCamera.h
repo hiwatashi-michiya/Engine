@@ -31,7 +31,7 @@ private:
 	//オフセット
 	Vector3 offset_ = { 0.0f,0.0f,-100.0f };
 	//初期の回転
-	Vector3 startAngle_ = { 0.6f,0.0f,0.0f };
+	Vector3 startAngle_ = { 1.0f,0.0f,0.0f };
 
 };
 

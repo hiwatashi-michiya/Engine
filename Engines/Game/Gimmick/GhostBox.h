@@ -86,5 +86,8 @@ private:
 	GameColor::Color color_ = GameColor::kWhite;
 	//二つ目の色
 	GameColor::Color secondColor_ = GameColor::kWhite;
-	
+	//ブロックにプレイヤーが侵入しているかどうか
+	bool isEntered_ = false;
+	bool preIsEntered_ = false;
+
 };

@@ -273,6 +273,8 @@ void PlayerDive::Initialize(Player* player)
 	//モデルのアニメーションリセット、移動をリセット
 	player_->SetAnimation(3, true, 2.0f);
 	player_->SetVelocity({ 0.0f, 0.0f, 0.0f });
+	player_->GetCollider()->collider_.size = { 0.9f,0.9f,0.9f };
+
 
 	//ブロックに潜っている判定もtrue
 	player_->SetIsDiving(true);
@@ -320,10 +322,9 @@ void PlayerDive::Update()
 
 	//潜行状態を終了させる
 	player_->SetVelocity({ 0.0f,0.0f,0.0f });
+	player_->GetCollider()->collider_.size = { 1.0f,1.0f,1.0f };
 	//タグを変更
 	player_->SetTag("player");
-	//パーティクルを出す
-
 	//潜っている判定をfalse
 	player_->SetIsDiving(false);
 	player_->SetPlayerState(std::make_unique<PlayerStay>());

@@ -56,7 +56,9 @@ void FollowCamera::Update() {
 			Vector2 addRotate = { -float(Input::GetInstance()->GetStickValue(Input::Stick::RY) * deltaSpeed),
 			float(Input::GetInstance()->GetStickValue(Input::Stick::RX) * deltaSpeed) };
 
-			camera_->rotation_ += {0.0f, addRotate.y, 0.0f};
+			camera_->rotation_ += {addRotate.x, addRotate.y, 0.0f};
+
+			camera_->rotation_.x = std::clamp(camera_->rotation_.x, 0.6f, 1.2f);
 
 			camera_->matRotate_ = MakeRotateMatrix(camera_->rotation_);
 
