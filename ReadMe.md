@@ -30,10 +30,6 @@ UniqueEditorで配置するオブジェクトを定義しています。
 
 <details open><summary>Game</summary>
 
-- [Gimmick](Engines/Game/Gimmick/)
-
-このフォルダ内では、ゲーム内のギミックの実装をしています。現在6つほどのギミックがあります。
-
 - [Stage](Engines/Game/stage/Stage.cpp)
 
 ゲームシーンでのオブジェクトの配置やステージの色の管理をしています。[Resources/Maps](Engines/Resources/Maps/)ファイル内のjsonファイルを読み込んで
