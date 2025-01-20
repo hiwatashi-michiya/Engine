@@ -14,12 +14,10 @@ PlayerBullet::~PlayerBullet()
 {
 }
 
-void PlayerBullet::Initialize(const Vector3& velocity, const Vector3& startPosition, float lifeTime)
+void PlayerBullet::Initialize()
 {
 
-	velocity_ = velocity;
-	transform_->translate_ = startPosition;
-	lifeTime_ = lifeTime;
+	
 	bulletColor_ = Stage::stageColor_;
 	model_->SetColor(GameColor::CreateColor(bulletColor_));
 
@@ -61,6 +59,17 @@ void PlayerBullet::Draw(Camera* camera)
 {
 
 	model_->Draw(camera);
+
+}
+
+void PlayerBullet::SetState(const Vector3& velocity, const Vector3& startPosition, float lifeTime)
+{
+
+	velocity_ = velocity;
+	transform_->translate_ = startPosition;
+	lifeTime_ = lifeTime;
+	transform_->UpdateMatrix();
+	model_->SetWorldMatrix(transform_->worldMatrix_);
 
 }
 

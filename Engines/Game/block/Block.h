@@ -16,11 +16,11 @@ public:
 	Block();
 	~Block();
 	//初期化
-	void Initialize();
+	void Initialize() override;
 	//更新
-	void Update();
+	void Update() override;
 	//描画
-	void Draw(Camera* camera);
+	void Draw(Camera* camera) override;
 	//オブジェクトの位置セット
 	void SetPosition(const Vector3& position) { 
 		transform_->translate_ = position;

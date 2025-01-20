@@ -88,10 +88,10 @@ private:
 private:
 
 	//使用するオブジェクトの最大数
-	static const int32_t kMaxObjects_ = 11;
+	static const int32_t kMaxObjects_ = 5;
 	//各オブジェクトの名前
 	std::array<std::string, kMaxObjects_> objectName_ = 
-	{ "player", "block", "moveBox", "paint", "goal", "warp", "ghostBox", "switch", "copyCat", "enemy", "colorHolder"};
+	{ "player", "block", "paint", "ghostBox", "switch"};
 	//入力に使う文字列
 	char name_[256];
 	//入力に使うファイルの名前文字列

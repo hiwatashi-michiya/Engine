@@ -94,17 +94,11 @@
     <Filter Include="Engine\Useful">
       <UniqueIdentifier>{61055ec7-62f4-42f8-b708-2fbabce33069}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Goal">
-      <UniqueIdentifier>{0cc38118-03d8-4959-9df5-fffe622fda0f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\EditorScene">
       <UniqueIdentifier>{009a3271-bbab-4f70-87b9-c976f2a6aaae}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\TestScene">
       <UniqueIdentifier>{4f6925dd-8c9a-4dbb-aa3f-05fc2149e297}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Enemy">
-      <UniqueIdentifier>{7dcd99ac-32ef-4a7f-ac2a-e716a57461c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Core">
       <UniqueIdentifier>{9c94228a-2e48-4af2-ba5f-db5ac31975da}</UniqueIdentifier>
@@ -303,15 +297,6 @@
     <ClCompile Include="Engine\Useful\UsefulFunc.cpp">
       <Filter>Engine\Useful</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Goal\Goal.cpp">
-      <Filter>Game\Goal</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Gimmick\MoveBox.cpp">
-      <Filter>Game\Gimmick</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Gimmick\Warp.cpp">
-      <Filter>Game\Gimmick</Filter>
-    </ClCompile>
     <ClCompile Include="Editor\UniqueEditor.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -330,23 +315,14 @@
     <ClCompile Include="Game\SceneChangeManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Gimmick\CopyCat.cpp">
-      <Filter>Game\Gimmick</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\math\DebugCamera.cpp">
       <Filter>Engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Enemy\Enemy.cpp">
-      <Filter>Game\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Drawing\Particle.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Drawing\ParticleManager.cpp">
       <Filter>Engine\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Gimmick\ColorHolder.cpp">
-      <Filter>Game\Gimmick</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\DescriptorRange.cpp">
       <Filter>Engine\Core</Filter>
@@ -596,15 +572,6 @@
     <ClInclude Include="Engine\Useful\UsefulFunc.h">
       <Filter>Engine\Useful</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Goal\Goal.h">
-      <Filter>Game\Goal</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Gimmick\MoveBox.h">
-      <Filter>Game\Gimmick</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Gimmick\Warp.h">
-      <Filter>Game\Gimmick</Filter>
-    </ClInclude>
     <ClInclude Include="Editor\UniqueEditor.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -623,23 +590,14 @@
     <ClInclude Include="Game\SceneChangeManager.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Gimmick\CopyCat.h">
-      <Filter>Game\Gimmick</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\math\DebugCamera.h">
       <Filter>Engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Enemy\Enemy.h">
-      <Filter>Game\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Drawing\Particle.h">
       <Filter>Engine\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Drawing\ParticleManager.h">
       <Filter>Engine\Drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Gimmick\ColorHolder.h">
-      <Filter>Game\Gimmick</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\DescriptorRange.h">
       <Filter>Engine\Core</Filter>

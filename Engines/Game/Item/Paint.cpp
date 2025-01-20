@@ -3,7 +3,6 @@
 #include "Game/stage/Stage.h"
 #include "Game/ColorSetter/ColorSetter.h"
 #include "ParticleManager.h"
-#include "Game/Gimmick/ColorHolder.h"
 
 const std::string Paint::objectName_ = "paint";
 
@@ -93,7 +92,7 @@ void Paint::Update() {
 	}
 
 	//色が揃っていて取得されていない時
-	if (GameColor::CheckIsActiveColor(color_, Stage::stageColor_, ColorHolder::GetHolderColor()) and !isObtained_) {
+	if (GameColor::CheckIsActiveColor(color_, Stage::stageColor_) and !isObtained_) {
 
 		if (model_->material_->constMap_->threshold > 0.0f) {
 

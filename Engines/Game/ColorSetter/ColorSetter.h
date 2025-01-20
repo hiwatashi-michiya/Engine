@@ -30,6 +30,6 @@ namespace GameColor {
 	//数字から色を作る(Vector3)
 	Vector3 CreateVector3Color(GameColor::Color color);
 	//ステージの色とホルダーの色を取得して対象のオブジェクトがアクティブ状態にあるかどうかを判定
-	bool CheckIsActiveColor(GameColor::Color color, GameColor::Color stageColor, GameColor::Color holderColor);
+	bool CheckIsActiveColor(GameColor::Color color, GameColor::Color stageColor);
 
 };

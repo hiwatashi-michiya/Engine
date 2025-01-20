@@ -550,22 +550,6 @@ void Player::OnCollision(Collider* collider) {
 		itemGetCount_++;
 	}
 
-	if (collider->GetGameObject()->GetName() == "enemy") {
-
-		isDead_ = true;
-
-	}
-
-	//ゴールとの当たり判定
-	if (collider->GetGameObject()->GetName() == "goal") {
-
-		//ゴール可能な状態なら判定
-		if (canGoal_) {
-			isGoal_ = true;
-		}
-
-	}
-
 }
 
 void Player::RotateVelocity()

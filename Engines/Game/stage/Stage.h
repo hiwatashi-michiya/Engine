@@ -6,14 +6,8 @@
 #include "Game/Player/Player.h"
 #include <memory>
 #include <string>
-#include "Game/Goal/Goal.h"
-#include "Game/Gimmick/MoveBox.h"
-#include "Game/Gimmick/Warp.h"
 #include "Game/Gimmick/GhostBox.h"
 #include "Game/Gimmick/Switch.h"
-#include "Game/Gimmick/CopyCat.h"
-#include "Game/Enemy/Enemy.h"
-#include "Game/Gimmick/ColorHolder.h"
 #include "Particle.h"
 #include "Game/Camera/FollowCamera.h"
 #include "ColorCounter.h"
@@ -92,18 +86,6 @@ private:
 
 	//オブジェクトリスト
 	std::list<std::unique_ptr<MapObject>> mapObjData_;
-	//ブロック
-	std::list<std::unique_ptr<Block>> blocks_;
-	//ペイント
-	std::list<std::unique_ptr<Paint>> rings_;
-	//ゴール
-	std::list<std::unique_ptr<Goal>> goals_;
-	//移動箱
-	std::list<std::unique_ptr<MoveBox>> moveBoxes_;
-	//潜行可能な箱
-	std::list<std::unique_ptr<GhostBox>> ghostBoxes_;
-	//スイッチ
-	std::list<std::unique_ptr<Switch>> switches_;
 	//ゲームオブジェクトリスト
 	std::list<std::unique_ptr<GameObject>> gameObjects_;
 

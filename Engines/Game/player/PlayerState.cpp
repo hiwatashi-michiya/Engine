@@ -224,7 +224,8 @@ void PlayerShot::Initialize(Player* player)
 	//弾を生成し、発射
 	std::unique_ptr<PlayerBullet> newBullet;
 	newBullet = std::make_unique<PlayerBullet>();
-	newBullet->Initialize(bulletVelocity, player_->GetPosition(), 60);
+	newBullet->Initialize();
+	newBullet->SetState(bulletVelocity, player_->GetPosition(), 60);
 	player_->GetBullets()->push_back(std::move(newBullet));
 
 }

@@ -117,24 +117,6 @@ void Mesh::LoadModelFile(const std::string& filename) {
 
 		}
 
-		//面の解析
-		//for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
-		//	aiFace& face = mesh->mFaces[faceIndex];
-		//	assert(face.mNumIndices == 3); //三角形のみサポート
-		//	//頂点の解析
-		//	for (uint32_t element = 0; element < face.mNumIndices; ++element) {
-		//		uint32_t vertexIndex = face.mIndices[element];
-		//		aiVector3D& position = mesh->mVertices[vertexIndex];
-		//		aiVector3D& normal = mesh->mNormals[vertexIndex];
-		//		aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
-		//		VertexData vertex;
-		//		vertex.position = { -position.x, position.y, position.z, 1.0f };
-		//		vertex.normal = { -normal.x, normal.y, normal.z };
-		//		vertex.texcoord = { texcoord.x, texcoord.y };
-		//		meshData_.vertices.push_back(vertex);
-		//	}
-		//}
-
 	}
 
 	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {

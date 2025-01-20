@@ -3,7 +3,6 @@
 #include "Collision.h"
 #include "Game/stage/Stage.h"
 #include "Game/ColorSetter/ColorSetter.h"
-#include "ColorHolder.h"
 #include "Game/Bullet/Bullet.h"
 #include "Particle.h"
 #include "ParticleManager.h"
@@ -165,8 +164,10 @@ void GhostBox::OnCollision(Collider* collider) {
 			newParticle->Load("./Resources/ParticleData/ghostBox.json");
 			newParticle->SetEndColor(CreateColor(color_));
 			newParticle->SetMaxStartColor(CreateColor(color_));
+			//色の濃さ最大値
+			float brightness = 0.2f;
 			//色の範囲最小を計算
-			Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(color_)) * 0.2f + CreateColor(color_);
+			Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(color_)) * brightness + CreateColor(color_);
 
 			newParticle->SetMinStartColor(minColor);
 			newParticle->SetTargetPoint(&transform_->translate_);

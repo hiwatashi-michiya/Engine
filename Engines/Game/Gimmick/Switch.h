@@ -14,11 +14,11 @@ public:
 	Switch();
 	~Switch();
 	//初期化
-	void Initialize();
+	void Initialize() override;
 	//更新
-	void Update();
+	void Update() override;
 	//描画
-	void Draw(Camera* camera);
+	void Draw(Camera* camera) override;
 	//色セット
 	void SetColor(GameColor::Color color) { color_ = color; }
 	//コライダー取得

@@ -23,7 +23,7 @@ void UniqueEditor::EditTransform()
 	}
 
 	//Guizmo関連の変数宣言
-	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
+	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
 	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
 	ImGui::Begin("Gizmo Transform");
@@ -47,6 +47,9 @@ void UniqueEditor::EditTransform()
 	float* cameraView = reinterpret_cast<float*>(camera_->matView_.m);
 	float* cameraProjection = reinterpret_cast<float*>(camera_->matProjection_.m);
 
+	//スナップ値
+	std::array<float, 3> snap = { 1.0f,1.0f,1.0f };
+
 	std::vector<Matrix4x4> matrices;
 
 	//一番近いオブジェクトとの距離
@@ -60,95 +63,31 @@ void UniqueEditor::EditTransform()
 		//判定用のOBB
 		OBB tmpObb{};
 
-		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
+		Vector3 scale = mapObjData_[i]->transform_->scale_;
+		Quaternion rotate = mapObjData_[i]->transform_->rotateQuaternion_;
+		Vector3 translate = mapObjData_[i]->transform_->translate_;
 
-			tmpObb = *warpPtr->obb_.get();
-			//判定用のOBB
-			OBB tmpObbB = *warpPtr->obbB_.get();
+		Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
 
-			//マウスと当たっていた場合
-			if (IsCollision(mouseSegment_, tmpObb)) {
+		tmpObb = *mapObjData_[i]->obb_.get();
 
-				warpPtr->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-				//最も近いなら数字を代入
-				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
-					nearLength = Length(tmpObb.center - mouseSegment_.origin);
-					changeNum = i;
-					if (input_->TriggerMouse(Input::Mouse::kLeft)) {
-						warpPtr->isMoveA_ = true;
-					}
-					isHit = true;
-				}
+		//マウスと当たっていた場合
+		if (IsCollision(mouseSegment_, tmpObb)) {
 
+			mapObjData_[i]->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+			//最も近いなら数字を代入
+			if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
+				nearLength = Length(tmpObb.center - mouseSegment_.origin);
+				changeNum = i;
+				isHit = true;
 			}
-			else {
-				warpPtr->lineBox_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-			}
-
-			//マウスと当たっていた場合
-			if (IsCollision(mouseSegment_, tmpObbB)) {
-
-				warpPtr->lineBoxB_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-				//最も近いなら数字を代入
-				if (Length(tmpObbB.center - mouseSegment_.origin) < nearLength) {
-					nearLength = Length(tmpObbB.center - mouseSegment_.origin);
-					changeNum = i;
-					if (input_->TriggerMouse(Input::Mouse::kLeft)) {
-						warpPtr->isMoveA_ = false;
-					}
-					isHit = true;
-				}
-
-			}
-			else {
-				warpPtr->lineBoxB_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-			}
-
-			Vector3 scale = warpPtr->transform_->scale_;
-			Quaternion rotate = warpPtr->transform_->rotateQuaternion_;
-			Vector3 translate = warpPtr->transform_->translate_;
-
-			//どちらを動かすかによって渡す行列を変更する
-			if (not warpPtr->isMoveA_) {
-				scale = warpPtr->transformB_->scale_;
-				rotate = warpPtr->transformB_->rotateQuaternion_;
-				translate = warpPtr->transformB_->translate_;
-			}
-
-			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
-
-			matrices.push_back(tmpMatrix);
 
 		}
 		else {
-
-			Vector3 scale = mapObjData_[i]->transform_->scale_;
-			Quaternion rotate = mapObjData_[i]->transform_->rotateQuaternion_;
-			Vector3 translate = mapObjData_[i]->transform_->translate_;
-
-			Matrix4x4 tmpMatrix = MakeAffineMatrix(scale, rotate, translate);
-
-			tmpObb = *mapObjData_[i]->obb_.get();
-
-			//マウスと当たっていた場合
-			if (IsCollision(mouseSegment_, tmpObb)) {
-
-				mapObjData_[i]->lineBox_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-				//最も近いなら数字を代入
-				if (Length(tmpObb.center - mouseSegment_.origin) < nearLength) {
-					nearLength = Length(tmpObb.center - mouseSegment_.origin);
-					changeNum = i;
-					isHit = true;
-				}
-
-			}
-			else {
-				mapObjData_[i]->lineBox_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
-			}
-
-			matrices.push_back(tmpMatrix);
-
+			mapObjData_[i]->lineBox_->SetColor({ 1.0f,1.0f,1.0f,0.0f });
 		}
+
+		matrices.push_back(tmpMatrix);
 
 	}
 
@@ -178,32 +117,14 @@ void UniqueEditor::EditTransform()
 
 		//操作している間
 		if (ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode,
-			reinterpret_cast<float*>(matrices[selectObject_].m), NULL, NULL, NULL, NULL)) {
+			reinterpret_cast<float*>(matrices[selectObject_].m), NULL, snap.data(), NULL, NULL)) {
 			
 			//操作した瞬間に状態を保存
 			if (not isRecordMove_) {
-				//ワープの処理
-				if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[selectObject_].get())) {
 
-					if (warpPtr->isMoveA_) {
-						oldTransform_->scale_ = warpPtr->transform_->worldMatrix_.GetScale();
-						oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(warpPtr->transform_->worldMatrix_.GetRotateMatrix());
-						oldTransform_->translate_ = warpPtr->transform_->worldMatrix_.GetTranslate();
-					}
-					else {
-						oldTransform_->scale_ = warpPtr->transformB_->worldMatrix_.GetScale();
-						oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(warpPtr->transformB_->worldMatrix_.GetRotateMatrix());
-						oldTransform_->translate_ = warpPtr->transformB_->worldMatrix_.GetTranslate();
-					}
-
-				}
-				else {
-
-					oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetScale();
-					oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(mapObjData_[selectObject_]->transform_->worldMatrix_.GetRotateMatrix());
-					oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetTranslate();
-
-				}
+				oldTransform_->scale_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetScale();
+				oldTransform_->rotateQuaternion_ = ConvertFromRotateMatrix(mapObjData_[selectObject_]->transform_->worldMatrix_.GetRotateMatrix());
+				oldTransform_->translate_ = mapObjData_[selectObject_]->transform_->worldMatrix_.GetTranslate();
 
 				
 				isRecordMove_ = true;
@@ -216,28 +137,10 @@ void UniqueEditor::EditTransform()
 			//操作が終わったらUndoリストに追加
 			if (isRecordMove_) {
 
-				if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[selectObject_].get())) {
-
-					if (warpPtr->isMoveA_) {
-						std::shared_ptr<MoveCommand> newMoveCommand =
-							std::make_shared<MoveCommand>(*warpPtr->transform_,
-								*oldTransform_, *warpPtr->transform_);
-						undoCommands_.push(newMoveCommand);
-					}
-					else {
-						std::shared_ptr<MoveCommand> newMoveCommand =
-							std::make_shared<MoveCommand>(*warpPtr->transformB_,
-								*oldTransform_, *warpPtr->transformB_);
-						undoCommands_.push(newMoveCommand);
-					}
-
-				}
-				else {
-					std::shared_ptr<MoveCommand> newMoveCommand =
-						std::make_shared<MoveCommand>(*mapObjData_[selectObject_]->transform_,
-							*oldTransform_, *mapObjData_[selectObject_]->transform_);
-					undoCommands_.push(newMoveCommand);
-				}
+				std::shared_ptr<MoveCommand> newMoveCommand =
+					std::make_shared<MoveCommand>(*mapObjData_[selectObject_]->transform_,
+						*oldTransform_, *mapObjData_[selectObject_]->transform_);
+				undoCommands_.push(newMoveCommand);
 
 				//新しい要素が作成された時点でRedoのコマンドをクリア
 				while (not redoCommands_.empty())
@@ -255,37 +158,11 @@ void UniqueEditor::EditTransform()
 	//全てのトランスフォームを更新
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
+		mapObjData_[i]->transform_->UpdateMatrix();
 
-			if (warpPtr->isMoveA_) {
-
-				warpPtr->transform_->UpdateMatrix();
-
-				warpPtr->transform_->scale_ = matrices[i].GetScale();
-				warpPtr->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[i].GetRotateMatrix());
-				warpPtr->transform_->translate_ = matrices[i].GetTranslate();
-
-			}
-			else {
-
-				warpPtr->transformB_->UpdateMatrix();
-
-				warpPtr->transformB_->scale_ = matrices[i].GetScale();
-				warpPtr->transformB_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[i].GetRotateMatrix());
-				warpPtr->transformB_->translate_ = matrices[i].GetTranslate();
-
-			}
-
-		}
-		else {
-
-			mapObjData_[i]->transform_->UpdateMatrix();
-
-			mapObjData_[i]->transform_->scale_ = matrices[i].GetScale();
-			mapObjData_[i]->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[i].GetRotateMatrix());
-			mapObjData_[i]->transform_->translate_ = matrices[i].GetTranslate();
-
-		}
+		mapObjData_[i]->transform_->scale_ = matrices[i].GetScale();
+		mapObjData_[i]->transform_->rotateQuaternion_ = ConvertFromRotateMatrix(matrices[i].GetRotateMatrix());
+		mapObjData_[i]->transform_->translate_ = matrices[i].GetTranslate();
 
 	}
 
@@ -410,28 +287,7 @@ void UniqueEditor::Edit() {
 							}
 
 						}
-						else if (objectName_[i] == "moveBox") {
-
-							if (ImGui::Button("Add")) {
-								CreateObject(objectName_[i]);
-							}
-
-						}
 						else if (objectName_[i] == "paint") {
-
-							if (ImGui::Button("Add")) {
-								CreateObject(objectName_[i]);
-							}
-
-						}
-						else if (objectName_[i] == "goal") {
-
-							if (ImGui::Button("Add")) {
-								CreateObject(objectName_[i]);
-							}
-
-						}
-						else if (objectName_[i] == "warp") {
 
 							if (ImGui::Button("Add")) {
 								CreateObject(objectName_[i]);
@@ -446,27 +302,6 @@ void UniqueEditor::Edit() {
 
 						}
 						else if (objectName_[i] == "switch") {
-
-							if (ImGui::Button("Add")) {
-								CreateObject(objectName_[i]);
-							}
-
-						}
-						else if (objectName_[i] == "copyCat") {
-
-							if (ImGui::Button("Add")) {
-								CreateObject(objectName_[i]);
-							}
-
-						}
-						else if (objectName_[i] == "enemy") {
-
-							if (ImGui::Button("Add")) {
-								CreateObject(objectName_[i]);
-							}
-
-						}
-						else if (objectName_[i] == "colorHolder") {
 
 							if (ImGui::Button("Add")) {
 								CreateObject(objectName_[i]);
@@ -520,15 +355,6 @@ void UniqueEditor::Edit() {
 
 							object->transform_->UpdateMatrix();
 							object->model_->SetWorldMatrix(object->transform_->worldMatrix_);
-
-							if (auto holderPtr = dynamic_cast<HolderObject*>(object.get())) {
-								holderPtr->modelB_->SetWorldMatrix(object->transform_->worldMatrix_);
-							}
-
-							if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
-								warpPtr->transformB_->UpdateMatrix();
-								warpPtr->modelB_->SetWorldMatrix(warpPtr->transformB_->worldMatrix_);
-							}
 
 							object->Update();
 
@@ -691,37 +517,15 @@ void UniqueEditor::Save(const std::string& filename) {
 	//情報を書き出し
 	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		if (auto warpPtr = dynamic_cast<WarpObject*>(mapObjData_[i].get())) {
-
-			root[kSceneName_]["objectData"][warpPtr->objName_]["position"] =
-				nlohmann::json::array({ warpPtr->transform_->translate_.x, warpPtr->transform_->translate_.y, warpPtr->transform_->translate_.z,
-					warpPtr->transformB_->translate_.x, warpPtr->transformB_->translate_.y, warpPtr->transformB_->translate_.z });
-			root[kSceneName_]["objectData"][warpPtr->objName_]["quaternion"] =
-				nlohmann::json::array({ warpPtr->transform_->rotateQuaternion_.x,
-					warpPtr->transform_->rotateQuaternion_.y, warpPtr->transform_->rotateQuaternion_.z, warpPtr->transform_->rotateQuaternion_.w });
-			root[kSceneName_]["objectData"][warpPtr->objName_]["scale"] =
-				nlohmann::json::array({ warpPtr->transform_->scale_.x, warpPtr->transform_->scale_.y, warpPtr->transform_->scale_.z });
-			root[kSceneName_]["objectData"][warpPtr->objName_]["tag"] = warpPtr->tag_;
-			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
-
-		}
-		else {
-
-			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["position"] =
-				nlohmann::json::array({ mapObjData_[i]->transform_->translate_.x, mapObjData_[i]->transform_->translate_.y, mapObjData_[i]->transform_->translate_.z });
-			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["quaternion"] =
-				nlohmann::json::array({ mapObjData_[i]->transform_->rotateQuaternion_.x,
-					mapObjData_[i]->transform_->rotateQuaternion_.y, mapObjData_[i]->transform_->rotateQuaternion_.z, mapObjData_[i]->transform_->rotateQuaternion_.w });
-			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["scale"] =
-				nlohmann::json::array({ mapObjData_[i]->transform_->scale_.x, mapObjData_[i]->transform_->scale_.y, mapObjData_[i]->transform_->scale_.z });
-			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["tag"] = mapObjData_[i]->tag_;
-			root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
-
-			if (auto ghostBoxPtr = dynamic_cast<GhostBoxObject*>(mapObjData_[i].get())) {
-				root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["RotateRight"] = ghostBoxPtr->isRotateRight_;
-			}
-
-		}
+		root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["position"] =
+			nlohmann::json::array({ mapObjData_[i]->transform_->translate_.x, mapObjData_[i]->transform_->translate_.y, mapObjData_[i]->transform_->translate_.z });
+		root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["quaternion"] =
+			nlohmann::json::array({ mapObjData_[i]->transform_->rotateQuaternion_.x,
+				mapObjData_[i]->transform_->rotateQuaternion_.y, mapObjData_[i]->transform_->rotateQuaternion_.z, mapObjData_[i]->transform_->rotateQuaternion_.w });
+		root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["scale"] =
+			nlohmann::json::array({ mapObjData_[i]->transform_->scale_.x, mapObjData_[i]->transform_->scale_.y, mapObjData_[i]->transform_->scale_.z });
+		root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["tag"] = mapObjData_[i]->tag_;
+		root[kSceneName_]["objectData"][mapObjData_[i]->objName_]["color"] = int(mapObjData_[i]->color_);
 
 	}
 
@@ -941,25 +745,12 @@ void UniqueEditor::Load(const std::string& filename) {
 
 						}
 
-						//名前がpositionだった場合、positionを登録
-						if (itemNameObject == "position") {
-
-							if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
-
-								//float型のjson配列登録
-								warpPtr->transform_->translate_ = { itItemObject->at(0), itItemObject->at(1), itItemObject->at(2) };
-								warpPtr->transformB_->translate_ = { itItemObject->at(3), itItemObject->at(4), itItemObject->at(5) };
-
-							}
-
-						}
-
 						if (itemNameObject == "color") {
 							
 							object->color_ = GameColor::Color(itItemObject->get<int32_t>());
 							object->model_->SetColor(CreateColor(object->color_));
 
-							if (auto blockPtr = dynamic_cast<BlockObject*>(object.get())) {
+							/*if (auto blockPtr = dynamic_cast<BlockObject*>(object.get())) {
 								blockPtr->model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 							}
 
@@ -969,13 +760,7 @@ void UniqueEditor::Load(const std::string& filename) {
 
 							if (auto playerPtr = dynamic_cast<PlayerObject*>(object.get())) {
 								playerPtr->model_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-							}
-
-							if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
-
-								warpPtr->modelB_->SetColor(CreateColor(warpPtr->color_));
-
-							}
+							}*/
 
 						}
 
@@ -1099,17 +884,6 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
-	else if (name == "moveBox") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<MoveBoxObject> object = std::make_shared<MoveBoxObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
 	else if (name == "paint" or name == "ring") {
 
 		std::string objectName = name;
@@ -1117,28 +891,6 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		objectName = CheckSameName(objectName);
 
 		std::shared_ptr<PaintObject> object = std::make_shared<PaintObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
-	else if (name == "goal") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<GoalObject> object = std::make_shared<GoalObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
-	else if (name == "warp") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<WarpObject> object = std::make_shared<WarpObject>();
 		object->Initialize(objectName);
 		mapObjData_.push_back(object);
 
@@ -1163,42 +915,6 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		std::shared_ptr<SwitchObject> object = std::make_shared<SwitchObject>();
 		object->Initialize(objectName);
 		mapObjData_.push_back(object);
-
-	}
-	else if (name == "copyCat") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<CopyCatObject> object = std::make_shared<CopyCatObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
-	else if (name == "enemy") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<EnemyObject> object = std::make_shared<EnemyObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
-	else if (name == "colorHolder") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<HolderObject> object = std::make_shared<HolderObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-		}
-	else {
 
 	}
 
@@ -1246,18 +962,6 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		mapObjData_.push_back(tmpObject);
 
 	}
-	else if (object->tag_ == "moveBox") {
-
-		std::shared_ptr<MoveBoxObject> tmpObject = std::make_shared<MoveBoxObject>();
-		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = object->transform_->translate_;
-		tmpObject->transform_->rotate_ = object->transform_->rotate_;
-		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->transform_->UpdateMatrix();
-		tmpObject->color_ = object->color_;
-		mapObjData_.push_back(tmpObject);
-
-	}
 	else if (object->tag_ == "paint" or object->tag_ == "ring") {
 
 		std::shared_ptr<PaintObject> tmpObject = std::make_shared<PaintObject>();
@@ -1267,39 +971,6 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->scale_ = object->transform_->scale_;
 		tmpObject->transform_->UpdateMatrix();
 		tmpObject->color_ = object->color_;
-		mapObjData_.push_back(tmpObject);
-
-	}
-	else if (object->tag_ == "goal") {
-
-		std::shared_ptr<GoalObject> tmpObject = std::make_shared<GoalObject>();
-		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = object->transform_->translate_;
-		tmpObject->transform_->rotate_ = object->transform_->rotate_;
-		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->transform_->UpdateMatrix();
-		tmpObject->color_ = object->color_;
-		mapObjData_.push_back(tmpObject);
-
-	}
-	else if (object->tag_ == "warp") {
-
-		std::shared_ptr<WarpObject> tmpObject = std::make_shared<WarpObject>();
-		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = object->transform_->translate_;
-		tmpObject->transform_->rotate_ = object->transform_->rotate_;
-		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->transform_->UpdateMatrix();
-
-		if (auto warpPtr = dynamic_cast<WarpObject*>(object.get())) {
-			tmpObject->transformB_->translate_ = warpPtr->transformB_->translate_;
-			tmpObject->transformB_->rotate_ = warpPtr->transformB_->rotate_;
-			tmpObject->transformB_->scale_ = warpPtr->transformB_->scale_;
-			tmpObject->transform_->UpdateMatrix();
-		}
-
-		tmpObject->color_ = object->color_;
-
 		mapObjData_.push_back(tmpObject);
 
 	}
@@ -1318,53 +989,6 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 	else if (object->tag_ == "switch") {
 
 		std::shared_ptr<SwitchObject> tmpObject = std::make_shared<SwitchObject>();
-		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = object->transform_->translate_;
-		tmpObject->transform_->rotate_ = object->transform_->rotate_;
-		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->transform_->UpdateMatrix();
-		tmpObject->color_ = object->color_;
-		mapObjData_.push_back(tmpObject);
-
-	}
-	else if (object->tag_ == "copyCat") {
-
-		std::shared_ptr<CopyCatObject> tmpObject = std::make_shared<CopyCatObject>();
-		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = object->transform_->translate_;
-		tmpObject->transform_->rotate_ = object->transform_->rotate_;
-		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->transform_->UpdateMatrix();
-		tmpObject->color_ = object->color_;
-		mapObjData_.push_back(tmpObject);
-
-	}
-	else if (object->tag_ == "enemy") {
-
-		std::shared_ptr<EnemyObject> tmpObject = std::make_shared<EnemyObject>();
-		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = object->transform_->translate_;
-		tmpObject->transform_->rotate_ = object->transform_->rotate_;
-		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->transform_->UpdateMatrix();
-		tmpObject->color_ = object->color_;
-		mapObjData_.push_back(tmpObject);
-
-	}
-	else if (object->tag_ == "colorHolder") {
-
-		std::shared_ptr<HolderObject> tmpObject = std::make_shared<HolderObject>();
-		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = object->transform_->translate_;
-		tmpObject->transform_->rotate_ = object->transform_->rotate_;
-		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->transform_->UpdateMatrix();
-		mapObjData_.push_back(tmpObject);
-
-	}
-	else {
-
-		std::shared_ptr<MapObject> tmpObject = std::make_shared<MapObject>();
 		tmpObject->Initialize(objectName);
 		tmpObject->transform_->translate_ = object->transform_->translate_;
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;

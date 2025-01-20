@@ -26,15 +26,8 @@ Stage::~Stage()
 void Stage::Initialize() {
 
 	player_->Initialize();
-	blocks_.clear();
-	rings_.clear();
 	mapObjData_.clear();
-	goals_.clear();
-	moveBoxes_.clear();
-	ghostBoxes_.clear();
-	switches_.clear();
 	gameObjects_.clear();
-	ColorHolder::ResetHolder();
 	counter_->Initialize();
 
 	stageColor_ = GameColor::kWhite;
@@ -58,23 +51,6 @@ void Stage::Update() {
 
 #endif // _DEBUG
 
-	//フラグが立ったものを削除
-	rings_.remove_if([](const std::unique_ptr<Paint>& ring) {
-
-		if (ring->GetIsVanish()) {
-			return true;
-		}
-
-		return false;
-
-	});
-
-	//ゴール可能の状態でない時
-	if (not player_->GetCanGoal()) {
-		//プレイヤーがゴール可能か確認
-		SetPlayerCanGoal();
-	}
-
 	if (not isClear_) {
 
 		player_->Update();
@@ -87,30 +63,8 @@ void Stage::Update() {
 	}
 
 	//各オブジェクト更新
-	for (const std::unique_ptr<Block>& block : blocks_) {
-
-		block->Update();
-
-	}
-
-	for (const std::unique_ptr<GhostBox>& ghostBox : ghostBoxes_) {
-		ghostBox->Update();
-	}
-
-	for (const std::unique_ptr<Paint>& ring : rings_) {
-		ring->Update();
-	}
-
 	for (const std::unique_ptr<GameObject>& gameObject : gameObjects_) {
-		gameObject;
-	}
-
-	for (const std::unique_ptr<Switch>& colorSwitch : switches_) {
-		colorSwitch->Update();
-	}
-
-	for (const std::unique_ptr<Goal>& goal : goals_) {
-		goal->Update();
+		gameObject->Update();
 	}
 
 	counter_->Update();
@@ -130,24 +84,8 @@ void Stage::Draw(Camera* camera) {
 	line_.origin = camera->GetWorldPosition();
 	line_.diff = player_->GetPosition() - camera->GetWorldPosition();
 
-	for (const std::unique_ptr<Paint>& ring : rings_) {
-		ring->Draw(camera);
-	}
-
-	for (const std::unique_ptr<Block>& block : blocks_) {
-		block->Draw(camera);
-	}
-
-	for (const std::unique_ptr<GhostBox>& ghostBox : ghostBoxes_) {
-		ghostBox->Draw(camera);
-	}
-
-	for (const std::unique_ptr<Switch>& colorSwitch : switches_) {
-		colorSwitch->Draw(camera);
-	}
-
-	for (const std::unique_ptr<Goal>& goal : goals_) {
-		goal->Draw(camera);
+	for (const std::unique_ptr<GameObject>& gameObject : gameObjects_) {
+		gameObject->Draw(camera);
 	}
 
 	player_->Draw(camera);
@@ -338,41 +276,6 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetScale(object->transforms_[0]->scale_);
-			blocks_.push_back(std::move(newObject));
-		}
-
-		if (object->tag == "item" || object->tag == Paint::objectName_) {
-			std::unique_ptr<Paint> newObject = std::make_unique<Paint>();
-			newObject->Initialize(object->transforms_[0]->translate_);
-			newObject->SetColor(object->color);
-			rings_.push_back(std::move(newObject));
-		}
-
-		if (object->tag == "goal") {
-			std::unique_ptr<Goal> newObject = std::make_unique<Goal>();
-			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetPlayer(player_.get());
-			goals_.push_back(std::move(newObject));
-		}
-
-		if (object->tag == "moveBox") {
-			std::unique_ptr<MoveBox> newObject = std::make_unique<MoveBox>();
-			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetScale(object->transforms_[0]->scale_);
-			newObject->SetColor(object->color);
-			moveBoxes_.push_back(std::move(newObject));
-		}
-
-		if (object->tag == "warp") {
-			std::unique_ptr<Warp> newObject = std::make_unique<Warp>();
-			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetScale(object->transforms_[0]->scale_);
-			newObject->SetPositionB(object->transforms_[1]->translate_);
-			newObject->SetScaleB(object->transforms_[1]->scale_);
-			newObject->SetColor(object->color);
 			gameObjects_.push_back(std::move(newObject));
 		}
 
@@ -383,7 +286,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->SetScale(object->transforms_[0]->scale_);
 			newObject->SetColor(object->color);
 
-			ghostBoxes_.push_back(std::move(newObject));
+			gameObjects_.push_back(std::move(newObject));
 		}
 
 		if (object->tag == "switch") {
@@ -391,44 +294,10 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
 			newObject->SetColor(object->color);
-			switches_.push_back(std::move(newObject));
-		}
-
-		if (object->tag == "copyCat") {
-			std::unique_ptr<CopyCat> newObject = std::make_unique<CopyCat>();
-			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetRespawnPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->color);
-			newObject->SetPlayer(player_.get());
-			gameObjects_.push_back(std::move(newObject));
-		}
-
-		if (object->tag == "enemy") {
-			std::unique_ptr<Enemy> newObject = std::make_unique<Enemy>();
-			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->color);
-			gameObjects_.push_back(std::move(newObject));
-		}
-
-		if (object->tag == "colorHolder") {
-			std::unique_ptr<ColorHolder> newObject = std::make_unique<ColorHolder>();
-			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
 			gameObjects_.push_back(std::move(newObject));
 		}
 
 	}
 
-	//プレイヤーのゴールカウントを設定
-	player_->SetGoalCount(int32_t(rings_.size()));
-
 }
 
-void Stage::SetPlayerCanGoal()
-{
-
-	player_->SetCanGoal(false);
-
-}

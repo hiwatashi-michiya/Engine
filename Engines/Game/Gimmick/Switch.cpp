@@ -1,7 +1,6 @@
 #include "Switch.h"
 #include "Game/stage/Stage.h"
 #include "Game/ColorSetter/ColorSetter.h"
-#include "ColorHolder.h"
 #include "Particle.h"
 #include "ParticleManager.h"
 

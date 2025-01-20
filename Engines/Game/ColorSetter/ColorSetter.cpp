@@ -44,7 +44,7 @@ Vector3 GameColor::CreateVector3Color(GameColor::Color color)
 
 }
 
-bool GameColor::CheckIsActiveColor(GameColor::Color color, GameColor::Color stageColor, GameColor::Color holderColor)
+bool GameColor::CheckIsActiveColor(GameColor::Color color, GameColor::Color stageColor)
 {
 
 	//色が白色ならtrue
@@ -53,7 +53,7 @@ bool GameColor::CheckIsActiveColor(GameColor::Color color, GameColor::Color stag
 	}
 
 	//どちらかの色と一致しているならtrue
-	if (color == stageColor or color == holderColor) {
+	if (color == stageColor) {
 		return true;
 	}
 

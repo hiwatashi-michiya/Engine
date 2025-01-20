@@ -99,20 +99,6 @@ public:
 };
 
 /// <summary>
-/// 移動箱
-/// </summary>
-class MoveBoxObject : public MapObject
-{
-public:
-
-
-	void Initialize(const std::string& name) override;
-
-	void Edit() override;
-
-};
-
-/// <summary>
 /// ペイント
 /// </summary>
 class PaintObject : public MapObject
@@ -122,50 +108,6 @@ public:
 	void Initialize(const std::string& name) override;
 
 	void Edit() override;
-
-};
-
-/// <summary>
-/// ゴール
-/// </summary>
-class GoalObject : public MapObject
-{
-public:
-
-	GoalObject() {}
-	~GoalObject() {}
-
-	void Initialize(const std::string& name) override;
-
-	void Edit() override;
-
-};
-
-/// <summary>
-/// ワープ
-/// </summary>
-class WarpObject : public MapObject
-{
-public:
-
-	std::unique_ptr<Model> modelB_;
-
-	std::unique_ptr<Transform> transformB_;
-
-	void Initialize(const std::string& name) override;
-
-	void Update() override;
-
-	void Edit() override;
-
-	void RecordMove() override;
-
-	void Draw(Camera* camera) override;
-
-	bool isMoveA_ = true;
-
-	std::unique_ptr<OBB> obbB_;
-	std::unique_ptr<LineBox> lineBoxB_;
 
 };
 
@@ -201,48 +143,5 @@ public:
 	void Initialize(const std::string& name) override;
 
 	void Edit() override;
-
-};
-
-/// <summary>
-/// 分身
-/// </summary>
-class CopyCatObject : public MapObject
-{
-public:
-
-	void Initialize(const std::string& name) override;
-
-	void Edit() override;
-
-};
-
-/// <summary>
-/// 敵
-/// </summary>
-class EnemyObject : public MapObject
-{
-public:
-
-	void Initialize(const std::string& name) override;
-
-	void Edit() override;
-
-};
-
-/// <summary>
-/// 色保持
-/// </summary>
-class HolderObject : public MapObject
-{
-public:
-
-	std::unique_ptr<Model> modelB_;
-
-	void Initialize(const std::string& name) override;
-
-	void Edit() override;
-
-	void Draw(Camera* camera) override;
 
 };

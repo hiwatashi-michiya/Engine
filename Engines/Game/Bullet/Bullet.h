@@ -14,12 +14,6 @@ class IBullet : public GameObject
 {
 public:
 	~IBullet() {};
-	//初期化
-	virtual void Initialize(const Vector3& velocity, const Vector3& startPosition, float lifeTime) = 0;
-	//更新
-	virtual void Update() = 0;
-	//描画コマンド積む
-	virtual void Draw(Camera* camera) = 0;
 	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
 
@@ -53,11 +47,13 @@ public:
 	PlayerBullet();
 	~PlayerBullet();
 	
-	void Initialize(const Vector3& velocity, const Vector3& startPosition, float lifeTime) override;
+	void Initialize() override;
 
 	void Update() override;
 
 	void Draw(Camera* camera) override;
+	//弾の移動方向、初期座標、生存時間セット
+	void SetState(const Vector3& velocity, const Vector3& startPosition, float lifeTime);
 
 	void OnCollision(Collider* collider) override;
 	//弾の色取得

@@ -28,11 +28,11 @@ public:
 	~Player();
 
 	//初期化
-	void Initialize();
+	void Initialize() override;
 	//更新
-	void Update();
+	void Update() override;
 	//描画
-	void Draw(Camera* camera);
+	void Draw(Camera* camera) override;
 	//当たり判定の位置を調整
 	void SetColliderPosition(const Vector3& position) { collider_->collider_.center = position; }
 	//オブジェクトの位置を調整し、その後当たり判定をオブジェクトの位置に合わせる
