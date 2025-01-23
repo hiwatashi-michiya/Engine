@@ -177,6 +177,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Core\RootSignatureDesc.cpp" />
     <ClCompile Include="Engine\Core\StaticSampler.cpp" />
     <ClCompile Include="Engine\Drawing\Draw.cpp" />
+    <ClCompile Include="Engine\Drawing\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Drawing\ParticleManager.cpp" />
     <ClCompile Include="Engine\Drawing\RenderManager.cpp" />
     <ClCompile Include="Engine\math\Camera.cpp" />
