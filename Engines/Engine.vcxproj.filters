@@ -372,6 +372,9 @@
     <ClCompile Include="Engine\math\Vector2.cpp">
       <Filter>Engine\math</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Drawing\ImGuiManager.cpp">
+      <Filter>Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">

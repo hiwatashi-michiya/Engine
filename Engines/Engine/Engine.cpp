@@ -29,7 +29,7 @@
 
 #ifdef _DEBUG
 
-#include "Drawing/ImGuiManager.h"
+#include "ImGuiManager.h"
 
 #endif // _DEBUG
 
@@ -83,17 +83,7 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 #ifdef _DEBUG
 
-	//ImGuiの初期化
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(windowManager_->GetHwnd());
-	ImGui_ImplDX12_Init(dxSetter_->GetDevice(),
-		2,
-		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-		TextureManager::GetInstance()->GetSRVDescHeap(),
-		TextureManager::GetInstance()->GetSRVDescHeap()->GetCPUDescriptorHandleForHeapStart(),
-		TextureManager::GetInstance()->GetSRVDescHeap()->GetGPUDescriptorHandleForHeapStart());
+	ImGuiManager::GetInstance()->Initialize();
 
 #endif // _DEBUG
 
@@ -109,9 +99,7 @@ void Engine::Finalize() {
 
 #ifdef _DEBUG
 
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	ImGuiManager::GetInstance()->Finalize();
 
 #endif // _DEBUG
 
@@ -131,11 +119,7 @@ void Engine::BeginFrame() {
 
 #ifdef _DEBUG
 
-	//フレーム開始を伝える
-	ImGui_ImplDX12_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	ImGuizmo::BeginFrame();
+	ImGuiManager::GetInstance()->BeginFrame();
 
 #endif // _DEBUG
 
@@ -147,11 +131,7 @@ void Engine::EndFrame() {
 
 #ifdef _DEBUG
 
-	//ImGuiの内部コマンドを生成する
-	ImGui::Render();
-
-	//実際のcommandListのImGuiの描画コマンドを積む
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxSetter_->GetCommandList());
+	ImGuiManager::GetInstance()->Render();
 
 #endif // _DEBUG
 

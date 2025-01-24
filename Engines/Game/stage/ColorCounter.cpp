@@ -5,7 +5,7 @@ ColorCounter::ColorCounter()
 {
 	
 	numTex_ = TextureManager::GetInstance()->Load("./Resources/UI/num.png");
-	blockTex_ = TextureManager::GetInstance()->Load("./Resources/block/ghostBox.png");
+	blockTex_ = TextureManager::GetInstance()->Load("./Resources/UI/countBox.png");
 	slashTex_ = TextureManager::GetInstance()->Load("./Resources/UI/slash.png");
 
 	for (int32_t i = 0; i < GameColor::kMaxColor - 1; i++) {

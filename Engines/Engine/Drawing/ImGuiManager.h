@@ -15,7 +15,16 @@ class ImGuiManager
 {
 public:
 	
-
+	//インスタンス取得
+	static ImGuiManager* GetInstance();
+	//初期化
+	void Initialize();
+	//終了処理
+	void Finalize();
+	//フレーム開始処理
+	void BeginFrame();
+	//描画コマンド積む
+	void Render();
 
 private:
 	//シングルトン化
