@@ -375,6 +375,9 @@
     <ClCompile Include="Engine\Drawing\ImGuiManager.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Variables\CommonVariables.cpp">
+      <Filter>Game\Variables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">

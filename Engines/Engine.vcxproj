@@ -240,6 +240,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Game\Player\Player.cpp" />
     <ClCompile Include="Game\Stage\Stage.cpp" />
+    <ClCompile Include="Game\Variables\CommonVariables.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game\SceneChangeManager.cpp" />
   </ItemGroup>
