@@ -375,9 +375,6 @@
     <ClCompile Include="Engine\Drawing\ImGuiManager.cpp">
       <Filter>Engine\Drawing</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Variables\CommonVariables.cpp">
-      <Filter>Game\Variables</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -590,9 +587,6 @@
     <ClInclude Include="Game\Gimmick\GhostBox.h">
       <Filter>Game\Gimmick</Filter>
     </ClInclude>
-    <ClInclude Include="Game\TestScene\TestScene.h">
-      <Filter>Game\TestScene</Filter>
-    </ClInclude>
     <ClInclude Include="Game\SceneChangeManager.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -647,14 +641,14 @@
     <ClInclude Include="Engine\math\Easing.h">
       <Filter>Engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Variables\CommonVariables.h">
-      <Filter>Game\Variables</Filter>
-    </ClInclude>
     <ClInclude Include="Game\gamescene\GameState.h">
       <Filter>Game\GameScene</Filter>
     </ClInclude>
     <ClInclude Include="Game\stage\ColorCounter.h">
       <Filter>Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\TestScene\TestScene.h">
+      <Filter>Game\TestScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

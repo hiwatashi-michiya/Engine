@@ -1,6 +1,5 @@
 #pragma once
 #include "Vector2.h"
-#include "Game/Variables/CommonVariables.h"
 #include "Vector3.h"
 #include "Input.h"
 

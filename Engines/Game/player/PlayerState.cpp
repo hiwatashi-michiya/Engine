@@ -2,14 +2,11 @@
 #include "Player.h"
 #include "ImGuiManager.h"
 #include "Game/Camera/FollowCamera.h"
-#include "Game/Variables/CommonVariables.h"
 #include <vector>
 #include "Particle.h"
 #include "ParticleManager.h"
 #include "Game/ColorSetter/ColorSetter.h"
 #include "Game/stage/Stage.h"
-
-using namespace CommonVariables;
 
 void PlayerStay::Initialize(Player* player)
 {

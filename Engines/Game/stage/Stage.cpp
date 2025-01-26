@@ -6,9 +6,7 @@
 #include "ImGuiManager.h"
 #include "PostEffectDrawer.h"
 #include "UsefulFunc.h"
-#include "Game/Variables/CommonVariables.h"
 
-using namespace CommonVariables;
 
 GameColor::Color Stage::stageColor_ = GameColor::kWhite;
 
