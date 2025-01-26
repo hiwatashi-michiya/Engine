@@ -6,7 +6,7 @@ static D3DResourceLeakChecker leak;
 
 void MarFrameWork::Initialize() {
 
-	Engine::Initialize("カイロウ", 1280, 720);
+	Engine::Initialize("Client", 1280, 720);
 
 	sceneManager_ = SceneManager::GetInstance();
 

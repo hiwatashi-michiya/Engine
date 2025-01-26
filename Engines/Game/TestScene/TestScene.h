@@ -98,7 +98,7 @@ private:
 	//クライアント側関数
 	static DWORD WINAPI CThreadfunc(void*);
 	//サーバー側かどうか
-	bool isServer_ = true;
+	bool isServer_ = false;
 	//試合が終わったかどうか
 	bool isEnd_ = false;
 	//勝ったかどうか
