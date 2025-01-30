@@ -129,12 +129,6 @@ void Engine::BeginFrame() {
 
 void Engine::EndFrame() {
 
-#ifdef _DEBUG
-
-	ImGuiManager::GetInstance()->Render();
-
-#endif // _DEBUG
-
-	dxSetter_->PostDraw();
+	dxSetter_->Execute();
 
 }

@@ -56,10 +56,14 @@ void DirectXSetter::Initialize(WindowManager* winApp, int32_t backBufferWidth, i
 
 }
 
-void DirectXSetter::RenderTexturePreDraw() {
+void DirectXSetter::RenderTexturePreDraw(int32_t textureNum) {
+
+	if (textureNum < 0 or textureNum > 1) {
+		return;
+	}
 
 	//レンダーターゲットビュー用ディスクリプタヒープハンドル取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = GetCPUDescriptorHandle(rtvHeap_.Get(), descriptorSizeRTV, 2);
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = GetCPUDescriptorHandle(rtvHeap_.Get(), descriptorSizeRTV, 2 + textureNum);
 	//深度ステンシルビュー用ディスクリプタヒープハンドル取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH = GetCPUDescriptorHandle(dsvHeap_.Get(), descriptorSizeDSV, 0);
 	//レンダーターゲットをセット
@@ -160,8 +164,6 @@ void DirectXSetter::PreDraw() {
 
 void DirectXSetter::PostDraw() {
 
-	HRESULT hr;
-
 	//バックバッファの番号取得
 	UINT bbIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -180,12 +182,21 @@ void DirectXSetter::PostDraw() {
 	//TransitionBarrierを張る
 	commandList_->ResourceBarrier(1, &barrier);
 
+	
+
+}
+
+void DirectXSetter::Execute()
+{
+
+	HRESULT hr;
+
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
 	hr = commandList_->Close();
 	assert(SUCCEEDED(hr));
 
 	//GPUにコマンドリストの実行を行わせる
-	ID3D12CommandList* commandLists[] = { commandList_.Get()};
+	ID3D12CommandList* commandLists[] = { commandList_.Get() };
 	commandQueue_->ExecuteCommandLists(1, commandLists);
 	//GPUとOSに画面の交換を行うよう通知する
 	swapChain_->Present(1, 0);
@@ -462,5 +473,25 @@ void DirectXSetter::UpdateFixFPS() {
 }
 
 void DirectXSetter::Finalize() {
+
+}
+
+void DirectXFunction::SetBarrier(D3D12_RESOURCE_BARRIER_TYPE type, D3D12_RESOURCE_BARRIER_FLAGS flag, D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter, ID3D12Resource* resource)
+{
+
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier{};
+	//今回のバリアはTransition
+	barrier.Type = type;
+	//Noneにしておく
+	barrier.Flags = flag;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrier.Transition.pResource = resource;
+	//遷移前(現在)のResourceState
+	barrier.Transition.StateBefore = stateBefore;
+	//遷移後のResourceState
+	barrier.Transition.StateAfter = stateAfter;
+	//TransitionBarrierを張る
+	DirectXSetter::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
 }

@@ -2,14 +2,12 @@
 #include "Player.h"
 #include "ImGuiManager.h"
 #include "Game/Camera/FollowCamera.h"
-#include "Game/Variables/CommonVariables.h"
 #include <vector>
 #include "Particle.h"
 #include "ParticleManager.h"
 #include "Game/ColorSetter/ColorSetter.h"
 #include "Game/stage/Stage.h"
 
-using namespace CommonVariables;
 
 void PlayerStay::Initialize(Player* player)
 {
@@ -73,11 +71,6 @@ void PlayerStay::Update()
 		player_->SetPlayerState(std::make_unique<PlayerDive>());
 		return;
 	}
-
-	//RBボタンで弾発射
-	/*else if (player.input_->TriggerButton(Input::Button::RB)) {
-		player.behaviorRequest_ = Player::Behavior::kShot;
-	}*/
 	
 
 }

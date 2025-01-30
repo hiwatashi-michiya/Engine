@@ -1,6 +1,7 @@
 #include "RenderManager.h"
 #include "Core/DirectXSetter.h"
 #include "PostEffectDrawer.h"
+#include "ImGuiManager.h"
 
 RenderManager* RenderManager::GetInstance()
 {
@@ -22,7 +23,7 @@ void RenderManager::Clear()
 void RenderManager::Render()
 {
 	//レンダーテクスチャの対象設定
-	DirectXSetter::GetInstance()->RenderTexturePreDraw();
+	DirectXSetter::GetInstance()->RenderTexturePreDraw(1);
 	//モデル描画
 	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
@@ -50,7 +51,29 @@ void RenderManager::Render()
 	//ここまでがポストエフェクトの対象
 	DirectXSetter::GetInstance()->PreDraw();
 	//ポストエフェクト適用
-	PostEffectDrawer::GetInstance()->Draw();
+	PostEffectDrawer::GetInstance()->Draw(1);
+
+	////レンダーテクスチャの対象設定
+	//DirectXSetter::GetInstance()->RenderTexturePreDraw(0);
+	////ポストエフェクト適用
+	//PostEffectDrawer::GetInstance()->SetType(PostEffectType::kGrayscale);
+	//PostEffectDrawer::GetInstance()->Draw(0);
+	////レンダーテクスチャの対象設定
+	//DirectXSetter::GetInstance()->RenderTexturePreDraw(1);
+	////ポストエフェクト適用
+	//PostEffectDrawer::GetInstance()->SetType(PostEffectType::kVignette);
+	//PostEffectDrawer::GetInstance()->Draw(1);
+	////レンダーテクスチャの対象設定
+	//DirectXSetter::GetInstance()->RenderTexturePreDraw(0);
+	////ポストエフェクト適用
+	//PostEffectDrawer::GetInstance()->SetType(PostEffectType::kRadialBlur);
+	//PostEffectDrawer::GetInstance()->Draw(0);
+	////レンダーテクスチャの対象設定
+	//DirectXSetter::GetInstance()->RenderTexturePreDraw(1);
+	////ポストエフェクト適用
+	//PostEffectDrawer::GetInstance()->SetType(PostEffectType::kHSVFilter);
+	//PostEffectDrawer::GetInstance()->Draw(1);
+
 	//スプライト描画
 	Sprite::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
@@ -69,5 +92,14 @@ void RenderManager::Render()
 	Line::PostDraw();
 	//描画対象のリセット
 	Clear();
+
+#ifdef _DEBUG
+
+	ImGuiManager::GetInstance()->Render();
+
+#endif // _DEBUG
+
+	//描画後処理。バリアを張る
+	DirectXSetter::GetInstance()->PostDraw();
 
 }

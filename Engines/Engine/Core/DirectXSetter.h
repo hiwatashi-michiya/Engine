@@ -14,6 +14,17 @@
 #include <wrl.h>
 
 /// <summary>
+/// DirectX関連の処理を行う関数やクラスなどをまとめたもの
+/// </summary>
+namespace DirectXFunction {
+
+	void SetBarrier(D3D12_RESOURCE_BARRIER_TYPE type, D3D12_RESOURCE_BARRIER_FLAGS flag,
+		D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter,
+		ID3D12Resource* resource);
+
+}
+
+/// <summary>
 /// DirectX12を使用した初期化や描画処理関連の流れを形成するクラス
 /// </summary>
 class DirectXSetter
@@ -43,9 +54,14 @@ public:
 	void PostDraw();
 
 	/// <summary>
+	/// コマンドリスト実行
+	/// </summary>
+	void Execute();
+
+	/// <summary>
 	/// RenderTextureに対しての描画前処理
 	/// </summary>
-	void RenderTexturePreDraw();
+	void RenderTexturePreDraw(int32_t textureNum);
 
 	/// <summary>
 	/// RenderTextureに対しての描画後処理

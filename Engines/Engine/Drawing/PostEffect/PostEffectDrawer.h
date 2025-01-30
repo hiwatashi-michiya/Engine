@@ -17,7 +17,7 @@ public:
 	//初期化
 	void Initialize();
 	//描画コマンド積む
-	void Draw();
+	void Draw(int32_t textureNum);
 	//デバッグ
 	void Debug();
 	//エフェクトタイプセット

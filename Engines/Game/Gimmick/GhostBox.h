@@ -7,7 +7,6 @@
 #include "LineDrawer.h"
 #include "Vector3.h"
 #include "Game/ColorSetter/ColorSetter.h"
-#include "Game/Variables/CommonVariables.h"
 #include <list>
 
 /// <summary>
