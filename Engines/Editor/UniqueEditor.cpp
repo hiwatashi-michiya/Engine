@@ -1010,6 +1010,8 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 			redoCommands_.pop();
 		}
 
+		selectObject_ = int32_t(mapObjData_.size() - 1);
+
 	}
 
 }

@@ -4,6 +4,8 @@ static D3DResourceLeakChecker leak;
 #include "Engine/input/Input.h"
 #include "MarFrameWork.h"
 
+using namespace MLEngine;
+
 void MarFrameWork::Initialize() {
 
 	Engine::Initialize("カイロウ", 1280, 720);

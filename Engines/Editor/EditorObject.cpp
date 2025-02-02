@@ -180,11 +180,11 @@ void BlockObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 1.0f)) {
 		isUsing_ = true;
 	}
 
-	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 1.0f)) {
 		isUsing_ = true;
 	}
 
@@ -220,7 +220,7 @@ void PaintObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 1.0f)) {
 		isUsing_ = true;
 	}
 
@@ -249,7 +249,7 @@ void PaintObject::Edit() {
 void GhostBoxObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/block/block.obj");
-	model_->SetTexture("./Resources/block/clockWise.png");
+	model_->SetTexture("./Resources/block/ghostBox.png");
 	model_->SetColor(CreateColor(color_));
 	objName_ = name;
 	tag_ = "ghostBox";
@@ -260,32 +260,17 @@ void GhostBoxObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 1.0f)) {
 		isUsing_ = true;
 	}
 
-	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 1.0f)) {
 		isUsing_ = true;
-	}
-
-	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
-		model_->SetColor(GameColor::CreateColor(color_));
-	}
-
-	if (ImGui::Checkbox("rotate Right", &isRotateRight_)) {
-
 	}
 
 	RecordMove();
 
 #endif // _DEBUG
-
-	if (isRotateRight_) {
-		model_->SetTexture("./Resources/block/clockWise.png");
-	}
-	else {
-		model_->SetTexture("./Resources/block/counterClockWise.png");
-	}
 
 	transform_->UpdateMatrix();
 
@@ -314,7 +299,7 @@ void SwitchObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 1.0f)) {
 		isUsing_ = true;
 	}
 

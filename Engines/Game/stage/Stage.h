@@ -42,8 +42,7 @@ public:
 	void DrawCounter() { if (counter_) { counter_->Draw(); } }
 
 private:
-	//プレイヤーがゴール可能かどうかセット
-	void SetPlayerCanGoal();
+
 
 private:
 

@@ -212,12 +212,12 @@ void GameScene::Update() {
 				}
 
 			}
-
+			//Bボタンでステージセレクト
 			if (not input_->TriggerButton(Input::Button::A) and input_->TriggerButton(Input::Button::B)) {
 				SceneChangeManager::GetInstance()->SetNextScene("SELECT");
 				SceneChangeManager::GetInstance()->SceneChangeStart();
 			}
-
+			//背景をぼかす
 			PostEffectDrawer::GetInstance()->SetType(kGaussianFilter);
 
 		}
@@ -238,7 +238,7 @@ void GameScene::Update() {
 		else {
 			PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
 		}
-
+		//プレイヤーが死んでいない間カメラを更新
 		if (not stage_->GetPlayer()->GetIsDead()) {
 
 			followCamera_->Update();

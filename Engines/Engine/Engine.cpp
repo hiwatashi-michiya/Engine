@@ -36,6 +36,8 @@
 WindowManager* windowManager_ = nullptr;
 DirectXSetter* dxSetter_ = nullptr;
 
+using namespace MLEngine;
+
 void Engine::Initialize(const char* title, int width, int height) {
 
 	HRESULT hr;

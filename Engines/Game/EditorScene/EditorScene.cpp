@@ -60,8 +60,6 @@ void EditorScene::Update() {
 	ImGui::DragFloat3("translation", &debugCamera_->GetCamera()->position_.x, 0.1f);
 	ImGui::End();
 
-	test_->ImGuiUpdate("test");
-
 	ImGui::Begin("Frame Late");
 	ImGui::Text("%1.2f", ImGui::GetIO().Framerate);
 	ImGui::End();

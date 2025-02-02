@@ -95,6 +95,11 @@ Vector3 CoordTransform(const Vector3& vector, const Matrix4x4& matrix) {
 		vector.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
 	float w = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] +
 		vector.z * matrix.m[2][3] + 1.0f * matrix.m[3][3];
+
+	if (w == 0.0f) {
+		return Vector3::Zero();
+	}
+
 	assert(w != 0.0f);
 	result.x /= w;
 	result.y /= w;
