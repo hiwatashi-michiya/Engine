@@ -13,7 +13,7 @@ void ParticleManager::Initialize() {
 
 void ParticleManager::Update() {
 	//終了したパーティクルを取り出す
-	particles_.remove_if([](std::shared_ptr<Particle> particle) {
+	particles_.remove_if([](std::unique_ptr<Particle>& particle) {
 
 		if (particle->IsEnd()) {
 			return true;
@@ -23,21 +23,21 @@ void ParticleManager::Update() {
 
 		});
 	//パーティクル更新
-	for (auto& particle : particles_) {
+	for (std::unique_ptr<Particle>& particle : particles_) {
 		particle->Update();
 	}
 
 }
 
-void ParticleManager::AddParticle(std::shared_ptr<Particle> particle) {
+void ParticleManager::AddParticle(std::unique_ptr<Particle>& particle) {
 
-	particles_.push_back(particle);
+	particles_.push_back(std::move(particle));
 
 }
 
 void ParticleManager::Draw(Camera* camera) {
 
-	for (auto& particle : particles_) {
+	for (std::unique_ptr<Particle>& particle : particles_) {
 		particle->Draw(camera);
 	}
 

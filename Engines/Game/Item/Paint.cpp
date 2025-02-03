@@ -57,17 +57,6 @@ void Paint::Obtained() {
 	//SE流す
 	PlaySE();
 
-	//取得された時にパーティクル追加
-	std::shared_ptr<Particle> newParticle;
-	newParticle = std::make_shared<Particle>();
-	newParticle->Initialize();
-	newParticle->Load("./Resources/ParticleData/paint.json");
-	newParticle->SetMinSpawnPoint(transform_->translate_ - transform_->scale_);
-	newParticle->SetMaxSpawnPoint(transform_->translate_ + transform_->scale_);
-	newParticle->SetEndColor(CreateColor(color_));
-	//マネージャーに渡す
-	ParticleManager::GetInstance()->AddParticle(newParticle);
-
 }
 
 void Paint::PlaySE() {

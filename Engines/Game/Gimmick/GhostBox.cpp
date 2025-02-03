@@ -129,20 +129,6 @@ void GhostBox::StartColorChange(GameColor::Color color)
 
 void GhostBox::OnCollision(Collider* collider) {
 
-	//プレイヤーの弾に当たったら
-	if (collider->GetGameObject()->GetName() == "P_Bullet") {
-
-		//弾の色に変わる
-		if (auto pBullet = dynamic_cast<PlayerBullet*>(collider->GetGameObject())) {
-
-			if (color_ != pBullet->GetBulletColor()) {
-				color_ = pBullet->GetBulletColor();
-			}
-
-		}
-
-	}
-
 	//プレイヤーが中に侵入してきたら
 	if (collider->GetGameObject()->GetName() == "P_Dive") {
 
@@ -158,8 +144,8 @@ void GhostBox::OnCollision(Collider* collider) {
 			addScale_ = { scaleValue,scaleValue,scaleValue };
 			//パーティクルを出す
 			//パーティクル追加
-			std::shared_ptr<Particle> newParticle;
-			newParticle = std::make_shared<Particle>();
+			std::unique_ptr<Particle> newParticle;
+			newParticle = std::make_unique<Particle>();
 			newParticle->Initialize();
 			newParticle->Load("./Resources/ParticleData/ghostBox.json");
 			newParticle->SetEndColor(CreateColor(color_));

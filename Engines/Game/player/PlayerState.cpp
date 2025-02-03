@@ -282,8 +282,8 @@ void PlayerDive::Initialize(Player* player)
 	//タグを変更
 	player_->SetTag("P_Dive");
 	//パーティクル追加
-	std::shared_ptr<Particle> newParticle;
-	newParticle = std::make_shared<Particle>();
+	std::unique_ptr<Particle> newParticle;
+	newParticle = std::make_unique<Particle>();
 	newParticle->Initialize();
 	newParticle->Load("./Resources/ParticleData/diveStart.json");
 	newParticle->SetMinSpeed(-player_->GetVelocity());
