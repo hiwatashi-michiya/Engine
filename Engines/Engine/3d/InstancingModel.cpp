@@ -16,7 +16,7 @@
 #include "Core/InputLayout.h"
 #include "Core/DescriptorRange.h"
 #include "Drawing/RenderManager.h"
-#include "DirectXSetter.h"
+#include "Core/DirectXSetter.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
