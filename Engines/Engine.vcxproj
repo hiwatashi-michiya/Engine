@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Editor;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\Useful</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Editor;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Core;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\Useful</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
@@ -139,7 +139,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Editor;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\Useful</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Editor;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Core;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\Useful</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <Optimization>MinSpace</Optimization>
