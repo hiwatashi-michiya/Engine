@@ -222,7 +222,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Tool\LevelDataLoader.cpp" />
     <ClCompile Include="Engine\Useful\UsefulFunc.cpp" />
     <ClCompile Include="Game\Block\Block.cpp" />
-    <ClCompile Include="Game\Bullet\Bullet.cpp" />
     <ClCompile Include="Game\Camera\FollowCamera.cpp" />
     <ClCompile Include="Game\ColorSetter\ColorSetter.cpp" />
     <ClCompile Include="Game\DefaultScene.cpp" />
@@ -230,13 +229,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameScene\GameScene.cpp" />
     <ClCompile Include="Game\gamescene\GameState.cpp" />
+    <ClCompile Include="Game\Gimmick\BombBox.cpp" />
     <ClCompile Include="Game\Gimmick\GhostBox.cpp" />
     <ClCompile Include="Game\Gimmick\Switch.cpp" />
-    <ClCompile Include="Game\Item\Paint.cpp" />
     <ClCompile Include="Game\player\PlayerState.cpp" />
     <ClCompile Include="Game\SceneFactory.cpp" />
     <ClCompile Include="Game\SelectScene\SelectScene.cpp" />
     <ClCompile Include="Game\stage\ColorCounter.cpp" />
+    <ClCompile Include="Game\stage\StageLoader.cpp" />
     <ClCompile Include="Game\TestScene\TestScene.cpp" />
     <ClCompile Include="Game\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Game\Player\Player.cpp" />
@@ -317,7 +317,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Tool\LevelDataLoader.h" />
     <ClInclude Include="Engine\Useful\UsefulFunc.h" />
     <ClInclude Include="Game\Block\Block.h" />
-    <ClInclude Include="Game\Bullet\Bullet.h" />
     <ClInclude Include="Game\Camera\FollowCamera.h" />
     <ClInclude Include="Game\ColorSetter\ColorSetter.h" />
     <ClInclude Include="Game\DefaultScene.h" />
@@ -325,13 +324,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameScene\GameScene.h" />
     <ClInclude Include="Game\gamescene\GameState.h" />
+    <ClInclude Include="Game\Gimmick\BombBox.h" />
     <ClInclude Include="Game\Gimmick\GhostBox.h" />
     <ClInclude Include="Game\Gimmick\Switch.h" />
-    <ClInclude Include="Game\Item\Paint.h" />
     <ClInclude Include="Game\player\PlayerState.h" />
     <ClInclude Include="Game\SceneFactory.h" />
     <ClInclude Include="Game\SelectScene\SelectScene.h" />
     <ClInclude Include="Game\stage\ColorCounter.h" />
+    <ClInclude Include="Game\stage\StageLoader.h" />
     <ClInclude Include="Game\TestScene\TestScene.h" />
     <ClInclude Include="Game\TitleScene\TitleScene.h" />
     <ClInclude Include="Game\Player\Player.h" />
@@ -398,6 +398,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\shaders\HSVFilter.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\InstancingObject3d.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\InstancingObject3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

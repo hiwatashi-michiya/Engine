@@ -37,6 +37,11 @@ public:
 	//srvHeapのHandle
 	static uint32_t srvHandleNumber_;
 
+	//各デスクリプタの最大数
+	static const uint32_t kMaxSRVDescriptor_ = 4096;
+	static const uint32_t kMaxRTVDescriptor_ = 4;
+	static const uint32_t kMaxDSVDescriptor_ = 1;
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -139,11 +144,6 @@ private:
 	uint32_t descriptorSizeSRV;
 	uint32_t descriptorSizeRTV;
 	uint32_t descriptorSizeDSV;
-
-	//各デスクリプタの最大数
-	static const uint32_t kMaxSRVDescriptor_ = 1024;
-	static const uint32_t kMaxRTVDescriptor_ = 4;
-	static const uint32_t kMaxDSVDescriptor_ = 1;
 
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;

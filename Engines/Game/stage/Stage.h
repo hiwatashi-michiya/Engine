@@ -2,7 +2,6 @@
 #include "Drawing/LineDrawer.h"
 #include "Engine/3d/Model.h"
 #include "Game/Block/Block.h"
-#include "Game/Item/Paint.h"
 #include "Game/Player/Player.h"
 #include <memory>
 #include <string>

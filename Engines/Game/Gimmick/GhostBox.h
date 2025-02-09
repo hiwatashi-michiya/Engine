@@ -53,8 +53,6 @@ public:
 	void SetSecondColor(GameColor::Color color) { secondColor_ = color; }
 	//2つ目の色取得
 	const GameColor::Color& GetSecondColor() const { return secondColor_; }
-	//色切り替え演出セット
-	void StartColorChange(GameColor::Color color);
 	//色が白かどうか
 	bool IsWhite() const { return color_ == GameColor::Color::kWhite; }
 

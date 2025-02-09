@@ -71,27 +71,6 @@ private:
 };
 
 /// <summary>
-/// 弾発射時の更新処理
-/// </summary>
-class PlayerShot : public PlayerState
-{
-public:
-
-	PlayerShot() {};
-
-	~PlayerShot() override {};
-
-	void Initialize(Player* player) override;
-
-	void Update() override;
-
-private:
-
-
-
-};
-
-/// <summary>
 /// 潜行時の更新処理
 /// </summary>
 class PlayerDive : public PlayerState

@@ -2,6 +2,7 @@
 #include "Core/DirectXSetter.h"
 #include "PostEffectDrawer.h"
 #include "ImGuiManager.h"
+#include "ModelManager.h"
 
 RenderManager* RenderManager::GetInstance()
 {
@@ -25,13 +26,11 @@ void RenderManager::Render()
 	//レンダーテクスチャの対象設定
 	DirectXSetter::GetInstance()->RenderTexturePreDraw(1);
 	//モデル描画
-	Model::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
+	ModelManager::GetInstance()->PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 
-	for (int32_t i = 0; i < models_.size(); i++) {
-		models_[i]->Render();
-	}
+	ModelManager::GetInstance()->Render();
 
-	Model::PostDraw();
+	ModelManager::GetInstance()->PostDraw();
 	//スキニングモデル描画描画
 	SkinningModel::PreDraw(DirectXSetter::GetInstance()->GetCommandList());
 

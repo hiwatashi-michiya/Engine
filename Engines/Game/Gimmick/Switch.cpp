@@ -6,8 +6,8 @@
 
 Switch::Switch()
 {
-	model_.reset(Model::Create("./Resources/bucket/bucket.obj"));
-	modelWire_.reset(Model::Create("./Resources/bucket/bucket_wire.obj"));
+	model_ = std::make_unique<Model>();
+	model_->Initialize("./Resources/bucket/bucket.obj");
 	modelTransform_ = std::make_unique<Transform>();
 	collider_ = std::make_unique<BoxCollider>();
 	lineBox_ = std::make_unique<LineBox>();
@@ -31,8 +31,6 @@ void Switch::Initialize() {
 }
 
 void Switch::Update() {
-
-	model_->material_->constMap_->edgeColor = CreateVector3Color(color_);
 
 	preIsEntered_ = isEntered_;
 

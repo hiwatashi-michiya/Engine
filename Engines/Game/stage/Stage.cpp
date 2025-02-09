@@ -169,7 +169,8 @@ void Stage::LoadStage(uint32_t stageNumber) {
 				std::unique_ptr<MapObject> mapObject = std::make_unique<MapObject>();
 
 				mapObject->isSelect = true;
-				mapObject->model.reset(Model::Create("./resources/cube/cube.obj"));
+				mapObject->model = std::make_unique<Model>();
+				mapObject->model->Initialize("./resources/block/block.obj");
 				mapObject->transforms_.resize(2);
 				mapObject->transforms_[0] = std::make_unique<Transform>();
 				mapObject->objName = objectName;

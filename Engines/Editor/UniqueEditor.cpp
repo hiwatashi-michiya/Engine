@@ -886,17 +886,6 @@ void UniqueEditor::CreateObject(const std::string& name) {
 		mapObjData_.push_back(object);
 
 	}
-	else if (name == "paint" or name == "ring") {
-
-		std::string objectName = name;
-
-		objectName = CheckSameName(objectName);
-
-		std::shared_ptr<PaintObject> object = std::make_shared<PaintObject>();
-		object->Initialize(objectName);
-		mapObjData_.push_back(object);
-
-	}
 	else if (name == "ghostBox") {
 
 		std::string objectName = name;
@@ -961,18 +950,6 @@ void UniqueEditor::CopyObject(std::shared_ptr<MapObject> object) {
 		tmpObject->transform_->rotate_ = object->transform_->rotate_;
 		tmpObject->transform_->scale_ = object->transform_->scale_;
 		tmpObject->transform_->UpdateMatrix();
-		mapObjData_.push_back(tmpObject);
-
-	}
-	else if (object->tag_ == "paint" or object->tag_ == "ring") {
-
-		std::shared_ptr<PaintObject> tmpObject = std::make_shared<PaintObject>();
-		tmpObject->Initialize(objectName);
-		tmpObject->transform_->translate_ = object->transform_->translate_;
-		tmpObject->transform_->rotate_ = object->transform_->rotate_;
-		tmpObject->transform_->scale_ = object->transform_->scale_;
-		tmpObject->transform_->UpdateMatrix();
-		tmpObject->color_ = object->color_;
 		mapObjData_.push_back(tmpObject);
 
 	}

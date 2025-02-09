@@ -129,8 +129,6 @@ void TextureManager::Initialize(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srv
 		textures_[i].srvHandleGPU.ptr = 0;
 	}
 
-	textureIndex_ = 0;
-
 }
 
 Texture* TextureManager::Load(const std::string& filePath) {
@@ -149,7 +147,7 @@ Texture* TextureManager::Load(const std::string& filePath) {
 	}
 
 	//制限数以上の読み込みで止める
-	assert(DirectXSetter::srvHandleNumber_ < kMaxTextures);
+	assert(DirectXSetter::srvHandleNumber_ < DirectXSetter::kMaxSRVDescriptor_);
 
 	std::unique_ptr<Texture> tex = std::make_unique<Texture>();
 
@@ -194,7 +192,7 @@ Texture* TextureManager::Load(const std::string& filePath) {
 InstancingResource TextureManager::SetInstancingResource(uint32_t instanceCount, Microsoft::WRL::ComPtr<ID3D12Resource> mapResource) {
 
 	//制限数以上の読み込みで止める
-	assert(DirectXSetter::srvHandleNumber_ < kMaxTextures);
+	assert(DirectXSetter::srvHandleNumber_ < DirectXSetter::kMaxSRVDescriptor_);
 
 	InstancingResource instancingResource;
 

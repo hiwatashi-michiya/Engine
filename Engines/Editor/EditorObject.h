@@ -99,19 +99,6 @@ public:
 };
 
 /// <summary>
-/// ペイント
-/// </summary>
-class PaintObject : public MapObject
-{
-public:
-
-	void Initialize(const std::string& name) override;
-
-	void Edit() override;
-
-};
-
-/// <summary>
 /// ダイブ可能な箱
 /// </summary>
 class GhostBoxObject : public MapObject

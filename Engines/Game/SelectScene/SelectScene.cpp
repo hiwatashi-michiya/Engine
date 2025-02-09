@@ -3,6 +3,7 @@
 #include "PostEffectDrawer.h"
 #include <cmath>
 #include "Game/ColorSetter/ColorSetter.h"
+#include "InstancingModel.h"
 
 #ifdef _DEBUG
 
@@ -16,7 +17,8 @@ SelectScene::SelectScene()
 	toTitleTex_ = TextureManager::GetInstance()->Load("./Resources/UI/toTitle.png");
 	numTex_ = TextureManager::GetInstance()->Load("./Resources/UI/num.png");
 	buttonTex_ = TextureManager::GetInstance()->Load("./Resources/UI/a.png");
-	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
+	skyDome_ = std::make_unique<Model>();
+	skyDome_->Initialize("./Resources/skydome/temp.obj");
 	stageSelect_.reset(Sprite::Create(stageSelectTex_, { 640.0f - 256.0f,100.0f - 32.0f }));
 	toTitle_.reset(Sprite::Create(toTitleTex_, { 140.0f - 128.0f,60.0f - 32.0f }));
 	num_.reset(Sprite::Create(numTex_, { 640.0f - 32.0f,360.0f - 32.0f }));
@@ -43,11 +45,11 @@ void SelectScene::Initialize() {
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
-	skyDome_->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
-	skyDome_->material_->dLightMap_->intensity = 1.0f;
-	skyDome_->material_->pLightMap_->radius = 650.0f;
-	skyDome_->material_->pLightMap_->intensity = 0.15f;
-	skyDome_->material_->pLightMap_->decay = 0.5f;
+	skyDome_->GetInstancingModel()->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
+	skyDome_->GetInstancingModel()->material_->dLightMap_->intensity = 1.0f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->radius = 650.0f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->intensity = 0.15f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->decay = 0.5f;
 	skyDomeTransform_->UpdateMatrix();
 	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 

@@ -79,8 +79,5 @@ private:
 	//ロードしたテクスチャの数
 	uint32_t textureIndex_ = 0;
 
-	//テクスチャの読み込み最大数
-	const uint32_t kMaxTextures = 256;
-
 };
 

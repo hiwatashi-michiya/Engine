@@ -346,7 +346,7 @@ void Particle3D::Draw(Camera* camera) {
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 
 		//アクティブ状態でない場合、スケールを0にして表示しない
-		if (!isActive_[i]) {
+		if (not isActive_[i]) {
 			transforms_[i]->scale_ = Vector3::Zero();
 		}
 

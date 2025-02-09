@@ -64,9 +64,6 @@
     <Filter Include="Engine\3d\Animation\Keyframe">
       <UniqueIdentifier>{4098cefd-5aa2-44e0-b7fa-8b2badd1aaf2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Item">
-      <UniqueIdentifier>{1f19433d-ba64-4076-a172-3e7cf492ae44}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Block">
       <UniqueIdentifier>{e35197d1-4974-42ed-be59-0551dcfb0d44}</UniqueIdentifier>
     </Filter>
@@ -108,9 +105,6 @@
     </Filter>
     <Filter Include="Editor">
       <UniqueIdentifier>{195999bf-2b06-4818-bbf1-668bb7eeaac7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Bullet">
-      <UniqueIdentifier>{445430c3-dd91-43e9-9781-caec7c360501}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\ColorSetter">
       <UniqueIdentifier>{86a6ee48-f5ad-4cfb-8980-5ebe00a209f8}</UniqueIdentifier>
@@ -243,9 +237,6 @@
     <ClCompile Include="Engine\3d\Animation\Animation.cpp">
       <Filter>Engine\3d\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Item\Paint.cpp">
-      <Filter>Game\Item</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\DescriptorHandle.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
@@ -342,9 +333,6 @@
     <ClCompile Include="Engine\Core\StaticSampler.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Bullet\Bullet.cpp">
-      <Filter>Game\Bullet</Filter>
-    </ClCompile>
     <ClCompile Include="Game\player\PlayerState.cpp">
       <Filter>Game\Player</Filter>
     </ClCompile>
@@ -374,6 +362,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Drawing\ImGuiManager.cpp">
       <Filter>Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\stage\StageLoader.cpp">
+      <Filter>Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Gimmick\BombBox.cpp">
+      <Filter>Game\Gimmick</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3d\InstancingModel.cpp">
       <Filter>Engine\3d</Filter>
@@ -521,9 +515,6 @@
     <ClInclude Include="Engine\3d\Animation\Animation.h">
       <Filter>Engine\3d\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Item\Paint.h">
-      <Filter>Game\Item</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\DescriptorHandle.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
@@ -629,9 +620,6 @@
     <ClInclude Include="Game\player\PlayerState.h">
       <Filter>Game\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Bullet\Bullet.h">
-      <Filter>Game\Bullet</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Drawing\ModelManager.h">
       <Filter>Engine\Drawing</Filter>
     </ClInclude>
@@ -652,6 +640,12 @@
     </ClInclude>
     <ClInclude Include="Game\stage\ColorCounter.h">
       <Filter>Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\stage\StageLoader.h">
+      <Filter>Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Gimmick\BombBox.h">
+      <Filter>Game\Gimmick</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3d\InstancingModel.h">
       <Filter>Engine\3d</Filter>
@@ -745,6 +739,12 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Dissolve.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\InstancingObject3d.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\InstancingObject3d.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

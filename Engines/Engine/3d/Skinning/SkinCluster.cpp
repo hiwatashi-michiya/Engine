@@ -95,9 +95,6 @@ void SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, con
 
 	}
 
-	//テクスチャ使用カウント上昇
-	TextureManager::GetInstance()->AddIndex();
-
 }
 
 void SkinCluster::Update(const Skeleton& skeleton) {
