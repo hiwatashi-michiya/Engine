@@ -1,6 +1,6 @@
 #include "ColorSetter.h"
 
-Vector4 GameColor::CreateColor(GameColor::Color color) {
+Vector4 GameColor::CreateColor(const GameColor::Color& color) {
 
 	switch (color % GameColor::kMaxColor)
 	{
@@ -22,7 +22,7 @@ Vector4 GameColor::CreateColor(GameColor::Color color) {
 
 }
 
-Vector3 GameColor::CreateVector3Color(GameColor::Color color)
+Vector3 GameColor::CreateVector3Color(const GameColor::Color& color)
 {
 	switch (color % GameColor::kMaxColor)
 	{
@@ -44,7 +44,7 @@ Vector3 GameColor::CreateVector3Color(GameColor::Color color)
 
 }
 
-bool GameColor::CheckIsActiveColor(GameColor::Color color, GameColor::Color stageColor)
+bool GameColor::CheckIsActiveColor(const GameColor::Color& color, const GameColor::Color& stageColor)
 {
 
 	//色が白色ならtrue

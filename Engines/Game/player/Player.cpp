@@ -117,17 +117,6 @@ void Player::Update() {
 	//前フレーム当たり判定座標記録
 	preTranslate_ = collider_->collider_.center;
 
-	//弾が生存していない場合は削除
-	bullets_.erase(std::remove_if(bullets_.begin(), bullets_.end(), [](const std::unique_ptr<PlayerBullet>& bullet) {
-
-		if (bullet->GetIsDead()) {
-			return true;
-		}
-
-		return false;
-
-		}), bullets_.end());
-
 	//死んでいない時の処理
 	if (not isDead_) {
 
@@ -156,11 +145,6 @@ void Player::Update() {
 		model_->SetWorldMatrix(transform_->worldMatrix_);
 		//モデルのアニメーション更新
 		model_->UpdateAnimation();
-
-		//弾更新
-		for (int32_t i = 0; i < bullets_.size(); i++) {
-			bullets_[i]->Update();
-		}
 
 		//半分の値
 		float half = 0.5f;
@@ -591,10 +575,6 @@ void Player::Draw(Camera* camera)
 
 #endif // _DEBUG
 
-	//弾描画
-	for (int32_t i = 0; i < bullets_.size(); i++) {
-		bullets_[i]->Draw(camera);
-	}
 	//モデル描画
 	if (not isDead_) {
 		model_->Draw(camera);

@@ -32,6 +32,6 @@ protected:
 	//現在のステージ
 	static uint32_t stageNumber_;
 	//最大ステージ数
-	static const uint32_t kMaxStage_ = 4;
+	static const uint32_t kMaxStage_ = 5;
 
 };

@@ -1,4 +1,4 @@
-#include "GhostBox.h"
+#include "BombBox.h"
 #include "Rand.h"
 #include "Collision.h"
 #include "Game/stage/Stage.h"
@@ -6,11 +6,10 @@
 #include "Particle.h"
 #include "ParticleManager.h"
 
-std::list<GhostBox*> GhostBox::boxList_;
+std::list<BombBox*> BombBox::boxList_;
 
-GhostBox::GhostBox()
+BombBox::BombBox()
 {
-
 	model_ = std::make_unique<Model>();
 	model_->Initialize("./Resources/ghostBox/ghostBox.obj");
 	collider_ = std::make_unique<BoxCollider>();
@@ -19,9 +18,9 @@ GhostBox::GhostBox()
 	boxList_.push_back(this);
 }
 
-GhostBox::~GhostBox()
+BombBox::~BombBox()
 {
-	
+
 	auto it = std::find(boxList_.begin(), boxList_.end(), this);
 
 	if (it != boxList_.end()) {
@@ -30,9 +29,9 @@ GhostBox::~GhostBox()
 
 }
 
-void GhostBox::Initialize() {
+void BombBox::Initialize() {
 
-	name_ = "ghostBox";
+	name_ = "bombBox";
 	collider_->SetGameObject(this);
 	collider_->collider_.center = transform_->translate_;
 	collider_->collider_.size = transform_->scale_;
@@ -44,7 +43,7 @@ void GhostBox::Initialize() {
 
 }
 
-void GhostBox::Update() {
+void BombBox::Update() {
 
 	preTranslate_ = collider_->collider_.center;
 	preIsEntered_ = isEntered_;
@@ -80,7 +79,7 @@ void GhostBox::Update() {
 
 }
 
-void GhostBox::Draw(Camera* camera) {
+void BombBox::Draw(Camera* camera) {
 
 	model_->Draw(camera);
 	if (collider_->GetIsActive()) {
@@ -89,7 +88,7 @@ void GhostBox::Draw(Camera* camera) {
 
 }
 
-void GhostBox::OnCollision(Collider* collider) {
+void BombBox::OnCollision(Collider* collider) {
 
 	//プレイヤーが中に侵入してきたら
 	if (collider->GetGameObject()->GetName() == "P_Dive") {

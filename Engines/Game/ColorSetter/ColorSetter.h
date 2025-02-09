@@ -26,10 +26,10 @@ namespace GameColor {
 	};
 
 	//数字から色を作る
-	Vector4 CreateColor(GameColor::Color color);
+	Vector4 CreateColor(const GameColor::Color& color);
 	//数字から色を作る(Vector3)
-	Vector3 CreateVector3Color(GameColor::Color color);
+	Vector3 CreateVector3Color(const GameColor::Color& color);
 	//ステージの色とホルダーの色を取得して対象のオブジェクトがアクティブ状態にあるかどうかを判定
-	bool CheckIsActiveColor(GameColor::Color color, GameColor::Color stageColor);
+	bool CheckIsActiveColor(const GameColor::Color& color, const GameColor::Color& stageColor);
 
 };

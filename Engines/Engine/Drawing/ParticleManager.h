@@ -20,11 +20,11 @@ public:
 	//描画
 	void Draw(Camera* camera);
 	//パーティクル追加
-	void AddParticle(std::shared_ptr<Particle> particle);
+	void AddParticle(std::unique_ptr<Particle>& particle);
 
 private:
 	//管理しているパーティクルのリスト
-	std::list<std::shared_ptr<Particle>> particles_;
+	std::list<std::unique_ptr<Particle>> particles_;
 
 private:
 	//シングルトン化

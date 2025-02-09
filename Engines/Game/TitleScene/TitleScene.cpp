@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include "FrameWork/SceneManager.h"
 #include "UsefulFunc.h"
+#include "InstancingModel.h"
 
 #ifdef _DEBUG
 
@@ -12,7 +13,8 @@ TitleScene::TitleScene()
 {
 	aTex_ = TextureManager::GetInstance()->Load("./Resources/UI/A_start.png");
 	titleTex_ = TextureManager::GetInstance()->Load("./Resources/UI/title.png");
-	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
+	skyDome_ = std::make_unique<Model>();
+	skyDome_->Initialize("./Resources/skydome/temp.obj");
 	title_.reset(Sprite::Create(titleTex_, { 640.0f - 512.0f,160.0f - 128.0f }));
 	aButton_.reset(Sprite::Create(aTex_, { 640.0f - 128.0f,560.0f - 32.0f }));
 	particle_ = std::make_unique<Particle>();
@@ -37,11 +39,11 @@ void TitleScene::Initialize() {
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
-	skyDome_->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
-	skyDome_->material_->dLightMap_->intensity = 1.0f;
-	skyDome_->material_->pLightMap_->radius = 650.0f;
-	skyDome_->material_->pLightMap_->intensity = 0.15f;
-	skyDome_->material_->pLightMap_->decay = 0.5f;
+	skyDome_->GetInstancingModel()->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
+	skyDome_->GetInstancingModel()->material_->dLightMap_->intensity = 1.0f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->radius = 650.0f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->intensity = 0.15f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->decay = 0.5f;
 	skyDomeTransform_->UpdateMatrix();
 	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 

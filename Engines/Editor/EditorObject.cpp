@@ -6,7 +6,8 @@ std::stack<std::shared_ptr<ICommand>>& MapObject::undoCommands_ = UniqueEditor::
 std::stack<std::shared_ptr<ICommand>>& MapObject::redoCommands_ = UniqueEditor::GetInstance()->GetRedoCommands();
 
 MapObject::MapObject() {
-	model_.reset(Model::Create("./Resources/cube/cube.obj"));
+	model_ = std::make_unique<Model>();
+	model_->Initialize("./Resources/block/block.obj");
 	transform_ = std::make_unique<Transform>();
 	oldTransform_ = std::make_unique<Transform>();
 	obb_ = std::make_unique<OBB>();
@@ -180,11 +181,11 @@ void BlockObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 1.0f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
 		isUsing_ = true;
 	}
 
-	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 1.0f)) {
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
 		isUsing_ = true;
 	}
 
@@ -207,49 +208,9 @@ void BlockObject::Edit() {
 
 }
 
-void PaintObject::Initialize(const std::string& name) {
-
-	model_->SetMesh("./Resources/paint/paint.gltf");
-	model_->SetColor(GameColor::CreateColor(color_));
-	objName_ = name;
-	tag_ = "paint";
-
-}
-
-void PaintObject::Edit() {
-
-#ifdef _DEBUG
-
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 1.0f)) {
-		isUsing_ = true;
-	}
-
-	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
-		model_->SetColor(CreateColor(color_));
-	}
-
-	RecordMove();
-
-#endif // _DEBUG
-
-	transform_->UpdateMatrix();
-
-	obb_->center = transform_->translate_;
-	obb_->size = transform_->scale_;
-	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
-	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
-	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
-
-	lineBox_->Update();
-
-	model_->SetWorldMatrix(transform_->worldMatrix_);
-
-}
-
 void GhostBoxObject::Initialize(const std::string& name) {
 
-	model_->SetMesh("./Resources/block/block.obj");
-	model_->SetTexture("./Resources/block/ghostBox.png");
+	model_->SetMesh("./Resources/ghostBox/ghostBox.obj");
 	model_->SetColor(CreateColor(color_));
 	objName_ = name;
 	tag_ = "ghostBox";
@@ -260,11 +221,11 @@ void GhostBoxObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 1.0f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
 		isUsing_ = true;
 	}
 
-	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 1.0f)) {
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
 		isUsing_ = true;
 	}
 
@@ -299,7 +260,7 @@ void SwitchObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 1.0f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
 		isUsing_ = true;
 	}
 

@@ -90,7 +90,11 @@ void PostEffectDrawer::Initialize() {
 
 }
 
-void PostEffectDrawer::Draw() {
+void PostEffectDrawer::Draw(int32_t textureNum) {
+
+	if (textureNum < 0 or textureNum > 1) {
+		return;
+	}
 
 	ID3D12GraphicsCommandList* commandList = DirectXSetter::GetInstance()->GetCommandList();
 
@@ -101,7 +105,7 @@ void PostEffectDrawer::Draw() {
 	//Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = renderTextures_[0].Get();
+	barrier.Transition.pResource = renderTextures_[textureNum].Get();
 	//遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//遷移後のResourceState
@@ -125,7 +129,7 @@ void PostEffectDrawer::Draw() {
 		postEffects_[type_]->Render();
 	}
 
-	renderTextures_[0].Draw();
+	renderTextures_[textureNum].Draw();
 
 	if (type_ < postEffects_.size()) {
 		postEffects_[type_]->PostRender();
@@ -136,7 +140,7 @@ void PostEffectDrawer::Draw() {
 	//Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = renderTextures_[0].Get();
+	barrier.Transition.pResource = renderTextures_[textureNum].Get();
 	//遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	//遷移後のResourceState

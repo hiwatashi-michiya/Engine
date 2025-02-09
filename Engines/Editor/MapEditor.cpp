@@ -441,10 +441,10 @@ void MapEditor::Load(const std::string& filename) {
 
 				std::shared_ptr<MapObject> object = std::make_shared<MapObject>();
 
-				object->isSelect = true;
+				/*object->isSelect = true;
 				object->model.reset(Model::Create("./Resources/cube/cube.obj"));
 				object->transform = std::make_unique<Transform>();
-				object->objName = objectName;
+				object->objName = objectName;*/
 
 				uint32_t roopCount = 0;
 
@@ -557,11 +557,11 @@ void MapEditor::AddObject(char* name) {
 
 	std::shared_ptr<MapObject> object = std::make_shared<MapObject>();
 
-	object->isSelect = true;
+	/*object->isSelect = true;
 	object->model.reset(Model::Create("./Resources/cube/cube.obj"));
 	object->transform = std::make_unique<Transform>();
 	object->objName = objectName;
-	object->transform->translate_ = spawnPoint_;
+	object->transform->translate_ = spawnPoint_;*/
 
 	mapObjData_.push_back(object);
 
@@ -575,15 +575,15 @@ void MapEditor::CopyObject(std::shared_ptr<MapObject> object) {
 
 	std::shared_ptr<MapObject> tmpObject = std::make_shared<MapObject>();
 
-	tmpObject->isSelect = true;
+	/*tmpObject->isSelect = true;
 	tmpObject->model.reset(Model::Create("./Resources/cube/cube.obj"));
-	tmpObject->model->SetMesh(object->model->meshFilePath_);
+	tmpObject->model->SetMesh(object->model->modelFilePath_);
 	tmpObject->meshNumber = object->meshNumber;
 	tmpObject->objName = objectName;
 	tmpObject->transform = std::make_unique<Transform>();
 	tmpObject->transform->translate_ = object->transform->translate_;
 	tmpObject->transform->rotate_ = object->transform->rotate_;
-	tmpObject->transform->scale_ = object->transform->scale_;
+	tmpObject->transform->scale_ = object->transform->scale_;*/
 	tmpObject->tag = object->tag;
 
 	mapObjData_.push_back(tmpObject);

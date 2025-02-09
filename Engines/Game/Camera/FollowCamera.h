@@ -4,7 +4,6 @@
 #include "Vector3.h"
 #include <memory>
 #include "Transform.h"
-#include "Game/Variables/CommonVariables.h"
 
 /// <summary>
 /// ターゲットに追従するカメラを動かすクラス

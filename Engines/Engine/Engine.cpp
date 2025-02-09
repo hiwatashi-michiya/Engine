@@ -24,6 +24,7 @@
 #include "Skybox.h"
 #include "ParticleManager.h"
 #include "RenderManager.h"
+#include "ModelManager.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -69,7 +70,9 @@ void Engine::Initialize(const char* title, int width, int height) {
 
 	AudioManager::GetInstance()->Initialize();
 	Sprite::StaticInitialize(dxSetter_->GetDevice());
-	Model::StaticInitialize(dxSetter_->GetDevice());
+	ModelManager::GetInstance()->Initialize();
+	Mesh::StaticInitialize(dxSetter_->GetDevice());
+	Material::StaticInitialize(dxSetter_->GetDevice());
 	SkinningModel::StaticInitialize(dxSetter_->GetDevice());
 	Skybox::Initialize();
 	Particle3D::StaticInitialize(dxSetter_->GetDevice());
@@ -107,7 +110,6 @@ void Engine::Finalize() {
 
 	Particle3D::Finalize();
 	AudioManager::GetInstance()->Finalize();
-	Model::Finalize();
 	SkinningModel::Finalize();
 	Sprite::Finalize();
 	dxSetter_->Finalize();
@@ -131,12 +133,6 @@ void Engine::BeginFrame() {
 
 void Engine::EndFrame() {
 
-#ifdef _DEBUG
-
-	ImGuiManager::GetInstance()->Render();
-
-#endif // _DEBUG
-
-	dxSetter_->PostDraw();
+	dxSetter_->Execute();
 
 }

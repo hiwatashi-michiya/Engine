@@ -20,7 +20,7 @@ public:
 	//描画
 	void Draw(Camera* camera) override;
 	//色セット
-	void SetColor(GameColor::Color color) { color_ = color; }
+	void SetColor(const GameColor::Color& color) { color_ = color; }
 	//コライダー取得
 	BoxCollider* GetCollider() { return collider_.get(); }
 
@@ -31,7 +31,6 @@ private:
 private:
 
 	std::unique_ptr<Model> model_;
-	std::unique_ptr<Model> modelWire_;
 
 	std::unique_ptr<BoxCollider> collider_;
 

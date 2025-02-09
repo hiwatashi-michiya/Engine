@@ -41,18 +41,19 @@ void TestScene::Initialize() {
 	for (auto& object : loader_->levelData_->objects_) {
 
 		if (object.type.compare("MESH") == 0) {
-			std::shared_ptr<Model> newModel;
+			std::unique_ptr<Model> newModel;
 
-			newModel.reset(Model::Create(object.fileName));
+			newModel = std::make_unique<Model>();
+			newModel->Initialize(object.fileName);
 
-			models_.push_back(newModel);
+			models_.push_back(std::move(newModel));
 
-			std::shared_ptr<Transform> newTransform = std::make_shared<Transform>();
+			std::unique_ptr<Transform> newTransform = std::make_unique<Transform>();
 			newTransform->translate_ = object.translation;
 			newTransform->rotateQuaternion_ = ConvertFromEuler(object.rotation);
 			newTransform->scale_ = object.scaling;
 
-			transforms_.push_back(newTransform);
+			transforms_.push_back(std::move(newTransform));
 		}
 		if (object.type.compare("CAMERA") == 0) {
 			camera_->position_ = object.translation;

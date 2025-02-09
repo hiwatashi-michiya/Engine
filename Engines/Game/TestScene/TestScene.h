@@ -42,8 +42,8 @@ private:
 
 	std::unique_ptr<Camera> camera_;
 	//モデルとトランスフォームリスト
-	std::vector<std::shared_ptr<Model>> models_;
-	std::vector<std::shared_ptr<Transform>> transforms_;
+	std::vector<std::unique_ptr<Model>> models_;
+	std::vector<std::unique_ptr<Transform>> transforms_;
 
 	//線分
 	std::unique_ptr<Line> line_;

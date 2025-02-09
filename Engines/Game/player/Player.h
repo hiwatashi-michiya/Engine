@@ -13,9 +13,7 @@
 #include "LineDrawer.h"
 #include "PlayerState.h"
 #include <optional>
-#include "Game/Bullet/Bullet.h"
 #include <vector>
-#include "Game/Variables/CommonVariables.h"
 
 /// <summary>
 /// プレイヤー全体の処理をまとめたクラス
@@ -94,8 +92,6 @@ public:
 	Camera* GetCamera() const { return camera_; }
 	//トランスフォーム取得
 	Transform* GetTransform() { return transform_.get(); }
-	//弾リスト取得
-	std::vector<std::unique_ptr<PlayerBullet>>* GetBullets() { return &bullets_; }
 	//モデル取得
 	SkinningModel* GetModel() { return model_.get(); }
 	//ダイブフラグ取得
@@ -131,9 +127,6 @@ private:
 	std::unique_ptr<LineBox> lineBox_;
 
 	std::unique_ptr<PlayerState> state_;
-
-	//弾リスト
-	std::vector<std::unique_ptr<PlayerBullet>> bullets_;
 
 	//ゴールに必要なアイテム数
 	int32_t goalCount_ = 0;

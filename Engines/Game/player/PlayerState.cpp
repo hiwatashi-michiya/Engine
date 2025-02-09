@@ -2,14 +2,12 @@
 #include "Player.h"
 #include "ImGuiManager.h"
 #include "Game/Camera/FollowCamera.h"
-#include "Game/Variables/CommonVariables.h"
 #include <vector>
 #include "Particle.h"
 #include "ParticleManager.h"
 #include "Game/ColorSetter/ColorSetter.h"
 #include "Game/stage/Stage.h"
 
-using namespace CommonVariables;
 
 void PlayerStay::Initialize(Player* player)
 {
@@ -45,10 +43,6 @@ void PlayerStay::Update()
 		input_->PushKey(DIK_A) or input_->PushKey(DIK_D))) {
 		player_->SetPlayerState(std::make_unique<PlayerMove>());
 	}
-	else if (input_->TriggerKey(DIK_SPACE)) {
-		player_->SetPlayerState(std::make_unique<PlayerShot>());
-		return;
-	}
 	
 	//ボタンをトリガーしていたら潜る状態に移行
 	else if (input_->TriggerKey(DIK_Q)) {
@@ -73,11 +67,6 @@ void PlayerStay::Update()
 		player_->SetPlayerState(std::make_unique<PlayerDive>());
 		return;
 	}
-
-	//RBボタンで弾発射
-	/*else if (player.input_->TriggerButton(Input::Button::RB)) {
-		player.behaviorRequest_ = Player::Behavior::kShot;
-	}*/
 	
 
 }
@@ -129,11 +118,6 @@ void PlayerMove::Update()
 		moveVector.x = 1.0f;
 	}
 
-	if (input_->TriggerKey(DIK_SPACE)) {
-		player_->SetPlayerState(std::make_unique<PlayerShot>());
-		return;
-	}
-
 	//ボタンをトリガーしていたら潜る状態に移行
 	if (input_->TriggerKey(DIK_Q)) {
 		//状態を切り替える
@@ -154,11 +138,6 @@ void PlayerMove::Update()
 			player_->SetPlayerState(std::make_unique<PlayerDive>());
 			return;
 		}
-
-		//弾発射
-		/*if (player.input_->TriggerButton(Input::Button::RB)) {
-			player.behaviorRequest_ = Player::Behavior::kShot;
-		}*/
 
 		//X移動量
 		if (fabsf(input_->GetStickValue(Input::LX)) > 0) {
@@ -200,63 +179,6 @@ void PlayerMove::Update()
 
 }
 
-void PlayerShot::Initialize(Player* player)
-{
-
-	//インプットのインスタンスを渡す
-	input_ = Input::GetInstance();
-
-	//ポインタ存在確認
-	if (not player) {
-		return;
-	}
-
-	//プレイヤーを渡す
-	player_ = player;
-
-	//モデルのアニメーションリセット、移動をリセット
-	player_->SetAnimation(2, true, 4.0f);
-	player_->SetVelocity({ 0.0f,player_->GetVelocity().y, 0.0f });
-
-	//プレイヤーの向きに弾の移動方向を設定
-	Vector3 bulletVelocity = Normalize(player_->GetTransform()->worldMatrix_.GetZAxis());
-
-	//弾を生成し、発射
-	std::unique_ptr<PlayerBullet> newBullet;
-	newBullet = std::make_unique<PlayerBullet>();
-	newBullet->Initialize();
-	newBullet->SetState(bulletVelocity, player_->GetPosition(), 60);
-	player_->GetBullets()->push_back(std::move(newBullet));
-
-}
-
-void PlayerShot::Update()
-{
-
-	//ポインタ存在確認
-	if (not player_) {
-		return;
-	}
-
-	//移動速度更新、落下速度加算
-	player_->SetVelocity({ 0.0f, player_->GetVelocity().y + player_->GetFallSpeed(), 0.0f });
-
-	//アニメーションが終了した時
-	if (player_->GetModel()->IsEndAnimation()) {
-
-		//移動の入力があるならMoveに遷移
-		if (fabsf(input_->GetStickValue(Input::LX)) > 0 or fabsf(input_->GetStickValue(Input::LY)) > 0) {
-			player_->SetPlayerState(std::make_unique<PlayerMove>());
-		}
-		//ない場合はStayに遷移
-		else {
-			player_->SetPlayerState(std::make_unique<PlayerStay>());
-		}
-
-	}
-
-}
-
 void PlayerDive::Initialize(Player* player)
 {
 
@@ -289,8 +211,8 @@ void PlayerDive::Initialize(Player* player)
 	//タグを変更
 	player_->SetTag("P_Dive");
 	//パーティクル追加
-	std::shared_ptr<Particle> newParticle;
-	newParticle = std::make_shared<Particle>();
+	std::unique_ptr<Particle> newParticle;
+	newParticle = std::make_unique<Particle>();
 	newParticle->Initialize();
 	newParticle->Load("./Resources/ParticleData/diveStart.json");
 	newParticle->SetMinSpeed(-player_->GetVelocity());

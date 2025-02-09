@@ -1,6 +1,5 @@
 #pragma once
 #include "Vector2.h"
-#include "Game/Variables/CommonVariables.h"
 #include "Vector3.h"
 #include "Input.h"
 
@@ -68,27 +67,6 @@ public:
 private:
 
 	Vector2 moveVelocity_{};
-
-};
-
-/// <summary>
-/// 弾発射時の更新処理
-/// </summary>
-class PlayerShot : public PlayerState
-{
-public:
-
-	PlayerShot() {};
-
-	~PlayerShot() override {};
-
-	void Initialize(Player* player) override;
-
-	void Update() override;
-
-private:
-
-
 
 };
 

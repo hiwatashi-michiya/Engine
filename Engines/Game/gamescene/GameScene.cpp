@@ -3,6 +3,7 @@
 #include "PostEffectDrawer.h"
 #include "CollisionManager.h"
 #include "UsefulFunc.h"
+#include "InstancingModel.h"
 
 #ifdef _DEBUG
 
@@ -13,7 +14,8 @@
 GameScene::GameScene()
 {
 
-	skyDome_.reset(Model::Create("./Resources/skydome/temp.obj"));
+	skyDome_ = std::make_unique<Model>();
+	skyDome_->Initialize("./Resources/skydome/temp.obj");
 	skybox_ = std::make_unique<Skybox>();
 	skybox_->LoadDds("./Resources/skydome/test.dds");
 	pauseTex_ = TextureManager::GetInstance()->Load("./Resources/UI/pause.png");
@@ -67,11 +69,11 @@ void GameScene::Initialize() {
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
-	skyDome_->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
-	skyDome_->material_->dLightMap_->intensity = 1.0f;
-	skyDome_->material_->pLightMap_->radius = 650.0f;
-	skyDome_->material_->pLightMap_->intensity = 0.15f;
-	skyDome_->material_->pLightMap_->decay = 0.5f;
+	skyDome_->GetInstancingModel()->material_->dLightMap_->direction = { 0.0f,-0.8f,0.6f };
+	skyDome_->GetInstancingModel()->material_->dLightMap_->intensity = 1.0f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->radius = 650.0f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->intensity = 0.15f;
+	skyDome_->GetInstancingModel()->material_->pLightMap_->decay = 0.5f;
 
 	stage_ = std::make_unique<Stage>();
 	stage_->Initialize();
@@ -106,8 +108,6 @@ void GameScene::Update() {
 	ImGui::DragFloat3("rotation", &camera_->rotation_.x, 0.1f);
 	ImGui::DragFloat3("translation", &camera_->position_.x, 0.1f);
 	ImGui::End();
-
-	skyDome_->ImGuiUpdate("skyDome");
 
 	ImGui::Begin("manual");
 	ImGui::Text("Move : Left Stick");
