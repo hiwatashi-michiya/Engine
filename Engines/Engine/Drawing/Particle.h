@@ -25,6 +25,9 @@ public:
 	//描画
 	void Draw(Camera* camera);
 
+	//パラメータをデフォルトに設定
+	void SetDefault();
+
 	//パーティクルのランダム速度最小設定
 	void SetMinSpeed(const Vector3& speed) { minSpeed_ = speed; }
 

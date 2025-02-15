@@ -6,13 +6,13 @@
 #include "ImGuiManager.h"
 #include "PostEffectDrawer.h"
 #include "UsefulFunc.h"
+#include "ParticleManager.h"
 
 GameColor::Color Stage::stageColor_ = GameColor::kWhite;
 
 Stage::Stage()
 {
 	player_ = std::make_unique<Player>();
-	stageParticle_ = std::make_unique<Particle>();
 	counter_ = std::make_unique<ColorCounter>();
 }
 
@@ -28,11 +28,15 @@ void Stage::Initialize() {
 	counter_->Initialize();
 
 	stageColor_ = GameColor::kWhite;
-	stageParticle_->Initialize();
-	stageParticle_->Load("./Resources/ParticleData/stage.json");
-	stageParticle_->SetInstanceCount(128);
-	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + minParticleLange_,
-		player_->GetPosition() + maxParticleLange_);
+
+	if (ParticleManager::GetInstance()->GetUnUsedParticle(stageParticle_)) {
+
+		stageParticle_->Load("./Resources/ParticleData/stage.json");
+		stageParticle_->SetInstanceCount(128);
+		stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + minParticleLange_,
+			player_->GetPosition() + maxParticleLange_);
+
+	}
 
 	isClear_ = false;
 
@@ -86,8 +90,6 @@ void Stage::Draw(Camera* camera) {
 	}
 
 	player_->Draw(camera);
-
-	stageParticle_->Draw(camera);
 
 }
 

@@ -122,7 +122,7 @@ private:
 
 	std::unique_ptr<SkinningModel> model_;
 
-	std::unique_ptr<Particle> particle_;
+	Particle* particle_ = nullptr;
 
 	std::unique_ptr<LineBox> lineBox_;
 

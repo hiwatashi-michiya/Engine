@@ -104,23 +104,25 @@ void GhostBox::OnCollision(Collider* collider) {
 			//サイズを大きくする
 			float scaleValue = 1.0f;
 			addScale_ = { scaleValue,scaleValue,scaleValue };
-			//パーティクルを出す
+			
 			//パーティクル追加
-			std::unique_ptr<Particle> newParticle;
-			newParticle = std::make_unique<Particle>();
-			newParticle->Initialize();
-			newParticle->Load("./Resources/ParticleData/ghostBox.json");
-			newParticle->SetEndColor(CreateColor(color_));
-			newParticle->SetMaxStartColor(CreateColor(color_));
-			//色の濃さ最大値
-			float brightness = 0.2f;
-			//色の範囲最小を計算
-			Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(color_)) * brightness + CreateColor(color_);
+			Particle* newParticle = nullptr;
 
-			newParticle->SetMinStartColor(minColor);
-			newParticle->SetTargetPoint(&transform_->translate_);
-			//マネージャーに渡す
-			ParticleManager::GetInstance()->AddParticle(newParticle);
+			//未使用のパーティクルのポインタを取得する
+			if (ParticleManager::GetInstance()->GetUnUsedParticle(newParticle)) {
+
+				newParticle->Load("./Resources/ParticleData/ghostBox.json");
+				newParticle->SetEndColor(CreateColor(color_));
+				newParticle->SetMaxStartColor(CreateColor(color_));
+				//色の濃さ最大値
+				float brightness = 0.2f;
+				//色の範囲最小を計算
+				Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(color_)) * brightness + CreateColor(color_);
+
+				newParticle->SetMinStartColor(minColor);
+				newParticle->SetTargetPoint(&transform_->translate_);
+
+			}
 
 		}
 

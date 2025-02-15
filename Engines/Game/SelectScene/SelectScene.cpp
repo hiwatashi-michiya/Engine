@@ -38,6 +38,8 @@ void SelectScene::Initialize() {
 	input_ = Input::GetInstance();
 	audioManager_ = AudioManager::GetInstance();
 
+	particleManager_ = ParticleManager::GetInstance();
+
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->position_ = { 0.0f,65.0f, -60.0f };
@@ -153,10 +155,14 @@ void SelectScene::Update() {
 
 	skyDome_->SetColor(CreateColor(GameColor::Color(stageNumber_)));
 
+	particleManager_->Update();
+
 }
 
 void SelectScene::Draw()
 {
+
+	particleManager_->Draw(camera_.get());
 
 	skyDome_->Draw(camera_.get());
 

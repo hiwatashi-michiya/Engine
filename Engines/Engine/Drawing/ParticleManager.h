@@ -15,16 +15,24 @@ public:
 	static ParticleManager* GetInstance();
 	//初期化
 	void Initialize();
+	//終了処理
+	void Finalize();
 	//更新
 	void Update();
 	//描画
 	void Draw(Camera* camera);
-	//パーティクル追加
-	void AddParticle(std::unique_ptr<Particle>& particle);
+	//全パーティクルのリセット
+	void Reset();
+	//未使用のパーティクル取得
+	bool GetUnUsedParticle(Particle*& particle);
+	//パーティクル最大数
+	static const int32_t kMaxParticle_ = 256;
 
 private:
 	//管理しているパーティクルのリスト
-	std::list<std::unique_ptr<Particle>> particles_;
+	std::array<std::unique_ptr<Particle>, kMaxParticle_> particles_;
+	//どのパーティクルが現在使われているか
+	std::array<bool, kMaxParticle_> isUsed_;
 
 private:
 	//シングルトン化

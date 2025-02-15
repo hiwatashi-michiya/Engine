@@ -109,6 +109,7 @@ void Engine::Finalize() {
 #endif // _DEBUG
 
 	Particle3D::Finalize();
+	ParticleManager::GetInstance()->Finalize();
 	AudioManager::GetInstance()->Finalize();
 	SkinningModel::Finalize();
 	Sprite::Finalize();

@@ -8,6 +8,8 @@
 
 Particle::Particle()
 {
+	particle_.reset(Particle3D::Create("./Resources/particle/plane.obj", kMaxParticle_));
+	particle_->SetInstanceCount(instanceCount_);
 }
 
 Particle::~Particle()
@@ -15,9 +17,6 @@ Particle::~Particle()
 }
 
 void Particle::Initialize() {
-
-	particle_.reset(Particle3D::Create("./Resources/particle/plane.obj", kMaxParticle_));
-	particle_->SetInstanceCount(instanceCount_);
 
 }
 
@@ -88,9 +87,61 @@ void Particle::Draw(Camera* camera) {
 
 }
 
+void Particle::SetDefault()
+{
+	//ターゲット外す
+	targetPoint_ = nullptr;
+	//その他の情報をリセット
+	particleLifeTime_ = 0;
+
+	//名前
+	name_ = "";
+	//出現時の色範囲
+	minStartColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	maxStartColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	//消滅時の色
+	endColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	//速度最低値
+	minSpeed_ = { 0.0f,0.0f,0.0f };
+	//速度最大値
+	maxSpeed_ = { 0.0f,0.0f,0.0f };
+	//スポーン地点
+	spawnPoint_ = { 0.0f,0.0f,0.0f };
+	//スポーン範囲最小
+	minSpawnPoint_ = { 0.0f,0.0f,0.0f };
+	//スポーン範囲最大
+	maxSpawnPoint_ = { 0.0f,0.0f,0.0f };
+	//スピードの変化量(一定)
+	changeSpeed_ = { 0.0f,0.0f,0.0f };
+	//回転変化量
+	changeRotate_ = { 0.0f,0.0f,0.0f };
+	//スケール変化量(一定)
+	changeScale_ = 0.0f;
+	//最小スケール
+	minScale_ = 0.1f;
+	//最大スケール
+	maxScale_ = 1.0f;
+	//最小生存時間
+	minLifeTime_ = 60;
+	//最大生存時間
+	maxLifeTime_ = 60;
+	//インスタンス数
+	instanceCount_ = 32;
+	//パーティクル全体の生存時間
+	particleLifeTime_ = 120;
+	//パーティクル全体の最大生存時間
+	maxParticleLifeTime_ = 120;
+	//アクティブ状態かどうか
+	isActive_ = false;
+	//ループするかどうか
+	isLoop_ = false;
+
+
+}
+
 bool Particle::IsEnd() {
 
-	if (particleLifeTime_ <= 0 and !particle_->IsAnyActive() and !isLoop_) {
+	if (particleLifeTime_ <= 0 and not particle_->IsAnyActive() and not isLoop_) {
 		return true;
 	}
 

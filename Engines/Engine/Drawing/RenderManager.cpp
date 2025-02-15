@@ -3,6 +3,7 @@
 #include "PostEffectDrawer.h"
 #include "ImGuiManager.h"
 #include "ModelManager.h"
+#include "ParticleManager.h"
 
 RenderManager* RenderManager::GetInstance()
 {

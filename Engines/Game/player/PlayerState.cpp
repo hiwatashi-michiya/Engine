@@ -211,21 +211,23 @@ void PlayerDive::Initialize(Player* player)
 	//タグを変更
 	player_->SetTag("P_Dive");
 	//パーティクル追加
-	std::unique_ptr<Particle> newParticle;
-	newParticle = std::make_unique<Particle>();
-	newParticle->Initialize();
-	newParticle->Load("./Resources/ParticleData/diveStart.json");
-	newParticle->SetMinSpeed(-player_->GetVelocity());
-	newParticle->SetMaxSpeed(-player_->GetVelocity() * 0.1f);
-	newParticle->SetEndColor(CreateColor(Stage::stageColor_));
-	newParticle->SetMaxStartColor(CreateColor(Stage::stageColor_));
-	//色の範囲最小を計算
-	Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(Stage::stageColor_)) * 0.2f + CreateColor(Stage::stageColor_);
+	Particle* newParticle = nullptr;
 
-	newParticle->SetMinStartColor(minColor);
-	newParticle->SetTargetPoint(&player_->GetTransform()->translate_);
-	//マネージャーに渡す
-	ParticleManager::GetInstance()->AddParticle(newParticle);
+	//未使用のパーティクルのポインタを取得する
+	if (ParticleManager::GetInstance()->GetUnUsedParticle(newParticle)) {
+
+		newParticle->Load("./Resources/ParticleData/diveStart.json");
+		newParticle->SetMinSpeed(-player_->GetVelocity());
+		newParticle->SetMaxSpeed(-player_->GetVelocity() * 0.1f);
+		newParticle->SetEndColor(CreateColor(Stage::stageColor_));
+		newParticle->SetMaxStartColor(CreateColor(Stage::stageColor_));
+		//色の範囲最小を計算
+		Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(Stage::stageColor_)) * 0.2f + CreateColor(Stage::stageColor_);
+
+		newParticle->SetMinStartColor(minColor);
+		newParticle->SetTargetPoint(&player_->GetTransform()->translate_);
+
+	}
 
 }
 

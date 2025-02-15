@@ -4,6 +4,7 @@
 #include "Easing.h"
 #include "Vector2.h"
 #include <algorithm>
+#include "ParticleManager.h"
 
 SceneChangeManager* SceneChangeManager::GetInstance() {
 	static SceneChangeManager instance;

@@ -23,6 +23,8 @@ void EditorScene::Initialize() {
 	particleEditor_ = ParticleEditor::GetInstance();
 	particleEditor_->Initialize();
 
+	particleManager_ = ParticleManager::GetInstance();
+
 	dxSetter_ = DirectXSetter::GetInstance();
 	input_ = Input::GetInstance();
 
@@ -93,11 +95,14 @@ void EditorScene::Update() {
 
 #endif // _DEBUG
 
+	particleManager_->Update();
 
 }
 
 void EditorScene::Draw()
 {
+
+	particleManager_->Draw(currentCamera_);
 
 	editor_->Draw(currentCamera_);
 

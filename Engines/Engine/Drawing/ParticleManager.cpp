@@ -7,38 +7,86 @@ ParticleManager* ParticleManager::GetInstance() {
 
 void ParticleManager::Initialize() {
 
-	particles_.clear();
+	for (int32_t i = 0; i < kMaxParticle_; i++) {
 
-}
-
-void ParticleManager::Update() {
-	//終了したパーティクルを取り出す
-	particles_.remove_if([](std::unique_ptr<Particle>& particle) {
-
-		if (particle->IsEnd()) {
-			return true;
+		if (not particles_[i]) {
+			particles_[i] = std::make_unique<Particle>();
+			particles_[i]->Initialize();
 		}
-
-		return false;
-
-		});
-	//パーティクル更新
-	for (std::unique_ptr<Particle>& particle : particles_) {
-		particle->Update();
+		particles_[i]->SetDefault();
+		isUsed_[i] = false;
 	}
 
 }
 
-void ParticleManager::AddParticle(std::unique_ptr<Particle>& particle) {
+void ParticleManager::Finalize()
+{
 
-	particles_.push_back(std::move(particle));
+	for (int32_t i = 0; i < kMaxParticle_; i++) {
+
+		if (particles_[i]) {
+			particles_[i].release();
+		}
+	}
+
+}
+
+void ParticleManager::Update() {
+	
+	//パーティクル更新
+	for (int32_t i = 0; i < kMaxParticle_; i++) {
+
+		particles_[i]->Update();
+		//パーティクルが終了した時に使用フラグを降ろす
+		if (particles_[i]->IsEnd()) {
+			isUsed_[i] = false;
+		}
+
+	}
 
 }
 
 void ParticleManager::Draw(Camera* camera) {
 
-	for (std::unique_ptr<Particle>& particle : particles_) {
-		particle->Draw(camera);
+	for (int32_t i = 0; i < kMaxParticle_; i++) {
+
+		if (isUsed_[i]) {
+			particles_[i]->Draw(camera);
+		}
+
 	}
 
+}
+
+void ParticleManager::Reset()
+{
+
+	for (int32_t i = 0; i < kMaxParticle_; i++) {
+
+		particles_[i]->SetDefault();
+		isUsed_[i] = false;
+
+	}
+
+}
+
+bool ParticleManager::GetUnUsedParticle(Particle*& particle)
+{
+
+	//全てのパーティクルから検索し、未使用のパーティクルのポインタを渡す
+	for (int32_t i = 0; i < kMaxParticle_; i++) {
+
+		if (not isUsed_[i]) {
+			particle = particles_[i].get();
+			isUsed_[i] = true;
+			//取得出来たらtrueを返す
+			return true;
+		}
+
+	}
+
+	//取得できなかったのでnullptrを渡す
+	particle = nullptr;
+	//取得できなかったらfalseを返す
+	return false;
 }

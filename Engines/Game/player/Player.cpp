@@ -10,6 +10,7 @@
 #include "Game/Gimmick/GhostBox.h"
 #include <numbers>
 #include "Game/Camera/FollowCamera.h"
+#include "ParticleManager.h"
 
 Player::Player()
 {
@@ -20,9 +21,11 @@ Player::Player()
 	model_->LoadAnimation("./Resources/player/brush_shot.gltf", 2);
 	model_->LoadAnimation("./Resources/player/brush_dive.gltf", 3);
 
-	particle_ = std::make_unique<Particle>();
-	particle_->Initialize();
-	particle_->Load("./Resources/ParticleData/player.json");
+	if (ParticleManager::GetInstance()->GetUnUsedParticle(particle_)) {
+
+		particle_->Load("./Resources/ParticleData/player.json");
+
+	}
 
 	/*particle_->SetTexture(tex_);*/
 	transform_ = std::make_unique<Transform>();

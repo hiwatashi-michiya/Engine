@@ -17,7 +17,6 @@ TitleScene::TitleScene()
 	skyDome_->Initialize("./Resources/skydome/temp.obj");
 	title_.reset(Sprite::Create(titleTex_, { 640.0f - 512.0f,160.0f - 128.0f }));
 	aButton_.reset(Sprite::Create(aTex_, { 640.0f - 128.0f,560.0f - 32.0f }));
-	particle_ = std::make_unique<Particle>();
 }
 
 TitleScene::~TitleScene()
@@ -34,8 +33,13 @@ void TitleScene::Initialize() {
 	camera_->position_ = { 0.0f,65.0f, -60.0f };
 	camera_->rotation_.x = 0.9f;
 
-	particle_->Initialize();
-	particle_->Load("./Resources/ParticleData/title.json");
+	particleManager_ = ParticleManager::GetInstance();
+
+	if (ParticleManager::GetInstance()->GetUnUsedParticle(particle_)) {
+
+		particle_->Load("./Resources/ParticleData/title.json");
+
+	}
 
 	skyDomeTransform_ = std::make_unique<Transform>();
 	skyDomeTransform_->scale_ = { 500.0f,500.0f,500.0f };
@@ -99,10 +103,14 @@ void TitleScene::Update() {
 	
 	particle_->Update();
 
+	particleManager_->Update();
+
 }
 
 void TitleScene::Draw()
 {
+
+	particleManager_->Draw(camera_.get());
 
 	skyDome_->Draw(camera_.get());
 

@@ -76,7 +76,7 @@ private:
 	//プレイヤー
 	std::unique_ptr<Player> player_;
 	//ステージ全体に書けるパーティクル
-	std::unique_ptr<Particle> stageParticle_;
+	Particle* stageParticle_ = nullptr;
 	//色カウンター
 	std::unique_ptr<ColorCounter> counter_;
 

@@ -8,6 +8,7 @@
 #include "Skinning/SkinningModel.h"
 #include "LineDrawer.h"
 #include "Drawing/RenderManager.h"
+#include "ParticleManager.h"
 
 SceneManager* SceneManager::GetInstance() {
 	static SceneManager instance;
@@ -20,6 +21,8 @@ void SceneManager::Update() {
 
 		//旧シーンの終了
 		if (scene_) {
+			//全パーティクルリセット
+			ParticleManager::GetInstance()->Reset();
 			scene_->Finalize();
 			scene_.reset();
 		}

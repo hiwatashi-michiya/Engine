@@ -36,7 +36,7 @@ private:
 	//モデル
 	std::unique_ptr<Model> model_;
 	//全体のパーティクル
-	std::unique_ptr<Particle> particle_;
+	Particle* particle_ = nullptr;
 	//トランスフォーム
 	std::unique_ptr<Transform> transform_;
 	//画像

@@ -55,7 +55,6 @@ void GameScene::Initialize() {
 	particleManager_ = ParticleManager::GetInstance();
 
 	mapEditor_->Initialize();
-	particleManager_->Initialize();
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
