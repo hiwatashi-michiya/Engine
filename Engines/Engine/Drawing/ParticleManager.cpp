@@ -25,7 +25,7 @@ void ParticleManager::Finalize()
 	for (int32_t i = 0; i < kMaxParticle_; i++) {
 
 		if (particles_[i]) {
-			particles_[i].release();
+			particles_[i].reset();
 		}
 	}
 

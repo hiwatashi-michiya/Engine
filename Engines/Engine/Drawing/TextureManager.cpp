@@ -155,6 +155,7 @@ Texture* TextureManager::Load(const std::string& filePath) {
 	DirectX::ScratchImage mipImages = LoadTexture(path);
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 	tex->resource = CreateTextureResource(device_, metadata);
+	tex->resource->SetName(L"Texture");
 	intermediateResources_[DirectXSetter::srvHandleNumber_] = UploadTextureData(tex->resource, mipImages, device_, DirectXSetter::GetInstance()->GetCommandList());
 
 	//metadataを基にSRVの設定
@@ -197,6 +198,8 @@ InstancingResource TextureManager::SetInstancingResource(uint32_t instanceCount,
 	InstancingResource instancingResource;
 
 	instancingResource.resource = mapResource;
+
+	instancingResource.resource->SetName(L"Instancing");
 
 	//metadataを基にSRVの設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};

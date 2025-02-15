@@ -136,8 +136,8 @@ void MapObject::Draw(Camera* camera) {
 
 void PlayerObject::Initialize(const std::string& name) {
 
-	model_->SetMesh("./Resources/human/walking.gltf");
-	transform_->rotateQuaternion_ = ConvertFromEuler(Vector3{ -1.57f, 0.0f, 0.0f });
+	model_->SetMesh("./Resources/player/brush_walk.gltf");
+	transform_->rotateQuaternion_ = ConvertFromEuler(Vector3{ -0.0f, 0.0f, 0.0f });
 	objName_ = name;
 	tag_ = "player";
 

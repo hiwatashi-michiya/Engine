@@ -207,6 +207,11 @@ void UniqueEditor::Finalize()
 	mouseLine_.reset();
 	std::stack<std::shared_ptr<ICommand>>().swap(undoCommands_);
 	std::stack<std::shared_ptr<ICommand>>().swap(redoCommands_);
+
+	for (int32_t i = 0; i < mapObjData_.size(); i++) {
+		mapObjData_[i].reset();
+	}
+
 	mapObjData_.clear();
 
 }
