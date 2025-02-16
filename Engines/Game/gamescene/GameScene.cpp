@@ -84,7 +84,7 @@ void GameScene::Initialize() {
 	PostEffectDrawer::GetInstance()->SetCamera(camera_.get());
 	PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
 
-	stage_->Update();
+	stage_->Update(camera_.get());
 
 	skyDomeTransform_->UpdateMatrix();
 	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
@@ -243,9 +243,9 @@ void GameScene::Update() {
 			followCamera_->Update();
 		}
 
-		stage_->Update();
+		stage_->Update(camera_.get());
 
-		skyDome_->SetColor(CreateColor(stage_->stageColor_));
+		skyDome_->SetColor(CreateColor(Stage::stageColor_));
 		skyDomeTransform_->UpdateMatrix();
 		skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 		skybox_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);

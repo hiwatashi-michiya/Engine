@@ -66,6 +66,8 @@ public:
 	//ベースとなる座標を設定
 	void SetSpawnPoint(const Vector3& point) { spawnPoint_ = point; }
 	//追従するターゲット設定
+	void SetFollowPoint(Vector3* followPoint) { followPoint_ = followPoint; }
+	//追従するターゲット設定
 	void SetTargetPoint(Vector3* target) { targetPoint_ = target; }
 	//パーティクルの速度変化量(一定)
 	void SetChangeSpeed(const Vector3& speed) { changeSpeed_ = speed; }
@@ -152,7 +154,9 @@ private:
 	Vector3 changeRotate_{};
 	//スケール変化量(一定)
 	float changeScale_ = 0.0f;
-	//追従する座標
+	//起点座標
+	Vector3* followPoint_ = nullptr;
+	//ターゲット座標
 	Vector3* targetPoint_ = nullptr;
 	//最小スケール
 	float minScale_ = 0.1f;

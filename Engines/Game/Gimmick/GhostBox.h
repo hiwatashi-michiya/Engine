@@ -8,6 +8,7 @@
 #include "Vector3.h"
 #include "Game/ColorSetter/ColorSetter.h"
 #include <list>
+#include "Game/stage/ColorCounter.h"
 
 /// <summary>
 /// 色に反応して出現したり消えたりするブロックのクラス
@@ -55,12 +56,17 @@ public:
 	const GameColor::Color& GetSecondColor() const { return secondColor_; }
 	//色が白かどうか
 	bool IsWhite() const { return color_ == GameColor::Color::kWhite; }
+	//カウンターセット
+	void SetCounter(ColorCounter* counter) { counter_ = counter; }
 
 private:
 	//オブジェクトと当たった時の処理
 	void OnCollision(Collider* collider);
 
 private:
+
+	//カウンターへのポインタ
+	ColorCounter* counter_ = nullptr;
 
 	std::unique_ptr<Model> model_;
 

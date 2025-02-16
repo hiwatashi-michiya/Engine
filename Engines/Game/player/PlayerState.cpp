@@ -225,7 +225,7 @@ void PlayerDive::Initialize(Player* player)
 		Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(Stage::stageColor_)) * 0.2f + CreateColor(Stage::stageColor_);
 
 		newParticle->SetMinStartColor(minColor);
-		newParticle->SetTargetPoint(&player_->GetTransform()->translate_);
+		newParticle->SetFollowPoint(&player_->GetTransform()->translate_);
 
 	}
 

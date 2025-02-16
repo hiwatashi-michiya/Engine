@@ -119,7 +119,7 @@ void BombBox::OnCollision(Collider* collider) {
 				Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(color_)) * brightness + CreateColor(color_);
 
 				newParticle->SetMinStartColor(minColor);
-				newParticle->SetTargetPoint(&transform_->translate_);
+				newParticle->SetFollowPoint(&transform_->translate_);
 
 			}
 

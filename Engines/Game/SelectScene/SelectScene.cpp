@@ -21,10 +21,10 @@ SelectScene::SelectScene()
 	skyDome_->Initialize("./Resources/skydome/temp.obj");
 	stageSelect_.reset(Sprite::Create(stageSelectTex_, { 640.0f - 256.0f,100.0f - 32.0f }));
 	toTitle_.reset(Sprite::Create(toTitleTex_, { 140.0f - 128.0f,60.0f - 32.0f }));
-	num_.reset(Sprite::Create(numTex_, { 640.0f - 32.0f,360.0f - 32.0f }));
+	num_.reset(Sprite::Create(numTex_, { 640.0f - 32.0f,180.0f - 32.0f }));
 	num_->size_ = { 64.0f,64.0f };
 	num_->viewRect_ = { 0.1f,1.0f };
-	aButton_.reset(Sprite::Create(buttonTex_, { 640.0f - 32.0f,600.0f - 32.0f }));
+	aButton_.reset(Sprite::Create(buttonTex_, { 640.0f - 32.0f,660.0f - 32.0f }));
 
 }
 

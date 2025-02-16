@@ -46,8 +46,8 @@ private:
 	Texture* tex_;
 
 	//初期座標
-	const Vector3 kStartPosition_ = { 0.0f,65.0f, -60.0f };
+	const Vector3 kStartPosition_ = { 15.0f,165.0f, -110.0f };
 	//初期回転角
-	const Vector3 kStartRotate_ = { 0.9f,0.0f,0.0f };
+	const Vector3 kStartRotate_ = { 1.0f,0.0f,0.0f };
 
 };

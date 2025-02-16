@@ -1,5 +1,6 @@
 #include "ColorCounter.h"
 #include "Game/Gimmick/GhostBox.h"
+#include "ParticleManager.h"
 
 ColorCounter::ColorCounter()
 {
@@ -36,9 +37,10 @@ ColorCounter::~ColorCounter()
 
 void ColorCounter::Initialize()
 {
+
 }
 
-void ColorCounter::Update()
+void ColorCounter::Update(Camera* camera)
 {
 
 	for (int32_t i = 0; i < GameColor::kMaxColor - 1; i++) {
@@ -103,6 +105,10 @@ void ColorCounter::Update()
 
 		}
 
+	}
+	//ワールド座標に変換
+	for (int32_t i = 0; i < GameColor::kMaxColor - 1; i++) {
+		blockPositions_[i] = ScreenToWorld(blockSprites_[i]->position_, 0.0f, camera->matView_, camera->matProjection_);
 	}
 
 }
@@ -186,5 +192,32 @@ bool ColorCounter::IsAllCountComplete()
 	}
 
 	return true;
+}
+
+void ColorCounter::SetParticle(GameColor::Color color, [[maybe_unused]]Vector3* followPoint)
+{
+
+	if (color == GameColor::kWhite) {
+		return;
+	}
+
+	//Particle* newParticle = nullptr;
+
+	//if (ParticleManager::GetInstance()->GetUnUsedParticle(newParticle)) {
+
+	//	newParticle->Load("./Resources/ParticleData/ghostBox.json");
+	//	newParticle->SetEndColor(CreateColor(color));
+	//	newParticle->SetMaxStartColor(CreateColor(color));
+	//	//色の濃さ最大値
+	//	float brightness = 0.2f;
+	//	//色の範囲最小を計算
+	//	Vector4 minColor = (Vector4{ 1.0f,1.0f,1.0f,1.0f } - CreateColor(color)) * brightness + CreateColor(color);
+
+	//	newParticle->SetMinStartColor(minColor);
+	//	newParticle->SetFollowPoint(followPoint);
+	//	newParticle->SetTargetPoint(&blockPositions_[color - 1]);
+
+	//}
+
 }
 

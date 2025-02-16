@@ -17,13 +17,15 @@ public:
 
 	void Initialize();
 
-	void Update();
+	void Update(Camera* camera);
 
 	void Draw();
 	//ゴールカウントセット
 	void SetGoalCount(int32_t rNum, int32_t gNum, int32_t bNum);
 	//全ての数字が揃っているかどうか
 	bool IsAllCountComplete();
+	//パーティクルセット
+	void SetParticle(GameColor::Color color, Vector3* followPoint);
 
 private:
 	//最大桁数
@@ -36,6 +38,9 @@ private:
 	std::array<std::unique_ptr<Sprite>, GameColor::kMaxColor - 1> blockSprites_;
 	//スラッシュ画像
 	std::array<std::unique_ptr<Sprite>, GameColor::kMaxColor - 1> slashSprites_;
+
+	//画像の三次元座標
+	std::array<Vector3, GameColor::kMaxColor - 1> blockPositions_;
 
 	//ゴールカウント
 	std::array<int32_t, GameColor::kMaxColor - 1> goalCount_;

@@ -42,7 +42,7 @@ void Stage::Initialize() {
 
 }
 
-void Stage::Update() {
+void Stage::Update(Camera* camera) {
 
 #ifdef _DEBUG
 
@@ -68,7 +68,7 @@ void Stage::Update() {
 		gameObjects_[i]->Update();
 	}
 
-	counter_->Update();
+	counter_->Update(camera);
 
 	//パーティクルのスポーン地点更新
 	stageParticle_->SetMinMaxSpawnPoint(player_->GetPosition() + minParticleLange_,
@@ -284,7 +284,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			newObject->SetPosition(mapObjData_[i]->transforms_[0]->translate_);
 			newObject->SetScale(mapObjData_[i]->transforms_[0]->scale_);
 			newObject->SetColor(mapObjData_[i]->color);
-
+			newObject->SetCounter(counter_.get());
 			gameObjects_.push_back(std::move(newObject));
 		}
 
@@ -292,6 +292,7 @@ void Stage::LoadStage(uint32_t stageNumber) {
 			std::unique_ptr<Switch> newObject = std::make_unique<Switch>();
 			newObject->Initialize();
 			newObject->SetPosition(mapObjData_[i]->transforms_[0]->translate_);
+			newObject->SetScale(mapObjData_[i]->transforms_[0]->scale_);
 			newObject->SetColor(mapObjData_[i]->color);
 			gameObjects_.push_back(std::move(newObject));
 		}

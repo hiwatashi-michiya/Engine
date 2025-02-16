@@ -33,8 +33,8 @@ void Particle::Update() {
 
 			particle_->transforms_[i]->translate_ = RandomVector3(spawnPoint_ + minSpawnPoint_, spawnPoint_ + maxSpawnPoint_);
 			//追従対象がいたら対象の座標分加算
-			if (targetPoint_) {
-				particle_->transforms_[i]->translate_ += *targetPoint_;
+			if (followPoint_) {
+				particle_->transforms_[i]->translate_ += *followPoint_;
 			}
 
 			particle_->transforms_[i]->rotateQuaternion_ = ConvertFromEuler(RandomVector3(-3.14f, 3.14f));
@@ -57,11 +57,23 @@ void Particle::Update() {
 		//アクティブ状態のパーティクルを更新
 		if (particle_->isActive_[i]) {
 
-			particle_->transforms_[i]->translate_ += particle_->velocities_[i];
-			particle_->transforms_[i]->scale_ += {changeScale_, changeScale_, changeScale_};
-			/*particle_->colors_[i] = Lerp(endColor_, minStartColor_, float(particle_->transforms_[i]->scale_.x) / maxScale_);*/
+			//ターゲットがある場合、ターゲットに向かう
+			if (targetPoint_) {
 
-			particle_->velocities_[i] += changeSpeed_;
+				particle_->transforms_[i]->translate_ = Lerp(particle_->transforms_[i]->translate_, *targetPoint_, float(maxLifeTime_ + 1 - particle_->lifeTimes_[i]) / float(maxLifeTime_ + 1));
+				particle_->transforms_[i]->scale_ += {changeScale_, changeScale_, changeScale_};
+
+			}
+			//ターゲットが無い場合は速度に合わせる
+			else {
+
+				particle_->transforms_[i]->translate_ += particle_->velocities_[i];
+				particle_->transforms_[i]->scale_ += {changeScale_, changeScale_, changeScale_};
+				/*particle_->colors_[i] = Lerp(endColor_, minStartColor_, float(particle_->transforms_[i]->scale_.x) / maxScale_);*/
+
+				particle_->velocities_[i] += changeSpeed_;
+
+			}
 
 			if (particle_->transforms_[i]->scale_.x <= 0.0f or 
 				particle_->transforms_[i]->scale_.y <= 0.0f or 
@@ -90,6 +102,7 @@ void Particle::Draw(Camera* camera) {
 void Particle::SetDefault()
 {
 	//ターゲット外す
+	followPoint_ = nullptr;
 	targetPoint_ = nullptr;
 	//その他の情報をリセット
 	particleLifeTime_ = 0;

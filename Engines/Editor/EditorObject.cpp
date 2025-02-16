@@ -264,6 +264,10 @@ void SwitchObject::Edit() {
 		isUsing_ = true;
 	}
 
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
+		isUsing_ = true;
+	}
+
 	if (ImGui::Combo("color", reinterpret_cast<int*>(&color_), GameColor::colorNames.data(), int(GameColor::colorNames.size()))) {
 		model_->SetColor(GameColor::CreateColor(color_));
 	}

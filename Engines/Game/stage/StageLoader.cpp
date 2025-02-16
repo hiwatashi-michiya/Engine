@@ -216,6 +216,7 @@ void StageLoader::LoadStage(uint32_t stageNumber, std::vector<std::unique_ptr<Ga
 			std::unique_ptr<Switch> newObject = std::make_unique<Switch>();
 			newObject->Initialize();
 			newObject->SetPosition(object->transforms_[0]->translate_);
+			newObject->SetScale(object->transforms_[0]->scale_);
 			newObject->SetColor(object->color);
 			gameObjects.push_back(std::move(newObject));
 		}

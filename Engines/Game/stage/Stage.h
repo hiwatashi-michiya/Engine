@@ -24,7 +24,7 @@ public:
 	//初期化
 	void Initialize();
 	//更新
-	void Update();
+	void Update(Camera* camera);
 	//描画コマンド積む
 	void Draw(Camera* camera);
 	//ステージ読み込み

@@ -23,6 +23,18 @@ public:
 	void SetColor(const GameColor::Color& color) { color_ = color; }
 	//コライダー取得
 	BoxCollider* GetCollider() { return collider_.get(); }
+	//オブジェクトの位置セット
+	void SetPosition(const Vector3& position) {
+		transform_->translate_ = position;
+		modelTransform_->translate_ = position;
+		collider_->collider_.center = transform_->translate_;
+		collider_->collider_.size = transform_->scale_ / 2.0f;
+	}
+	//スケールセッター
+	void SetScale(const Vector3& scale) {
+		transform_->scale_ = scale;
+		modelTransform_->translate_ = scale;
+	}
 
 private:
 	//他オブジェクトと当たった時の処理
