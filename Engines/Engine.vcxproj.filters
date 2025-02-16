@@ -372,6 +372,9 @@
     <ClCompile Include="Engine\3d\InstancingModel.cpp">
       <Filter>Engine\3d</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Gimmick\SpriteFlag.cpp">
+      <Filter>Game\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -649,6 +652,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\InstancingModel.h">
       <Filter>Engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Gimmick\SpriteFlag.h">
+      <Filter>Game\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

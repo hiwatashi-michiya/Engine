@@ -286,3 +286,38 @@ void SwitchObject::Edit() {
 
 }
 
+void SpriteFlagObject::Initialize(const std::string& name)
+{
+
+	model_->SetMesh("./Resources/bucket/bucket.obj");
+	objName_ = name;
+	tag_ = "spriteFlag";
+
+}
+
+void SpriteFlagObject::Edit()
+{
+
+#ifdef _DEBUG
+
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+		isUsing_ = true;
+	}
+
+	RecordMove();
+
+#endif // _DEBUG
+
+	transform_->UpdateMatrix();
+
+	obb_->center = transform_->translate_;
+	obb_->size = transform_->scale_;
+	obb_->orientations[0] = Normalize(transform_->worldMatrix_.GetXAxis());
+	obb_->orientations[1] = Normalize(transform_->worldMatrix_.GetYAxis());
+	obb_->orientations[2] = Normalize(transform_->worldMatrix_.GetZAxis());
+
+	lineBox_->Update();
+
+	model_->SetWorldMatrix(transform_->worldMatrix_);
+
+}

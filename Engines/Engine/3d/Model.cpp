@@ -21,7 +21,7 @@
 
 #pragma comment(lib, "dxcompiler.lib")
 
-void Model::Initialize(const std::string& filename) {
+void Model::Initialize(const std::string& filename, [[maybe_unused]] const std::string& texturename) {
 
 	localMatrix_ = Matrix4x4::Identity();
 	worldMatrix_ = Matrix4x4::Identity();
@@ -130,18 +130,18 @@ void Model::Draw(Camera* camera) {
 
 }
 
-void Model::SetMesh(const std::string& objFileName)
+void Model::SetMesh(const std::string& filename, [[maybe_unused]] const std::string& texturename)
 {
 
 	//既にインスタンシング用のモデルを作成している場合、それを返す
-	if (ModelManager::GetInstance()->IsExistModel(objFileName)) {
-		instancingModel_ = ModelManager::GetInstance()->GetModel(objFileName);
+	if (ModelManager::GetInstance()->IsExistModel(filename)) {
+		instancingModel_ = ModelManager::GetInstance()->GetModel(filename);
 		return;
 	}
 	//新規でインスタンシング用のモデルを作成
-	ModelManager::GetInstance()->AddModel(objFileName);
+	ModelManager::GetInstance()->AddModel(filename);
 	//ポインタを渡す
-	instancingModel_ = ModelManager::GetInstance()->GetModel(objFileName);
+	instancingModel_ = ModelManager::GetInstance()->GetModel(filename);
 
 }
 

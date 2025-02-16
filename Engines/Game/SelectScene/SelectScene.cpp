@@ -42,7 +42,7 @@ void SelectScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->position_ = { 0.0f,65.0f, -60.0f };
+	camera_->position_ = { 15.0f,165.0f, -120.0f };
 	camera_->rotation_.x = 0.9f;
 
 	skyDomeTransform_ = std::make_unique<Transform>();
@@ -55,6 +55,7 @@ void SelectScene::Initialize() {
 	skyDomeTransform_->UpdateMatrix();
 	skyDome_->SetWorldMatrix(skyDomeTransform_->worldMatrix_);
 
+	LoadAllStage();
 
 }
 
@@ -155,12 +156,20 @@ void SelectScene::Update() {
 
 	skyDome_->SetColor(CreateColor(GameColor::Color(stageNumber_)));
 
+	for (int32_t i = 0; i < gameObjects_[stageNumber_ - 1].size(); i++) {
+		gameObjects_[stageNumber_ - 1][i]->Update();
+	}
+
 	particleManager_->Update();
 
 }
 
 void SelectScene::Draw()
 {
+
+	for (int32_t i = 0; i < gameObjects_[stageNumber_ - 1].size(); i++) {
+		gameObjects_[stageNumber_ - 1][i]->Draw(camera_.get());
+	}
 
 	particleManager_->Draw(camera_.get());
 
@@ -170,5 +179,16 @@ void SelectScene::Draw()
 	toTitle_->Draw();
 	aButton_->Draw();
 	num_->Draw();
+
+}
+
+void SelectScene::LoadAllStage()
+{
+
+	StageLoader loader;
+
+	for (int32_t i = 0; i < kMaxStage_; i++) {
+		loader.LoadStage(i + 1, gameObjects_[i]);
+	}
 
 }

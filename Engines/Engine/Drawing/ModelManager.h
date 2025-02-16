@@ -1,6 +1,8 @@
 #pragma once
 #include "Model.h"
 #include "InstancingModel.h"
+#include <array>
+#include <unordered_map>
 
 /// <summary>
 /// モデルの描画管理などを行うクラス
@@ -60,7 +62,7 @@ private:
 
 	BlendMode currentBlendMode_;
 
-	//モデルのカウントと名前を紐づけたマップ
+	//モデルと名前を紐づけたマップ
 	std::unordered_map<std::string, std::unique_ptr<InstancingModel>> models_;
 
 private:

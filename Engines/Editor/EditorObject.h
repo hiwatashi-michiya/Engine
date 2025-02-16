@@ -132,3 +132,19 @@ public:
 	void Edit() override;
 
 };
+
+/// <summary>
+/// 入ったら画像を出すエリア
+/// </summary>
+class SpriteFlagObject : public MapObject
+{
+public:
+
+	SpriteFlagObject() {}
+	~SpriteFlagObject() {}
+
+	void Initialize(const std::string& name) override;
+
+	void Edit() override;
+
+};

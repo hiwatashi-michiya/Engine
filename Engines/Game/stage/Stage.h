@@ -83,9 +83,9 @@ private:
 	//TODO:リストを一つにまとめる
 
 	//オブジェクトリスト
-	std::list<std::unique_ptr<MapObject>> mapObjData_;
+	std::vector<std::unique_ptr<MapObject>> mapObjData_;
 	//ゲームオブジェクトリスト
-	std::list<std::unique_ptr<GameObject>> gameObjects_;
+	std::vector<std::unique_ptr<GameObject>> gameObjects_;
 
 	//線
 	Segment line_{};

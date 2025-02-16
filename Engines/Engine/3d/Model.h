@@ -21,11 +21,11 @@ class Model
 {
 public:
 	//初期化
-	void Initialize(const std::string& filename);
+	void Initialize(const std::string& filename, const std::string& texturename = "");
 	//描画コマンド積む
 	void Draw(Camera* camera);
 	//メッシュ切り替え
-	void SetMesh(const std::string& objFileName);
+	void SetMesh(const std::string& filename, const std::string& texturename = "");
 
 	//ワールド行列セット
 	void SetWorldMatrix(const Matrix4x4& matrix) { worldMatrix_ = matrix; }

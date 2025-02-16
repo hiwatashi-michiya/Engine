@@ -64,8 +64,8 @@ void Stage::Update() {
 	}
 
 	//各オブジェクト更新
-	for (const std::unique_ptr<GameObject>& gameObject : gameObjects_) {
-		gameObject->Update();
+	for (int32_t i = 0; i < gameObjects_.size(); i++) {
+		gameObjects_[i]->Update();
 	}
 
 	counter_->Update();
@@ -85,8 +85,8 @@ void Stage::Draw(Camera* camera) {
 	line_.origin = camera->GetWorldPosition();
 	line_.diff = player_->GetPosition() - camera->GetWorldPosition();
 
-	for (const std::unique_ptr<GameObject>& gameObject : gameObjects_) {
-		gameObject->Draw(camera);
+	for (int32_t i = 0; i < gameObjects_.size(); i++) {
+		gameObjects_[i]->Draw(camera);
 	}
 
 	player_->Draw(camera);
@@ -264,40 +264,40 @@ void Stage::LoadStage(uint32_t stageNumber) {
 
 	}
 
-	//マップオブジェクトのデータを基にオブジェクトを生成
-	for (auto& object : mapObjData_) {
+	for (int32_t i = 0; i < mapObjData_.size(); i++) {
 
-		if (object->tag == "player") {
-			player_->SetPosition(object->transforms_[0]->translate_);
+		if (mapObjData_[i]->tag == "player") {
+			player_->SetPosition(mapObjData_[i]->transforms_[0]->translate_);
 		}
 
-		if (object->tag == "block") {
+		if (mapObjData_[i]->tag == "block") {
 			std::unique_ptr<Block> newObject = std::make_unique<Block>();
 			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetScale(object->transforms_[0]->scale_);
+			newObject->SetPosition(mapObjData_[i]->transforms_[0]->translate_);
+			newObject->SetScale(mapObjData_[i]->transforms_[0]->scale_);
 			gameObjects_.push_back(std::move(newObject));
 		}
 
-		if (object->tag == "ghostBox") {
+		if (mapObjData_[i]->tag == "ghostBox") {
 			std::unique_ptr<GhostBox> newObject = std::make_unique<GhostBox>();
 			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetScale(object->transforms_[0]->scale_);
-			newObject->SetColor(object->color);
+			newObject->SetPosition(mapObjData_[i]->transforms_[0]->translate_);
+			newObject->SetScale(mapObjData_[i]->transforms_[0]->scale_);
+			newObject->SetColor(mapObjData_[i]->color);
 
 			gameObjects_.push_back(std::move(newObject));
 		}
 
-		if (object->tag == "switch") {
+		if (mapObjData_[i]->tag == "switch") {
 			std::unique_ptr<Switch> newObject = std::make_unique<Switch>();
 			newObject->Initialize();
-			newObject->SetPosition(object->transforms_[0]->translate_);
-			newObject->SetColor(object->color);
+			newObject->SetPosition(mapObjData_[i]->transforms_[0]->translate_);
+			newObject->SetColor(mapObjData_[i]->color);
 			gameObjects_.push_back(std::move(newObject));
 		}
 
 	}
+
 
 }
 

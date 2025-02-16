@@ -231,6 +231,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\gamescene\GameState.cpp" />
     <ClCompile Include="Game\Gimmick\BombBox.cpp" />
     <ClCompile Include="Game\Gimmick\GhostBox.cpp" />
+    <ClCompile Include="Game\Gimmick\SpriteFlag.cpp" />
     <ClCompile Include="Game\Gimmick\Switch.cpp" />
     <ClCompile Include="Game\player\PlayerState.cpp" />
     <ClCompile Include="Game\SceneFactory.cpp" />
@@ -326,6 +327,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\gamescene\GameState.h" />
     <ClInclude Include="Game\Gimmick\BombBox.h" />
     <ClInclude Include="Game\Gimmick\GhostBox.h" />
+    <ClInclude Include="Game\Gimmick\SpriteFlag.h" />
     <ClInclude Include="Game\Gimmick\Switch.h" />
     <ClInclude Include="Game\player\PlayerState.h" />
     <ClInclude Include="Game\SceneFactory.h" />

@@ -16,6 +16,7 @@
 #include "Transform.h"
 #include <memory>
 #include "Tool/LevelDataLoader.h"
+#include "Game/stage/StageLoader.h"
 
 /// <summary>
 /// セレクトシーンの更新を行う
@@ -36,6 +37,10 @@ public:
 
 private:
 
+	void LoadAllStage();
+
+private:
+
 	std::unique_ptr<Camera> camera_;
 
 	std::unique_ptr<Model> skyDome_;
@@ -53,5 +58,8 @@ private:
 	Texture* Tex2_;
 	Texture* Tex3_;
 	Texture* numTex_;
+
+	//ゲームオブジェクトリスト
+	std::array<std::vector<std::unique_ptr<GameObject>>, kMaxStage_> gameObjects_;
 
 };
