@@ -147,7 +147,6 @@
                 "tag": "block"
             },
             "ghostBox": {
-                "RotateRight": true,
                 "color": 0,
                 "position": [
                     7.0,
@@ -168,7 +167,6 @@
                 "tag": "ghostBox"
             },
             "ghostBox1": {
-                "RotateRight": true,
                 "color": 0,
                 "position": [
                     15.0,
@@ -189,12 +187,11 @@
                 "tag": "ghostBox"
             },
             "ghostBox10": {
-                "RotateRight": true,
                 "color": 0,
                 "position": [
                     23.0,
                     3.0,
-                    12.0
+                    -12.0
                 ],
                 "quaternion": [
                     0.0,
@@ -210,7 +207,46 @@
                 "tag": "ghostBox"
             },
             "ghostBox11": {
-                "RotateRight": true,
+                "color": 0,
+                "position": [
+                    23.0,
+                    3.0,
+                    4.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox2": {
+                "color": 0,
+                "position": [
+                    23.0,
+                    3.0,
+                    12.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox3": {
                 "color": 0,
                 "position": [
                     7.0,
@@ -230,55 +266,12 @@
                 ],
                 "tag": "ghostBox"
             },
-            "ghostBox2": {
-                "RotateRight": true,
-                "color": 0,
-                "position": [
-                    15.0,
-                    3.0,
-                    4.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "ghostBox"
-            },
-            "ghostBox3": {
-                "RotateRight": true,
-                "color": 0,
-                "position": [
-                    15.0,
-                    3.0,
-                    -4.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "ghostBox"
-            },
             "ghostBox4": {
-                "RotateRight": true,
                 "color": 0,
                 "position": [
-                    23.0,
+                    15.0,
                     3.0,
-                    -4.0
+                    4.0
                 ],
                 "quaternion": [
                     0.0,
@@ -294,10 +287,9 @@
                 "tag": "ghostBox"
             },
             "ghostBox5": {
-                "RotateRight": true,
                 "color": 0,
                 "position": [
-                    7.0,
+                    15.0,
                     3.0,
                     -4.0
                 ],
@@ -315,7 +307,46 @@
                 "tag": "ghostBox"
             },
             "ghostBox6": {
-                "RotateRight": true,
+                "color": 0,
+                "position": [
+                    23.0,
+                    3.0,
+                    -4.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox7": {
+                "color": 0,
+                "position": [
+                    7.0,
+                    3.0,
+                    -4.0
+                ],
+                "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "scale": [
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "tag": "ghostBox"
+            },
+            "ghostBox8": {
                 "color": 0,
                 "position": [
                     7.0,
@@ -335,55 +366,12 @@
                 ],
                 "tag": "ghostBox"
             },
-            "ghostBox7": {
-                "RotateRight": true,
+            "ghostBox9": {
                 "color": 0,
                 "position": [
                     15.0,
                     3.0,
                     -12.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "ghostBox"
-            },
-            "ghostBox8": {
-                "RotateRight": true,
-                "color": 0,
-                "position": [
-                    23.0,
-                    3.0,
-                    -12.0
-                ],
-                "quaternion": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    4.0,
-                    4.0,
-                    4.0
-                ],
-                "tag": "ghostBox"
-            },
-            "ghostBox9": {
-                "RotateRight": true,
-                "color": 0,
-                "position": [
-                    23.0,
-                    3.0,
-                    4.0
                 ],
                 "quaternion": [
                     0.0,
@@ -422,7 +410,7 @@
                 "color": 3,
                 "position": [
                     31.0,
-                    0.0,
+                    1.0,
                     20.0
                 ],
                 "quaternion": [
@@ -432,9 +420,9 @@
                     1.0
                 ],
                 "scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ],
                 "tag": "switch"
             },
@@ -442,7 +430,7 @@
                 "color": 1,
                 "position": [
                     0.0,
-                    0.0,
+                    1.0,
                     20.0
                 ],
                 "quaternion": [
@@ -452,9 +440,9 @@
                     1.0
                 ],
                 "scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ],
                 "tag": "switch"
             },
@@ -462,7 +450,7 @@
                 "color": 2,
                 "position": [
                     31.0,
-                    0.0,
+                    1.0,
                     -20.0
                 ],
                 "quaternion": [
@@ -472,9 +460,9 @@
                     1.0
                 ],
                 "scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ],
                 "tag": "switch"
             },
@@ -482,7 +470,7 @@
                 "color": 3,
                 "position": [
                     0.0,
-                    0.0,
+                    1.0,
                     -20.0
                 ],
                 "quaternion": [
@@ -492,9 +480,9 @@
                     1.0
                 ],
                 "scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ],
                 "tag": "switch"
             }
