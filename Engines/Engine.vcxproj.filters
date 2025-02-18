@@ -375,9 +375,6 @@
     <ClCompile Include="Game\Gimmick\SpriteFlag.cpp">
       <Filter>Game\Gimmick</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\Particle2D.cpp">
-      <Filter>Engine\2d</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -658,9 +655,6 @@
     </ClInclude>
     <ClInclude Include="Game\Gimmick\SpriteFlag.h">
       <Filter>Game\Gimmick</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2d\Particle2D.h">
-      <Filter>Engine\2d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -160,7 +160,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Editor\EditorObject.cpp" />
     <ClCompile Include="Editor\ParticleEditor.cpp" />
     <ClCompile Include="Editor\UniqueEditor.cpp" />
-    <ClCompile Include="Engine\2d\Particle2D.cpp" />
     <ClCompile Include="Engine\2d\Sprite.cpp" />
     <ClCompile Include="Engine\3d\InstancingModel.cpp" />
     <ClCompile Include="Engine\3d\Material.cpp" />
@@ -251,7 +250,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Editor\EditorObject.h" />
     <ClInclude Include="Editor\ParticleEditor.h" />
     <ClInclude Include="Editor\UniqueEditor.h" />
-    <ClInclude Include="Engine\2d\Particle2D.h" />
     <ClInclude Include="Engine\2d\Sprite.h" />
     <ClInclude Include="Engine\3d\GameObject.h" />
     <ClInclude Include="Engine\3d\InstancingModel.h" />
