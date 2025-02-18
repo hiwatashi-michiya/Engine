@@ -375,6 +375,9 @@
     <ClCompile Include="Game\Gimmick\SpriteFlag.cpp">
       <Filter>Game\Gimmick</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\2d\Particle2D.cpp">
+      <Filter>Engine\2d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -656,6 +659,9 @@
     <ClInclude Include="Game\Gimmick\SpriteFlag.h">
       <Filter>Game\Gimmick</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\2d\Particle2D.h">
+      <Filter>Engine\2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\Object3d.hlsli">
@@ -677,6 +683,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="Resources\shaders\Material3d.hlsli">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Resources\shaders\Particle2d.hlsli">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
@@ -751,6 +760,12 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\InstancingObject3d.VS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Particle2d.PS.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Particle2d.VS.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

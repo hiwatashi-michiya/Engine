@@ -149,6 +149,17 @@ void Particle::SetDefault()
 	//ループするかどうか
 	isLoop_ = false;
 
+	//全てを初期値にリセット
+	for (int32_t i = 0; i < kMaxParticle_; i++) {
+		particle_->transforms_[i]->translate_ = Vector3::Zero();
+		particle_->transforms_[i]->rotateQuaternion_ = { 0.0f,0.0f,0.0f,1.0f };
+		particle_->transforms_[i]->scale_ = Vector3::Zero();
+
+		particle_->velocities_[i] = Vector3::Zero();
+		particle_->lifeTimes_[i] = 0;
+		particle_->colors_[i] = { 1.0f,1.0f,1.0f,1.0f };
+		particle_->isActive_[i] = false;
+	}
 
 }
 

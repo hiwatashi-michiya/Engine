@@ -59,7 +59,7 @@ public:
 	Vector2 uvTranslate_{};
 
 	//UV回転
-	float uvRotate_;
+	float uvRotate_ = 0.0f;
 
 	//UVスケール
 	Vector2 uvScale_{ 1.0f,1.0f };

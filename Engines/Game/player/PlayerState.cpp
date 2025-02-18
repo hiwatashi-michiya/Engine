@@ -247,7 +247,7 @@ void PlayerDive::Update()
 
 	//潜行状態を終了させる
 	player_->SetVelocity({ 0.0f,0.0f,0.0f });
-	player_->GetCollider()->collider_.size = { 1.0f,1.0f,1.0f };
+	player_->GetCollider()->collider_.size = { 2.0f,2.0f,2.0f };
 	//タグを変更
 	player_->SetTag("player");
 	//潜っている判定をfalse

@@ -138,6 +138,7 @@ void PlayerObject::Initialize(const std::string& name) {
 
 	model_->SetMesh("./Resources/player/brush_walk.gltf");
 	transform_->rotateQuaternion_ = ConvertFromEuler(Vector3{ -0.0f, 0.0f, 0.0f });
+	transform_->scale_ = { 2.0f,2.0f,2.0f };
 	objName_ = name;
 	tag_ = "player";
 
@@ -147,7 +148,11 @@ void PlayerObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.5f)) {
+		isUsing_ = true;
+	}
+
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.1f)) {
 		isUsing_ = true;
 	}
 
@@ -181,11 +186,11 @@ void BlockObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.5f)) {
 		isUsing_ = true;
 	}
 
-	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.5f)) {
 		isUsing_ = true;
 	}
 
@@ -221,11 +226,11 @@ void GhostBoxObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.5f)) {
 		isUsing_ = true;
 	}
 
-	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.5f)) {
 		isUsing_ = true;
 	}
 
@@ -260,11 +265,11 @@ void SwitchObject::Edit() {
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.5f)) {
 		isUsing_ = true;
 	}
 
-	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.01f)) {
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.5f)) {
 		isUsing_ = true;
 	}
 
@@ -304,7 +309,11 @@ void SpriteFlagObject::Edit()
 
 #ifdef _DEBUG
 
-	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.1f)) {
+	if (ImGui::DragFloat3("position", &transform_->translate_.x, 0.5f)) {
+		isUsing_ = true;
+	}
+
+	if (ImGui::DragFloat3("scale", &transform_->scale_.x, 0.5f)) {
 		isUsing_ = true;
 	}
 

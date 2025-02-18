@@ -39,6 +39,13 @@ public:
 		transform_->UpdateMatrix();
 		collider_->collider_.center = transform_->worldMatrix_.GetTranslate() + Vector3{ 0.0f, collider_->collider_.size.y, 0.0f };
 	}
+	//スケールセット
+	void SetScale(const Vector3& scale) {
+		transform_->scale_ = scale;
+		transform_->UpdateMatrix();
+
+	}
+
 	//コライダー取得
 	BoxCollider* GetCollider() const { return collider_.get(); }
 	//オブジェクトの位置取得

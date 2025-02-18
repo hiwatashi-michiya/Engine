@@ -53,6 +53,7 @@ void Player::Initialize() {
 	model_->SetAnimationSpeed(2.0f);
 
 	transform_->translate_ = { 0.0f,5.0f,0.0f };
+	transform_->scale_ = { 2.0f,2.0f,2.0f };
 	transform_->UpdateMatrix();
 	model_->material_->pLightMap_->intensity = 2.0f;
 
@@ -65,7 +66,7 @@ void Player::Initialize() {
 	particle_->SetColor(CreateColor(Stage::stageColor_));
 
 	collider_->collider_.center = transform_->translate_;
-	collider_->collider_.size = { 1.0f,1.0f,1.0f };
+	collider_->collider_.size = { 2.0f,2.0f,2.0f };
 
 	preTranslate_ = collider_->collider_.center;
 
