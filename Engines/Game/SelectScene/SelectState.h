@@ -1,16 +1,16 @@
 #pragma once
 #include "Camera.h"
 
-class GameScene;
+class SelectScene;
 
 /// <summary>
 /// インゲームの状態管理基底クラス
 /// </summary>
-class IGameState
+class ISelectState
 {
 public:
-	IGameState() = default;
-	virtual ~IGameState() = default;
+	ISelectState() = default;
+	virtual ~ISelectState() = default;
 
 	virtual void Initialize() = 0;
 
@@ -20,18 +20,18 @@ public:
 
 protected:
 
-	GameScene* gameScene_ = nullptr;
+	SelectScene* selectScene_ = nullptr;
 
 };
 
 /// <summary>
 /// 通常のゲームシーン更新
 /// </summary>
-class GameAct : public IGameState
+class SelectAct : public ISelectState
 {
 public:
-	GameAct() {};
-	~GameAct() override {};
+	SelectAct() {};
+	~SelectAct() override {};
 
 	void Initialize() override;
 
@@ -46,11 +46,11 @@ private:
 /// <summary>
 /// ポーズ画面更新
 /// </summary>
-class GamePose : public IGameState
+class SelectPose : public ISelectState
 {
 public:
-	GamePose() {};
-	~GamePose() override {};
+	SelectPose() {};
+	~SelectPose() override {};
 
 	void Initialize() override;
 

@@ -16,7 +16,7 @@ struct VertexShaderInput {
 
 VertexShaderOutput main(VertexShaderInput input, uint32_t instanceId : SV_InstanceID, uint32_t vertexId : SV_VertexID)
 {
-    VertexShaderOutput output;]
+    VertexShaderOutput output;
     float32_t4 pos = input.position;
     pos.xy = pos.xy * gParticle[instanceId].size;
     output.position = mul(pos, gParticle[instanceId].WVP);

@@ -119,6 +119,10 @@ void SelectScene::Update() {
 
 #endif // _DEBUG
 
+	//アウトラインに変更
+
+	PostEffectDrawer::GetInstance()->SetType(kDepthBasedOutline);
+
 	//左の入力があったら数字を下げる
 	if (input_->TriggerButton(Input::Button::LEFT) or input_->TriggerLStick(Input::StickArrow::S_LEFT)) {
 		//ステージが1の場合は下げない

@@ -378,6 +378,9 @@
     <ClCompile Include="Engine\2d\Particle2D.cpp">
       <Filter>Engine\2d</Filter>
     </ClCompile>
+    <ClCompile Include="Game\SelectScene\SelectState.cpp">
+      <Filter>Game\SelectScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -661,6 +664,9 @@
     </ClInclude>
     <ClInclude Include="Engine\2d\Particle2D.h">
       <Filter>Engine\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\SelectScene\SelectState.h">
+      <Filter>Game\SelectScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

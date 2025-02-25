@@ -7,9 +7,13 @@
 #include "Drawing/PipelineManager.h"
 #include <sstream>
 #include "Drawing/ImGuiManager.h"
-#include "Model.h"
-#include "Drawing/MeshManager.h"
 #include "Drawing/RenderManager.h"
+#include "Core/RootSignatureDesc.h"
+#include "Core/RootParameter.h"
+#include "Core/StaticSampler.h"
+#include "Core/InputElement.h"
+#include "Core/InputLayout.h"
+#include "Core/DescriptorRange.h"
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -32,84 +36,46 @@ void Particle2D::StaticInitialize(ID3D12Device* device) {
 	IDxcBlob* ps2dParticleBlob = ShaderManager::GetInstance()->CompileShader(L"./Resources/shaders/Particle2d.PS.hlsl", ShaderManager::kPS, "PSParticle2D");
 	
 	//頂点レイアウト
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
-	inputElementDescs[0].SemanticName = "POSITION";
-	inputElementDescs[0].SemanticIndex = 0;
-	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs[1].SemanticName = "TEXCOORD";
-	inputElementDescs[1].SemanticIndex = 0;
-	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs;
-	inputLayoutDesc.NumElements = _countof(inputElementDescs);
+	ML_InputElement inputElement{};
+	inputElement.SetSize(2);
+	inputElement.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, D3D12_APPEND_ALIGNED_ELEMENT, 0);
+	inputElement.SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, D3D12_APPEND_ALIGNED_ELEMENT, 1);
+
+	ML_InputLayout inputLayout{};
+	inputLayout.SetElements(inputElement.Get());
 
 	//RootSignature作成
-	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
-	descriptionRootSignature.Flags =
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	ML_RootSignatureDesc rootSignatureDesc{};
+	rootSignatureDesc.SetFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-	//D3D12_ROOT_PARAMETER rootParameters[1];
-	//rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	//rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	//rootParameters[0].Descriptor.ShaderRegister = 0;
-	//descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
-	//descriptionRootSignature.NumParameters = 1; //ルートパラメータの長さ
+	ML_DescriptorRange descriptorRange{};
+	descriptorRange.SetSize(1);
+	descriptorRange.SetDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND, 0);
+	
+	ML_DescriptorRange descriptorRangeForInstancing{};
+	descriptorRangeForInstancing.SetSize(1);
+	descriptorRangeForInstancing.SetDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND, 0);
 
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	descriptorRange[0].BaseShaderRegister = 0;
-	descriptorRange[0].NumDescriptors = 1;
-	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	ML_RootParameter rootParameters{};
+	rootParameters.SetSize(4);
+	rootParameters.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_CBV, D3D12_SHADER_VISIBILITY_PIXEL, 0, 0);
+	rootParameters.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, D3D12_SHADER_VISIBILITY_VERTEX, descriptorRangeForInstancing.Get(), 1);
+	rootParameters.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, D3D12_SHADER_VISIBILITY_PIXEL, descriptorRange.Get(), 2);
+	rootParameters.SetRootParameter(D3D12_ROOT_PARAMETER_TYPE_CBV, D3D12_SHADER_VISIBILITY_PIXEL, 1, 3);
 
-	D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
-	descriptorRangeForInstancing[0].BaseShaderRegister = 0;
-	descriptorRangeForInstancing[0].NumDescriptors = 1;
-	descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	rootSignatureDesc.SetRootParameter(rootParameters.Get());
 
-	//ルートパラメータ作成
-	D3D12_ROOT_PARAMETER rootParameters[4]{};
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[0].Descriptor.ShaderRegister = 0;
+	ML_StaticSampler staticSamplers{};
+	staticSamplers.SetSize(1);
+	staticSamplers.SetSampler(D3D12_FILTER_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+		D3D12_COMPARISON_FUNC_NEVER, D3D12_FLOAT32_MAX, 0, D3D12_SHADER_VISIBILITY_PIXEL, 0);
 
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX; //VertexShaderで使う
-	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing; //Tableの中身の配列を指定
-	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing); //Tableで利用する数
-
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
-	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange; //Tableの中身の配列を指定
-	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); //Tableで利用する数
-
-	//平行光源
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //CBVを使う
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
-	rootParameters[3].Descriptor.ShaderRegister = 1; //レジスタ番号1を使う
-
-	descriptionRootSignature.pParameters = rootParameters; //ルートパラメータ配列へのポインタ
-	descriptionRootSignature.NumParameters = _countof(rootParameters); //ルートパラメータの長さ
-
-	//Samplerの設定
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ
-	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; //0～1の範囲外をリピート
-	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; //比較しない
-	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX; //ありったけのMipmapを使う
-	staticSamplers[0].ShaderRegister = 0; //レジスタ番号0を使う
-	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
-	descriptionRootSignature.pStaticSamplers = staticSamplers;
-	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
+	rootSignatureDesc.SetSamplers(staticSamplers.Get());
 
 	//シリアライズしてバイナリにする
 	Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
+	hr = D3D12SerializeRootSignature(&rootSignatureDesc.Get(),
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
 		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
@@ -142,7 +108,7 @@ void Particle2D::StaticInitialize(ID3D12Device* device) {
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature_; //RootSignature
-	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc; //InputLayout
+	graphicsPipelineStateDesc.InputLayout = inputLayout.Get(); //InputLayout
 	graphicsPipelineStateDesc.VS = { vs2dParticleBlob->GetBufferPointer(),
 	vs2dParticleBlob->GetBufferSize() }; //VertexShader
 	graphicsPipelineStateDesc.PS = { ps2dParticleBlob->GetBufferPointer(),
@@ -196,29 +162,11 @@ void Particle2D::Initialize(const std::string& filename, uint32_t instanceCount)
 
 	assert(device_);
 
-	if (MeshManager::GetInstance()->IsExistMesh(filename)) {
-
-		mesh_ = MeshManager::GetInstance()->GetMesh(filename);
-
-	}
-	else {
-
-		//メッシュを登録
-		MeshManager::GetInstance()->CreateMesh(filename);
-		mesh_ = MeshManager::GetInstance()->GetMesh(filename);
-
-	}
-
-	material_ = std::make_unique<Material>();
-	material_->Create();
-
-	texture_ = TextureManager::GetInstance()->Load(mesh_->textureFilePath_);
-	texturePath_ = mesh_->textureFilePath_;
+	texture_ = TextureManager::GetInstance()->Load(filename);
 
 	maxInstanceCount_ = instanceCount;
 
 	//トランスフォーム情報をインスタンス数に合わせてリサイズする
-	transforms_.resize(maxInstanceCount_);
 	colors_.resize(maxInstanceCount_);
 	worldMatrices_.resize(maxInstanceCount_);
 	velocities_.resize(maxInstanceCount_);
@@ -226,7 +174,6 @@ void Particle2D::Initialize(const std::string& filename, uint32_t instanceCount)
 	lifeTimes_.resize(maxInstanceCount_);
 
 	for (uint32_t i = 0; i < maxInstanceCount_; i++) {
-		transforms_[i] = std::make_shared<Transform>();
 		colors_[i] = { 1.0f,1.0f,1.0f,1.0f };
 		worldMatrices_[i] = MakeIdentity4x4();
 	}
@@ -236,7 +183,7 @@ void Particle2D::Initialize(const std::string& filename, uint32_t instanceCount)
 	//transformMatrix
 	{
 
-		matBuff_ = CreateBufferResource(device_, sizeof(ParticleForGPU) * maxInstanceCount_);
+		matBuff_ = CreateBufferResource(device_, sizeof(Particle2DForGPU) * maxInstanceCount_);
 
 		matBuff_->Map(0, nullptr, reinterpret_cast<void**>(&matTransformMap_));
 
@@ -353,17 +300,36 @@ void Particle2D::PostDraw() {
 
 void Particle2D::Draw(Camera* camera) {
 
+	//左下
+	vertMap_[0].position = { 0.0f - anchorPoint_.x * size_.x,size_.y - anchorPoint_.y * size_.y, 0.0f,1.0f };
+	vertMap_[0].texcoord = { 0.0f,viewRect_.y };
+	//左上
+	vertMap_[1].position = { 0.0f - anchorPoint_.x * size_.x,0.0f - anchorPoint_.y * size_.y, 0.0f,1.0f };
+	vertMap_[1].texcoord = { 0.0f,0.0f };
+	//右下
+	vertMap_[2].position = { size_.x - anchorPoint_.x * size_.x,size_.y - anchorPoint_.y * size_.y, 0.0f,1.0f };
+	vertMap_[2].texcoord = { viewRect_.x,viewRect_.y };
+	//右上
+	vertMap_[3].position = { size_.x - anchorPoint_.x * size_.x,0.0f - anchorPoint_.y * size_.y, 0.0f,1.0f };
+	vertMap_[3].texcoord = { viewRect_.x,0.0f };
+
+	Matrix4x4 worldMatrix = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, { position_.x, position_.y, 0.5f });
+	Matrix4x4 viewMatrix = MakeIdentity4x4();
+	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
+	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+
+	constMap_->color = color_;
+
+	Matrix4x4 matUVTransform = MakeScaleMatrix(Vector3(uvScale_.x, uvScale_.y, 1.0f)) * MakeRotateZMatrix(uvRotate_) *
+		MakeTranslateMatrix(Vector3(uvTranslate_.x, uvTranslate_.y, 0.0f));
+
+	constMap_->uvTransform = matUVTransform;
 
 	instanceCount_ = std::clamp(instanceCount_, uint32_t(0), maxInstanceCount_);
 
 	for (uint32_t i = 0; i < instanceCount_; i++) {
 
-		//アクティブ状態でない場合、スケールを0にして表示しない
-		if (not isActive_[i]) {
-			transforms_[i]->scale_ = Vector3::Zero();
-		}
-
-		worldMatrices_[i] = MakeAffineMatrix(transforms_[i]->scale_, transforms_[i]->rotateQuaternion_, transforms_[i]->translate_);
+		/*worldMatrices_[i] = MakeAffineMatrix(transforms_[i]->scale_, transforms_[i]->rotateQuaternion_, transforms_[i]->translate_);*/
 
 		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
 		Matrix4x4 worldViewProjectionMatrix = worldMatrices_[i] * camera->matViewProjection_;
@@ -380,11 +346,6 @@ void Particle2D::Render()
 	commandList_->SetGraphicsRootDescriptorTable(1, instancingResource_.srvHandleGPU);
 
 	commandList_->SetGraphicsRootDescriptorTable(2, texture_->srvHandleGPU);
-
-	//描画
-	material_->SetCommandMaterialForParticle(commandList_);
-
-	mesh_->SetCommandMesh(commandList_, instanceCount_);
 
 }
 

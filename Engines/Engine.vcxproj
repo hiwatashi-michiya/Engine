@@ -237,6 +237,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\player\PlayerState.cpp" />
     <ClCompile Include="Game\SceneFactory.cpp" />
     <ClCompile Include="Game\SelectScene\SelectScene.cpp" />
+    <ClCompile Include="Game\SelectScene\SelectState.cpp" />
     <ClCompile Include="Game\stage\ColorCounter.cpp" />
     <ClCompile Include="Game\stage\StageLoader.cpp" />
     <ClCompile Include="Game\TestScene\TestScene.cpp" />
@@ -334,6 +335,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\player\PlayerState.h" />
     <ClInclude Include="Game\SceneFactory.h" />
     <ClInclude Include="Game\SelectScene\SelectScene.h" />
+    <ClInclude Include="Game\SelectScene\SelectState.h" />
     <ClInclude Include="Game\stage\ColorCounter.h" />
     <ClInclude Include="Game\stage\StageLoader.h" />
     <ClInclude Include="Game\TestScene\TestScene.h" />

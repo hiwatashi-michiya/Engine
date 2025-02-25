@@ -1,7 +1,6 @@
 #pragma once
 #include "Camera.h"
 #include "Drawing/RenderingData.h"
-#include "Mesh.h"
 #include <d3d12.h>
 #include <dxcapi.h>
 #include <memory>
@@ -22,7 +21,7 @@ public:
 	//静的初期化
 	static void StaticInitialize(ID3D12Device* device);
 	//GPUに使う用のパーティクルデータ
-	struct ParticleForGPU {
+	struct Particle2DForGPU {
 		Matrix4x4 WVP;
 		std::array<Vector2, 4> texcoords;
 		Vector4 color;
@@ -116,12 +115,6 @@ public:
 	//表示するインスタンスの数
 	uint32_t instanceCount_ = 0;
 
-	//メッシュ
-	Mesh* mesh_;
-
-	//マテリアル
-	std::unique_ptr<Material> material_;
-
 private:
 
 	//静的メンバ変数
@@ -153,8 +146,6 @@ private:
 	uint32_t* indexMap_ = nullptr;
 	//定数バッファマップ
 	Material2D* constMap_ = nullptr;
-	//Sprite用のTransformMatrix
-	Matrix4x4* matTransformMap_ = nullptr;
 
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
@@ -162,7 +153,7 @@ private:
 	D3D12_INDEX_BUFFER_VIEW ibView_{};
 
 	//TransformMatrix
-	ParticleForGPU* matTransformMap_ = nullptr;
+	Particle2DForGPU* matTransformMap_ = nullptr;
 
 	//テクスチャ
 	Texture* texture_;

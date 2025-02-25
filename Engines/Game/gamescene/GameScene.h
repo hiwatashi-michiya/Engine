@@ -25,8 +25,11 @@ public:
 
 	void Draw() override;
 
-private:
+	void AddStageNumber() { stageNumber_++; }
 
+	void SubStageNumber() { stageNumber_--; }
+
+	uint32_t GetStageNumber() const { return stageNumber_; }
 
 private:
 
