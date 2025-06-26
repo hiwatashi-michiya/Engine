@@ -79,7 +79,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Editor;$(ProjectDir)Engine;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\math;$(ProjectDir)Externals\assimp\include;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Core;$(ProjectDir)Engine\Buffer;$(ProjectDir)Engine\DescriptorHeap;$(ProjectDir)Engine\Drawing;$(ProjectDir)Engine\Drawing\PostEffect;$(ProjectDir)Engine\FrameWork;$(ProjectDir)Engine\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\Useful</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>

@@ -300,6 +300,8 @@ void Particle2D::PostDraw() {
 
 void Particle2D::Draw(Camera* camera) {
 
+	camera;
+
 	//左下
 	vertMap_[0].position = { 0.0f - anchorPoint_.x * size_.x,size_.y - anchorPoint_.y * size_.y, 0.0f,1.0f };
 	vertMap_[0].texcoord = { 0.0f,viewRect_.y };
@@ -327,16 +329,16 @@ void Particle2D::Draw(Camera* camera) {
 
 	instanceCount_ = std::clamp(instanceCount_, uint32_t(0), maxInstanceCount_);
 
-	for (uint32_t i = 0; i < instanceCount_; i++) {
+	//for (uint32_t i = 0; i < instanceCount_; i++) {
 
-		/*worldMatrices_[i] = MakeAffineMatrix(transforms_[i]->scale_, transforms_[i]->rotateQuaternion_, transforms_[i]->translate_);*/
+	//	/*worldMatrices_[i] = MakeAffineMatrix(transforms_[i]->scale_, transforms_[i]->rotateQuaternion_, transforms_[i]->translate_);*/
 
-		/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
-		Matrix4x4 worldViewProjectionMatrix = worldMatrices_[i] * camera->matViewProjection_;
-		matTransformMap_[i].WVP = worldViewProjectionMatrix;
-		matTransformMap_[i].color = colors_[i];
+	//	/*Matrix4x4 worldMatrix = worldTransform[i].matWorld_;*/
+	//	Matrix4x4 worldViewProjectionMatrix = worldMatrices_[i] * camera->matViewProjection_;
+	//	matTransformMap_[i].WVP = worldViewProjectionMatrix;
+	//	matTransformMap_[i].color = colors_[i];
 
-	}
+	//}
 
 }
 

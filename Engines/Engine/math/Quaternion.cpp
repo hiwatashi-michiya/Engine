@@ -459,6 +459,43 @@ Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t) {
 
 }
 
+Quaternion DirectionToDirectionQuaternion(const Vector3& from, const Vector3& to) {
+
+	// 回転軸をクロス積から求める
+	Vector3 axis = Cross(from, to);
+	// 内積
+	float dot = Dot(from, to);
+	// 完全に平行な場合、単位クォータニオンを返す
+	if (dot > 0.9999f) {
+		return { 0.0f, 0.0f, 0.0f, 1.0f };
+	}
+
+	//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
+	if (dot <= -1.0f) {
+
+		if (from.x != 0.0f || from.y != 0.0f) {
+
+			axis = { from.y, -from.x,0.0f };
+			axis = Normalize(axis);
+		}
+		else if (from.x != 0.0f || from.z != 0.0f) {
+
+			axis = { 0.0f, -from.z, from.x };
+			axis = Normalize(axis);
+
+		}
+
+	}
+	else {
+		axis = Normalize(Cross(from, to));
+	}
+
+	// θを求める
+	float theta = std::acos(Dot(from, to) / (Length(from) * Length(to)));
+
+	return MakeRotateAxisAngleQuaternion(axis, theta);
+}
+
 Vector3 operator*(const Quaternion& q, const Vector3& v) {
 
 	Quaternion tmpQ = { v.x, v.y, v.z, 0.0f };

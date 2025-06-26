@@ -139,6 +139,9 @@ Quaternion RotateForAxis(const Quaternion& q, const Vector3& axis, const Vector3
 //球面線形補間
 Quaternion Slerp(const Quaternion& qr0, const Quaternion& qr1, float t);
 
+//ある方向からある方向へのベクトル
+Quaternion DirectionToDirectionQuaternion(const Vector3& from, const Vector3& to);
+
 Vector3 operator*(const Quaternion& q, const Vector3& v);
 
 Quaternion operator*(const Quaternion& qr1, const Quaternion& qr2);
